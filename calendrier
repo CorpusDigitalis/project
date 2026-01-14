@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prendre rendez-vous – Corpus Digitalis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .rdv-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .rdv-buttons button {
+      background: #4A90E2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Alata', sans-serif;
+      transition: background 0.3s;
+    }
+    .rdv-buttons button:hover {
+      background: #357ABD;
+    }
+    .cal-embed-wrapper {
+      width: 100%;
+      max-width: 800px;
+      height: 700px;
+      margin: 0 auto;
+    }
+    .cal-embed-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <div class="container">
+    <div class="main-content">
+      <h1>Prendre rendez-vous</h1>
+      <p>Choisissez un type de rendez-vous :</p>
+
+      <!-- Boutons de sélection -->
+      <div class="rdv-buttons">
+        <button onclick="loadIframe('https://cal.com/corpusdigitalis/15min?embed=true')">15 min</button>
+        <button onclick="loadIframe('https://cal.com/corpusdigitalis/30min?embed=true')">30 min</button>
+        <button onclick="loadIframe('https://cal.com/corpusdigitalis/rendez-vous-professionnel?embed=true')">Rendez-vous professionnel</button>
+      </div>
+
+      <!-- Zone iframe -->
+      <div class="cal-embed-wrapper">
+        <iframe id="calIframe" src="https://cal.com/corpusdigitalis/15min?embed=true"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadHTML(id, url) {
+      fetch(url)
+        .then(r => r.text())
+        .then(d => document.getElementById(id).innerHTML = d)
+        .catch(e => console.error('Erreur chargement', e));
+    }
+
+    function loadIframe(url) {
+      document.getElementById('calIframe').src = url;
+    }
+
+    loadHTML('header-placeholder', 'header.html');
+    loadHTML('footer-placeholder', 'footer.html');
+  </script>
+</body>
+</html>

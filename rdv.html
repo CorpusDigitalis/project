@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prendre rendez-vous - Tristan Arbona</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Styles de Navigation Dynamique (Cohérence Site) */
+        .dynamic-nav { display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; }
+        .dynamic-nav a { text-decoration: none; color: inherit; font-weight: 500; }
+        header, footer { padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+
+        .rdv-container {
+            max-width: 600px;
+            margin: 5rem auto;
+            text-align: center;
+            padding: 0 1.5rem;
+        }
+        .rdv-intro { color: #666; margin-bottom: 3rem; line-height: 1.6; }
+        .rdv-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+        .rdv-button {
+            background-color: #000;
+            color: white;
+            padding: 1.2rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid #000;
+        }
+        .rdv-button:hover {
+            background-color: #fff;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .empty-msg { color: #888; font-style: italic; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" style="font-weight: 800;"><span class="site-name-display">CHARGEMENT...</span></div>
+        <nav><ul id="header-menu" class="dynamic-nav"></ul></nav>
+    </header>
+
+    <div class="rdv-container">
+        <h1 id="titre-rdv">Prendre rendez-vous</h1>
+        <p class="rdv-intro">Sélectionnez le type de créneau qui vous convient pour accéder à mon agenda en ligne.</p>
+
+        <div id="rdv-options" class="rdv-list">
+            <p class="empty-msg">Chargement des disponibilités...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© <span id="current-year"></span> <span class="site-name-display"></span></p>
+        <nav><ul id="footer-menu" class="dynamic-nav"></ul></nav>
+    </footer>
+
+    <script type="module">
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const slug = "tristan";
+
+        async function initRDVPage() {
+            // 1. Récupération des données
+            const { data: prof, error } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('slug', slug)
+                .single();
+
+            if (error || !prof) {
+                document.getElementById('rdv-options').innerHTML = "<p class='empty-msg'>Erreur de chargement.</p>";
+                return;
+            }
+
+            // 2. Mise à jour Identité/Menus
+            document.querySelectorAll('.site-name-display').forEach(el => el.innerText = prof.name);
+            document.getElementById('current-year').innerText = new Date().getFullYear();
+            renderMenu('header-menu', prof.header_menu);
+            renderMenu('footer-menu', prof.footer_menu);
+
+            // 3. Gestion des boutons de RDV
+            const container = document.getElementById('rdv-options');
+            
+            // On vérifie si tu as une liste (rdv_config) ou un lien unique (appointment_settings)
+            // Pour être flexible, on gère les deux cas
+            const options = prof.rdv_config || (prof.appointment_settings?.url ? [prof.appointment_settings] : []);
+
+            if (options.length === 0) {
+                container.innerHTML = "<p class='empty-msg'>Aucun créneau disponible pour le moment.</p>";
+                return;
+            }
+
+            container.innerHTML = ""; // Vider le loader
+
+            options.forEach(item => {
+                const btn = document.createElement('a');
+                btn.href = item.url;
+                btn.className = 'rdv-button';
+                btn.target = "_blank";
+                btn.innerText = item.label || item.text || "Prendre rendez-vous";
+                container.appendChild(btn);
+            });
+        }
+
+        function renderMenu(id, items) {
+            const list = document.getElementById(id);
+            if (items) list.innerHTML = items.map(i => `<li><a href="${i.link}">${i.text}</a></li>`).join('');
+        }
+
+        initRDVPage();
+    </script>
+</body>
+</html>

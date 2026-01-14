@@ -1,0 +1,104 @@
+{
+  "config": {
+    "menu": [
+      {
+        "titre": "Accueil",
+        "url": "index.html"
+      },
+      {
+        "titre": "Publications",
+        "url": "publications.html"
+      },
+      {
+        "titre": "Interventions",
+        "url": "interventions.html"
+      },
+      {
+        "titre": "Cours",
+        "url": "cours.html"
+      }
+    ],
+    "footer": [
+      {
+        "nom": "Me contacter",
+        "url": "mailto:contact@email.com"
+      },
+      {
+        "nom": "Mon Université",
+        "url": "https://www.univ-paris.fr"
+      }
+    ]
+  },
+  "profil": {
+    "titre": "Bienvenue",
+    "description": "Je conçois des sites web professionnels sur mesure, pensés pour valoriser l’identité, les différents travaux et l’expertise de professionnels issus de divers secteurs.\n\nChaque site est développé de manière personnalisée, avec une attention portée à la lisibilité, à la simplicité d’usage et à l’autonomie du client.",
+    "image": "portrait.jpg"
+  },
+  "publications": [
+    {
+      "categorie": "Articles de recherche",
+      "texte": "Exemple d'article de recherche sur des thématiques économiques.",
+      "lien": "#",
+      "texteLien": "Consulter le document"
+    },
+    {
+      "categorie": "Colloques",
+      "texte": "Exemple de communication présentée lors d’un colloque universitaire.",
+      "lien": "#",
+      "texteLien": "Voir la présentation"
+    },
+    {
+      "categorie": "Ouvrages",
+      "texte": "Exemple d'étude approfondie publiée dans une revue spécialisée.",
+      "lien": "#",
+      "texteLien": "Accéder au PDF"
+    }
+  ],
+  "interventions": [
+    {
+      "date": "2025-05-12",
+      "lieu": "Paris, France",
+      "type": "Colloque",
+      "description": "Présentation sur l’impact de l’IA dans l’enseignement supérieur.",
+      "lien": "#",
+      "motsCles": "colloque ia paris enseignement supérieur intelligence artificielle"
+    },
+    {
+      "date": "2024-11-20",
+      "lieu": "Lyon, France",
+      "type": "Conférence",
+      "description": "Conférence invitée sur l’avenir des sciences des données.",
+      "lien": "#",
+      "motsCles": "conférence lyon sciences des données machine learning"
+    }
+  ],
+  "cours": [
+    {
+      "nom": "Macroéconomie L1",
+      "sections": [
+        {
+          "titre": "Slides Magistraux",
+          "fichiers": [
+            {
+              "nom": "Introduction (Chap 1)",
+              "url": "slides1.pdf"
+            },
+            {
+              "nom": "Le marché des biens (Chap 2)",
+              "url": "slides2.pdf"
+            }
+          ]
+        },
+        {
+          "titre": "Travaux Dirigés",
+          "fichiers": [
+            {
+              "nom": "Fiche TD 1",
+              "url": "td1.pdf"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

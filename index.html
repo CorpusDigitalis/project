@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tristan Arbona</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Respect des sauts de ligne de la bio saisie en admin */
+        #profil-desc { white-space: pre-line; }
+        
+        /* Styles pour la navigation dynamique */
+        .dynamic-nav { display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; }
+        .dynamic-nav a { text-decoration: none; color: inherit; font-weight: 500; transition: opacity 0.2s; }
+        .dynamic-nav a:hover { opacity: 0.6; }
+        
+        header, footer { 
+            padding: 30px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+
+        #profil-img {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            max-width: 300px;
+            border-radius: 8px;
+        }
+
+        .rdv-btn-container { margin-top: 30px; }
+        
+        /* Style responsive simple */
+        @media (max-width: 768px) {
+            header, footer { flex-direction: column; gap: 20px; text-align: center; }
+            .dynamic-nav { justify-content: center; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo" style="font-weight: 800; letter-spacing: -1px;">
+            <span class="site-name-display">CHARGEMENT...</span>
+        </div>
+        <nav>
+            <ul id="header-menu" class="dynamic-nav">
+                </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <img id="profil-img" src="" alt="Portrait" />
+            
+            <div class="description">
+                <h1 id="profil-titre">Chargement...</h1>
+                <p id="profil-desc"></p>
+                
+                <div id="rdv-container" class="rdv-btn-container"></div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>© <span id="current-year"></span> <span class="site-name-display"></span></p>
+        <nav>
+            <ul id="footer-menu" class="dynamic-nav">
+                </ul>
+        </nav>
+    </footer>
+
+    <script type="module">
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Détection du profil (via ?prof=nom ou par défaut 'tristan')
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('prof') || 'tristan';
+
+       async function loadSiteContent() {
+    // Récupération des données du profil
+    const { data: prof, error } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+    // SÉCURITÉ : Si la ligne n'existe pas ou s'il y a une erreur 406
+    if (error || !prof) {
+        console.error("Profil non trouvé dans Supabase:", error);
+        document.getElementById('profil-titre').innerText = "Profil en cours de configuration";
+        document.querySelectorAll('.site-name-display').forEach(el => el.innerText = "MON SITE");
+        return; // On arrête la fonction ici pour éviter le crash
+    }
+
+    // 1. Mise à jour de l'identité (avec protections contre le "null")
+    const safeName = prof.name || "Identité à remplir";
+    
+    document.title = safeName;
+    
+    // On transforme en majuscules SEULEMENT si safeName n'est pas vide
+    document.querySelectorAll('.site-name-display').forEach(el => {
+        el.innerText = safeName.toUpperCase();
+    });
+
+    document.getElementById('profil-titre').innerText = safeName;
+    document.getElementById('profil-desc').innerHTML = (prof.bio || "Votre biographie apparaîtra ici après modification dans l'admin.").replace(/\n/g, '<br>');
+    document.getElementById('current-year').innerText = new Date().getFullYear();
+
+    // 2. Image de profil
+    const img = document.getElementById('profil-img');
+    if (prof.image_url) {
+        img.src = prof.image_url;
+        img.style.opacity = 1;
+    }
+
+    // 3. Menus Header & Footer
+    renderMenu('header-menu', prof.header_menu);
+    renderMenu('footer-menu', prof.footer_menu);
+
+    // 4. Bouton RDV
+    if (prof.appointment_settings?.url) {
+        const container = document.getElementById('rdv-container');
+        container.innerHTML = `<a href="${prof.appointment_settings.url}" class="rdv-button" target="_blank">
+            ${prof.appointment_settings.text || 'Prendre RDV'}
+        </a>`;
+    }
+}
+
+        // Fonction utilitaire pour construire les menus JSON
+        function renderMenu(elementId, menuItems) {
+            const list = document.getElementById(elementId);
+            list.innerHTML = '';
+            if (menuItems && Array.isArray(menuItems)) {
+                menuItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="${item.link}">${item.text}</a>`;
+                    list.appendChild(li);
+                });
+            }
+        }
+
+        // Lancement
+        loadSiteContent();
+    </script>
+</body>
+</html>

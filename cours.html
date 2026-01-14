@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cours & Ressources - Tristan Arbona</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* --- Tes styles accordéon conservés et améliorés --- */
+        #profil-desc { white-space: pre-line; }
+        .dynamic-nav { display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; }
+        .dynamic-nav a { text-decoration: none; color: inherit; font-weight: 500; }
+        header, footer { padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+
+        details {
+            margin-bottom: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        details > summary {
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 1.2rem;
+            background: #f8f8f8;
+            list-style: none;
+            position: relative;
+            transition: background 0.2s;
+        }
+        details > summary:hover { background: #eee; }
+        details > summary::-webkit-details-marker { display: none; }
+
+        details > summary::after {
+            content: "+";
+            position: absolute;
+            right: 1.5rem;
+            font-size: 1.5rem;
+        }
+        details[open] > summary::after { content: "-"; }
+
+        .course-section { padding: 1rem 1.5rem; border-top: 1px solid #eee; }
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #888;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .resource-list { list-style: none; padding: 0; margin: 0; }
+        .resource-list li { margin-bottom: 0.5rem; }
+        .resource-list li a {
+            text-decoration: none;
+            color: #1f1f1f;
+            display: flex;
+            align-items: center;
+            padding: 0.6rem;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .resource-list li a:hover { background: #f0f0f0; color: #000; }
+        .resource-list li a::before { content: "📄"; margin-right: 12px; opacity: 0.5; }
+        
+        .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" style="font-weight: 800;"><span class="site-name-display">CHARGEMENT...</span></div>
+        <nav><ul id="header-menu" class="dynamic-nav"></ul></nav>
+    </header>
+    
+    <div class="container">
+        <h1 style="text-align: center; margin: 3rem 0;">Cours & Ressources</h1>
+
+        <div id="courses-container">
+            <p class="empty-msg">Chargement de votre espace de formation...</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© <span id="current-year"></span> <span class="site-name-display"></span></p>
+        <nav><ul id="footer-menu" class="dynamic-nav"></ul></nav>
+    </footer>
+
+    <script type="module">
+        // Configuration
+        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // On cible toujours Tristan pour l'instant
+        const slug = "tristan";
+
+        async function initLMS() {
+            // 1. Récupération du profil et des cours liés
+            const { data: prof, error } = await supabaseClient
+                .from('profiles')
+                .select('*, courses(*)')
+                .eq('slug', slug)
+                .single();
+
+            if (error || !prof) {
+                document.getElementById('courses-container').innerHTML = "<p class='empty-msg'>Erreur de connexion.</p>";
+                return;
+            }
+
+            // 2. Mise à jour Header / Footer
+            document.querySelectorAll('.site-name-display').forEach(el => el.innerText = prof.name);
+            document.getElementById('current-year').innerText = new Date().getFullYear();
+            renderMenu('header-menu', prof.header_menu);
+            renderMenu('footer-menu', prof.footer_menu);
+
+            // 3. Génération des accordéons de cours
+            const container = document.getElementById('courses-container');
+            const coursList = prof.courses || [];
+
+            if (coursList.length === 0) {
+                container.innerHTML = "<p class='empty-msg'>Aucun cours publié pour le moment.</p>";
+                return;
+            }
+
+            container.innerHTML = ""; // Vider le loader
+
+            coursList.forEach(cours => {
+                let chaptersHTML = "";
+                
+                // On utilise la structure 'content' JSONB définie dans l'admin
+                const chapters = cours.content || [];
+
+                chapters.forEach(chap => {
+                    let lessonsHTML = chap.lessons.map(less => `
+                        <li>
+                            <a href="${less.url}" target="_blank">${less.title}</a>
+                        </li>
+                    `).join('');
+
+                    chaptersHTML += `
+                        <div class="course-section">
+                            <div class="section-title">${chap.title}</div>
+                            <ul class="resource-list">
+                                ${lessonsHTML}
+                            </ul>
+                        </div>
+                    `;
+                });
+
+                const details = document.createElement('details');
+                details.innerHTML = `
+                    <summary>${cours.title}</summary>
+                    ${chaptersHTML}
+                `;
+                container.appendChild(details);
+            });
+        }
+
+        function renderMenu(elementId, items) {
+            const list = document.getElementById(elementId);
+            if (items && Array.isArray(items)) {
+                list.innerHTML = items.map(i => `<li><a href="${i.link}">${i.text}</a></li>`).join('');
+            }
+        }
+
+        initLMS();
+    </script>
+</body>
+</html>

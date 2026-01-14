@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Interventions & Colloques - Tristan Arbona</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* ====== Style de Navigation Dynamique (Commun) ====== */
+        .dynamic-nav { display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; }
+        .dynamic-nav a { text-decoration: none; color: inherit; font-weight: 500; }
+        header, footer { padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+
+        /* ====== Layout Interventions ====== */
+        .top-fade-voile {
+            position: fixed; top: 0; left: 0; width: 100%;
+            height: var(--voile-height, 150px); 
+            background: linear-gradient(to bottom, #fefaf5 90%, rgba(254, 250, 245, 0) 100%);
+            z-index: 9; pointer-events: none; 
+        }
+
+        #titre-interventions { text-align: center; margin-top: 2rem; position: relative; z-index: 10; font-size: 2.5rem; }
+        #texte-intro-interventions { text-align: center; max-width: 760px; margin: 0.5rem auto 2rem auto; position: relative; z-index: 10; color: #666; }
+
+        /* zone filtres sticky */
+        #tools-box {
+            position: sticky; top: 20px; z-index: 100;
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+            margin: 2rem auto; padding: 1.5rem; border-radius: 12px; border: 1px solid #eee;
+            display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+            max-width: 1000px;
+        }
+        #search-keyword { flex: 1; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
+        #tools-right { display: flex; gap: 0.5rem; align-items: center; }
+        #btn-reset { padding: 0.8rem 1.2rem; background: #000; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+        /* TIMELINE */
+        #timeline-wrapper { position: relative; margin-top: 4rem; padding-bottom: 5rem; }
+        #timeline-line { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 2px; background: #ddd; z-index: 1; }
+        .timeline-grid { display: grid; grid-template-columns: 1fr 50px 1fr; column-gap: 2rem; row-gap: 3rem; align-items: center; position: relative; z-index: 2; }
+        .timeline-event { display: contents; }
+        .timeline-dot { grid-column: 2; width: 12px; height: 12px; background: #000; border-radius: 50%; justify-self: center; border: 4px solid #fefaf5; }
+
+        .event-card { background: #fff; border: 1px solid #eee; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .event-date { font-weight: 700; color: #000; margin-bottom: 5px; }
+        .event-type { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
+        .event-link a { color: #0077cc; text-decoration: none; font-weight: 600; }
+
+        @media (max-width: 880px) {
+            #tools-box { flex-direction: column; top: 10px; }
+            .timeline-grid { grid-template-columns: 50px 1fr; }
+            #timeline-line { left: 25px; }
+            .timeline-dot { grid-column: 1; }
+            .event-left, .event-right { grid-column: 2; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-fade-voile" aria-hidden="true"></div>
+
+    <header>
+        <div class="logo" style="font-weight: 800;"><span class="site-name-display">CHARGEMENT...</span></div>
+        <nav><ul id="header-menu" class="dynamic-nav"></ul></nav>
+    </header>
+
+    <div class="container">
+        <h1 id="titre-interventions">Interventions & Colloques</h1>
+        <p id="texte-intro-interventions">
+            Explorez mes prises de parole et participations scientifiques.
+        </p>
+
+        <aside id="tools-box">
+            <input type="text" id="search-keyword" placeholder="Rechercher par mot-clé (lieu, sujet, type)..." />
+            <div id="tools-right">
+                <input type="date" id="date-start" />
+                <input type="date" id="date-end" />
+                <button id="btn-reset">Réinitialiser</button>
+            </div>
+        </aside>
+
+        <section id="timeline-wrapper">
+            <div id="timeline-line"></div>
+            <div class="timeline-grid" id="timeline-grid">Chargement de la chronologie...</div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© <span id="current-year"></span> <span class="site-name-display"></span></p>
+        <nav><ul id="footer-menu" class="dynamic-nav"></ul></nav>
+    </footer>
+
+    <script type="module">
+        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const slug = "tristan";
+
+        async function initInterventions() {
+            // 1. Récupération des données
+            const { data: prof, error } = await supabaseClient
+                .from('profiles')
+                .select('*, interventions(*)')
+                .eq('slug', slug)
+                .single();
+
+            if (error || !prof) return;
+
+            // 2. Mise à jour Identité/Menus
+            document.querySelectorAll('.site-name-display').forEach(el => el.innerText = prof.name);
+            document.getElementById('current-year').innerText = new Date().getFullYear();
+            renderMenu('header-menu', prof.header_menu);
+            renderMenu('footer-menu', prof.footer_menu);
+
+            // 3. Génération Timeline
+            const container = document.getElementById('timeline-grid');
+            container.innerHTML = "";
+            
+            const list = prof.interventions || [];
+            list.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            list.forEach((item, index) => {
+                const isEven = index % 2 === 0;
+                const keywords = `${item.lieu} ${item.type} ${item.description}`.toLowerCase();
+                
+                const html = `
+                    <div class="timeline-event" data-date="${item.date}" data-keywords="${keywords}">
+                        <div class="${isEven ? 'event-left' : 'event-right'}">
+                            <div class="event-card">
+                                <p class="event-date">${new Date(item.date).toLocaleDateString('fr-FR')}</p>
+                                <p style="color:#888; font-size:0.9rem; margin-bottom:10px;">${item.lieu || ''}</p>
+                                <h3 class="event-type">${item.type || ''}</h3>
+                                <p style="line-height:1.6;">${item.description || ''}</p>
+                                ${item.lien_url ? `<p class="event-link"><a href="${item.lien_url}" target="_blank">→ Consulter</a></p>` : ''}
+                            </div>
+                        </div>
+                        <div class="timeline-dot"></div>
+                        <div class="${isEven ? 'event-right' : 'event-left'}"></div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            setupFilters();
+        }
+
+        function renderMenu(id, items) {
+            const list = document.getElementById(id);
+            if (items) list.innerHTML = items.map(i => `<li><a href="${i.link}">${i.text}</a></li>`).join('');
+        }
+
+        function setupFilters() {
+            const $search = document.getElementById('search-keyword');
+            const $start = document.getElementById('date-start');
+            const $end = document.getElementById('date-end');
+            const $reset = document.getElementById('btn-reset');
+
+            function apply() {
+                const kw = $search.value.toLowerCase();
+                const start = $start.value ? new Date($start.value) : null;
+                const end = $end.value ? new Date($end.value) : null;
+
+                document.querySelectorAll('.timeline-event').forEach(ev => {
+                    const evDate = new Date(ev.dataset.date);
+                    const evKw = ev.dataset.keywords;
+                    let visible = true;
+
+                    if (kw && !evKw.includes(kw)) visible = false;
+                    if (start && evDate < start) visible = false;
+                    if (end && evDate > end) visible = false;
+
+                    ev.style.display = visible ? 'contents' : 'none';
+                });
+            }
+
+            [$search, $start, $end].forEach(el => el.addEventListener('input', apply));
+            $reset.onclick = () => { $search.value = ""; $start.value = ""; $end.value = ""; apply(); };
+        }
+
+        initInterventions();
+    </script>
+</body>
+</html>
