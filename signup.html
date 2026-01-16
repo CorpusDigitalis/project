@@ -7,143 +7,209 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #000000; --bg: #f9f9f9; --border: #e0e0e0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .onboarding-card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 450px; }
+        :root { --accent: #111; --bg: #f3f4f6; --border: #d1d5db; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; color: #1f2937; }
+        
+        .onboarding-card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); width: 100%; max-width: 450px; }
+        
         .step { display: none; }
-        .step.active { display: block; }
-        h1 { font-weight: 800; font-size: 1.5rem; margin-bottom: 10px; }
-        p { color: #666; font-size: 0.9rem; margin-bottom: 25px; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #999; margin-top: 15px; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; box-sizing: border-box; }
-        .btn-primary { background: var(--accent); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 25px; }
-        .btn-primary:disabled { background: #ccc; }
-        #loading-msg { margin-top: 15px; font-size: 0.8rem; color: #666; text-align: center; display: none; }
+        .step.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-weight: 800; font-size: 1.5rem; margin-bottom: 10px; color: #111; margin-top: 0; }
+        p { color: #6b7280; font-size: 0.9rem; margin-bottom: 25px; line-height: 1.5; }
+        
+        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: #4b5563; margin-top: 18px; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; transition: 0.2s; }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent); ring: 2px solid #e5e7eb; }
+        
+        .btn-primary { background: var(--accent); color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 30px; font-size: 1rem; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+        
+        #loading-msg { margin-top: 15px; font-size: 0.85rem; color: #6b7280; text-align: center; display: none; font-style: italic; }
+        .error-msg { color: #ef4444; font-size: 0.85rem; margin-bottom: 15px; display: none; background: #fef2f2; padding: 10px; border-radius: 6px; border: 1px solid #fee2e2; }
     </style>
 </head>
 <body>
 
 <div class="onboarding-card">
+    
     <div id="step-1" class="step active">
         <h1>Bienvenue.</h1>
-        <p>Créez vos identifiants sécurisés.</p>
-        <label>Email</label>
+        <p>Commencez par créer vos identifiants sécurisés pour accéder à la plateforme.</p>
+        
+        <div id="err-1" class="error-msg"></div>
+
+        <label>Email professionnel</label>
         <input type="email" id="reg-email" placeholder="email@exemple.com">
+        
         <label>Mot de passe</label>
-        <input type="password" id="reg-password" placeholder="••••••••">
-        <button class="btn-primary" onclick="handleSignup()">Continuer →</button>
+        <input type="password" id="reg-password" placeholder="8 caractères minimum">
+        
+        <button class="btn-primary" id="btn-step1" onclick="handleSignup()">Continuer →</button>
     </div>
 
     <div id="step-2" class="step">
         <h1>Votre identité.</h1>
-        <p>Ces infos rempliront votre page d'accueil.</p>
+        <p>Ces informations structureront votre page publique.</p>
         
-        <label>Nom complet</label>
-        <input type="text" id="conf-name" placeholder="Prénom Nom">
+        <div id="err-2" class="error-msg"></div>
         
-        <label>Adresse personnalisée (URL)</label>
+        <label>Nom complet (avec Titre)</label>
+        <input type="text" id="conf-name" placeholder="Ex: Pr. Tristan Arbona">
+        
+        <label>Biographie courte</label>
+        <textarea id="conf-bio" rows="3" placeholder="Votre statut, université ou spécialité..."></textarea>
+        
+        <label>URL personnalisée (Slug)</label>
         <input type="text" id="conf-slug" placeholder="ex: tristan-arbona">
         
-        <label>Lien LinkedIn</label>
-        <input type="url" id="conf-linkedin" placeholder="https://linkedin.com/in/...">
-
-        <label>Lien Google Scholar</label>
-        <input type="url" id="conf-scholar" placeholder="https://scholar.google.com/...">
-
-        <label>Photo de profil</label>
+        <label>Photo de profil (Optionnel)</label>
         <input type="file" id="up-avatar" accept="image/*">
 
-        <label>Votre CV (PDF)</label>
+        <label>Votre CV PDF (Optionnel)</label>
         <input type="file" id="up-cv" accept=".pdf">
-        
+
         <button class="btn-primary" id="btn-final" onclick="submitOnboarding()">Finaliser mon site</button>
-        <div id="loading-msg">Envoi des données et fichiers en cours...</div>
+        <div id="loading-msg">Création de votre espace en cours...<br>Cela peut prendre quelques secondes.</div>
     </div>
 
     <div id="step-3" class="step">
-        <h1 style="color: #2ecc71;">C'est envoyé !</h1>
-        <p>Votre profil a été créé avec succès.</p>
-        <div style="background: #f0fdf4; padding: 20px; border-radius: 8px; border: 1px solid #dcfce7; font-size: 0.9rem;">
-            <strong>Prochaine étape :</strong><br>
-            Nous préparons votre espace. Votre site sera activé sous 24h après validation de votre paiement.
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="width: 60px; height: 60px; background: #dcfce7; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
         </div>
-        <button class="btn-primary" onclick="window.location.href='index.html'">Retour à l'accueil</button>
+        <h1 style="text-align: center;">C'est envoyé !</h1>
+        <p style="text-align: center;">Votre profil a été enregistré avec succès.</p>
+        
+        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 0.9rem; color: #374151;">
+            <strong>Prochaine étape :</strong><br>
+            Votre compte est en attente de validation. Un administrateur activera votre accès sous 24h.
+        </div>
+        <button class="btn-primary" onclick="window.location.href='index.html'" style="background: white; color: #111; border: 1px solid #d1d5db;">Retour à l'accueil</button>
     </div>
 </div>
 
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
+    // CONFIGURATION (Vérifie que ce sont les bonnes clés !)
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; // Remplace par ta clé réelle
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let userId = null;
+    let userEmail = null;
 
+    // --- ÉTAPE 1 : CRÉATION COMPTE ---
     window.handleSignup = async () => {
+        const btn = document.getElementById('btn-step1');
+        const errDiv = document.getElementById('err-1');
         const email = document.getElementById('reg-email').value;
         const password = document.getElementById('reg-password').value;
+
+        errDiv.style.display = 'none';
+        if(!email || !password) { showErr(errDiv, "Veuillez remplir tous les champs."); return; }
+        if(password.length < 6) { showErr(errDiv, "Le mot de passe est trop court."); return; }
+
+        btn.disabled = true;
+        btn.innerText = "Traitement...";
+
+        // Inscription Supabase
         const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) { alert(error.message); return; }
+
+        if (error) {
+            showErr(errDiv, error.message);
+            btn.disabled = false;
+            btn.innerText = "Continuer →";
+            return;
+        }
+
+        // Succès étape 1
         userId = data.user.id;
+        userEmail = email;
+        
+        // Pré-remplissage du slug basé sur l'email si besoin
+        document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+        
         document.getElementById('step-1').classList.remove('active');
         document.getElementById('step-2').classList.add('active');
     }
 
+    // --- ÉTAPE 2 : DETAILS & UPLOADS ---
     window.submitOnboarding = async () => {
         const btn = document.getElementById('btn-final');
         const loader = document.getElementById('loading-msg');
+        const errDiv = document.getElementById('err-2');
+        
+        const name = document.getElementById('conf-name').value;
+        const bio = document.getElementById('conf-bio').value;
+        const slug = document.getElementById('conf-slug').value;
+        
+        errDiv.style.display = 'none';
+        if(!name || !slug) { showErr(errDiv, "Le nom et l'URL sont obligatoires."); return; }
+
         btn.disabled = true;
+        btn.style.opacity = "0.5";
         loader.style.display = "block";
 
         try {
-            const name = document.getElementById('conf-name').value;
-            const slug = document.getElementById('conf-slug').value;
-            const linkedin = document.getElementById('conf-linkedin').value;
-            const scholar = document.getElementById('conf-scholar').value;
             const avatarFile = document.getElementById('up-avatar').files[0];
             const cvFile = document.getElementById('up-cv').files[0];
 
             let imageUrl = null;
             let cvUrl = null;
 
-            // 1. Upload Photo
+            // 1. Upload Avatar (Si présent)
             if (avatarFile) {
-                const path = `${userId}/avatar-${Date.now()}.${avatarFile.name.split('.').pop()}`;
-                await supabase.storage.from('avatars').upload(path, avatarFile);
-                imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+                const ext = avatarFile.name.split('.').pop();
+                const path = `${userId}/avatar-${Date.now()}.${ext}`;
+                const { error: upErr } = await supabase.storage.from('avatars').upload(path, avatarFile);
+                if (!upErr) {
+                    imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+                }
             }
 
-            // 2. Upload CV
+            // 2. Upload CV (Si présent)
             if (cvFile) {
                 const path = `${userId}/cv-${Date.now()}.pdf`;
-                await supabase.storage.from('documents').upload(path, cvFile);
-                cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                const { error: upErr } = await supabase.storage.from('documents').upload(path, cvFile);
+                if (!upErr) {
+                    cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                }
             }
 
-            // 3. Création du profil
-            const { error: profErr } = await supabase.from('profiles').insert([{
+            // 3. Sauvegarde dans la base de données (UPSERT pour éviter les doublons)
+            const { error: profErr } = await supabase.from('profiles').upsert({
                 id: userId,
                 name: name,
+                bio: bio,
                 slug: slug,
-                linkedin_url: linkedin,
-                scholar_url: scholar,
-                image_url: imageUrl,
-                cv_url: cvUrl,
-                is_active: false
-            }]);
+                image_url: imageUrl, // Peut être null, c'est ok
+                cv_url: cvUrl,       // Peut être null, c'est ok
+                is_active: false     // Sécurité : toujours false à la création
+            });
 
             if (profErr) throw profErr;
             
+            // Succès final !
             document.getElementById('step-2').classList.remove('active');
             document.getElementById('step-3').classList.add('active');
 
         } catch (err) {
-            alert("Erreur : " + err.message);
-        } finally {
+            console.error(err);
+            showErr(errDiv, "Erreur technique : " + err.message);
             btn.disabled = false;
+            btn.style.opacity = "1";
             loader.style.display = "none";
         }
+    }
+
+    function showErr(div, msg) {
+        div.innerText = msg;
+        div.style.display = 'block';
     }
 </script>
 </body>
