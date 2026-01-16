@@ -10,11 +10,10 @@
     
     <style>
         :root { 
-            --bg-content: #f8fafc; /* Couleur du fond de la zone de travail */
-            --sidebar: #0f172a;    /* Noir/Bleu nuit profond */
+            --bg-content: #f8fafc;
+            --sidebar: #0f172a; 
             --sidebar-text: #94a3b8;
             --sidebar-active: #1e293b;
-            
             --accent: #2563eb; 
             --border: #e2e8f0; 
             --text: #334155; 
@@ -23,7 +22,7 @@
             --danger: #ef4444;
         }
 
-        /* FIX CSS #1 : Le body prend la couleur de la sidebar pour combler les trous des arrondis */
+        /* FIX CSS : Body couleur sidebar pour les coins */
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
         /* --- SIDEBAR --- */
@@ -43,10 +42,8 @@
         .logout-btn { color: #f87171; font-size: 0.8rem; font-weight: 500; cursor: pointer; background: none; border: none; padding: 0; opacity: 0.8; transition:0.2s; }
         .logout-btn:hover { opacity: 1; text-decoration: underline; }
 
-        /* --- LAYOUT PRINCIPAL --- */
-        /* Le background ici est blanc/gris clair pour contraster avec le body noir */
+        /* --- LAYOUT --- */
         .admin-layout { display: flex; flex: 1; overflow: hidden; background: var(--bg-content); border-radius: 30px 0 0 30px; margin-left: -20px; box-shadow: -20px 0 50px rgba(0,0,0,0.2); z-index: 100; position: relative; }
-        
         .editor-side { flex: 1; padding: 50px 60px; overflow-y: auto; max-width: 900px; margin: 0 auto; }
         
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -54,59 +51,61 @@
         p.subtitle { color: var(--text-light); font-size: 1rem; margin-top: 8px; font-weight: 400; }
 
         .card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03); }
-        
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         .full-width { grid-column: span 2; }
         
-        /* Inputs & Labels */
         label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--text-light); letter-spacing: 0.5px; }
-        input, textarea, select { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem; transition: 0.2s; box-sizing: border-box; background: #f8fafc; color: #334155; }
+        input[type="text"], input[type="url"], input[type="password"], input[type="email"], textarea, select { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem; transition: 0.2s; box-sizing: border-box; background: #f8fafc; color: #334155; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
 
-        /* Buttons */
         .btn-primary { background: #0f172a; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.2s; box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.2); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3); }
         .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; }
         .btn-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; }
 
-        /* FIX CSS #2 : Affichage des fichiers existants */
-        .current-file-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534;
-            padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
-            margin-bottom: 8px; text-decoration: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-        .current-file-badge:hover { background: #dcfce7; text-decoration: underline; }
+        /* GESTION FICHIERS */
+        .current-file-badge { display: inline-flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; text-decoration: none; }
         .file-input-group { display: flex; flex-direction: column; gap: 5px; }
 
-        /* Items (Cours, Pubs...) */
+        /* MENU LISTS (Header/Footer) */
+        .menu-row { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 8px; }
+        .menu-row.disabled { opacity: 0.6; background: #f1f5f9; }
+        .menu-actions { display: flex; gap: 5px; }
+        .btn-icon { background: white; border: 1px solid #cbd5e1; border-radius: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; transition: 0.2s; }
+        .btn-icon:hover { border-color: #94a3b8; color: #334155; }
+        .btn-icon.danger:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+        
+        /* SWITCH TOGGLE */
+        .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        .switch-label { font-size: 0.9rem; font-weight: 500; color: #334155; display: flex; align-items: center; gap: 10px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
+
+        /* ITEMS */
         .item-card { border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; background: #fdfdfd; position: relative; transition: 0.2s; }
         .item-card:hover { background: white; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); border-color: #cbd5e1; }
         .delete-btn-abs { position: absolute; top: 20px; right: 20px; color: var(--danger); background: none; border: none; cursor: pointer; opacity: 0.4; transition: 0.2s; padding: 5px; }
         .delete-btn-abs:hover { opacity: 1; background: #fee2e2; border-radius: 6px; }
 
-        /* Course Sections */
-        .course-section-row { display: flex; gap: 12px; align-items: center; background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-top: 10px; }
-        
-        /* Helpers */
-        .hidden { display: none !important; }
-        .empty-state { text-align: center; padding: 40px; border: 2px dashed #e2e8f0; border-radius: 12px; color: #94a3b8; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-
-        /* PREVIEW DESKTOP */
+        /* PREVIEW */
         .preview-side { width: 600px; background: #f1f5f9; border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
-        .desktop-mockup { width: 100%; aspect-ratio: 16/10; background: white; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #cbd5e1; }
+        .desktop-mockup { width: 100%; aspect-ratio: 16/10; background: white; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #cbd5e1; }
         .desktop-header { height: 32px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 12px; gap: 8px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #10b981; }
         .fake-url { flex: 1; height: 20px; background: white; border: 1px solid #e2e8f0; border-radius: 4px; margin-left: 10px; margin-right: 10px; }
-        .desktop-screen { flex: 1; position: relative; background: white; }
+        .desktop-screen { flex: 1; background: white; }
         iframe { width: 100%; height: 100%; border: none; }
         .preview-note { margin-top: 20px; color: #94a3b8; font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 6px; }
 
-        /* Toast */
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0f172a; color: white; padding: 14px 28px; border-radius: 100px; font-weight: 500; opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 200; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); display:flex; align-items:center; gap:10px; }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0f172a; color: white; padding: 14px 28px; border-radius: 100px; font-weight: 500; opacity: 0; transition: 0.4s; z-index: 200; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); display:flex; align-items:center; gap:10px; }
         #toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
-        
+        .hidden { display: none !important; }
         @media (max-width: 1300px) { .preview-side { display: none; } }
     </style>
 </head>
@@ -153,52 +152,39 @@
                         </div>
                     </div>
                     <div class="form-grid">
-                        <div class="full-width">
-                            <label>Nom Affiché (Titre inclus)</label>
-                            <input type="text" id="field-name" placeholder="Ex: Pr. Tristan Arbona">
-                        </div>
-                        <div class="full-width">
-                            <label>Biographie</label>
-                            <textarea id="field-bio" rows="6" placeholder="Votre parcours, universités, spécialités..."></textarea>
-                        </div>
+                        <div class="full-width"><label>Nom Affiché</label><input type="text" id="field-name"></div>
+                        <div class="full-width"><label>Biographie</label><textarea id="field-bio" rows="6"></textarea></div>
                     </div>
                 </div>
             </section>
 
             <section id="mod-biblio" class="module hidden">
-                <div class="header-flex">
-                    <div><h2>Publications</h2><p class="subtitle">Articles, Ouvrages, Thèses...</p></div>
-                    <button class="btn-primary" onclick="addPublication()"><i data-lucide="plus"></i> Nouvelle entrée</button>
-                </div>
+                <div class="header-flex"><div><h2>Publications</h2><p class="subtitle">Articles, Ouvrages...</p></div><button class="btn-primary" onclick="addPublication()"><i data-lucide="plus"></i> Nouvelle entrée</button></div>
                 <div id="pubs-container"></div>
             </section>
 
             <section id="mod-cours" class="module hidden">
-                <div class="header-flex">
-                    <div><h2>Enseignements</h2><p class="subtitle">Partagez vos supports pédagogiques.</p></div>
-                    <button class="btn-primary" onclick="createCourse()"><i data-lucide="plus"></i> Nouveau Cours</button>
-                </div>
+                <div class="header-flex"><div><h2>Enseignements</h2><p class="subtitle">Vos supports pédagogiques.</p></div><button class="btn-primary" onclick="createCourse()"><i data-lucide="plus"></i> Nouveau Cours</button></div>
                 <div id="courses-container"></div>
             </section>
 
             <section id="mod-interventions" class="module hidden">
-                <div class="header-flex">
-                    <div><h2>Interventions</h2><p class="subtitle">Conférences, Médias et Colloques.</p></div>
-                    <button class="btn-primary" onclick="createIntervention()"><i data-lucide="plus"></i> Ajouter une date</button>
-                </div>
+                <div class="header-flex"><div><h2>Interventions</h2><p class="subtitle">Conférences et Médias.</p></div><button class="btn-primary" onclick="createIntervention()"><i data-lucide="plus"></i> Ajouter</button></div>
                 <div id="interventions-container"></div>
             </section>
 
             <section id="mod-perso" class="module hidden">
                 <div class="header-flex">
-                    <div><h2>Personnalisation</h2><p class="subtitle">Réseaux sociaux, CV et menus.</p></div>
+                    <div><h2>Personnalisation</h2><p class="subtitle">Navigation, Réseaux et CV.</p></div>
                     <button class="btn-primary" onclick="savePerso()"><i data-lucide="save"></i> Tout mettre à jour</button>
                 </div>
+
                 <div class="card">
-                    <h3 style="margin-top:0;">Réseaux & CV</h3><br>
+                    <h3 style="margin-top:0;">Réseaux & CV (Sources)</h3>
+                    <p style="font-size:0.85rem; color:#64748b; margin-bottom:20px;">Renseignez ces informations pour qu'elles puissent s'afficher sur votre site.</p>
                     <div class="form-grid">
-                        <div><label>LinkedIn</label><input type="url" id="field-linkedin"></div>
-                        <div><label>Google Scholar</label><input type="url" id="field-scholar"></div>
+                        <div><label>Lien LinkedIn</label><input type="url" id="field-linkedin" placeholder="https://linkedin.com/in/..."></div>
+                        <div><label>Lien Google Scholar</label><input type="url" id="field-scholar" placeholder="https://scholar.google.com/..."></div>
                         <div class="full-width">
                             <label>Votre CV (PDF)</label>
                             <div class="file-input-group">
@@ -208,24 +194,42 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="card">
-                    <h3 style="margin-top:0;">Menus de navigation</h3>
-                    <label>Menu Principal</label><div id="header-list"></div>
-                    <button class="btn-secondary" onclick="addMenuItem('header')" style="margin-top:10px;">+ Ajouter un lien</button>
-                    <div style="margin-top:30px; border-top:1px solid #eee; padding-top:20px;">
-                        <label>Pied de page</label><div id="footer-list"></div>
-                        <button class="btn-secondary" onclick="addMenuItem('footer')" style="margin-top:10px;">+ Ajouter un lien</button>
+                    <h3 style="margin-top:0;">Menu Principal</h3>
+                    <p style="font-size:0.85rem; color:#64748b; margin-bottom:20px;">Organisez les pages de votre site. Vous pouvez renommer, déplacer ou masquer les modules.</p>
+                    <div id="header-list-container"></div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-top:0;">Pied de page</h3>
+                    
+                    <label style="margin-top:20px; color:#0f172a;">Liens Système (Automatiques)</label>
+                    <div style="background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:20px;">
+                        <div class="switch-row">
+                            <div class="switch-label"><i data-lucide="file-user" size="16"></i> Afficher le lien CV</div>
+                            <label class="switch"><input type="checkbox" id="toggle-cv"><span class="slider"></span></label>
+                        </div>
+                        <div class="switch-row">
+                            <div class="switch-label"><i data-lucide="linkedin" size="16"></i> Afficher LinkedIn</div>
+                            <label class="switch"><input type="checkbox" id="toggle-linkedin"><span class="slider"></span></label>
+                        </div>
+                        <div class="switch-row" style="border:none;">
+                            <div class="switch-label"><i data-lucide="graduation-cap" size="16"></i> Afficher Google Scholar</div>
+                            <label class="switch"><input type="checkbox" id="toggle-scholar"><span class="slider"></span></label>
+                        </div>
                     </div>
+
+                    <label style="color:#0f172a;">Liens Personnalisés (Libres)</label>
+                    <div id="footer-list"></div>
+                    <button class="btn-secondary" onclick="addFooterItem()" style="margin-top:10px;">+ Ajouter un lien libre</button>
                 </div>
             </section>
 
             <section id="mod-rdv" class="module hidden">
-                <div class="header-flex">
-                    <div><h2>Prise de RDV</h2></div>
-                    <button class="btn-primary" onclick="saveRDV()"><i data-lucide="save"></i> Enregistrer</button>
-                </div>
+                <div class="header-flex"><div><h2>Prise de RDV</h2></div><button class="btn-primary" onclick="saveRDV()"><i data-lucide="save"></i> Enregistrer</button></div>
                 <div class="card">
-                    <label>Lien de réservation (Calendly, Cal.com)</label><input type="url" id="rdv-url" placeholder="https://calendly.com...">
+                    <label>Lien de réservation</label><input type="url" id="rdv-url" placeholder="https://calendly.com...">
                     <label style="margin-top:15px;">Texte du bouton</label><input type="text" id="rdv-text" placeholder="Prendre RDV">
                 </div>
             </section>
@@ -233,9 +237,7 @@
 
         <aside class="preview-side">
             <div class="desktop-mockup">
-                <div class="desktop-header">
-                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div><div class="fake-url"></div>
-                </div>
+                <div class="desktop-header"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div><div class="fake-url"></div></div>
                 <div class="desktop-screen"><iframe id="site-preview" src="about:blank"></iframe></div>
             </div>
             <div class="preview-note"><i data-lucide="monitor" size="14"></i> Aperçu ordinateur</div>
@@ -245,7 +247,6 @@
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-    // CONFIG
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -253,44 +254,55 @@
     let profileData = null;
     const PUB_CATEGORIES = ["Articles", "Ouvrages", "Chapitres", "Conférences", "Thèses", "Rapports", "Presse", "Divers"];
 
-    // UTILS POUR FICHIERS
-    function getFileName(url) {
-        if(!url) return null;
-        try {
-            // Nettoie l'URL pour garder que le nom du fichier (supprime le timestamp Supabase)
-            let name = decodeURIComponent(url.split('/').pop()); 
-            // Enlève les chiffres du début si c'est format "12345_nom.pdf"
-            return name.replace(/^\d+_/, '');
-        } catch(e) { return "Fichier existant"; }
-    }
+    // DEFAULT HEADER STRUCTURE (Fixe)
+    const DEFAULT_HEADER = [
+        { id: 'home', label: 'Accueil', link: 'index.html', visible: true },
+        { id: 'pubs', label: 'Publications', link: '#publications', visible: true },
+        { id: 'cours', label: 'Enseignements', link: '#cours', visible: true },
+        { id: 'inter', label: 'Interventions', link: '#interventions', visible: true },
+        { id: 'rdv', label: 'Rendez-vous', link: '#rdv', visible: true }
+    ];
 
+    // --- INIT ---
     async function init() {
         lucide.createIcons();
-        console.log("🚀 Démarrage Creator Studio v3.1 (Fix CSS Corners + Filenames)");
+        console.log("🚀 Creator Studio v3.2 Loaded");
 
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
 
         const { data, error } = await supabase.from('profiles').select('*, publications(*), courses(*), interventions(*)').eq('id', session.user.id);
-        if (error) { console.error(error); if(error.code !== 'PGRST116') alert("Erreur : " + error.message); return; }
+        if (error) { alert("Erreur : " + error.message); return; }
         
         profileData = Array.isArray(data) ? (data[0] || null) : data;
         if(!profileData) { alert("Profil introuvable."); return; }
 
+        // Init Header Menu if empty or old format
+        if (!profileData.header_menu || !Array.isArray(profileData.header_menu) || !profileData.header_menu[0].id) {
+            profileData.header_menu = JSON.parse(JSON.stringify(DEFAULT_HEADER));
+        }
+        // Init Footer Custom
+        if (!profileData.footer_menu) profileData.footer_menu = [];
+
+        // Sorting
         if(profileData.interventions) profileData.interventions.sort((a,b) => new Date(b.event_date) - new Date(a.event_date));
         if(profileData.courses) profileData.courses.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
+        fillAll();
+    }
+
+    function fillAll() {
         fillIdentity();
         renderPublications();
         renderCourses();
         renderInterventions();
-        fillPerso();
-        renderMenus();
+        fillPerso();     // Rempli les liens
+        renderMenus();   // Rempli les listes Header/Footer
         fillRDV();
         refreshPreview();
     }
 
-    // 1. PROFIL
+    // --- PROFIL ---
     function fillIdentity() {
         document.getElementById('field-name').value = profileData.name || '';
         document.getElementById('field-bio').value = profileData.bio || '';
@@ -303,7 +315,136 @@
         btn.innerHTML = oldText; lucide.createIcons();
     }
 
-    // 2. PUBLICATIONS
+    // --- PERSO (CV & RÉSEAUX & MENUS) ---
+    function fillPerso() {
+        document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
+        document.getElementById('field-scholar').value = profileData.scholar_url || '';
+        
+        // Refresh CV Badge (Correction Bug visuel)
+        const cvArea = document.getElementById('cv-display-area');
+        if(profileData.cv_url) {
+            cvArea.innerHTML = `<a href="${profileData.cv_url}" target="_blank" class="current-file-badge"><i data-lucide="file-user" size="16"></i> ${getFileName(profileData.cv_url)}</a>`;
+            document.getElementById('link-cv').classList.remove('hidden'); 
+        } else {
+            cvArea.innerHTML = '';
+        }
+
+        // Toggles Footer System (Sauvegardés dans un objet footer_options ou on déduit ?)
+        // Pour simplifier, on stocke l'état des switchs dans le profil si besoin, 
+        // ou on laisse l'utilisateur décider. Ici je vais sauvegarder ces prefs.
+        const opts = profileData.footer_options || { show_cv: true, show_li: true, show_sc: true };
+        document.getElementById('toggle-cv').checked = opts.show_cv;
+        document.getElementById('toggle-linkedin').checked = opts.show_li;
+        document.getElementById('toggle-scholar').checked = opts.show_sc;
+
+        // Désactive les switchs si pas de lien
+        document.getElementById('toggle-cv').disabled = !profileData.cv_url;
+        document.getElementById('toggle-linkedin').disabled = !profileData.linkedin_url;
+        document.getElementById('toggle-scholar').disabled = !profileData.scholar_url;
+
+        lucide.createIcons();
+    }
+
+    function renderMenus() {
+        // A. HEADER (Fixe avec ordre)
+        const headerContainer = document.getElementById('header-list-container');
+        headerContainer.innerHTML = profileData.header_menu.map((item, i) => `
+            <div class="menu-row ${item.visible ? '' : 'disabled'}">
+                <i data-lucide="grip-vertical" size="16" style="color:#cbd5e1; cursor:grab;"></i>
+                <input type="text" value="${item.label}" onchange="updateHeader(${i}, 'label', this.value)" style="flex:1; font-weight:600;">
+                <span style="font-size:0.75rem; color:#94a3b8; background:#f1f5f9; padding:4px 8px; border-radius:4px;">${item.link}</span>
+                <div class="menu-actions">
+                    <button class="btn-icon" onclick="moveHeader(${i}, -1)" title="Monter"><i data-lucide="arrow-up" size="16"></i></button>
+                    <button class="btn-icon" onclick="moveHeader(${i}, 1)" title="Descendre"><i data-lucide="arrow-down" size="16"></i></button>
+                    <button class="btn-icon ${item.visible ? '' : 'danger'}" onclick="toggleHeader(${i})" title="${item.visible ? 'Masquer' : 'Afficher'}">
+                        <i data-lucide="${item.visible ? 'eye' : 'eye-off'}" size="16"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        // B. FOOTER (Custom)
+        const footerContainer = document.getElementById('footer-list');
+        footerContainer.innerHTML = profileData.footer_menu.map((item, i) => `
+            <div class="menu-row">
+                <input type="text" value="${item.text}" onchange="updateFooter(${i}, 'text', this.value)" placeholder="Nom (ex: Mentions Légales)" style="flex:1">
+                <input type="text" value="${item.link}" onchange="updateFooter(${i}, 'link', this.value)" placeholder="Lien (http...)" style="flex:1">
+                <button class="btn-icon danger" onclick="removeFooter(${i})"><i data-lucide="trash-2" size="16"></i></button>
+            </div>
+        `).join('');
+        
+        lucide.createIcons();
+    }
+
+    // LOGIQUE HEADER
+    window.updateHeader = (i, key, val) => { profileData.header_menu[i][key] = val; }
+    window.toggleHeader = (i) => { profileData.header_menu[i].visible = !profileData.header_menu[i].visible; renderMenus(); }
+    window.moveHeader = (i, dir) => {
+        if (dir === -1 && i > 0) {
+            [profileData.header_menu[i], profileData.header_menu[i-1]] = [profileData.header_menu[i-1], profileData.header_menu[i]];
+        } else if (dir === 1 && i < profileData.header_menu.length - 1) {
+            [profileData.header_menu[i], profileData.header_menu[i+1]] = [profileData.header_menu[i+1], profileData.header_menu[i]];
+        }
+        renderMenus();
+    }
+
+    // LOGIQUE FOOTER
+    window.addFooterItem = () => { profileData.footer_menu.push({text:'', link:''}); renderMenus(); }
+    window.removeFooter = (i) => { profileData.footer_menu.splice(i, 1); renderMenus(); }
+    window.updateFooter = (i, key, val) => { profileData.footer_menu[i][key] = val; }
+
+    window.savePerso = async () => {
+        const btn = document.querySelector('#mod-perso .btn-primary');
+        const old = btn.innerHTML; btn.innerHTML = "Enregistrement...";
+        
+        // Récup des toggles
+        const footerOptions = {
+            show_cv: document.getElementById('toggle-cv').checked,
+            show_li: document.getElementById('toggle-linkedin').checked,
+            show_sc: document.getElementById('toggle-scholar').checked
+        };
+
+        await updateProfile({ 
+            linkedin_url: document.getElementById('field-linkedin').value,
+            scholar_url: document.getElementById('field-scholar').value,
+            header_menu: profileData.header_menu,
+            footer_menu: profileData.footer_menu,
+            footer_options: footerOptions
+        });
+        
+        // Force refresh visuel des switchs (si jamais on a ajouté un lien qui active un switch)
+        fillPerso();
+        btn.innerHTML = old;
+    }
+
+    // --- UPLOAD ---
+    async function uploadFile(type) {
+        const file = document.getElementById(type === 'avatar' ? 'up-avatar' : 'up-cv').files[0];
+        if(!file) return; 
+        showToast("Envoi en cours...");
+        
+        const bucket = type === 'avatar' ? 'avatars' : 'documents';
+        const path = `${profileData.id}/${type}_${Date.now()}.${file.name.split('.').pop()}`;
+        
+        const { error } = await supabase.storage.from(bucket).upload(path, file);
+        if(!error) {
+            const url = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+            
+            // Mise à jour immédiate des données locales
+            if (type === 'avatar') {
+                profileData.image_url = url;
+                document.getElementById('preview-avatar').src = url;
+            } else {
+                profileData.cv_url = url;
+                fillPerso(); // REFRESH LE BADGE VERT DU CV
+            }
+
+            await updateProfile({ [type === 'avatar' ? 'image_url' : 'cv_url']: url });
+            showToast("Fichier mis à jour");
+        }
+    }
+
+    // --- PUBLICATIONS / COURS / INTER --- (Code standard v3.1 conservé)
     function renderPublications() {
         const container = document.getElementById('pubs-container');
         if (!profileData.publications || profileData.publications.length === 0) {
@@ -323,7 +464,6 @@
                     </div>
                     <div>
                         <label>Description</label><textarea style="height:115px;" onchange="updateItem('publications', '${p.id}', 'description', this.value)">${p.description || ''}</textarea>
-                        
                         <label style="margin-top:10px;">Fichier Joint (PDF)</label>
                         <div class="file-input-group">
                             ${p.fichier_url ? `<a href="${p.fichier_url}" target="_blank" class="current-file-badge"><i data-lucide="file-check" size="14"></i> ${getFileName(p.fichier_url)}</a>` : ''}
@@ -336,7 +476,6 @@
     }
     window.addPublication = async () => createItem('publications', { texte: 'Nouvelle publication', categorie: 'Articles' });
 
-    // 3. COURS
     function renderCourses() {
         const container = document.getElementById('courses-container');
         if (!profileData.courses || profileData.courses.length === 0) {
@@ -353,7 +492,7 @@
                     <div><label>Description</label><textarea style="height:82px;" onchange="updateItem('courses', '${c.id}', 'description', this.value)">${c.description || ''}</textarea></div>
                 </div>
                 <div style="margin-top:20px; border-top:1px solid #eee; padding-top:15px;">
-                    <label style="margin-bottom:10px;">Contenu & Supports</label>
+                    <label style="margin-bottom:10px;">Contenu</label>
                     <div id="course-sections-${c.id}">
                         ${(c.sections || []).map((sec, idx) => `
                             <div class="course-section-row">
@@ -366,7 +505,7 @@
                         `).join('')}
                     </div>
                     <div style="background:#f1f5f9; padding:12px; border-radius:8px; margin-top:12px; display:flex; gap:10px; align-items:center;">
-                        <input type="text" id="sec-label-${c.id}" placeholder="Nom (ex: Slides CM1)" style="flex:1; margin:0; background:white;">
+                        <input type="text" id="sec-label-${c.id}" placeholder="Nom" style="flex:1; margin:0; background:white;">
                         <select id="sec-type-${c.id}" style="width:100px; margin:0; background:white;"><option value="file">Fichier</option><option value="link">Lien</option></select>
                         <div id="sec-input-area-${c.id}" style="flex:1;"><input type="file" id="sec-file-${c.id}" style="margin:0; background:white;"></div>
                         <button class="btn-primary" style="padding:10px 16px;" onclick="addCourseSection('${c.id}')">+</button>
@@ -385,7 +524,6 @@
     }
     window.createCourse = async () => createItem('courses', { title: 'Nouveau Cours', category: 'Master', sections: [] });
 
-    // 4. INTERVENTIONS
     function renderInterventions() {
         const container = document.getElementById('interventions-container');
         if (!profileData.interventions || profileData.interventions.length === 0) {
@@ -393,11 +531,11 @@
         }
         container.innerHTML = profileData.interventions.map(i => `
             <div class="item-card" style="display:flex; gap:20px; align-items:flex-start;">
-                <button class="delete-btn-abs" onclick="deleteItem('interventions', '${i.id}')" style="top:10px; right:10px;"><i data-lucide="trash-2"></i></button>
+                <button class="delete-btn-abs" onclick="deleteItem('interventions', '${i.id}')"><i data-lucide="trash-2"></i></button>
                 <div style="flex:1;">
                     <div style="display:flex; gap:15px; margin-bottom:12px;">
                         <input type="date" value="${i.event_date}" onchange="updateItem('interventions', '${i.id}', 'event_date', this.value)" style="width:150px;">
-                        <input type="text" value="${i.location || ''}" placeholder="Lieu (Paris...)" onchange="updateItem('interventions', '${i.id}', 'location', this.value)" style="flex:1;">
+                        <input type="text" value="${i.location || ''}" placeholder="Lieu" onchange="updateItem('interventions', '${i.id}', 'location', this.value)" style="flex:1;">
                     </div>
                     <input type="text" value="${i.title}" placeholder="Titre / Contexte" onchange="updateItem('interventions', '${i.id}', 'title', this.value)" style="font-weight:600; margin-bottom:12px;">
                     <div style="display:flex; gap:12px; align-items:center;">
@@ -413,43 +551,20 @@
     }
     window.createIntervention = async () => createItem('interventions', { title: 'Nouvelle Intervention', event_date: new Date().toISOString().split('T')[0] });
 
-    // PERSO (CV)
-    function fillPerso() {
-        document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
-        document.getElementById('field-scholar').value = profileData.scholar_url || '';
-        
-        // AFFICHAGE DU NOM DU CV
-        const cvArea = document.getElementById('cv-display-area');
-        if(profileData.cv_url) {
-            cvArea.innerHTML = `<a href="${profileData.cv_url}" target="_blank" class="current-file-badge"><i data-lucide="file-user" size="16"></i> ${getFileName(profileData.cv_url)}</a>`;
-            document.getElementById('link-cv').classList.remove('hidden'); 
-        } else {
-            cvArea.innerHTML = '';
-        }
-        lucide.createIcons();
+    // UTILS
+    function getFileName(url) {
+        if(!url) return null;
+        try { let name = decodeURIComponent(url.split('/').pop()); return name.replace(/^\d+_/, ''); } catch(e) { return "Fichier existant"; }
     }
-    window.savePerso = async () => {
-        const btn = document.querySelector('#mod-perso .btn-primary');
-        const old = btn.innerHTML; btn.innerHTML = "Enregistrement...";
-        await updateProfile({ 
-            linkedin_url: document.getElementById('field-linkedin').value,
-            scholar_url: document.getElementById('field-scholar').value,
-            header_menu: profileData.header_menu,
-            footer_menu: profileData.footer_menu
-        });
-        btn.innerHTML = old;
-    }
-
-    // UTILS GENERIC
     window.addCourseSection = async (courseId) => {
         const label = document.getElementById(`sec-label-${courseId}`).value;
         const type = document.getElementById(`sec-type-${courseId}`).value;
-        if(!label) return alert("Mettez un nom !");
+        if(!label) return alert("Nom requis");
         let url = "";
         if (type === 'file') {
             const fileInput = document.getElementById(`sec-file-${courseId}`);
             const file = fileInput.files[0];
-            if (!file) return alert("Choisissez un fichier.");
+            if (!file) return alert("Fichier requis");
             showToast("Upload en cours...");
             const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
             const { error } = await supabase.storage.from('documents').upload(path, file);
@@ -457,7 +572,7 @@
             url = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
         } else {
             url = document.getElementById(`sec-link-${courseId}`).value;
-            if(!url) return alert("Mettez un lien.");
+            if(!url) return alert("Lien requis");
         }
         const course = profileData.courses.find(c => c.id === courseId);
         if(!course.sections) course.sections = [];
@@ -481,19 +596,6 @@
     async function deleteItem(table, id) {
         if(!confirm("Supprimer ?")) return; await supabase.from(table).delete().eq('id', id); profileData[table] = profileData[table].filter(x => x.id !== id); refreshAll();
     }
-    async function uploadFile(type) {
-        const file = document.getElementById(type === 'avatar' ? 'up-avatar' : 'up-cv').files[0];
-        if(!file) return; showToast("Envoi...");
-        const bucket = type === 'avatar' ? 'avatars' : 'documents';
-        const path = `${profileData.id}/${type}_${Date.now()}.${file.name.split('.').pop()}`;
-        const { error } = await supabase.storage.from(bucket).upload(path, file);
-        if(!error) {
-            const url = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
-            await updateProfile({ [type === 'avatar' ? 'image_url' : 'cv_url']: url });
-            if(type === 'avatar') document.getElementById('preview-avatar').src = url;
-            else fillPerso(); // Refresh CV display
-        }
-    }
     async function uploadItemFile(table, id, inputId) {
         const file = document.getElementById(inputId).files[0];
         if(!file) return; showToast("Envoi du fichier...");
@@ -508,28 +610,12 @@
     async function updateProfile(updates) {
         await supabase.from('profiles').update(updates).eq('id', profileData.id);
         const { data } = await supabase.from('profiles').select('*').eq('id', profileData.id);
-        if(data) profileData = { ...profileData, ...data[0] }; // Force update local data
+        if(data) profileData = { ...profileData, ...data[0] };
         showToast("Modifications publiées");
         refreshPreview();
     }
-    function renderMenus() {
-        ['header', 'footer'].forEach(type => {
-            const list = document.getElementById(type + '-list'); const items = profileData[type + '_menu'] || [];
-            list.innerHTML = items.map((item, i) => `
-                <div style="display:flex; gap:10px; margin-bottom:8px;">
-                    <input type="text" value="${item.text}" onchange="updateMenu('${type}', ${i}, 'text', this.value)" style="flex:1" placeholder="Texte">
-                    <input type="text" value="${item.link}" onchange="updateMenu('${type}', ${i}, 'link', this.value)" style="flex:1" placeholder="Lien">
-                    <button onclick="removeMenu('${type}', ${i})" style="border:none; background:none; color:red;">×</button>
-                </div>`).join('');
-        });
-    }
-    window.updateMenu = (type, i, key, val) => { if(!profileData[type+'_menu']) profileData[type+'_menu']=[]; profileData[type+'_menu'][i][key]=val; }
-    window.addMenu = (type) => { if(!profileData[type+'_menu']) profileData[type+'_menu']=[]; profileData[type+'_menu'].push({text:'Lien', link:'#'}); renderMenus(); }
-    window.removeMenu = (type, i) => { profileData[type+'_menu'].splice(i, 1); renderMenus(); }
-    window.addMenuItem = (type) => { if(!profileData[type+'_menu']) profileData[type+'_menu']=[]; profileData[type+'_menu'].push({text:'Nouveau', link:'#'}); renderMenus(); }
     function fillRDV() { document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; document.getElementById('rdv-text').value = profileData.appointment_settings?.text || ''; }
     window.saveRDV = async () => updateProfile({ appointment_settings: { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }});
-    function refreshAll() { renderPublications(); renderCourses(); renderInterventions(); refreshPreview(); }
     function refreshPreview() { document.getElementById('site-preview').src = `index.html?prof=${profileData.slug}&t=${Date.now()}`; }
     function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=msg; t.classList.add('visible'); setTimeout(()=>t.classList.remove('visible'),3000); }
     window.handleLogout = async () => { await supabase.auth.signOut(); window.location.href='login.html'; }
