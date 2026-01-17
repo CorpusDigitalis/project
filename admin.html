@@ -24,6 +24,10 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
+        /* Animation de chargement */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spin { animation: spin 1s linear infinite; }
+
         /* --- SIDEBAR --- */
         nav { width: 280px; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; padding: 30px 20px; z-index: 50; }
         .logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.5px; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; }
@@ -71,7 +75,6 @@
         }
         .item-card:hover { box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); border-color: #cbd5e1; }
         
-        /* Barre de titre grise */
         .item-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 12px 20px; background: #f1f5f9; border-bottom: 1px solid var(--border);
@@ -86,7 +89,7 @@
         .delete-btn:hover { opacity: 1; background: #fee2e2; }
 
         .item-body { padding: 24px; display: flex; flex-wrap: wrap; gap: 24px; }
-        .col-fluid { flex: 1; min-width: 300px; } /* S'empile si écran < 600px */
+        .col-fluid { flex: 1; min-width: 300px; }
         
         /* CUSTOM FILE INPUT (Clean) */
         .custom-file-input { display: none; }
@@ -176,7 +179,7 @@
                         <img id="preview-avatar" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; background:#f1f5f9; border:1px solid #e2e8f0;">
                         <div>
                             <label>Photo de profil</label>
-                            <label for="up-avatar" class="file-label-btn" style="width:auto; padding: 10px 20px;">
+                            <label for="up-avatar" id="lbl-avatar" class="file-label-btn" style="width:auto; padding: 10px 20px;">
                                 <i data-lucide="upload"></i> Changer la photo
                             </label>
                             <input type="file" id="up-avatar" class="custom-file-input" accept="image/*" onchange="uploadFile('avatar')">
@@ -237,7 +240,7 @@
                     <div class="form-row" style="margin-top:30px; background:#f8fafc; padding:20px; border-radius:8px; border:1px solid #e2e8f0;">
                         <label style="margin-bottom:15px;">Votre CV (Format PDF)</label>
                         <div id="cv-display-area"></div>
-                        <label for="up-cv" class="file-label-btn">
+                        <label for="up-cv" id="lbl-cv" class="file-label-btn">
                             <i data-lucide="file-up"></i> Sélectionner un nouveau fichier PDF
                         </label>
                         <input type="file" id="up-cv" class="custom-file-input" accept=".pdf" onchange="uploadFile('cv')">
@@ -290,7 +293,7 @@
 
     async function init() {
         lucide.createIcons();
-        console.log("🚀 Démarrage Creator Studio v5.0 (Final)");
+        console.log("🚀 Démarrage Creator Studio v5.1 (UI Feedback)");
 
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
@@ -332,7 +335,61 @@
         btn.innerHTML = oldText; lucide.createIcons();
     }
 
-    // 2. PUBLICATIONS (DESIGN FLUIDE)
+    // --- UPLOAD AMÉLIORÉ (Preview + Feedback + CV Réactif) ---
+    async function uploadFile(type) {
+        const inputId = type === 'avatar' ? 'up-avatar' : 'up-cv';
+        const labelId = type === 'avatar' ? 'lbl-avatar' : 'lbl-cv';
+        const file = document.getElementById(inputId).files[0];
+        if (!file) return;
+
+        // 1. Preview Immédiate (Avatar uniquement)
+        if (type === 'avatar') {
+            const reader = new FileReader();
+            reader.onload = (e) => document.getElementById('preview-avatar').src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+
+        // 2. Feedback UI (Bouton Loading)
+        const labelBtn = document.getElementById(labelId);
+        const originalText = labelBtn.innerHTML;
+        labelBtn.innerHTML = `<i data-lucide="loader-2" class="spin"></i> Envoi...`;
+        labelBtn.style.opacity = "0.7";
+        lucide.createIcons();
+
+        try {
+            // Upload Supabase
+            const bucket = type === 'avatar' ? 'avatars' : 'documents';
+            const ext = file.name.split('.').pop();
+            const path = `${profileData.id}/${type}_${Date.now()}.${ext}`;
+
+            const { error } = await supabase.storage.from(bucket).upload(path, file);
+            if (error) throw error;
+
+            const url = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+
+            // Mise à jour DB
+            await updateProfile({ [type === 'avatar' ? 'image_url' : 'cv_url']: url });
+
+            // 3. Update UI Local (CV Réactif)
+            if (type === 'cv') {
+                profileData.cv_url = url; 
+                fillPerso(); // Affiche le badge vert immédiatement
+            }
+            
+            showToast("Fichier mis à jour avec succès !");
+
+        } catch (error) {
+            // 4. Erreur Explicite
+            alert("❌ Échec de l'envoi : " + error.message + "\nVérifiez votre connexion.");
+        } finally {
+            // Reset Bouton
+            labelBtn.innerHTML = originalText;
+            labelBtn.style.opacity = "1";
+            lucide.createIcons();
+        }
+    }
+
+    // 2. PUBLICATIONS
     function renderPublications() {
         const container = document.getElementById('pubs-container');
         if (!profileData.publications || profileData.publications.length === 0) {
@@ -368,7 +425,7 @@
     }
     window.addPublication = async () => createItem('publications', { texte: 'Nouvelle publication', categorie: 'Articles' });
 
-    // 3. COURS (DESIGN FLUIDE)
+    // 3. COURS
     function renderCourses() {
         const container = document.getElementById('courses-container');
         if (!profileData.courses || profileData.courses.length === 0) {
@@ -457,7 +514,7 @@
     }
     window.createIntervention = async () => createItem('interventions', { title: 'Nouvelle Intervention', event_date: new Date().toISOString().split('T')[0] });
 
-    // 5. PERSO (Header Fixe & Footer Libre)
+    // 5. PERSO
     function fillPerso() {
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
@@ -512,27 +569,6 @@
         const footerOptions = { show_cv: document.getElementById('toggle-cv').checked, show_li: document.getElementById('toggle-linkedin').checked, show_sc: document.getElementById('toggle-scholar').checked };
         await updateProfile({ linkedin_url: document.getElementById('field-linkedin').value, scholar_url: document.getElementById('field-scholar').value, header_menu: profileData.header_menu, footer_menu: profileData.footer_menu, footer_options: footerOptions });
         fillPerso(); btn.innerHTML = old; lucide.createIcons();
-    }
-
-    // UPLOADS
-    async function uploadFile(type) {
-        const file = document.getElementById(type === 'avatar' ? 'up-avatar' : 'up-cv').files[0];
-        if(!file) return; showToast("Upload en cours...");
-        const bucket = type === 'avatar' ? 'avatars' : 'documents';
-        const path = `${profileData.id}/${type}_${Date.now()}.${file.name.split('.').pop()}`;
-        const { error } = await supabase.storage.from(bucket).upload(path, file);
-        if(!error) {
-            const url = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
-            if (type === 'avatar') {
-                profileData.image_url = url;
-                document.getElementById('preview-avatar').src = url + '?t=' + Date.now();
-            } else {
-                profileData.cv_url = url;
-                fillPerso();
-            }
-            await updateProfile({ [type === 'avatar' ? 'image_url' : 'cv_url']: url });
-            showToast("Mis à jour !");
-        } else { alert("Erreur upload"); }
     }
 
     // UTILS GENERIC
