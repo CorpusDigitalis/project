@@ -10,74 +10,119 @@
     
     <style>
         :root { 
-            --bg-content: #f8fafc;
-            --sidebar: #0f172a; 
+            --bg-body: #f1f5f9; /* Gris très léger, plus moderne */
+            --bg-card: #ffffff;
+            --sidebar: #0f172a; /* Slate 900 */
             --sidebar-text: #94a3b8;
-            --sidebar-active: #1e293b;
-            --accent: #2563eb; 
+            --accent: #0f172a; 
+            --accent-hover: #1e293b;
             --border: #e2e8f0; 
-            --text: #334155; 
-            --text-light: #64748b;
+            --text-main: #334155; 
+            --text-muted: #64748b;
             --success: #10b981;
             --danger: #ef4444;
+            --focus-ring: rgba(15, 23, 42, 0.1);
         }
 
-        body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* Animation */
+        /* --- ANIMATIONS --- */
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .spin { animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .card { animation: fadeIn 0.3s ease-out; }
 
-        /* SIDEBAR */
-        nav { width: 280px; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; padding: 30px 20px; z-index: 50; overflow-y: auto; }
-        .logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.5px; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; }
-        .logo span { background: white; color: var(--sidebar); padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
+        /* --- SIDEBAR --- */
+        nav { width: 280px; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; padding: 30px 20px; z-index: 50; border-right: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-weight: 800; font-size: 0.95rem; letter-spacing: -0.02em; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; }
+        .logo span { background: white; color: var(--sidebar); padding: 3px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: 900; letter-spacing: 0.5px; }
 
-        .nav-group { margin-bottom: 30px; }
-        .nav-title { font-size: 0.7rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 15px; padding-left: 12px; letter-spacing: 1px; }
-        .nav-item { padding: 12px 16px; margin-bottom: 6px; cursor: pointer; border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: var(--sidebar-text); transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
-        .nav-item.active { background: var(--sidebar-active); color: white; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .nav-group { margin-bottom: 35px; }
+        .nav-title { font-size: 0.7rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 12px; padding-left: 12px; letter-spacing: 0.05em; }
+        .nav-item { padding: 10px 14px; margin-bottom: 4px; cursor: pointer; border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: var(--sidebar-text); transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+        .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .nav-item.active { background: rgba(255,255,255,0.1); color: white; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); }
         .nav-item.active i { color: #60a5fa; }
 
-        .user-mini { margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px; color: white;}
+        .user-mini { margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; color: white; }
         .logout-btn { color: #f87171; font-size: 0.8rem; font-weight: 500; cursor: pointer; background: none; border: none; padding: 0; opacity: 0.8; transition:0.2s; }
-        
-        /* MAIN LAYOUT */
-        .admin-layout { display: flex; flex: 1; overflow: hidden; background: var(--bg-content); border-radius: 30px 0 0 30px; margin-left: -20px; box-shadow: -20px 0 50px rgba(0,0,0,0.2); z-index: 100; position: relative; }
-        .editor-side { flex: 1; padding: 40px 50px; overflow-y: auto; max-width: 900px; margin: 0 auto; }
-        
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
-        h2 { font-size: 1.8rem; font-weight: 800; margin: 0; letter-spacing: -0.8px; color: #0f172a; }
-        p.subtitle { color: var(--text-light); font-size: 1rem; margin-top: 8px; font-weight: 400; }
+        .logout-btn:hover { opacity: 1; text-decoration: underline; }
 
-        .card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03); }
+        /* --- MAIN LAYOUT --- */
+        .admin-layout { display: flex; flex: 1; overflow: hidden; background: var(--bg-body); border-radius: 24px 0 0 24px; margin-left: -10px; box-shadow: -20px 0 40px rgba(0,0,0,0.3); z-index: 100; position: relative; }
+        .editor-side { flex: 1; padding: 40px 60px; overflow-y: auto; max-width: 900px; margin: 0 auto; scroll-behavior: smooth; }
         
-        /* INPUTS & FORMS */
-        .form-row { margin-bottom: 20px; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--text-light); letter-spacing: 0.5px; }
-        input, textarea, select { 
-            width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; 
-            font-family: inherit; font-size: 0.95rem; transition: 0.2s; box-sizing: border-box; background: #f8fafc; color: #334155; 
+        /* HEADER SECTION */
+        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
+        h2 { font-size: 1.75rem; font-weight: 800; margin: 0; letter-spacing: -0.03em; color: #0f172a; }
+        p.subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; font-weight: 400; }
+
+        /* CARDS (Premium Look) */
+        .card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            padding: 32px; 
+            margin-bottom: 24px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* Soft shadow */
         }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+        
+        /* FORM ELEMENTS (SaaS Style) */
+        .form-row { margin-bottom: 24px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--text-muted); letter-spacing: 0.05em; }
+        
+        input[type="text"], input[type="url"], input[type="date"], textarea, select { 
+            width: 100%; padding: 12px 16px; 
+            border: 1px solid #cbd5e1; border-radius: 8px; 
+            font-family: inherit; font-size: 0.95rem; color: var(--text-main);
+            transition: all 0.2s ease; box-sizing: border-box; background: #fff;
+        }
+        input:focus, textarea:focus, select:focus { 
+            outline: none; border-color: var(--accent); 
+            box-shadow: 0 0 0 4px var(--focus-ring); 
+        }
+        textarea { resize: vertical; line-height: 1.6; }
 
-        .btn-primary { background: #0f172a; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.2s; box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.2); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3); }
-        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; white-space: nowrap; }
-        .btn-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        /* BUTTONS (Refined) */
+        .btn-primary { 
+            background: var(--accent); color: white; border: none; 
+            padding: 12px 24px; border-radius: 10px; 
+            font-weight: 600; cursor: pointer; font-size: 0.9rem; 
+            display: inline-flex; align-items: center; gap: 8px; 
+            transition: all 0.2s ease; 
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); 
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(15, 23, 42, 0.2); background: var(--accent-hover); }
+        
+        /* Bouton secondaire STANDARD */
+        .btn-secondary { 
+            background: white; border: 1px solid var(--border); color: var(--text-main); 
+            padding: 10px 18px; border-radius: 8px; cursor: pointer; 
+            font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; 
+            transition: 0.2s; white-space: nowrap; 
+        }
+        .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; color: #0f172a; }
 
-        /* --- CARDS RESPONSIVE (LA SOLUTION) --- */
+        /* NOUVEAU : Bouton "Dashed" pour les ajouts (Le fameux bouton moche remplacé) */
+        .btn-dashed {
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px;
+            color: var(--text-muted); font-weight: 600; padding: 14px; margin-top: 15px;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn-dashed:hover { background: #fff; border-color: var(--accent); color: var(--accent); }
+
+        /* --- CARDS ITEM FLUIDE (Responsive) --- */
         .item-card { 
             background: #fff; border: 1px solid var(--border); border-radius: 12px; 
             margin-bottom: 20px; overflow: hidden; transition: 0.2s; display: flex; flex-direction: column;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .item-card:hover { box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+        .item-card:hover { box-shadow: 0 10px 30px -5px rgba(0,0,0,0.08); border-color: #cbd5e1; transform: translateY(-2px); }
         
-        /* 1. HEADER DE CARTE (Sépare Titre et Poubelle) */
         .item-header {
             display: flex; justify-content: space-between; align-items: center; gap: 15px;
-            padding: 12px 20px; background: #f1f5f9; border-bottom: 1px solid var(--border);
+            padding: 14px 24px; background: #f8fafc; border-bottom: 1px solid var(--border);
         }
         .item-title-input { 
             font-weight: 700; border: none !important; background: transparent !important; 
@@ -85,62 +130,69 @@
         }
         .item-title-input:focus { text-decoration: underline; }
         
-        .delete-btn { color: var(--danger); background: white; border: 1px solid #fee2e2; cursor: pointer; opacity: 0.8; transition: 0.2s; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .delete-btn:hover { opacity: 1; background: #fee2e2; }
-
-        /* 2. BODY FLUIDE (S'adapte à la largeur) */
-        .item-body { padding: 20px; display: flex; flex-wrap: wrap; gap: 20px; }
-        .col-fluid { flex: 1; min-width: 280px; } /* Si < 280px, passe à la ligne */
-
-        /* 3. LIGNE D'AJOUT RESPONSIVE (Cours) */
-        .add-row-responsive {
-            display: flex; flex-wrap: wrap; gap: 10px; align-items: center; 
-            background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;
+        .delete-btn { 
+            color: var(--danger); background: white; border: 1px solid #fee2e2; 
+            cursor: pointer; transition: 0.2s; padding: 8px; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .add-row-responsive input[type="text"] { flex: 2; min-width: 120px; } /* Nom grandit */
-        .add-row-responsive select { width: auto; min-width: 90px; }
-        .add-row-responsive .file-area { flex: 2; min-width: 120px; }
+        .delete-btn:hover { background: #fee2e2; color: #dc2626; }
+
+        .item-body { padding: 24px; display: flex; flex-wrap: wrap; gap: 24px; }
+        .col-fluid { flex: 1; min-width: 300px; } 
+
+        /* Ligne Ajout Responsive */
+        .add-row-responsive {
+            display: flex; flex-wrap: wrap; gap: 12px; align-items: center; 
+            background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0;
+        }
+        .add-row-responsive input[type="text"] { flex: 2; min-width: 140px; }
+        .add-row-responsive select { width: auto; min-width: 100px; }
+        .add-row-responsive .file-area { flex: 2; min-width: 140px; }
         .add-row-responsive button { flex-shrink: 0; }
 
-        /* FILES & BADGES */
+        /* UPLOAD BUTTONS */
         .custom-file-input { display: none; }
         .file-label-btn {
             display: inline-flex; align-items: center; gap: 8px; justify-content: center;
             background: #fff; border: 1px solid #cbd5e1; color: #475569;
             padding: 12px; border-radius: 8px; cursor: pointer;
-            font-size: 0.9rem; font-weight: 500; transition: 0.2s; width: 100%; box-sizing: border-box; text-align: center;
+            font-size: 0.9rem; font-weight: 600; transition: 0.2s; width: 100%; box-sizing: border-box;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .file-label-btn:hover { background: #f8fafc; border-color: #94a3b8; color: #1e293b; }
-        
+        .file-label-btn:hover { background: #f8fafc; border-color: var(--accent); color: var(--accent); }
         .current-file-badge { 
             display: inline-flex; align-items: center; gap: 8px; 
-            background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; 
+            background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; 
             padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; 
-            margin-bottom: 8px; text-decoration: none; width: fit-content; max-width: 100%;
+            margin-bottom: 12px; text-decoration: none; max-width: 100%;
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; 
         }
 
-        /* HELPERS */
-        .course-section-row { display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 8px; margin-top: 8px; }
-        .hidden { display: none !important; }
-        .empty-state { text-align: center; padding: 40px; border: 2px dashed #e2e8f0; border-radius: 12px; color: #94a3b8; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-
         /* MENUS */
-        .menu-row { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 10px; }
-        .btn-icon { background: white; border: 1px solid #cbd5e1; border-radius: 6px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; transition: 0.2s; flex-shrink: 0; }
+        .menu-row { display: flex; gap: 12px; align-items: center; background: #fff; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 10px; transition: 0.2s; }
+        .menu-row:hover { border-color: #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
+        .menu-row.disabled { opacity: 0.6; background: #f8fafc; border-style: dashed; }
+        .btn-icon { background: white; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; transition: 0.2s; flex-shrink: 0; }
+        .btn-icon:hover { border-color: #64748b; color: #0f172a; }
         .btn-icon.danger:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
-        .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+        
+        .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #f1f5f9; }
+        .switch-label { font-size: 0.95rem; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 12px; }
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         input:checked + .slider { background-color: var(--accent); } input:checked + .slider:before { transform: translateX(20px); }
 
+        /* HELPERS */
+        .empty-state { text-align: center; padding: 60px 20px; border: 2px dashed #e2e8f0; border-radius: 16px; color: #94a3b8; display: flex; flex-direction: column; align-items: center; gap: 15px; background: #fdfdfd; }
+        .hidden { display: none !important; }
+        
         /* TOAST & PREVIEW */
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0f172a; color: white; padding: 14px 28px; border-radius: 100px; font-weight: 500; opacity: 0; transition: 0.4s; z-index: 200; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); display:flex; align-items:center; gap:10px; }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0f172a; color: white; padding: 12px 28px; border-radius: 100px; font-weight: 600; opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 200; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3); display:flex; align-items:center; gap:12px; }
         #toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .preview-side { width: 500px; background: #f1f5f9; border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
-        .desktop-mockup { width: 100%; aspect-ratio: 16/10; background: white; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #cbd5e1; }
+        .preview-side { width: 600px; background: #f1f5f9; border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
+        .desktop-mockup { width: 100%; aspect-ratio: 16/10; background: white; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #cbd5e1; }
         .desktop-header { height: 32px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 12px; gap: 8px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; } .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #10b981; }
         .fake-url { flex: 1; height: 20px; background: white; border: 1px solid #e2e8f0; border-radius: 4px; margin-left: 10px; margin-right: 10px; }
@@ -149,12 +201,12 @@
         .preview-note { margin-top: 20px; color: #94a3b8; font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 6px; }
 
         @media (max-width: 1300px) { .preview-side { display: none; } }
-        @media (max-width: 768px) { nav { display: none; } .editor-side { padding: 20px; } }
+        @media (max-width: 768px) { nav { display: none; } .editor-side { padding: 25px; } .admin-layout { border-radius: 0; margin-left: 0; } }
     </style>
 </head>
 <body>
 
-    <div id="toast"><i data-lucide="check-circle" size="20"></i> <span id="toast-msg">Action effectuée</span></div>
+    <div id="toast"><i data-lucide="check-circle" size="20"></i> <span id="toast-msg">Sauvegardé</span></div>
 
     <nav>
         <div class="logo">CORPUS DIGITALIS <span>PRO</span></div>
@@ -187,18 +239,18 @@
                     <button class="btn-primary" onclick="saveProfil()"><i data-lucide="save"></i> Enregistrer</button>
                 </div>
                 <div class="card">
-                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:24px; margin-bottom:30px;">
-                        <img id="preview-avatar" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; background:#f1f5f9; border:1px solid #e2e8f0;">
+                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:30px; margin-bottom:40px; padding-bottom:30px; border-bottom:1px solid #f1f5f9;">
+                        <img id="preview-avatar" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; background:#f1f5f9; border:1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                         <div>
-                            <label>Photo de profil</label>
-                            <label for="up-avatar" id="lbl-avatar" class="file-label-btn" style="width:auto; padding: 10px 20px;">
+                            <label style="margin-bottom:12px;">Photo de profil</label>
+                            <label for="up-avatar" id="lbl-avatar" class="file-label-btn" style="width:auto; padding: 10px 24px;">
                                 <i data-lucide="upload"></i> Changer la photo
                             </label>
                             <input type="file" id="up-avatar" class="custom-file-input" accept="image/*" onchange="uploadFile('avatar')">
                         </div>
                     </div>
-                    <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name"></div>
-                    <div class="form-row"><label>Biographie</label><textarea id="field-bio" rows="6"></textarea></div>
+                    <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name" placeholder="Ex: Pr. Tristan Arbona"></div>
+                    <div class="form-row"><label>Biographie</label><textarea id="field-bio" rows="6" placeholder="Votre parcours, vos spécialités..."></textarea></div>
                 </div>
             </section>
 
@@ -213,7 +265,7 @@
             </section>
 
             <section id="mod-interventions" class="module hidden">
-                <div class="header-flex"><div><h2>Interventions</h2><p class="subtitle">Conférences et Médias.</p></div><button class="btn-primary" onclick="createIntervention()"><i data-lucide="plus"></i> Ajouter une date</button></div>
+                <div class="header-flex"><div><h2>Interventions</h2><p class="subtitle">Conférences et Médias.</p></div><button class="btn-primary" onclick="createIntervention()"><i data-lucide="plus"></i> Ajouter</button></div>
                 <div id="interventions-container"></div>
             </section>
 
@@ -225,21 +277,25 @@
 
                 <div class="card">
                     <h3 style="margin-top:0;">Haut de page (Header)</h3>
-                    <p style="font-size:0.9rem; color:#64748b; margin-bottom:20px;">Liste des pages. Vous pouvez les renommer ou les masquer.</p>
+                    <p style="font-size:0.9rem; color:#64748b; margin-bottom:25px;">Liste des pages. Vous pouvez les renommer ou les masquer.</p>
                     <div id="header-list-container"></div>
                 </div>
 
                 <div class="card">
                     <h3 style="margin-top:0;">Pied de page (Footer)</h3>
+                    
                     <label style="margin-top:20px; color:#0f172a;">Liens Système</label>
-                    <div style="background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:20px;">
-                        <div class="switch-row"><div class="switch-label">Afficher le lien CV</div><label class="switch"><input type="checkbox" id="toggle-cv"><span class="slider"></span></label></div>
-                        <div class="switch-row"><div class="switch-label">Afficher LinkedIn</div><label class="switch"><input type="checkbox" id="toggle-linkedin"><span class="slider"></span></label></div>
-                        <div class="switch-row" style="border:none;"><div class="switch-label">Afficher Google Scholar</div><label class="switch"><input type="checkbox" id="toggle-scholar"><span class="slider"></span></label></div>
+                    <div style="background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:25px;">
+                        <div class="switch-row"><div class="switch-label"><i data-lucide="file-text" size="18"></i> Afficher le lien CV</div><label class="switch"><input type="checkbox" id="toggle-cv"><span class="slider"></span></label></div>
+                        <div class="switch-row"><div class="switch-label"><i data-lucide="linkedin" size="18"></i> Afficher LinkedIn</div><label class="switch"><input type="checkbox" id="toggle-linkedin"><span class="slider"></span></label></div>
+                        <div class="switch-row" style="border:none;"><div class="switch-label"><i data-lucide="graduation-cap" size="18"></i> Afficher Google Scholar</div><label class="switch"><input type="checkbox" id="toggle-scholar"><span class="slider"></span></label></div>
                     </div>
+
                     <label style="color:#0f172a;">Liens Libres</label>
                     <div id="footer-list"></div>
-                    <button class="btn-secondary" onclick="addFooterItem()" style="margin-top:10px;">+ Ajouter un lien libre</button>
+                    <button class="btn-dashed" onclick="addFooterItem()">
+                        <i data-lucide="plus-circle"></i> Ajouter un lien libre
+                    </button>
                 </div>
 
                 <div class="card">
@@ -247,7 +303,7 @@
                     <div class="form-row"><label>Lien LinkedIn</label><input type="url" id="field-linkedin" placeholder="https://linkedin.com/in/..."></div>
                     <div class="form-row"><label>Lien Google Scholar</label><input type="url" id="field-scholar" placeholder="https://scholar.google.com/..."></div>
                     
-                    <div class="form-row" style="margin-top:30px; background:#f8fafc; padding:20px; border-radius:8px; border:1px solid #e2e8f0;">
+                    <div class="form-row" style="margin-top:30px; background:#f8fafc; padding:25px; border-radius:12px; border:1px solid #e2e8f0;">
                         <label style="margin-bottom:15px;">Votre CV (Format PDF)</label>
                         <div id="cv-display-area"></div>
                         <label for="up-cv" id="lbl-cv" class="file-label-btn">
@@ -285,6 +341,15 @@
 
     let profileData = null;
     const PUB_CATEGORIES = ["Articles", "Ouvrages", "Chapitres", "Conférences", "Thèses", "Rapports", "Presse", "Divers"];
+    
+    // LISTE FIXE HEADER
+    const DEFAULT_HEADER = [
+        { id: 'home', label: 'Accueil', link: 'index.html', visible: true },
+        { id: 'pubs', label: 'Publications', link: '#publications', visible: true },
+        { id: 'cours', label: 'Enseignements', link: '#cours', visible: true },
+        { id: 'inter', label: 'Interventions', link: '#interventions', visible: true },
+        { id: 'rdv', label: 'Rendez-vous', link: '#rdv', visible: true }
+    ];
 
     function getFileName(url) {
         if(!url) return null;
@@ -293,7 +358,7 @@
 
     async function init() {
         lucide.createIcons();
-        console.log("🚀 V7.0 Responsive & Unlocked");
+        console.log("🚀 V8.0 Ultimate Polish");
 
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
@@ -304,6 +369,14 @@
         profileData = Array.isArray(data) ? (data[0] || null) : data;
         if(!profileData) { alert("Profil introuvable."); return; }
 
+        // --- FIX : INITIALISATION FORCÉE DU HEADER SI VIDE ---
+        if (!profileData.header_menu || !Array.isArray(profileData.header_menu) || profileData.header_menu.length < 5) {
+            console.log("🔧 Initialisation du Header par défaut");
+            profileData.header_menu = JSON.parse(JSON.stringify(DEFAULT_HEADER));
+        }
+        if (!profileData.footer_menu) profileData.footer_menu = [];
+
+        // Tri
         if(profileData.interventions) profileData.interventions.sort((a,b) => new Date(b.event_date) - new Date(a.event_date));
         if(profileData.courses) profileData.courses.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
@@ -362,10 +435,10 @@
         }
     }
 
-    // 2. PUBLICATIONS (Responsive Card)
+    // 2. PUBLICATIONS
     function renderPublications() {
         const container = document.getElementById('pubs-container');
-        if (!profileData.publications?.length) { container.innerHTML = `<div class="empty-state">Aucune publication.</div>`; return; }
+        if (!profileData.publications?.length) { container.innerHTML = `<div class="empty-state"><i data-lucide="book" size="48" style="opacity:0.2"></i><p>Aucune publication pour l'instant.</p></div>`; lucide.createIcons(); return; }
         container.innerHTML = profileData.publications.map(p => `
             <div class="item-card">
                 <div class="item-header">
@@ -382,7 +455,7 @@
                         <div style="margin-top:15px;">
                             <label>Document Joint</label>
                             ${p.fichier_url ? `<div class="current-file-badge"><i data-lucide="check" size="14"></i> ${getFileName(p.fichier_url)}</div>` : ''}
-                            <label for="fp-${p.id}" class="file-label-btn">Choisir PDF</label><input type="file" id="fp-${p.id}" class="custom-file-input" onchange="uploadItemFile('publications', '${p.id}', 'fp-${p.id}')">
+                            <label for="fp-${p.id}" class="file-label-btn"><i data-lucide="file"></i> Choisir PDF</label><input type="file" id="fp-${p.id}" class="custom-file-input" onchange="uploadItemFile('publications', '${p.id}', 'fp-${p.id}')">
                         </div>
                     </div>
                 </div>
@@ -391,10 +464,10 @@
     }
     window.addPublication = async () => createItem('publications', { texte: 'Nouvelle publication', categorie: 'Articles' });
 
-    // 3. COURS (Responsive Card + Ligne Ajout fluide)
+    // 3. COURS
     function renderCourses() {
         const container = document.getElementById('courses-container');
-        if (!profileData.courses?.length) { container.innerHTML = `<div class="empty-state">Aucun cours.</div>`; return; }
+        if (!profileData.courses?.length) { container.innerHTML = `<div class="empty-state"><i data-lucide="graduation-cap" size="48" style="opacity:0.2"></i><p>Ajoutez un premier cours.</p></div>`; lucide.createIcons(); return; }
         container.innerHTML = profileData.courses.map(c => `
             <div class="item-card">
                 <div class="item-header">
@@ -434,10 +507,10 @@
     }
     window.createCourse = async () => createItem('courses', { title: 'Nouveau Cours', category: 'Master', sections: [] });
 
-    // 4. INTERVENTIONS (Responsive Card)
+    // 4. INTERVENTIONS
     function renderInterventions() {
         const container = document.getElementById('interventions-container');
-        if (!profileData.interventions?.length) { container.innerHTML = `<div class="empty-state">Aucune intervention.</div>`; return; }
+        if (!profileData.interventions?.length) { container.innerHTML = `<div class="empty-state"><i data-lucide="mic" size="48" style="opacity:0.2"></i><p>Aucune intervention.</p></div>`; lucide.createIcons(); return; }
         container.innerHTML = profileData.interventions.map(i => `
             <div class="item-card">
                 <div class="item-header">
@@ -456,7 +529,7 @@
                     <div class="col-fluid">
                         <label>Document</label>
                         ${i.file_url ? `<div class="current-file-badge"><i data-lucide="check" size="14"></i> ${getFileName(i.file_url)}</div>` : ''}
-                        <label class="file-label-btn" for="fi-${i.id}">Choisir</label>
+                        <label class="file-label-btn" for="fi-${i.id}"><i data-lucide="file"></i> Choisir</label>
                         <input type="file" id="fi-${i.id}" class="custom-file-input" onchange="uploadItemFile('interventions', '${i.id}', 'fi-${i.id}')">
                     </div>
                 </div>
@@ -470,11 +543,18 @@
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         const cvArea = document.getElementById('cv-display-area');
         cvArea.innerHTML = profileData.cv_url ? `<a href="${profileData.cv_url}" target="_blank" class="current-file-badge"><i data-lucide="file-text" size="16"></i> ${getFileName(profileData.cv_url)}</a>` : '';
+        
+        // SWITCHS DEBLOQUES
+        const opts = profileData.footer_options || { show_cv: true, show_li: true, show_sc: true };
+        document.getElementById('toggle-cv').checked = opts.show_cv;
+        document.getElementById('toggle-linkedin').checked = opts.show_li;
+        document.getElementById('toggle-scholar').checked = opts.show_sc;
     }
     window.savePerso = async () => {
         const btn = document.querySelector('#mod-perso .btn-primary'); const old = btn.innerHTML; btn.innerHTML = "...";
-        await updateProfile({ linkedin_url: document.getElementById('field-linkedin').value, scholar_url: document.getElementById('field-scholar').value });
-        btn.innerHTML = old;
+        const footerOptions = { show_cv: document.getElementById('toggle-cv').checked, show_li: document.getElementById('toggle-linkedin').checked, show_sc: document.getElementById('toggle-scholar').checked };
+        await updateProfile({ linkedin_url: document.getElementById('field-linkedin').value, scholar_url: document.getElementById('field-scholar').value, header_menu: profileData.header_menu, footer_menu: profileData.footer_menu, footer_options: footerOptions });
+        fillPerso(); btn.innerHTML = old;
     }
 
     // UTILS GENERIC & EXPOSED
@@ -521,14 +601,38 @@
     }
 
     function renderMenus() {
-        ['header', 'footer'].forEach(type => {
-            const list = document.getElementById(type + '-list'); const items = profileData[type + '_menu'] || [];
-            list.innerHTML = items.map((item, i) => `<div class="menu-row"><input type="text" value="${item.text}" onchange="updateMenu('${type}', ${i}, 'text', this.value)" style="flex:1"><input type="text" value="${item.link}" onchange="updateMenu('${type}', ${i}, 'link', this.value)" style="flex:1"><button class="btn-icon danger" onclick="removeMenu('${type}', ${i})">×</button></div>`).join('');
-        });
+        // A. HEADER FIXE
+        const headerContainer = document.getElementById('header-list-container');
+        if(profileData.header_menu) {
+            headerContainer.innerHTML = profileData.header_menu.map((item, i) => `
+                <div class="menu-row ${item.visible ? '' : 'disabled'}">
+                    <div style="font-size:0.8rem; background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:600; width:24px; text-align:center; color:#94a3b8;">${i+1}</div>
+                    <input type="text" value="${item.label}" onchange="updateHeader(${i}, 'label', this.value)" style="flex:1; font-weight:600;">
+                    <div class="menu-actions">
+                        <button class="btn-icon ${item.visible ? '' : 'danger'}" onclick="toggleHeader(${i})"><i data-lucide="${item.visible ? 'eye' : 'eye-off'}" size="16"></i></button>
+                    </div>
+                </div>`).join('');
+        }
+
+        // B. FOOTER LIBRE
+        const footerContainer = document.getElementById('footer-list');
+        if(profileData.footer_menu) {
+            footerContainer.innerHTML = profileData.footer_menu.map((item, i) => `
+                <div class="menu-row">
+                    <input type="text" value="${item.text}" onchange="updateFooter(${i}, 'text', this.value)" placeholder="Nom" style="flex:1">
+                    <input type="text" value="${item.link}" onchange="updateFooter(${i}, 'link', this.value)" placeholder="Lien" style="flex:1">
+                    <button class="btn-icon danger" onclick="removeFooter(${i})"><i data-lucide="trash-2" size="16"></i></button>
+                </div>`).join('');
+        }
+        lucide.createIcons();
     }
-    window.updateMenu = (t, i, k, v) => { if(!profileData[t+'_menu']) profileData[t+'_menu']=[]; profileData[t+'_menu'][i][k]=v; }
-    window.addMenuItem = (t) => { if(!profileData[t+'_menu']) profileData[t+'_menu']=[]; profileData[t+'_menu'].push({text:'Nouveau', link:'#'}); renderMenus(); }
-    window.removeMenu = (t, i) => { profileData[t+'_menu'].splice(i, 1); renderMenus(); }
+
+    window.updateHeader = (i, k, v) => { profileData.header_menu[i][k] = v; }
+    window.toggleHeader = (i) => { profileData.header_menu[i].visible = !profileData.header_menu[i].visible; renderMenus(); }
+    
+    window.addFooterItem = () => { profileData.footer_menu.push({text:'', link:''}); renderMenus(); }
+    window.removeFooter = (i) => { profileData.footer_menu.splice(i, 1); renderMenus(); }
+    window.updateFooter = (i, k, v) => { profileData.footer_menu[i][k] = v; }
 
     function fillRDV() { document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; document.getElementById('rdv-text').value = profileData.appointment_settings?.text || ''; }
     window.saveRDV = async () => updateProfile({ appointment_settings: { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }});
