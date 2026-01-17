@@ -22,10 +22,8 @@
             --danger: #ef4444;
         }
 
-        /* 1. FIX COINS : Le body prend la couleur du menu pour éviter les trous blancs */
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* SIDEBAR */
         nav { width: 280px; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; padding: 30px 20px; z-index: 50; }
         .logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.5px; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; }
         .logo span { background: white; color: var(--sidebar); padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
@@ -39,9 +37,7 @@
 
         .user-mini { margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 15px; color: white;}
         .logout-btn { color: #f87171; font-size: 0.8rem; font-weight: 500; cursor: pointer; background: none; border: none; padding: 0; opacity: 0.8; transition:0.2s; }
-        .logout-btn:hover { opacity: 1; text-decoration: underline; }
 
-        /* MAIN LAYOUT */
         .admin-layout { display: flex; flex: 1; overflow: hidden; background: var(--bg-content); border-radius: 30px 0 0 30px; margin-left: -20px; box-shadow: -20px 0 50px rgba(0,0,0,0.2); z-index: 100; position: relative; }
         .editor-side { flex: 1; padding: 50px 60px; overflow-y: auto; max-width: 900px; margin: 0 auto; }
         
@@ -60,21 +56,14 @@
         .btn-primary { background: #0f172a; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.2s; box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.2); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3); }
         .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; }
-        .btn-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; }
 
-        /* BADGES FICHIERS */
         .current-file-badge { display: inline-flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; text-decoration: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .file-input-group { display: flex; flex-direction: column; gap: 5px; }
 
-        /* MENU LISTS UI */
         .menu-row { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 8px; }
         .menu-row.disabled { opacity: 0.6; background: #f1f5f9; }
-        .menu-actions { display: flex; gap: 5px; }
         .btn-icon { background: white; border: 1px solid #cbd5e1; border-radius: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; transition: 0.2s; }
-        .btn-icon:hover { border-color: #94a3b8; color: #334155; }
-        .btn-icon.danger:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
-
-        /* SWITCH UI */
+        
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
         .switch-label { font-size: 0.9rem; font-weight: 500; color: #334155; display: flex; align-items: center; gap: 10px; }
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
@@ -83,11 +72,8 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(20px); }
-        input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
 
-        /* ITEMS (Pubs, Cours) */
         .item-card { border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; background: #fdfdfd; position: relative; transition: 0.2s; }
-        .item-card:hover { background: white; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); border-color: #cbd5e1; }
         .delete-btn-abs { position: absolute; top: 20px; right: 20px; color: var(--danger); background: none; border: none; cursor: pointer; opacity: 0.4; transition: 0.2s; padding: 5px; }
         .delete-btn-abs:hover { opacity: 1; background: #fee2e2; border-radius: 6px; }
         .course-section-row { display: flex; gap: 12px; align-items: center; background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; margin-top: 10px; }
@@ -95,7 +81,6 @@
         .empty-state { text-align: center; padding: 40px; border: 2px dashed #e2e8f0; border-radius: 12px; color: #94a3b8; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .hidden { display: none !important; }
 
-        /* PREVIEW */
         .preview-side { width: 600px; background: #f1f5f9; border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
         .desktop-mockup { width: 100%; aspect-ratio: 16/10; background: white; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #cbd5e1; }
         .desktop-header { height: 32px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 12px; gap: 8px; }
@@ -114,7 +99,7 @@
 </head>
 <body>
 
-    <div id="toast"><i data-lucide="check-circle" size="20"></i> <span id="toast-msg">Modifications publiées</span></div>
+    <div id="toast"><i data-lucide="check-circle" size="20"></i> <span id="toast-msg">Action effectuée</span></div>
 
     <nav>
         <div class="logo">CORPUS DIGITALIS <span>PRO</span></div>
@@ -200,7 +185,6 @@
 
                 <div class="card">
                     <h3 style="margin-top:0;">Menu Principal</h3>
-                    <p style="font-size:0.85rem; color:#64748b; margin-bottom:20px;">Activez, renommez ou réorganisez les pages.</p>
                     <div id="header-list-container"></div>
                 </div>
 
@@ -249,7 +233,6 @@
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-    // CONFIG
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -257,7 +240,6 @@
     let profileData = null;
     const PUB_CATEGORIES = ["Articles", "Ouvrages", "Chapitres", "Conférences", "Thèses", "Rapports", "Presse", "Divers"];
 
-    // DEFAULT HEADER POUR ÉVITER LES BUGS SI NULL
     const DEFAULT_HEADER = [
         { id: 'home', label: 'Accueil', link: 'index.html', visible: true },
         { id: 'pubs', label: 'Publications', link: '#publications', visible: true },
@@ -266,7 +248,6 @@
         { id: 'rdv', label: 'Rendez-vous', link: '#rdv', visible: true }
     ];
 
-    // UTILS POUR FICHIERS
     function getFileName(url) {
         if(!url) return null;
         try { let name = decodeURIComponent(url.split('/').pop()); return name.replace(/^\d+_/, ''); } catch(e) { return "Fichier existant"; }
@@ -274,25 +255,23 @@
 
     async function init() {
         lucide.createIcons();
-        console.log("🚀 Démarrage Creator Studio v3.3 (Stable Fix)");
+        console.log("🚀 Démarrage Creator Studio v3.4 (Fix Buttons & Cache)");
 
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
 
-        const { data, error } = await supabase.from('profiles').select('*, publications(*), courses(*), interventions(*)') .eq('id', session.user.id);
+        const { data, error } = await supabase.from('profiles').select('*, publications(*), courses(*), interventions(*)').eq('id', session.user.id);
         
-        if (error) { console.error(error); if(error.code !== 'PGRST116') alert("Erreur : " + error.message); return; }
+        if (error) { console.error(error); alert("Erreur Supabase : " + error.message); return; }
         
         profileData = Array.isArray(data) ? (data[0] || null) : data;
-        if(!profileData) { alert("Profil introuvable."); return; }
+        if(!profileData) { alert("Profil introuvable. Veuillez vous reconnecter."); return; }
 
-        // SÉCURITÉ ANTI-CRASH : Si les menus n'existent pas encore dans la base, on met les valeurs par défaut
-        if (!profileData.header_menu || !Array.isArray(profileData.header_menu) || !profileData.header_menu[0]?.id) {
+        if (!profileData.header_menu || !Array.isArray(profileData.header_menu)) {
             profileData.header_menu = JSON.parse(JSON.stringify(DEFAULT_HEADER));
         }
         if (!profileData.footer_menu) profileData.footer_menu = [];
 
-        // Tri des listes
         if(profileData.interventions) profileData.interventions.sort((a,b) => new Date(b.event_date) - new Date(a.event_date));
         if(profileData.courses) profileData.courses.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
@@ -314,7 +293,10 @@
     function fillIdentity() {
         document.getElementById('field-name').value = profileData.name || '';
         document.getElementById('field-bio').value = profileData.bio || '';
-        if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
+        if(profileData.image_url) {
+            // AJOUT DU TIMESTAMP POUR FORCER LE RAFRAICHISSEMENT
+            document.getElementById('preview-avatar').src = profileData.image_url + '?t=' + Date.now();
+        }
     }
     window.saveProfil = async () => {
         const btn = document.querySelector('#mod-profil .btn-primary');
@@ -326,7 +308,6 @@
     // 2. PUBLICATIONS
     function renderPublications() {
         const container = document.getElementById('pubs-container');
-        // FIX: Retour du carré gris si vide
         if (!profileData.publications || profileData.publications.length === 0) {
             container.innerHTML = `<div class="empty-state"><i data-lucide="book" size="32"></i><p>Aucune publication pour l'instant.</p></div>`; lucide.createIcons(); return;
         }
@@ -359,7 +340,6 @@
     // 3. COURS
     function renderCourses() {
         const container = document.getElementById('courses-container');
-        // FIX: Retour du carré gris si vide
         if (!profileData.courses || profileData.courses.length === 0) {
             container.innerHTML = `<div class="empty-state"><i data-lucide="graduation-cap" size="32"></i><p>Ajoutez un premier cours.</p></div>`; lucide.createIcons(); return;
         }
@@ -434,12 +414,12 @@
     }
     window.createIntervention = async () => createItem('interventions', { title: 'Nouvelle Intervention', event_date: new Date().toISOString().split('T')[0] });
 
-    // 5. PERSO (Avec le FIX du CV Badge)
+    // 5. PERSO (CV & MENUS)
     function fillPerso() {
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         
-        // Refresh CV Badge (Correction Bug visuel)
+        // FIX DU BADGE CV
         const cvArea = document.getElementById('cv-display-area');
         if(profileData.cv_url) {
             cvArea.innerHTML = `<a href="${profileData.cv_url}" target="_blank" class="current-file-badge"><i data-lucide="file-user" size="16"></i> ${getFileName(profileData.cv_url)}</a>`;
@@ -447,13 +427,10 @@
             cvArea.innerHTML = '';
         }
 
-        // Toggles Footer System
         const opts = profileData.footer_options || { show_cv: true, show_li: true, show_sc: true };
         document.getElementById('toggle-cv').checked = opts.show_cv;
         document.getElementById('toggle-linkedin').checked = opts.show_li;
         document.getElementById('toggle-scholar').checked = opts.show_sc;
-
-        // Désactive les switchs si pas de lien
         document.getElementById('toggle-cv').disabled = !profileData.cv_url;
         document.getElementById('toggle-linkedin').disabled = !profileData.linkedin_url;
         document.getElementById('toggle-scholar').disabled = !profileData.scholar_url;
@@ -462,7 +439,6 @@
     }
 
     function renderMenus() {
-        // A. HEADER (Fixe avec ordre)
         const headerContainer = document.getElementById('header-list-container');
         headerContainer.innerHTML = profileData.header_menu.map((item, i) => `
             <div class="menu-row ${item.visible ? '' : 'disabled'}">
@@ -479,16 +455,14 @@
             </div>
         `).join('');
 
-        // B. FOOTER (Custom)
         const footerContainer = document.getElementById('footer-list');
         footerContainer.innerHTML = profileData.footer_menu.map((item, i) => `
             <div class="menu-row">
-                <input type="text" value="${item.text}" onchange="updateFooter(${i}, 'text', this.value)" placeholder="Nom (ex: Mentions Légales)" style="flex:1">
-                <input type="text" value="${item.link}" onchange="updateFooter(${i}, 'link', this.value)" placeholder="Lien (http...)" style="flex:1">
+                <input type="text" value="${item.text}" onchange="updateFooter(${i}, 'text', this.value)" placeholder="Nom" style="flex:1">
+                <input type="text" value="${item.link}" onchange="updateFooter(${i}, 'link', this.value)" placeholder="Lien" style="flex:1">
                 <button class="btn-icon danger" onclick="removeFooter(${i})"><i data-lucide="trash-2" size="16"></i></button>
             </div>
         `).join('');
-        
         lucide.createIcons();
     }
 
@@ -496,11 +470,8 @@
     window.updateHeader = (i, key, val) => { profileData.header_menu[i][key] = val; }
     window.toggleHeader = (i) => { profileData.header_menu[i].visible = !profileData.header_menu[i].visible; renderMenus(); }
     window.moveHeader = (i, dir) => {
-        if (dir === -1 && i > 0) {
-            [profileData.header_menu[i], profileData.header_menu[i-1]] = [profileData.header_menu[i-1], profileData.header_menu[i]];
-        } else if (dir === 1 && i < profileData.header_menu.length - 1) {
-            [profileData.header_menu[i], profileData.header_menu[i+1]] = [profileData.header_menu[i+1], profileData.header_menu[i]];
-        }
+        if (dir === -1 && i > 0) { [profileData.header_menu[i], profileData.header_menu[i-1]] = [profileData.header_menu[i-1], profileData.header_menu[i]]; }
+        else if (dir === 1 && i < profileData.header_menu.length - 1) { [profileData.header_menu[i], profileData.header_menu[i+1]] = [profileData.header_menu[i+1], profileData.header_menu[i]]; }
         renderMenus();
     }
     window.addFooterItem = () => { profileData.footer_menu.push({text:'', link:''}); renderMenus(); }
@@ -509,7 +480,7 @@
 
     window.savePerso = async () => {
         const btn = document.querySelector('#mod-perso .btn-primary');
-        const old = btn.innerHTML; btn.innerHTML = "Enregistrement...";
+        const old = btn.innerHTML; btn.innerHTML = `<i data-lucide="loader-2" class="spin"></i> Enregistrement...`; lucide.createIcons();
         const footerOptions = {
             show_cv: document.getElementById('toggle-cv').checked,
             show_li: document.getElementById('toggle-linkedin').checked,
@@ -523,33 +494,40 @@
             footer_options: footerOptions
         });
         fillPerso();
-        btn.innerHTML = old;
+        btn.innerHTML = old; lucide.createIcons();
     }
 
     // UTILS FICHIERS
     async function uploadFile(type) {
+        if(!profileData) return alert("Profil non chargé.");
         const file = document.getElementById(type === 'avatar' ? 'up-avatar' : 'up-cv').files[0];
         if(!file) return; showToast("Envoi en cours...");
+        
         const bucket = type === 'avatar' ? 'avatars' : 'documents';
         const path = `${profileData.id}/${type}_${Date.now()}.${file.name.split('.').pop()}`;
+        
         const { error } = await supabase.storage.from(bucket).upload(path, file);
         if(!error) {
             const url = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
             if (type === 'avatar') {
                 profileData.image_url = url;
-                document.getElementById('preview-avatar').src = url;
+                document.getElementById('preview-avatar').src = url + '?t=' + Date.now(); // FORCE REFRESH
             } else {
                 profileData.cv_url = url;
-                fillPerso(); 
+                fillPerso(); // MET A JOUR LE BADGE VERT
             }
             await updateProfile({ [type === 'avatar' ? 'image_url' : 'cv_url']: url });
             showToast("Fichier mis à jour");
+        } else {
+            alert("Erreur upload: " + error.message);
         }
     }
+
+    // UTILS COURS/ITEMS
     window.addCourseSection = async (courseId) => {
         const label = document.getElementById(`sec-label-${courseId}`).value;
         const type = document.getElementById(`sec-type-${courseId}`).value;
-        if(!label) return alert("Mettez un nom !");
+        if(!label) return alert("Nom requis");
         let url = "";
         if (type === 'file') {
             const fileInput = document.getElementById(`sec-file-${courseId}`);
@@ -562,7 +540,7 @@
             url = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
         } else {
             url = document.getElementById(`sec-link-${courseId}`).value;
-            if(!url) return alert("Mettez un lien.");
+            if(!url) return alert("Lien requis");
         }
         const course = profileData.courses.find(c => c.id === courseId);
         if(!course.sections) course.sections = [];
@@ -574,10 +552,29 @@
         course.sections.splice(idx, 1);
         await updateItem('courses', courseId, 'sections', course.sections);
     }
+    
+    // FONCTIONS GENERIQUES BLINDÉES
     async function createItem(table, defaultData) {
+        if(!profileData) return alert("Erreur : Profil non chargé.");
+        // UI FEEDBACK
+        const btnId = table === 'publications' ? '#mod-biblio button' : (table === 'courses' ? '#mod-cours button' : '#mod-interventions button');
+        const btn = document.querySelector(btnId);
+        const oldText = btn ? btn.innerHTML : '';
+        if(btn) btn.innerHTML = "Ajout...";
+
         defaultData.prof_id = profileData.id;
         const { data, error } = await supabase.from(table).insert([defaultData]).select();
-        if(!error) { if(!profileData[table]) profileData[table] = []; profileData[table].push(data[0]); refreshAll(); showToast("Élément créé"); }
+        
+        if(btn) btn.innerHTML = oldText;
+
+        if(!error) { 
+            if(!profileData[table]) profileData[table] = []; 
+            profileData[table].push(data[0]); 
+            refreshAll(); 
+            showToast("Élément créé"); 
+        } else {
+            alert("Erreur création : " + error.message);
+        }
     }
     async function updateItem(table, id, field, value) {
         await supabase.from(table).update({ [field]: value }).eq('id', id);
@@ -606,10 +603,12 @@
     }
     function fillRDV() { document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; document.getElementById('rdv-text').value = profileData.appointment_settings?.text || ''; }
     window.saveRDV = async () => updateProfile({ appointment_settings: { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }});
+    function refreshAll() { renderPublications(); renderCourses(); renderInterventions(); refreshPreview(); }
     function refreshPreview() { document.getElementById('site-preview').src = `index.html?prof=${profileData.slug}&t=${Date.now()}`; }
     function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=msg; t.classList.add('visible'); setTimeout(()=>t.classList.remove('visible'),3000); }
     window.handleLogout = async () => { await supabase.auth.signOut(); window.location.href='login.html'; }
     window.switchTab = (id, el) => { document.querySelectorAll('.module').forEach(m=>m.classList.add('hidden')); document.getElementById('mod-'+id).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); }
+    
     init();
 </script>
 </body>
