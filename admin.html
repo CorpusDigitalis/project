@@ -15,7 +15,6 @@
             --sidebar: #0f172a; 
             --sidebar-text: #94a3b8;
             --accent: #0f172a; 
-            --accent-hover: #1e293b;
             --border: #e2e8f0; 
             --text-main: #334155; 
             --text-muted: #64748b;
@@ -28,8 +27,6 @@
         /* ANIMATIONS */
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .spin { animation: spin 1s linear infinite; display: inline-block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .item-card, .menu-row { animation: slideIn 0.3s ease-out; }
 
         /* SIDEBAR */
         nav { width: 280px; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; padding: 30px 20px; z-index: 50; border-right: 1px solid rgba(255,255,255,0.05); }
@@ -43,9 +40,8 @@
         .nav-item.active i { color: #60a5fa; }
         .user-mini { margin-top: auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; color: white; }
         .logout-btn { color: #f87171; font-size: 0.8rem; font-weight: 500; cursor: pointer; background: none; border: none; padding: 0; opacity: 0.8; transition:0.2s; }
-        .logout-btn:hover { opacity: 1; text-decoration: underline; }
-
-        /* LAYOUT */
+        
+        /* MAIN LAYOUT */
         .admin-layout { display: flex; flex: 1; overflow: hidden; background: var(--bg-body); border-radius: 24px 0 0 24px; margin-left: -10px; box-shadow: -20px 0 40px rgba(0,0,0,0.3); z-index: 100; position: relative; }
         .editor-side { flex: 1; padding: 40px 60px; overflow-y: auto; max-width: 900px; margin: 0 auto; scroll-behavior: smooth; }
         
@@ -59,16 +55,14 @@
         input, textarea, select { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem; color: var(--text-main); transition: 0.2s; box-sizing: border-box; background: #fff; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.1); }
 
-        .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); }
-        .btn-primary:hover { transform: translateY(-1px); background: var(--accent-hover); }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
         .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-main); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
         .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
-        
         .btn-dashed { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; color: var(--text-muted); font-weight: 600; padding: 14px; margin-top: 15px; cursor: pointer; transition: 0.2s; }
         .btn-dashed:hover { background: #fff; border-color: var(--accent); color: var(--accent); }
 
         /* ITEM CARD RESPONSIVE */
-        .item-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; overflow: hidden; transition: 0.2s; display: flex; flex-direction: column; }
+        .item-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; overflow: hidden; transition: 0.2s; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
         .item-card:hover { box-shadow: 0 10px 30px -5px rgba(0,0,0,0.08); border-color: #cbd5e1; }
         .item-header { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 14px 24px; background: #f8fafc; border-bottom: 1px solid var(--border); }
         .item-title-input { font-weight: 700; border: none !important; background: transparent !important; padding: 0 !important; font-size: 1rem !important; box-shadow: none !important; color: #334155; width: 100%; }
@@ -78,76 +72,48 @@
         .item-body { padding: 24px; display: flex; flex-wrap: wrap; gap: 24px; }
         .col-fluid { flex: 1; min-width: 300px; }
 
-        /* COURS ADD ROW (FIXED SPACING) */
+        /* ADD ROW (FIXED SPACING & RESPONSIVE) */
         .add-row-responsive {
-            display: flex; flex-wrap: wrap; gap: 12px; align-items: center; /* GAP 12px ICI POUR ÉVITER LE COLLAGE */
+            display: flex; flex-wrap: wrap; gap: 12px; align-items: center; 
             background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0;
         }
         .add-row-responsive input[type="text"] { flex: 2; min-width: 140px; }
         .add-row-responsive select { width: auto; min-width: 110px; }
         .add-row-responsive .file-area { flex: 2; min-width: 140px; }
-        .add-row-responsive button { flex-shrink: 0; margin-left: auto; } /* Bouton poussé à droite si besoin */
-
-        /* MENU ROW (PREMIUM LOOK) */
-        .menu-row { 
-            display: flex; gap: 15px; align-items: center; 
-            background: #fff; padding: 16px; border-radius: 10px; 
-            border: 1px solid #e2e8f0; margin-bottom: 12px; 
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-        }
-        .menu-row:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-1px); }
-        .menu-row.disabled { opacity: 0.6; background: #f8fafc; border-style: dashed; box-shadow: none; }
-        
-        .btn-icon { background: white; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; transition: 0.2s; flex-shrink: 0; }
-        .btn-icon:hover { border-color: #64748b; color: #0f172a; background: #f1f5f9; }
-        .btn-icon.danger:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
-
-        /* MEDIA SWITCHER */
-        .media-switch-group { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-top: 10px; animation: slideIn 0.2s; }
-        .media-option { display: none; }
-        .media-option.active { display: block; }
+        .add-row-responsive button { flex-shrink: 0; margin-left: auto; }
 
         /* FILE INPUTS */
         .custom-file-input { display: none; }
-        .file-label-btn { display: inline-flex; align-items: center; gap: 8px; justify-content: center; background: #fff; border: 1px solid #cbd5e1; color: #475569; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s; width: 100%; box-sizing: border-box; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .file-label-btn { display: inline-flex; align-items: center; gap: 8px; justify-content: center; background: #fff; border: 1px solid #cbd5e1; color: #475569; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s; width: 100%; box-sizing: border-box; }
         .file-label-btn:hover { background: #f8fafc; border-color: var(--accent); color: var(--accent); }
+        .file-label-btn.file-selected { background: #f0fdf4; border-color: #10b981; color: #15803d; }
         .current-file-badge { display: inline-flex; align-items: center; gap: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-bottom: 12px; text-decoration: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* LISTE CONTENU COURS */
+        /* MEDIA SWITCHER */
+        .media-switch-group { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-top: 10px; }
+        .media-option { display: none; }
+        .media-option.active { display: block; }
+
+        /* CONTENT LIST (COURS) */
         .content-list-item { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid #e2e8f0; padding: 10px 14px; border-radius: 8px; margin-bottom: 8px; transition:0.2s; }
         .content-list-item:hover { border-color: #cbd5e1; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .content-type-icon { color: #64748b; }
         .content-label { flex: 1; font-weight: 500; font-size: 0.9rem; color: #334155; }
-        .content-actions { display: flex; gap: 5px; }
         .mini-btn { border: none; background: transparent; cursor: pointer; color: #94a3b8; padding: 4px; border-radius: 4px; transition: 0.2s; }
         .mini-btn:hover { background: #f1f5f9; color: #ef4444; }
 
-        /* SWITCH */
+        /* MENUS */
+        .menu-row { display: flex; gap: 12px; align-items: center; background: #fff; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 10px; }
+        .btn-icon { background: white; border: 1px solid #cbd5e1; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; }
+        .btn-icon.danger:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #f1f5f9; }
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input:checked + .slider { background-color: var(--accent); } input:checked + .slider:before { transform: translateX(20px); }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; } .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; } .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; } input:checked + .slider { background-color: var(--accent); } input:checked + .slider:before { transform: translateX(20px); }
 
-        /* TOAST & HELPERS */
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0f172a; color: white; padding: 12px 28px; border-radius: 100px; font-weight: 600; opacity: 0; transition: 0.4s; z-index: 200; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3); display:flex; align-items:center; gap:12px; }
         #toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .empty-state { text-align: center; padding: 60px 20px; border: 2px dashed #e2e8f0; border-radius: 16px; color: #94a3b8; display: flex; flex-direction: column; align-items: center; gap: 15px; background: #fdfdfd; }
-        .hidden { display: none !important; }
-
-        /* PREVIEW */
-        .preview-side { width: 600px; background: #f1f5f9; border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
-        .desktop-mockup { width: 100%; aspect-ratio: 16/10; background: white; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #cbd5e1; }
-        .desktop-header { height: 32px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 12px; gap: 8px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; } .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #10b981; }
-        .fake-url { flex: 1; height: 20px; background: white; border: 1px solid #e2e8f0; border-radius: 4px; margin-left: 10px; margin-right: 10px; }
-        .desktop-screen { flex: 1; background: white; }
-        iframe { width: 100%; height: 100%; border: none; }
+        .hidden { display: none !important; } .empty-state { text-align: center; padding: 60px 20px; border: 2px dashed #e2e8f0; border-radius: 16px; color: #94a3b8; background: #fdfdfd; }
         
         @media (max-width: 1300px) { .preview-side { display: none; } }
-        @media (max-width: 768px) { nav { display: none; } .editor-side { padding: 25px; } .col-fluid { min-width: 100%; } }
     </style>
 </head>
 <body>
@@ -168,9 +134,7 @@
             <div class="nav-item" onclick="switchTab('perso', this)"><i data-lucide="settings-2"></i> Personnalisation</div>
             <div class="nav-item" onclick="switchTab('rdv', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
         </div>
-        <div class="user-mini">
-            <div style="flex:1;"><div style="font-weight:600; font-size:0.9rem;">Mon Compte</div><button class="logout-btn" onclick="handleLogout()">Se déconnecter</button></div>
-        </div>
+        <div class="user-mini"><div style="flex:1;"><div style="font-weight:600; font-size:0.9rem;">Mon Compte</div><button class="logout-btn" onclick="handleLogout()">Se déconnecter</button></div></div>
     </nav>
 
     <div class="admin-layout">
@@ -210,18 +174,15 @@
                 <div class="header-flex"><div><h2>Personnalisation</h2><p class="subtitle">Menus, Réseaux et CV.</p></div><button class="btn-primary" onclick="savePerso()"><i data-lucide="save"></i> Tout mettre à jour</button></div>
                 <div class="card">
                     <h3 style="margin-top:0;">Haut de page (Header)</h3>
-                    <p style="font-size:0.9rem; color:#64748b; margin-bottom:25px;">Liste des pages. Vous pouvez les renommer ou les masquer.</p>
-                    <div id="header-list-container"></div>
+                    <div id="header-list"></div>
                 </div>
                 <div class="card">
                     <h3 style="margin-top:0;">Pied de page (Footer)</h3>
-                    <label style="margin-top:20px; color:#0f172a;">Liens Système</label>
                     <div style="background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:25px;">
-                        <div class="switch-row"><div class="switch-label"><i data-lucide="file-text" size="18"></i> Afficher le lien CV</div><label class="switch"><input type="checkbox" id="toggle-cv"><span class="slider"></span></label></div>
-                        <div class="switch-row"><div class="switch-label"><i data-lucide="linkedin" size="18"></i> Afficher LinkedIn</div><label class="switch"><input type="checkbox" id="toggle-linkedin"><span class="slider"></span></label></div>
-                        <div class="switch-row" style="border:none;"><div class="switch-label"><i data-lucide="graduation-cap" size="18"></i> Afficher Google Scholar</div><label class="switch"><input type="checkbox" id="toggle-scholar"><span class="slider"></span></label></div>
+                        <div class="switch-row"><div class="switch-label">Afficher le lien CV</div><label class="switch"><input type="checkbox" id="toggle-cv"><span class="slider"></span></label></div>
+                        <div class="switch-row"><div class="switch-label">Afficher LinkedIn</div><label class="switch"><input type="checkbox" id="toggle-linkedin"><span class="slider"></span></label></div>
+                        <div class="switch-row" style="border:none;"><div class="switch-label">Afficher Google Scholar</div><label class="switch"><input type="checkbox" id="toggle-scholar"><span class="slider"></span></label></div>
                     </div>
-                    <label style="color:#0f172a;">Liens Libres</label>
                     <div id="footer-list"></div>
                     <button class="btn-dashed" onclick="addFooterItem()"><i data-lucide="plus"></i> Ajouter un lien libre</button>
                 </div>
@@ -233,7 +194,7 @@
                         <label style="margin-bottom:15px;">Votre CV (PDF)</label>
                         <div id="cv-display-area"></div>
                         <label for="up-cv" id="lbl-cv" class="file-label-btn"><i data-lucide="file-up"></i> Sélectionner un document</label>
-                        <input type="file" id="up-cv" class="custom-file-input" onchange="uploadFile('cv')">
+                        <input type="file" id="up-cv" class="custom-file-input" accept=".pdf" onchange="uploadFile('cv')">
                     </div>
                 </div>
             </section>
@@ -255,7 +216,7 @@
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-    // REMPLACE TES CLÉS ICI SI BESOIN
+    // REMPLACEZ PAR VOS CLÉS RÉELLES
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -271,7 +232,7 @@
 
     async function init() {
         lucide.createIcons();
-        console.log("🚀 V10.0 Ultimate UX");
+        console.log("🚀 V13.0 Stable + UX Fixes");
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
         const { data, error } = await supabase.from('profiles').select('*, publications(*), courses(*), interventions(*)').eq('id', session.user.id);
@@ -279,9 +240,9 @@
         profileData = Array.isArray(data) ? (data[0] || null) : data;
         if(!profileData) return alert("Profil introuvable.");
 
-        // FIX HEADER VIDE : FORCE LE DEFAULT SI VIDE
+        // FIX HEADER VIDE : Force le menu par défaut si vide
         if (!profileData.header_menu || !Array.isArray(profileData.header_menu) || profileData.header_menu.length === 0) {
-            console.log("⚠️ Menu vide détecté : Application du menu par défaut.");
+            console.log("⚠️ Menu vide : Correction automatique.");
             profileData.header_menu = JSON.parse(JSON.stringify(DEFAULT_HEADER));
         }
         if (!profileData.footer_menu) profileData.footer_menu = [];
@@ -296,12 +257,15 @@
         fillIdentity(); renderPublications(); renderCourses(); renderInterventions(); fillPerso(); renderMenus(); fillRDV(); refreshPreview();
     }
 
+    // 1. IDENTITY (Optimisation Image Cache)
     function fillIdentity() {
         document.getElementById('field-name').value = profileData.name || '';
         document.getElementById('field-bio').value = profileData.bio || '';
-        if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url + '?t=' + Date.now();
+        // Pas de ?t=... ici pour éviter le clignotement au chargement de page
+        if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
     }
 
+    // GLOBAL FUNCTIONS (Exposées à window pour le HTML)
     window.saveProfil = async () => {
         const btn = document.querySelector('#mod-profil .btn-primary');
         const oldText = btn.innerHTML; btn.innerHTML = `<i data-lucide="loader-2" class="spin"></i> ...`; lucide.createIcons();
@@ -334,11 +298,10 @@
 
             const url = supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
             
-            // FIX CV BADGE
+            // Fix CV Badge
             if(type === 'cv') { 
                 profileData.cv_url = url; 
                 fillPerso();
-                // FORCE UPDATE VISUEL IMMÉDIAT
                 setTimeout(() => {
                     const badge = document.querySelector('#cv-display-area .current-file-badge');
                     if(badge) badge.innerHTML = `<i data-lucide="check"></i> ${file.name}`;
@@ -347,6 +310,12 @@
             }
             
             await updateProfile({ [type === 'avatar' ? 'image_url' : 'cv_url']: url }, false);
+            
+            // Force reload pour l'avatar uniquement APRÈS upload
+            if (type === 'avatar') {
+                document.getElementById('preview-avatar').src = url + '?t=' + Date.now();
+            }
+
             showToast("Fichier mis à jour !");
         } catch(err) {
             alert("❌ Erreur upload : " + err.message);
@@ -356,7 +325,6 @@
         }
     }
 
-    // --- TOGGLE LOGIC ---
     window.toggleInput = (type, id, val) => {
         const linkDiv = document.getElementById(`grp-link-${type}-${id}`);
         const fileDiv = document.getElementById(`grp-file-${type}-${id}`);
@@ -364,7 +332,7 @@
         else { linkDiv.classList.add('hidden'); fileDiv.classList.remove('hidden'); }
     }
 
-    // 2. PUBLICATIONS
+    // 2. PUBLICATIONS (Avec Toggle Lien/Doc)
     function renderPublications() {
         const container = document.getElementById('pubs-container');
         if (!profileData.publications?.length) { container.innerHTML = `<div class="empty-state"><i data-lucide="book" size="48" style="opacity:0.2"></i><p>Aucune publication.</p></div>`; lucide.createIcons(); return; }
@@ -389,7 +357,7 @@
                         <div id="grp-file-pub-${p.id}" class="media-switch-group ${!isFile ? 'hidden' : ''}">
                             <label>Document</label>
                             ${p.fichier_url ? `<div class="current-file-badge"><i data-lucide="check" size="14"></i> ${getFileName(p.fichier_url)}</div>` : ''}
-                            <label for="fp-${p.id}" class="file-label-btn">Choisir un document</label><input type="file" id="fp-${p.id}" class="custom-file-input" onchange="uploadItemFile('publications', '${p.id}', 'fp-${p.id}')">
+                            <label for="fp-${p.id}" id="lbl-fp-${p.id}" class="file-label-btn">Choisir un document</label><input type="file" id="fp-${p.id}" class="custom-file-input" onchange="uploadItemFile('publications', '${p.id}', 'fp-${p.id}')">
                         </div>
                     </div>
                     <div class="col-fluid"><label>Description</label><textarea style="height:100px;" onchange="updateItem('publications', '${p.id}', 'description', this.value)">${p.description || ''}</textarea></div>
@@ -400,7 +368,7 @@
     }
     window.addPublication = async () => createItem('publications', { texte: 'Nouvelle publication', categorie: 'Articles' });
 
-    // 3. COURS (SPACED OUT & CLEAN)
+    // 3. COURS (Design Fluide + Feedback "+")
     function renderCourses() {
         const container = document.getElementById('courses-container');
         if (!profileData.courses?.length) { container.innerHTML = `<div class="empty-state"><i data-lucide="graduation-cap" size="48" style="opacity:0.2"></i><p>Ajoutez un premier cours.</p></div>`; lucide.createIcons(); return; }
@@ -432,9 +400,34 @@
                 </div>
             </div>`).join('');
         
+        // Attachement des événements pour feedback visuel immédiat
         profileData.courses.forEach(c => {
             const s=document.getElementById(`st-${c.id}`), a=document.getElementById(`sia-${c.id}`);
-            if(s) s.addEventListener('change', e => { a.innerHTML = e.target.value === 'link' ? `<input type="text" id="slink-${c.id}" placeholder="https://..." style="width:100%">` : `<label class="file-label-btn" for="sf-${c.id}"><i data-lucide="upload"></i> Document</label><input type="file" id="sf-${c.id}" class="custom-file-input">`; lucide.createIcons(); });
+            
+            const updateLabel = () => {
+                const fileInput = document.getElementById(`sf-${c.id}`);
+                const fileLabel = document.querySelector(`label[for="sf-${c.id}"]`);
+                if(fileInput && fileLabel) {
+                    fileInput.addEventListener('change', (e) => {
+                        if(e.target.files[0]) {
+                            fileLabel.innerHTML = `<i data-lucide="check"></i> ${e.target.files[0].name}`;
+                            fileLabel.classList.add('file-selected');
+                            lucide.createIcons();
+                        }
+                    });
+                }
+            };
+            
+            if(s) s.addEventListener('change', e => { 
+                if (e.target.value === 'link') {
+                    a.innerHTML = `<input type="text" id="slink-${c.id}" placeholder="https://..." style="width:100%">`;
+                } else {
+                    a.innerHTML = `<label class="file-label-btn" for="sf-${c.id}"><i data-lucide="upload"></i> Document</label><input type="file" id="sf-${c.id}" class="custom-file-input">`;
+                    updateLabel();
+                }
+                lucide.createIcons(); 
+            });
+            updateLabel();
         });
         lucide.createIcons();
     }
@@ -467,7 +460,7 @@
                         <div id="grp-file-int-${i.id}" class="media-switch-group ${!isFile ? 'hidden' : ''}">
                             <label>Document</label>
                             ${i.file_url ? `<div class="current-file-badge"><i data-lucide="check" size="14"></i> ${getFileName(i.file_url)}</div>` : ''}
-                            <label class="file-label-btn" for="fi-${i.id}">Choisir un document</label><input type="file" id="fi-${i.id}" class="custom-file-input" onchange="uploadItemFile('interventions', '${i.id}', 'fi-${i.id}')">
+                            <label class="file-label-btn" id="lbl-fi-${i.id}" for="fi-${i.id}">Choisir un document</label><input type="file" id="fi-${i.id}" class="custom-file-input" onchange="uploadItemFile('interventions', '${i.id}', 'fi-${i.id}')">
                         </div>
                     </div>
                 </div>
@@ -477,6 +470,7 @@
     }
     window.createIntervention = async () => createItem('interventions', { title: 'Nouvelle Intervention', event_date: new Date().toISOString().split('T')[0] });
 
+    // 5. PERSO
     function fillPerso() {
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
@@ -499,14 +493,24 @@
         const label = document.getElementById(`sl-${courseId}`).value; const type = document.getElementById(`st-${courseId}`).value;
         if(!label) return alert("Nom requis");
         let url = "";
+        
+        // Feedback visuel "Loading"
+        const btn = document.querySelector(`.add-row-responsive button[onclick="addCourseSection('${courseId}')"]`);
+        const oldBtn = btn ? btn.innerHTML : '+';
+        if(btn) btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i>'; lucide.createIcons();
+
         if(type === 'file') {
-            const file = document.getElementById(`sf-${courseId}`).files[0]; if(!file) return alert("Fichier requis");
-            showToast("Upload..."); const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
+            const file = document.getElementById(`sf-${courseId}`).files[0]; if(!file) { if(btn) btn.innerHTML = oldBtn; return alert("Fichier requis"); }
+            showToast("Upload en cours..."); 
+            const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
             const { error } = await supabase.storage.from('documents').upload(path, file);
-            if(!error) url = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl; else return alert(error.message);
+            if(!error) url = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl; else { if(btn) btn.innerHTML = oldBtn; return alert(error.message); }
         } else { url = document.getElementById(`slink-${courseId}`).value; }
+
         const c = profileData.courses.find(x => x.id === courseId); if(!c.sections) c.sections = []; c.sections.push({label,type,url});
         await updateItem('courses', courseId, 'sections', c.sections);
+        // Reset bouton
+        if(btn) btn.innerHTML = oldBtn;
     }
     window.removeCourseSection = async (cid, idx) => { const c = profileData.courses.find(x => x.id === cid); c.sections.splice(idx, 1); await updateItem('courses', cid, 'sections', c.sections); }
     
@@ -516,20 +520,31 @@
     }
     window.updateItem = async (table, id, field, val) => {
         await supabase.from(table).update({[field]: val}).eq('id', id); const item = profileData[table].find(x => x.id === id); if(item) item[field] = val; 
-        if(table === 'courses') renderCourses();
+        if(table === 'courses') renderCourses(); // Refresh for sections logic
+        showToast("Sauvegardé"); // Feedback demandé !
     }
     window.deleteItem = async (table, id) => {
         if(!confirm("Supprimer ?")) return; await supabase.from(table).delete().eq('id', id); profileData[table] = profileData[table].filter(x => x.id !== id); refreshAll();
     }
+    
     window.uploadItemFile = async (table, id, inputId) => {
-        const f = document.getElementById(inputId).files[0]; if(!f) return; showToast("Envoi...");
+        const f = document.getElementById(inputId).files[0]; if(!f) return; 
+        const btnLabel = document.querySelector(`label[for="${inputId}"]`);
+        const oldText = btnLabel ? btnLabel.innerHTML : '';
+        if(btnLabel) { btnLabel.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Envoi...'; lucide.createIcons(); }
+
         const path = `${profileData.id}/${table}/${id}_${Date.now()}.pdf`;
         const { error } = await supabase.storage.from('documents').upload(path, f);
+        
         if(!error) {
             const url = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
             await window.updateItem(table, id, table === 'publications' || table === 'interventions' ? 'fichier_url' : 'url', url);
-            refreshAll(); showToast("Fichier OK");
-        } else alert(error.message);
+            refreshAll(); 
+            showToast("Fichier OK");
+        } else {
+            alert(error.message);
+            if(btnLabel) btnLabel.innerHTML = oldText;
+        }
     }
 
     async function updateProfile(updates, refresh=true) {
@@ -538,38 +553,18 @@
     }
 
     function renderMenus() {
-        // A. HEADER FIXE
-        const headerContainer = document.getElementById('header-list-container');
-        if(profileData.header_menu) {
-            headerContainer.innerHTML = profileData.header_menu.map((item, i) => `
-                <div class="menu-row ${item.visible ? '' : 'disabled'}">
-                    <div style="font-size:0.8rem; background:#f1f5f9; padding:4px 8px; border-radius:4px; font-weight:600; width:24px; text-align:center; color:#94a3b8;">${i+1}</div>
-                    <input type="text" value="${item.label}" onchange="updateHeader(${i}, 'label', this.value)" style="flex:1; font-weight:600;">
-                    <div class="menu-actions">
-                        <button class="btn-icon ${item.visible ? '' : 'danger'}" onclick="toggleHeader(${i})"><i data-lucide="${item.visible ? 'eye' : 'eye-off'}" size="16"></i></button>
-                    </div>
-                </div>`).join('');
-        }
-
-        // B. FOOTER LIBRE (PREMIUM LOOK)
-        const footerContainer = document.getElementById('footer-list');
-        if(profileData.footer_menu) {
-            footerContainer.innerHTML = profileData.footer_menu.map((item, i) => `
-                <div class="menu-row">
-                    <input type="text" value="${item.text}" onchange="updateFooter(${i}, 'text', this.value)" placeholder="Nom" style="flex:1">
-                    <input type="text" value="${item.link}" onchange="updateFooter(${i}, 'link', this.value)" placeholder="Lien" style="flex:1">
-                    <button class="btn-icon danger" onclick="removeFooter(${i})"><i data-lucide="trash-2" size="16"></i></button>
-                </div>`).join('');
-        }
+        ['header', 'footer'].forEach(type => {
+            const list = document.getElementById(type + '-list'); // FIX ID
+            const items = profileData[type + '_menu'] || [];
+            if(list) list.innerHTML = items.map((item, i) => `<div class="menu-row"><div class="menu-row ${item.visible===false?'disabled':''}"><input type="text" value="${item.label||item.text}" onchange="updateMenu('${type}', ${i}, '${item.label?'label':'text'}', this.value)" style="flex:1"><button class="btn-icon ${item.visible===false?'':'danger'}" onclick="${type==='header'?'toggleHeader('+i+')':'removeMenu(\''+type+'\','+i+')'}"><i data-lucide="${type==='header'?(item.visible!==false?'eye':'eye-off'):'trash-2'}" size="16"></i></button></div>`).join('');
+        });
         lucide.createIcons();
     }
-
-    window.updateHeader = (i, k, v) => { profileData.header_menu[i][k] = v; }
+    window.updateMenu = (t, i, k, v) => { if(!profileData[t+'_menu']) profileData[t+'_menu']=[]; profileData[t+'_menu'][i][k]=v; showToast("Sauvegardé"); }
+    window.addFooterItem = () => { if(!profileData['footer_menu']) profileData['footer_menu']=[]; profileData['footer_menu'].push({text:'Nouveau', link:'#'}); renderMenus(); }
+    window.removeMenu = (t, i) => { profileData[t+'_menu'].splice(i, 1); renderMenus(); }
     window.toggleHeader = (i) => { profileData.header_menu[i].visible = !profileData.header_menu[i].visible; renderMenus(); }
-    
-    window.addFooterItem = () => { profileData.footer_menu.push({text:'', link:''}); renderMenus(); }
-    window.removeFooter = (i) => { profileData.footer_menu.splice(i, 1); renderMenus(); }
-    window.updateFooter = (i, k, v) => { profileData.footer_menu[i][k] = v; }
+    window.updateHeader = (i, k, v) => { profileData.header_menu[i][k] = v; }
 
     function fillRDV() { document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; document.getElementById('rdv-text').value = profileData.appointment_settings?.text || ''; }
     window.saveRDV = async () => updateProfile({ appointment_settings: { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }});
