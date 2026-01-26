@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis Pro - V16 Adaptive</title>
+    <title>Corpus Digitalis Pro - V17 Perfect Dock</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -15,16 +15,16 @@
             --bg-body: #f8fafc; 
             --sidebar: #0f172a; 
             --accent: #0f172a; 
-            --accent-blue: #3b82f6; /* Bleu pour les états actifs */
+            --accent-blue: #3b82f6; 
             --accent-light: #1e293b; 
             --border: #e2e8f0; 
             --text-main: #334155; 
             --text-muted: #64748b; 
             --danger: #ef4444;
-            --radius-pro: 30px; /* L'arrondi du layout */
+            --radius-pro: 30px; 
         }
 
-        /* BODY prend la couleur de la Sidebar pour l'effet de fond "Pro" */
+        /* BODY prend la couleur de la Sidebar pour l'effet de fond continu */
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
         /* --- SIDEBAR --- */
@@ -32,11 +32,12 @@
         
         nav { 
             width: 270px; 
-            background: var(--sidebar); /* Fond continu */
+            background: var(--sidebar); 
             display: flex; flex-direction: column; 
             padding: 35px 20px; 
-            /* Pas de bordure droite, c'est le gap qui fait la séparation */
-            transition: transform 0.3s ease; z-index: 100; flex-shrink: 0;
+            flex-shrink: 0;
+            z-index: 100;
+            transition: transform 0.3s ease;
         }
         .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
         .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
@@ -47,18 +48,40 @@
         .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; }
         .logout-btn { margin-top: auto; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; }
 
-        /* --- LAYOUT PRO (Wrapper) --- */
+        /* --- LAYOUT PRO (Wrapper Docké) --- */
         .wrapper { 
-            display: flex; flex: 1; height: 100%; overflow: hidden; position: relative; 
-            background: var(--bg-body); /* Le fond clair commence ici */
+            display: flex; 
+            flex: 1; 
+            position: relative; 
+            background: var(--bg-body);
             
-            /* LA TOUCHE ESTHÉTIQUE : Gap et Arrondis */
-            margin: 10px 10px 10px 0; /* Marge en haut, droite, bas. 0 à gauche car collé visuellement mais séparé par le margin */
-            border-radius: var(--radius-pro); /* Arrondis massifs */
-            box-shadow: -5px 0 20px rgba(0,0,0,0.2); /* Ombre pour détacher du fond sombre */
+            /* C'EST ICI QUE LA MAGIE OPÈRE */
+            
+            /* 1. Hauteur calculée : 100% écran - 20px (10px haut + 10px bas) */
+            height: calc(100vh - 20px); 
+            
+            /* 2. Marges : 10px haut/bas, 0 gauche/droite */
+            margin: 10px 0 10px 0; 
+            
+            /* 3. Arrondis : Uniquement Haut-Gauche et Bas-Gauche */
+            border-radius: 30px 0 0 30px; 
+            
+            /* 4. Esthétique */
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2); 
+            overflow: hidden; /* Important pour clipper le contenu aux arrondis */
         }
         
-        .editor-side { flex: 1; padding: 40px 50px; overflow-y: auto; max-width: 900px; margin: 0 auto; scroll-behavior: smooth; }
+        .editor-side { 
+            /* Le scroll se fait ICI, pas sur le body */
+            height: 100%;
+            overflow-y: auto; 
+            
+            flex: 1; 
+            padding: 40px 50px; 
+            max-width: 1000px; /* Largeur max contenu */
+            margin: 0 auto;    /* Centré horizontalement dans sa zone */
+            scroll-behavior: smooth; 
+        }
         
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
@@ -107,7 +130,7 @@
         .input-compact:focus { background: #f8fafc; border-radius: 4px; }
 
         /* =========================================
-           NOUVEAU COMPOSANT : RESOURCE ROW (ADAPTATIF)
+           COMPOSANT : RESOURCE ROW (ADAPTATIF)
            ========================================= */
         .resource-row {
             background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px;
@@ -132,7 +155,6 @@
         /* 3. Action Area */
         .action-area { flex: 2; min-width: 200px; position: relative; }
         
-        /* Styles Upload */
         .upload-btn-wrapper { width: 100%; display: none; }
         .upload-label { 
             display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 9px; 
@@ -142,7 +164,6 @@
         .upload-label:hover { background: #dcfce7; }
         .hidden-input { display: none; }
 
-        /* Mécanique d'affichage JS */
         .resource-row.mode-link .link-input-wrapper { display: block; }
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
         .resource-row.mode-file .link-input-wrapper { display: none; }
@@ -150,7 +171,7 @@
 
 
         /* PREVIEW SIDE */
-        .preview-side { width: 550px; background: #f1f5f9; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border-top-right-radius: var(--radius-pro); border-bottom-right-radius: var(--radius-pro); }
+        .preview-side { width: 550px; background: #f1f5f9; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .computer-wrapper { width: 1366px; height: 768px; background: white; border-radius: 8px; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15); transform: scale(0.38); transform-origin: center center; display: flex; flex-direction: column; overflow: hidden; }
         .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; gap: 12px; }
         .url-bar { flex: 1; height: 28px; background: white; border-radius: 4px; display: flex; align-items: center; padding-left: 12px; font-size: 11px; color: #94a3b8; border: 1px solid #e2e8f0; }
@@ -168,19 +189,27 @@
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); /* Reset bg mobile */ }
             
-            /* Reset Layout Pro sur Mobile */
-            .wrapper { margin: 0; border-radius: 0; box-shadow: none; height: auto; overflow: visible; }
+            /* RESET LAYOUT PRO SUR MOBILE */
+            .wrapper { 
+                height: auto; 
+                margin: 0; 
+                border-radius: 0; 
+                box-shadow: none; 
+                overflow: visible; 
+            }
+            .editor-side { 
+                height: auto; 
+                overflow-y: visible; 
+                padding: 20px;
+            }
             
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
             nav.mobile-open { transform: translateX(0); }
             
-            .editor-side { padding: 20px; overflow: visible; }
-            
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
             
-            /* Responsive Resource Row */
             .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
             .type-selector { justify-content: center; margin: 5px 0; }
             .input-group-title, .action-area { width: 100%; min-width: 0; }
@@ -261,7 +290,6 @@
     let profileData = null, saveTimer = null;
     let openCourseId = null;
 
-    // INIT
     async function init() {
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
@@ -295,7 +323,6 @@
         lucide.createIcons();
     }
 
-    // --- LOGIQUE COURS AVEC NOUVEAU DESIGN ---
     function renderCourses() {
         const c = document.getElementById('courses-container');
         if(!profileData.courses?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; return; }
@@ -316,7 +343,6 @@
                     
                     <div style="margin-top:25px;">
                         <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
-                        
                         ${(course.sections || []).map((sec, secIdx) => `
                             <div class="section-block">
                                 <div class="section-header">
@@ -329,7 +355,6 @@
                                             <i class="item-icon" data-lucide="${item.type==='file'?'file-text':'link'}" size="16"></i>
                                             <input class="input-compact" style="flex:1; font-weight:600;" value="${item.label}" onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'label', this.value)">
                                             <input class="input-compact" style="flex:1; font-weight:400; font-size:0.8rem; color:#64748b;" value="${item.value||''}" placeholder="${item.type==='file'?'URL Fichier':'https://...'}" onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'value', this.value)">
-                                            
                                             <button class="btn-ghost" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
                                         </div>
                                     `).join('')}
@@ -338,13 +363,11 @@
                                         <div class="input-group-title">
                                             <input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document">
                                         </div>
-                                        
                                         <div class="type-selector">
                                             <input type="hidden" id="type-val-${course.id}-${secIdx}" value="link">
                                             <button type="button" class="type-btn active" onclick="switchMode('${course.id}', ${secIdx}, 'link', this)">Lien</button>
                                             <button type="button" class="type-btn" onclick="switchMode('${course.id}', ${secIdx}, 'file', this)">Fichier</button>
                                         </div>
-
                                         <div class="action-area">
                                             <div class="link-input-wrapper">
                                                 <input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="https://...">
@@ -356,49 +379,33 @@
                                                 </label>
                                             </div>
                                         </div>
-
                                         <button class="btn-primary" style="padding:10px;" onclick="addItem('${course.id}', ${secIdx})"><i data-lucide="plus" size="18"></i></button>
                                     </div>
-                                    </div>
+                                </div>
                             </div>
                         `).join('')}
-
                         <button class="btn-dashed" onclick="addSection('${course.id}')" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">+ Ajouter une Section (ex: TD, Examens)</button>
                     </div>
-
                     <div style="text-align:right; margin-top:30px;">
-                        <button class="btn-delete-course" onclick="delItem('courses', '${course.id}')">
-                            <i data-lucide="trash-2" size="14"></i> Supprimer ce cours
-                        </button>
+                        <button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button>
                     </div>
                 </div>
             </div>`;
         }).join('');
-        
         lucide.createIcons();
     }
 
-    // --- ACTIONS LOGIC (UPDATED) ---
-    
-    // GESTION DU SWITCH MODE
     window.switchMode = (cid, sIdx, mode, btn) => {
         const rowId = `add-row-${cid}-${sIdx}`;
         const row = document.getElementById(rowId);
-        
-        // 1. Mise à jour de la classe CSS du conteneur
         row.classList.remove('mode-link', 'mode-file');
         row.classList.add('mode-' + mode);
-        
-        // 2. Mise à jour de la valeur cachée pour le script d'ajout
         document.getElementById(`type-val-${cid}-${sIdx}`).value = mode;
-
-        // 3. Gestion visuelle des boutons
         const btns = row.querySelectorAll('.type-btn');
         btns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
-    // GESTION NOM FICHIER UPLOAD
     window.updateFileName = (cid, sIdx, input) => {
         if (input.files && input.files.length > 0) {
             document.getElementById(`file-txt-${cid}-${sIdx}`).textContent = input.files[0].name;
@@ -438,14 +445,10 @@
         await updateCourseDB(c);
     }
 
-    // AJOUT ITEM ADAPTÉ AU NOUVEAU HTML
     window.addItem = async (cid, sIdx) => {
-        // On récupère le type via l'input caché
         const type = document.getElementById(`type-val-${cid}-${sIdx}`).value; 
         const label = document.getElementById(`lbl-${cid}-${sIdx}`).value;
-        
         if(!label) return alert("Le titre du document est requis");
-        
         let value = "";
         
         if(type === 'link') {
@@ -454,7 +457,6 @@
         } else {
             const fileInput = document.getElementById(`file-${cid}-${sIdx}`);
             if(fileInput.files.length === 0) return alert("Veuillez choisir un fichier");
-            
             const file = fileInput.files[0];
             showToast("Upload en cours...");
             const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
@@ -481,7 +483,6 @@
         renderCourses(); reloadPreview();
     }
 
-    // --- GENERIC FUNCTIONS ---
     function renderGeneric(key, containerId, titleField, subField) {
         const c = document.getElementById(containerId);
         if(!profileData[key]) { c.innerHTML=''; return; }
