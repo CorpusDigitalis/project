@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - V18 Ultimate UI</title>
+    <title>Corpus Digitalis - V19 Interventions & Fixes</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -25,16 +25,12 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- SIDEBAR & MOBILE HEADER --- */
+        /* --- SIDEBAR & HEADER --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         
         nav { 
-            width: 270px; 
-            background: var(--sidebar); 
-            display: flex; flex-direction: column; 
-            padding: 35px 20px; 
-            flex-shrink: 0; z-index: 100;
-            transition: transform 0.3s ease;
+            width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
+            padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease;
         }
         .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
         .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
@@ -52,9 +48,7 @@
             border-radius: 30px 0 0 30px; 
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
         }
-        
         .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
-        
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
 
@@ -85,59 +79,61 @@
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
 
-        /* --- COURSES STRUCTURE --- */
+        /* --- COURSES --- */
         .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
         .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .section-title-input { background: transparent; border: 1px solid transparent; font-weight: 700; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; width: auto; transition: 0.2s; border-radius: 4px; }
         .section-title-input:hover { border-color: #cbd5e1; background: white; }
         .section-title-input:focus { background: white; border-color: var(--accent); box-shadow: none; }
         .section-content { padding: 12px; }
-        
         .course-item-row { display: flex; align-items: center; gap: 10px; background: white; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
         .item-icon { color: #64748b; flex-shrink: 0; }
         .input-compact { border: none; background: transparent; padding: 4px; font-size: 0.9rem; font-weight: 500; color: #334155; }
         .input-compact:focus { background: #f8fafc; border-radius: 4px; }
 
-        /* --- RESOURCE ROW (ADAPTATIF) --- */
+        /* --- RESOURCE ROW (FIX RESPONSIVE & OVERFLOW) --- */
         .resource-row {
             background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px;
-            display: flex; align-items: center; gap: 12px; margin-top: 15px; flex-wrap: wrap;
+            display: flex; align-items: center; gap: 12px; margin-top: 15px; 
+            flex-wrap: wrap; /* IMPORTANT: Permet le retour à la ligne si trop petit */
             transition: all 0.2s ease;
         }
         .resource-row:hover { border-color: #94a3b8; background: #fdfdfd; }
 
-        .input-group-title { flex: 1; min-width: 180px; }
+        .input-group-title { flex: 1; min-width: 150px; }
         .type-selector { display: flex; background: #f1f5f9; padding: 3px; border-radius: 8px; flex-shrink: 0; }
         .type-btn { border: none; background: transparent; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; }
         .type-btn:hover { color: var(--accent-blue); }
         .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
-        .action-area { flex: 2; min-width: 200px; position: relative; }
+        /* Action Area : min-width 0 pour permettre le shrink, flex-basis ajusté */
+        .action-area { flex: 2; min-width: 200px; position: relative; } 
+
         .upload-btn-wrapper { width: 100%; display: none; }
         .upload-label { 
             display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 9px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; 
             cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* FIX TEXTE TROP LONG */
         }
         .upload-label:hover { background: #dcfce7; }
         .hidden-input { display: none; }
 
+        /* Mécanique d'affichage */
         .resource-row.mode-link .link-input-wrapper { display: block; }
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
-        .resource-row.mode-link .add-btn-container { display: block; } /* Bouton + visible pour lien */
+        .resource-row.mode-link .add-btn-container { display: block; }
         
         .resource-row.mode-file .link-input-wrapper { display: none; }
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
-        .resource-row.mode-file .add-btn-container { display: none; } /* Bouton + caché pour fichier (auto-upload) */
+        .resource-row.mode-file .add-btn-container { display: none; }
 
-
-        /* PREVIEW SIDE */
+        /* --- PREVIEW SIDE --- */
         .preview-side { width: 550px; background: #f1f5f9; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .computer-wrapper { width: 1366px; height: 768px; background: white; border-radius: 8px; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15); transform: scale(0.38); transform-origin: center center; display: flex; flex-direction: column; overflow: hidden; }
         .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; gap: 12px; }
         .url-bar { flex: 1; height: 28px; background: white; border-radius: 4px; display: flex; align-items: center; padding-left: 12px; font-size: 11px; color: #94a3b8; border: 1px solid #e2e8f0; }
         iframe { width: 100%; flex: 1; border: none; background: white; }
-
         .hidden { display: none !important; }
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 10px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s; z-index: 999; display: flex; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #toast.visible { transform: translateX(-50%) translateY(0); }
@@ -152,6 +148,8 @@
             nav.mobile-open { transform: translateX(0); }
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
+            
+            /* Responsive du resource-row sur mobile */
             .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
             .type-selector { justify-content: center; margin: 5px 0; }
             .input-group-title, .action-area { width: 100%; min-width: 0; }
@@ -169,17 +167,14 @@
 
     <nav id="sidebar">
         <div class="logo">CORPUS DIGITALIS <span>PRO</span></div>
-        
         <div class="nav-title">Site Web</div>
         <div class="nav-item active" onclick="switchTab('profil', 'index.html', this)"><i data-lucide="user"></i> Accueil & Profil</div>
         <div class="nav-item" onclick="switchTab('biblio', 'publications.html', this)"><i data-lucide="book-open"></i> Publications</div>
         <div class="nav-item" onclick="switchTab('cours', 'cours.html', this)"><i data-lucide="graduation-cap"></i> Enseignements</div>
         <div class="nav-item" onclick="switchTab('interventions', 'interventions.html', this)"><i data-lucide="mic"></i> Interventions</div>
-        
         <div class="nav-title">Configuration</div>
         <div class="nav-item" onclick="switchTab('perso', 'index.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
         <div class="nav-item" onclick="switchTab('rdv', 'index.html', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
-        
         <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Déconnexion</button>
     </nav>
 
@@ -212,12 +207,19 @@
             <section id="mod-biblio" class="module hidden">
                 <div class="header-flex">
                     <div><h2>Publications</h2><p class="subtitle">Vos articles, thèses et ouvrages.</p></div>
-                    <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().getFullYear()})"><i data-lucide="plus"></i> Ajouter</button>
+                    <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]})"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
                 <div id="pubs-container"></div>
             </section>
 
-            <section id="mod-interventions" class="module hidden"><div class="header-flex"><div><h2>Interventions</h2></div><button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Inter'})"><i data-lucide="plus"></i> Ajouter</button></div><div id="interventions-container"></div></section>
+            <section id="mod-interventions" class="module hidden">
+                <div class="header-flex">
+                    <div><h2>Interventions</h2><p class="subtitle">Colloques, conférences et séminaires.</p></div>
+                    <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention', category:'Conférence', event_date: new Date().toISOString().split('T')[0]})"><i data-lucide="plus"></i> Ajouter</button>
+                </div>
+                <div id="interventions-container"></div>
+            </section>
+
             <section id="mod-perso" class="module hidden"><div class="header-flex"><h2>Personnalisation</h2></div><div class="card"><div class="form-row"><label>LinkedIn</label><input id="field-linkedin" oninput="autoSave('profiles',null,'linkedin_url',this.value)"></div><div class="form-row"><label>Scholar</label><input id="field-scholar" oninput="autoSave('profiles',null,'scholar_url',this.value)"></div><div class="form-row"><label>CV PDF</label><input type="file" id="up-cv" onchange="uploadFile('cv')"></div></div></section>
             <section id="mod-rdv" class="module hidden"><div class="header-flex"><h2>Rendez-vous</h2></div><div class="card"><label>Lien</label><input id="rdv-url" oninput="saveRDV()"><label style="margin-top:10px">Texte</label><input id="rdv-text" oninput="saveRDV()"></div></section>
 
@@ -237,7 +239,7 @@
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
     let profileData = null, saveTimer = null;
-    let openCourseId = null, openPubId = null;
+    let openCourseId = null, openPubId = null, openInterId = null;
 
     async function init() {
         lucide.createIcons();
@@ -268,7 +270,7 @@
         
         renderCourses();
         renderPublications();
-        renderGeneric('interventions', 'interventions-container', 'title', 'event_date');
+        renderInterventions();
         lucide.createIcons();
     }
 
@@ -290,7 +292,6 @@
                 <div class="item-body" onclick="event.stopPropagation()">
                     <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value)"></div>
                     <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
-                    
                     <div style="margin-top:25px;">
                         <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
                         ${(course.sections || []).map((sec, secIdx) => `
@@ -308,46 +309,34 @@
                                             <button class="btn-ghost" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
                                         </div>
                                     `).join('')}
-
                                     <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}">
-                                        <div class="input-group-title">
-                                            <input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document">
-                                        </div>
+                                        <div class="input-group-title"><input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document"></div>
                                         <div class="type-selector">
                                             <input type="hidden" id="type-val-${course.id}-${secIdx}" value="link">
                                             <button type="button" class="type-btn active" onclick="switchMode('${course.id}', ${secIdx}, 'link', this)">Lien</button>
                                             <button type="button" class="type-btn" onclick="switchMode('${course.id}', ${secIdx}, 'file', this)">Fichier</button>
                                         </div>
                                         <div class="action-area">
-                                            <div class="link-input-wrapper">
-                                                <input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="https://...">
-                                            </div>
+                                            <div class="link-input-wrapper"><input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="https://..."></div>
                                             <div class="upload-btn-wrapper">
-                                                <label class="upload-label">
-                                                    <i data-lucide="cloud-upload"></i> <span id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span>
-                                                    <input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="addItem('${course.id}', ${secIdx}, true)">
-                                                </label>
+                                                <label class="upload-label"><i data-lucide="cloud-upload"></i> <span id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span><input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="addItem('${course.id}', ${secIdx}, true)"></label>
                                             </div>
                                         </div>
-                                        <div class="add-btn-container">
-                                            <button class="btn-primary" style="padding:10px;" onclick="addItem('${course.id}', ${secIdx}, false)"><i data-lucide="plus" size="18"></i></button>
-                                        </div>
+                                        <div class="add-btn-container"><button class="btn-primary" style="padding:10px;" onclick="addItem('${course.id}', ${secIdx}, false)"><i data-lucide="plus" size="18"></i></button></div>
                                     </div>
                                 </div>
                             </div>
                         `).join('')}
                         <button class="btn-dashed" onclick="addSection('${course.id}')" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">+ Ajouter une Section (ex: TD, Examens)</button>
                     </div>
-                    <div style="text-align:right; margin-top:30px;">
-                        <button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button>
-                    </div>
+                    <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button></div>
                 </div>
             </div>`;
         }).join('');
         lucide.createIcons();
     }
 
-    // --- PUBLICATIONS RENDER (NEW) ---
+    // --- PUBLICATIONS RENDER ---
     function renderPublications() {
         const c = document.getElementById('pubs-container');
         if(!profileData.publications?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication.</div>'; return; }
@@ -368,8 +357,8 @@
                     
                     <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
                         <div style="flex:1; min-width:120px;">
-                             <label>Année/Date</label>
-                             <input value="${pub.date || ''}" placeholder="2024" oninput="autoSave('publications', '${pub.id}', 'date', this.value)">
+                             <label>Date</label>
+                             <input type="date" value="${pub.date || ''}" oninput="autoSave('publications', '${pub.id}', 'date', this.value)">
                         </div>
                         <div style="flex:1; min-width:150px;">
                              <label>Catégorie</label>
@@ -383,11 +372,9 @@
                              </select>
                         </div>
                     </div>
-
-                    <label>Lien ou Document associé</label>
+                    <label>Document associé</label>
                     <div class="resource-row mode-link" id="pub-res-${pub.id}" style="margin-top:5px;">
                         <div class="type-selector">
-                            <input type="hidden" id="pub-type-${pub.id}" value="link">
                             <button type="button" class="type-btn active" onclick="switchPubMode('${pub.id}', 'link', this)">Lien</button>
                             <button type="button" class="type-btn" onclick="switchPubMode('${pub.id}', 'file', this)">Fichier</button>
                         </div>
@@ -397,23 +384,86 @@
                             </div>
                             <div class="upload-btn-wrapper">
                                 <label class="upload-label">
-                                    <i data-lucide="cloud-upload"></i> <span>Uploader le PDF</span>
+                                    <i data-lucide="cloud-upload"></i> <span>Uploader PDF</span>
                                     <input type="file" class="hidden-input" onchange="uploadPubFile('${pub.id}', this)">
                                 </label>
                             </div>
                         </div>
                     </div>
-                    
-                    <div style="text-align:right; margin-top:20px;">
-                        <button class="btn-delete-course" onclick="delItem('publications', '${pub.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button>
-                    </div>
+                    <div style="text-align:right; margin-top:20px;"><button class="btn-delete-course" onclick="delItem('publications', '${pub.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button></div>
                 </div>
             </div>`;
         }).join('');
         lucide.createIcons();
     }
 
-    // --- COURSES LOGIC (PLUS BUTTON HIDDEN LOGIC) ---
+    // --- INTERVENTIONS RENDER (NEW) ---
+    function renderInterventions() {
+        const c = document.getElementById('interventions-container');
+        if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
+        
+        c.innerHTML = profileData.interventions.map(inter => {
+            const isOpen = (openInterId === inter.id) ? 'open' : '';
+            return `
+            <div class="item-card ${isOpen}" id="inter-${inter.id}">
+                <div class="item-header" onclick="toggleCard('${inter.id}', 'inter')">
+                    <div class="item-title">${inter.title || 'Sans titre'}</div>
+                    <span class="item-badge">${inter.category || 'Conférence'}</span>
+                    <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${inter.event_date || ''}</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
+                <div class="item-body" onclick="event.stopPropagation()">
+                    <div class="form-row"><label>Titre de l'intervention</label><input value="${inter.title || ''}" oninput="autoSave('interventions', '${inter.id}', 'title', this.value)"></div>
+                    <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('interventions', '${inter.id}', 'description', this.value)">${inter.description || ''}</textarea></div>
+                    
+                    <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
+                        <div style="flex:1; min-width:120px;">
+                             <label>Date</label>
+                             <input type="date" value="${inter.event_date || ''}" oninput="autoSave('interventions', '${inter.id}', 'event_date', this.value)">
+                        </div>
+                        <div style="flex:1; min-width:150px;">
+                             <label>Lieu</label>
+                             <input type="text" value="${inter.location || ''}" placeholder="Paris, Zoom..." oninput="autoSave('interventions', '${inter.id}', 'location', this.value)">
+                        </div>
+                        <div style="flex:1; min-width:150px;">
+                             <label>Type</label>
+                             <select onchange="autoSave('interventions', '${inter.id}', 'category', this.value)">
+                                <option value="Conférence" ${inter.category==='Conférence'?'selected':''}>Conférence</option>
+                                <option value="Colloque" ${inter.category==='Colloque'?'selected':''}>Colloque</option>
+                                <option value="Séminaire" ${inter.category==='Séminaire'?'selected':''}>Séminaire</option>
+                                <option value="Présentation" ${inter.category==='Présentation'?'selected':''}>Présentation</option>
+                                <option value="Autre" ${inter.category==='Autre'?'selected':''}>Autre</option>
+                             </select>
+                        </div>
+                    </div>
+
+                    <label>Support (Lien ou PDF)</label>
+                    <div class="resource-row mode-link" id="inter-res-${inter.id}" style="margin-top:5px;">
+                        <div class="type-selector">
+                            <button type="button" class="type-btn active" onclick="switchInterMode('${inter.id}', 'link', this)">Lien</button>
+                            <button type="button" class="type-btn" onclick="switchInterMode('${inter.id}', 'file', this)">Fichier</button>
+                        </div>
+                        <div class="action-area">
+                            <div class="link-input-wrapper">
+                                <input type="url" value="${inter.link_value || ''}" placeholder="https://..." onchange="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                            </div>
+                            <div class="upload-btn-wrapper">
+                                <label class="upload-label">
+                                    <i data-lucide="cloud-upload"></i> <span>Uploader support</span>
+                                    <input type="file" class="hidden-input" onchange="uploadInterFile('${inter.id}', this)">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align:right; margin-top:20px;"><button class="btn-delete-course" onclick="delItem('interventions', '${inter.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button></div>
+                </div>
+            </div>`;
+        }).join('');
+        lucide.createIcons();
+    }
+
+    // --- ACTIONS COURSES ---
     window.switchMode = (cid, sIdx, mode, btn) => {
         const row = document.getElementById(`add-row-${cid}-${sIdx}`);
         row.classList.remove('mode-link', 'mode-file');
@@ -426,139 +476,82 @@
     window.addItem = async (cid, sIdx, isFileAuto) => {
         const type = document.getElementById(`type-val-${cid}-${sIdx}`).value; 
         const label = document.getElementById(`lbl-${cid}-${sIdx}`).value;
-        
-        if(!label) return alert("Veuillez d'abord entrer un titre pour le document.");
-
+        if(!label) return alert("Titre requis.");
         let value = "";
-        
         if(type === 'link' && !isFileAuto) {
             value = document.getElementById(`url-${cid}-${sIdx}`).value;
-            if(!value) return alert("L'URL est requise");
+            if(!value) return alert("URL requise");
         } else if (type === 'file') {
             const fileInput = document.getElementById(`file-${cid}-${sIdx}`);
-            if(fileInput.files.length === 0) return; // Si annulé
-            
+            if(fileInput.files.length === 0) return; 
             const file = fileInput.files[0];
             showToast("Upload en cours...");
-            // Affichage visuel du nom
             document.getElementById(`file-txt-${cid}-${sIdx}`).textContent = file.name;
-            
             const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
             const { error } = await sb.storage.from('documents').upload(path, file);
-            if(error) return alert("Erreur upload: " + error.message);
+            if(error) return alert("Erreur upload");
             value = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
         }
-
         const c = profileData.courses.find(x => x.id === cid);
         c.sections[sIdx].items.push({ label, type, value });
         openCourseId = cid;
         await updateCourseDB(c);
-        showToast("Ajouté avec succès !");
+        showToast("Ajouté !");
     }
 
-    // --- PUBLICATIONS LOGIC ---
+    // --- ACTIONS PUBLICATIONS ---
     window.switchPubMode = (pid, mode, btn) => {
         const row = document.getElementById(`pub-res-${pid}`);
         row.classList.remove('mode-link', 'mode-file');
         row.classList.add('mode-' + mode);
-        
-        // AutoSave du type
         autoSave('publications', pid, 'link_type', mode);
-        
         row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-
     window.uploadPubFile = async (pid, input) => {
         if (input.files.length === 0) return;
         const file = input.files[0];
-        showToast("Upload en cours...");
-        
-        // Update visuel label
+        showToast("Upload...");
         input.parentElement.querySelector('span').textContent = file.name;
-
         const path = `${profileData.id}/publications/${Date.now()}_${file.name}`;
         const { error } = await sb.storage.from('documents').upload(path, file);
         if(error) return alert("Erreur upload");
-        
-        const publicUrl = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
-        await autoSave('publications', pid, 'link_value', publicUrl);
-        showToast("Publication mise à jour");
+        await autoSave('publications', pid, 'link_value', sb.storage.from('documents').getPublicUrl(path).data.publicUrl);
+        showToast("Sauvegardé");
+    }
+
+    // --- ACTIONS INTERVENTIONS ---
+    window.switchInterMode = (iid, mode, btn) => {
+        const row = document.getElementById(`inter-res-${iid}`);
+        row.classList.remove('mode-link', 'mode-file');
+        row.classList.add('mode-' + mode);
+        autoSave('interventions', iid, 'link_type', mode);
+        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+    window.uploadInterFile = async (iid, input) => {
+        if (input.files.length === 0) return;
+        const file = input.files[0];
+        showToast("Upload...");
+        input.parentElement.querySelector('span').textContent = file.name;
+        const path = `${profileData.id}/interventions/${Date.now()}_${file.name}`;
+        const { error } = await sb.storage.from('documents').upload(path, file);
+        if(error) return alert("Erreur upload");
+        await autoSave('interventions', iid, 'link_value', sb.storage.from('documents').getPublicUrl(path).data.publicUrl);
+        showToast("Sauvegardé");
     }
 
     // --- COMMON HELPERS ---
     window.toggleCard = (id, type) => {
         if(type === 'course') { openCourseId = (openCourseId === id) ? null : id; renderCourses(); }
-        else { openPubId = (openPubId === id) ? null : id; renderPublications(); }
+        else if (type === 'pub') { openPubId = (openPubId === id) ? null : id; renderPublications(); }
+        else { openInterId = (openInterId === id) ? null : id; renderInterventions(); }
     }
 
-    window.updateSectionTitle = async (cid, sIdx, val) => {
-        const c = profileData.courses.find(x => x.id === cid);
-        c.sections[sIdx].title = val;
-        await updateCourseDB(c);
-    }
-
-    window.updateItemData = async (cid, sIdx, iIdx, key, val) => {
-        const c = profileData.courses.find(x => x.id === cid);
-        c.sections[sIdx].items[iIdx][key] = val;
-        await updateCourseDB(c);
-    }
-
-    window.addSection = async (cid) => {
-        const c = profileData.courses.find(x => x.id === cid);
-        if(!c.sections) c.sections = [];
-        c.sections.push({ title: 'Nouvelle Section', items: [] });
-        openCourseId = cid; 
-        await updateCourseDB(c);
-    }
-
-    window.delSection = async (cid, sIdx) => {
-        if(!confirm("Supprimer cette section ?")) return;
-        const c = profileData.courses.find(x => x.id === cid);
-        c.sections.splice(sIdx, 1);
-        await updateCourseDB(c);
-    }
-
-    window.delCourseItem = async (cid, sIdx, iIdx) => {
-        const c = profileData.courses.find(x => x.id === cid);
-        c.sections[sIdx].items.splice(iIdx, 1);
-        await updateCourseDB(c);
-    }
-
-    async function updateCourseDB(c) {
-        await sb.from('courses').update({sections: c.sections}).eq('id', c.id);
-        renderCourses(); reloadPreview();
-    }
-
-    function renderGeneric(key, containerId, titleField, subField) {
-        const c = document.getElementById(containerId);
-        if(!profileData[key]) { c.innerHTML=''; return; }
-        c.innerHTML = profileData[key].map(item => `
-             <div class="item-card">
-                <div class="item-header"><div class="item-title">${item[titleField]}</div><span class="item-badge">${item[subField]}</span><button class="btn-ghost" onclick="delItem('${key}', '${item.id}')"><i data-lucide="trash-2" size="14"></i></button></div>
-             </div>
-        `).join('');
-    }
-
-    window.createItem = async (t,d) => { d.prof_id=profileData.id; const {data,error}=await sb.from(t).insert([d]).select(); if(!error){ if(!profileData[t]) profileData[t]=[]; profileData[t].unshift(data[0]); if(t==='courses') openCourseId = data[0].id; if(t==='publications') openPubId = data[0].id; fillUI(); reloadPreview(); } }
-    window.delItem = async (t,id) => { if(!confirm("Supprimer ?")) return; await sb.from(t).delete().eq('id',id); profileData[t]=profileData[t].filter(x=>x.id!==id); fillUI(); reloadPreview(); }
-    window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
-    window.switchTab = (id,p,el) => { 
-        document.querySelectorAll('.module').forEach(m=>m.classList.add('hidden')); 
-        document.getElementById('mod-'+id).classList.remove('hidden'); 
-        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); 
-        if(el) el.classList.add('active'); 
-        document.getElementById('sidebar').classList.remove('mobile-open');
-        const iframe = document.getElementById('site-preview');
-        if(iframe) iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
-    }
-    window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
-    window.reloadPreview = () => { const i=document.getElementById('site-preview'); if(i) i.src=i.src; }
-    window.uploadFile = async (t) => { /* Code upload avatar/cv standard */ }
-    window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
-    function showToast(m){ const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=m; t.classList.add('visible'); setTimeout(()=>t.classList.remove('visible'),2000); }
-
-    init();
-</script>
-</body>
-</html>
+    window.updateSectionTitle = async (cid, sIdx, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].title = val; await updateCourseDB(c); }
+    window.updateItemData = async (cid, sIdx, iIdx, key, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items[iIdx][key] = val; await updateCourseDB(c); }
+    window.addSection = async (cid) => { const c = profileData.courses.find(x => x.id === cid); if(!c.sections) c.sections = []; c.sections.push({ title: 'Nouvelle Section', items: [] }); openCourseId = cid; await updateCourseDB(c); }
+    window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
+    window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
+    async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
+    window.createItem = async (t,d) => { d.prof_id=profileData.id; const {data,error}=await sb.from(t).insert([d]).select(); if(!error){ if(!profileData[t]) profileData[t]=[]; profileData[t].unshift(data[0]); if(t==='courses') openCourseId = data[0].id; if(t==='publications') openPubId = data
