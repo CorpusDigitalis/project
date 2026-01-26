@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis Pro - Administration</title>
+    <title>Corpus Digitalis Pro - V14</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -12,332 +12,84 @@
     
     <style>
         :root { 
-            /* CHARTE GRAPHIQUE CORPORATE */
-            --bg-body: #f8fafc;        /* Gris très pâle, presque blanc */
-            --sidebar: #0f172a;        /* Bleu Nuit Profond (Votre couleur) */
-            --accent: #0f172a;         /* Boutons et actions en noir/nuit */
-            --accent-hover: #1e293b;   /* Légèrement plus clair au survol */
-            --border: #e2e8f0;         /* Bordures subtiles */
-            --text-main: #334155;      /* Gris foncé pour le texte */
-            --text-muted: #64748b;     /* Gris moyen pour les labels */
-            --danger: #ef4444;         /* Rouge pour suppression */
+            --bg-body: #f8fafc; --sidebar: #0f172a; --accent: #0f172a; 
+            --accent-light: #1e293b; --border: #e2e8f0; --text-main: #334155; 
+            --text-muted: #64748b; --danger: #ef4444;
         }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--sidebar); 
-            color: var(--text-main); 
-            margin: 0; 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
+        body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- 1. SIDEBAR --- */
-        nav { 
-            width: 270px; 
-            background: var(--sidebar); 
-            display: flex; 
-            flex-direction: column; 
-            flex-shrink: 0; 
-            padding: 35px 20px; 
-            border-right: 1px solid rgba(255,255,255,0.05); 
-        }
-        
-        .logo { 
-            font-weight: 700; 
-            font-size: 0.9rem; 
-            letter-spacing: -0.01em;
-            margin-bottom: 50px; 
-            color: white; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            padding-left: 10px; 
-            text-transform: uppercase;
-        }
-        .logo span { 
-            background: white; 
-            color: var(--sidebar); 
-            padding: 2px 6px; 
-            border-radius: 2px; 
-            font-size: 0.7rem; 
-            font-weight: 800; 
-        }
-        
-        .nav-title { 
-            font-size: 0.65rem; 
-            font-weight: 600; 
-            color: #475569; 
-            text-transform: uppercase; 
-            margin: 25px 0 10px 12px; 
-            letter-spacing: 0.08em; 
-        }
-        
-        .nav-item { 
-            padding: 10px 14px; 
-            margin-bottom: 2px; 
-            cursor: pointer; 
-            border-radius: 6px; 
-            font-size: 0.85rem; 
-            font-weight: 500; 
-            color: #94a3b8; 
-            transition: all 0.2s ease; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-        }
-        .nav-item:hover { 
-            color: white; 
-            background: rgba(255,255,255,0.05); 
-        }
-        .nav-item.active { 
-            background: rgba(255,255,255,0.1); 
-            color: white; 
-            font-weight: 600; 
-        }
-
-        .logout-btn { 
-            margin-top: auto; 
-            color: #f87171; 
-            background: none; 
-            border: none; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            padding: 12px; 
-            font-size: 0.85rem; 
-            font-weight: 500; 
-            opacity: 0.7; 
-            transition: 0.2s; 
-        }
+        /* SIDEBAR */
+        nav { width: 270px; background: var(--sidebar); display: flex; flex-direction: column; padding: 35px 20px; border-right: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
+        .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; }
+        .nav-item { padding: 10px 14px; margin-bottom: 2px; cursor: pointer; border-radius: 6px; font-size: 0.85rem; font-weight: 500; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .logout-btn { margin-top: auto; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; transition: 0.2s; }
         .logout-btn:hover { opacity: 1; }
 
-        /* --- 2. LAYOUT PRINCIPAL --- */
-        .admin-layout { 
-            display: flex; 
-            flex: 1; 
-            overflow: hidden; 
-            background: var(--bg-body); 
-            border-radius: 20px 0 0 20px; 
-            box-shadow: -20px 0 40px rgba(0,0,0,0.2); 
-            position: relative; 
-        }
+        /* LAYOUT */
+        .admin-layout { display: flex; flex: 1; overflow: hidden; background: var(--bg-body); border-radius: 20px 0 0 20px; box-shadow: -20px 0 40px rgba(0,0,0,0.2); position: relative; }
+        .editor-side { flex: 1; padding: 50px 60px; overflow-y: auto; max-width: 900px; margin: 0 auto; scroll-behavior: smooth; }
         
-        /* ZONE D'EDITION (Gauche) */
-        .editor-side { 
-            flex: 1; 
-            padding: 50px 60px; 
-            overflow-y: auto; 
-            max-width: 850px; 
-            margin: 0 auto; 
-            scroll-behavior: smooth; 
-        }
-        
-        .header-flex { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-end; 
-            margin-bottom: 40px; 
-            padding-bottom: 20px; 
-            border-bottom: 1px solid #e2e8f0; 
-        }
-        h2 { 
-            font-size: 1.5rem; 
-            font-weight: 700; 
-            margin: 0; 
-            color: var(--accent); 
-            letter-spacing: -0.02em; 
-        }
-        p.subtitle { 
-            color: var(--text-muted); 
-            font-size: 0.9rem; 
-            margin-top: 5px; 
-            font-weight: 400; 
-        }
+        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+        h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
+        p.subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
 
-        /* --- 3. COMPOSANTS UI (Clean & Corporate) --- */
-        
-        /* Cartes Blanches */
-        .card { 
-            background: white; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            padding: 30px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02); 
-        }
-
-        /* Formulaires */
+        /* UI ELEMENTS */
+        .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .form-row { margin-bottom: 24px; }
-        label { 
-            display: block; 
-            font-size: 0.7rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            margin-bottom: 8px; 
-            color: var(--text-muted); 
-            letter-spacing: 0.05em; 
-        }
-        input, textarea, select { 
-            width: 100%; 
-            padding: 12px 14px; 
-            border: 1px solid #cbd5e1; 
-            border-radius: 6px; 
-            font-family: inherit; 
-            font-size: 0.9rem; 
-            color: var(--text-main); 
-            background: #fff; 
-            transition: 0.2s; 
-            box-sizing: border-box; 
-        }
-        input:focus, textarea:focus, select:focus { 
-            outline: none; 
-            border-color: var(--accent); 
-            box-shadow: 0 0 0 1px var(--accent); /* Focus ring sobre */
-        }
+        label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--text-muted); letter-spacing: 0.05em; }
+        input, textarea, select { width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background: #fff; transition: 0.2s; box-sizing: border-box; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 
-        /* Boutons */
-        .btn-primary { 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 6px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            font-size: 0.85rem; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 8px; 
-            transition: 0.2s; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-        }
-        .btn-primary:hover { 
-            background: var(--accent-hover); 
-            transform: translateY(-1px); 
-        }
-        
-        .btn-danger { 
-            background: white; 
-            border: 1px solid #fee2e2; 
-            color: #ef4444; 
-            padding: 8px 12px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            transition: 0.2s; 
-        }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-primary:hover { background: var(--accent-light); transform: translateY(-1px); }
+        .btn-danger { background: white; border: 1px solid #fee2e2; color: #ef4444; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; }
         .btn-danger:hover { background: #fee2e2; }
+        .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 4px; border-radius: 4px; }
+        .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
 
-        /* Listes Accordéon (Minimalistes) */
-        .item-card { 
-            background: white; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-            overflow: hidden; 
-            transition: all 0.2s ease; 
-        }
-        .item-card:hover { 
-            border-color: #cbd5e1; 
-        }
-        
-        .item-header { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            padding: 16px 20px; 
-            cursor: pointer; 
-            background: white; 
-            user-select: none; 
-        }
+        /* ACCORDIONS */
+        .item-card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden; transition: 0.2s; }
+        .item-header { display: flex; align-items: center; gap: 15px; padding: 16px 20px; cursor: pointer; background: white; user-select: none; }
         .item-header:hover { background: #fafafa; }
-        
         .drag-handle { color: #cbd5e1; cursor: grab; padding: 4px; }
         .item-title { flex: 1; font-weight: 600; color: #334155; font-size: 0.95rem; }
-        .item-badge { 
-            font-size: 0.7rem; 
-            background: #f1f5f9; 
-            color: #64748b; 
-            padding: 4px 8px; 
-            border-radius: 4px; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-        }
+        .item-badge { font-size: 0.7rem; background: #f1f5f9; color: #64748b; padding: 4px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
         .chevron { color: #cbd5e1; transition: transform 0.2s; }
-        
-        .item-body { 
-            display: none; 
-            padding: 25px; 
-            background: #fafafa; 
-            border-top: 1px solid var(--border); 
-        }
+        .item-body { display: none; padding: 25px; background: #fafafa; border-top: 1px solid var(--border); }
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
-        .item-card.open .item-header { background: #fafafa; }
 
-        /* --- 4. PREVIEW (SIMULATION ORDINATEUR) --- */
-        .preview-side { 
-            width: 620px; 
-            background: #f1f5f9; 
-            border-left: 1px solid #e2e8f0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
-        }
-        
-        .computer-wrapper {
-            /* PC 1366x768 simulé */
-            width: 1366px; 
-            height: 768px; 
-            background: white;
-            border-radius: 8px; /* Coins un peu plus carrés (Pro) */
-            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
-            /* Zoom arrière pour faire rentrer */
-            transform: scale(0.42); 
-            transform-origin: center center;
-            display: flex; flex-direction: column;
-            overflow: hidden;
-        }
+        /* --- TYPE SWITCHER (LINK vs FILE) --- */
+        .type-switcher { display: flex; gap: 0; background: #f1f5f9; padding: 4px; border-radius: 6px; width: fit-content; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .type-opt { padding: 6px 12px; font-size: 0.8rem; font-weight: 600; color: #64748b; cursor: pointer; border-radius: 4px; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .type-opt.active { background: white; color: var(--accent); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .input-group-file, .input-group-link { display: none; }
+        .input-group-file.visible, .input-group-link.visible { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .browser-chrome {
-            height: 44px; 
-            background: #f8fafc; 
-            border-bottom: 1px solid #e2e8f0;
-            display: flex; align-items: center; padding: 0 20px; gap: 12px;
-        }
-        .dots { display: flex; gap: 8px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .red { background: #e2e8f0; border:1px solid #cbd5e1; } /* Discret */
-        .yellow { background: #e2e8f0; border:1px solid #cbd5e1; }
-        .green { background: #e2e8f0; border:1px solid #cbd5e1; }
-        
-        .url-bar { 
-            flex: 1; height: 28px; background: white; border-radius: 4px; 
-            display: flex; align-items: center; padding-left: 12px; 
-            font-size: 11px; color: #94a3b8; font-family: sans-serif;
-            border: 1px solid #e2e8f0;
-            margin-left: 10px; margin-right: 10px;
-        }
+        /* --- COURSES HIERARCHY --- */
+        .section-block { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; }
+        .section-title { font-weight: 700; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; }
+        .section-content { padding: 15px; }
+        .course-item-row { display: flex; align-items: center; gap: 10px; background: white; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; }
+        .add-item-box { background: white; padding: 12px; border: 1px dashed #cbd5e1; border-radius: 6px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 10px; }
 
+        /* PREVIEW */
+        .preview-side { width: 620px; background: #f1f5f9; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .computer-wrapper { width: 1366px; height: 768px; background: white; border-radius: 8px; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05); transform: scale(0.42); transform-origin: center center; display: flex; flex-direction: column; overflow: hidden; }
+        .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; gap: 12px; }
+        .dots { display: flex; gap: 8px; } .dot { width: 10px; height: 10px; border-radius: 50%; border:1px solid #cbd5e1; background: #e2e8f0; }
+        .url-bar { flex: 1; height: 28px; background: white; border-radius: 4px; display: flex; align-items: center; padding-left: 12px; font-size: 11px; color: #94a3b8; border: 1px solid #e2e8f0; }
         iframe { width: 100%; flex: 1; border: none; background: white; }
 
-        /* HELPER CLASSES */
         .hidden { display: none !important; }
-        
-        #toast { 
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); 
-            background: var(--accent); color: white; padding: 10px 24px; 
-            border-radius: 50px; font-weight: 500; font-size: 0.9rem;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            z-index: 999; display: flex; gap: 10px; align-items: center; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
-        }
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 10px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s; z-index: 999; display: flex; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #toast.visible { transform: translateX(-50%) translateY(0); }
         
         @media (max-width: 1300px) { .preview-side { display: none; } }
@@ -349,37 +101,29 @@
 
     <nav>
         <div class="logo">CORPUS DIGITALIS <span>PRO</span></div>
-        
         <div class="nav-title">Site Web</div>
         <div class="nav-item active" onclick="switchTab('profil', 'index.html', this)"><i data-lucide="user"></i> Accueil & Profil</div>
         <div class="nav-item" onclick="switchTab('biblio', 'publications.html', this)"><i data-lucide="book-open"></i> Publications</div>
         <div class="nav-item" onclick="switchTab('cours', 'cours.html', this)"><i data-lucide="graduation-cap"></i> Enseignements</div>
         <div class="nav-item" onclick="switchTab('interventions', 'interventions.html', this)"><i data-lucide="mic"></i> Interventions</div>
-
         <div class="nav-title">Configuration</div>
         <div class="nav-item" onclick="switchTab('perso', 'index.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
         <div class="nav-item" onclick="switchTab('rdv', 'index.html', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
-
         <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Déconnexion</button>
     </nav>
 
     <div class="admin-layout">
-        
         <main class="editor-side">
             
             <section id="mod-profil" class="module">
-                <div class="header-flex">
-                    <div><h2>Profil</h2><p class="subtitle">Identité de la page d'accueil.</p></div>
-                </div>
+                <div class="header-flex"><div><h2>Profil</h2><p class="subtitle">Identité de la page d'accueil.</p></div></div>
                 <div class="card">
                     <div style="display:flex; align-items:center; gap:30px; padding-bottom:30px; margin-bottom:30px; border-bottom:1px solid #f1f5f9;">
                         <img id="preview-avatar" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; background:#f8fafc; border:1px solid #e2e8f0;">
-                        <div>
-                            <label style="cursor:pointer; background:white; border:1px solid #cbd5e1; padding:10px 18px; border-radius:6px; font-weight:600; font-size:0.85rem; display:inline-flex; align-items:center; gap:8px; transition:0.2s; color:#334155;">
-                                <i data-lucide="upload" size="16"></i> Modifier la photo
-                                <input type="file" id="up-avatar" hidden accept="image/*" onchange="uploadFile('avatar')">
-                            </label>
-                        </div>
+                        <label style="cursor:pointer; background:white; border:1px solid #cbd5e1; padding:10px 18px; border-radius:6px; font-weight:600; font-size:0.85rem; display:inline-flex; align-items:center; gap:8px; color:#334155;">
+                            <i data-lucide="upload" size="16"></i> Modifier la photo
+                            <input type="file" id="up-avatar" hidden accept="image/*" onchange="uploadFile('avatar')">
+                        </label>
                     </div>
                     <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name" oninput="autoSave('profiles', null, 'name', this.value)"></div>
                     <div class="form-row"><label>Biographie</label><textarea id="field-bio" rows="6" oninput="autoSave('profiles', null, 'bio', this.value)"></textarea></div>
@@ -387,89 +131,65 @@
             </section>
 
             <section id="mod-biblio" class="module hidden">
-                <div class="header-flex">
-                    <div><h2>Publications</h2><p class="subtitle">Gérez vos travaux de recherche.</p></div>
-                    <button class="btn-primary" onclick="createItem('publications', {texte:'Nouvelle publication', categorie:'Articles'})"><i data-lucide="plus"></i> Ajouter</button>
-                </div>
+                <div class="header-flex"><div><h2>Publications</h2><p class="subtitle">Gérez vos travaux de recherche.</p></div><button class="btn-primary" onclick="createItem('publications', {texte:'Nouvelle publication', categorie:'Articles'})"><i data-lucide="plus"></i> Ajouter</button></div>
                 <div id="pubs-container"></div>
             </section>
 
             <section id="mod-cours" class="module hidden">
-                <div class="header-flex">
-                    <div><h2>Enseignements</h2><p class="subtitle">Gérez vos supports pédagogiques.</p></div>
-                    <button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence'})"><i data-lucide="plus"></i> Créer</button>
-                </div>
+                <div class="header-flex"><div><h2>Enseignements</h2><p class="subtitle">Structurez vos cours par chapitres.</p></div><button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence', sections:[]})"><i data-lucide="plus"></i> Créer</button></div>
                 <div id="courses-container"></div>
             </section>
 
             <section id="mod-interventions" class="module hidden">
-                <div class="header-flex">
-                    <div><h2>Interventions</h2><p class="subtitle">Conférences et médias.</p></div>
-                    <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention'})"><i data-lucide="plus"></i> Ajouter</button>
-                </div>
+                <div class="header-flex"><div><h2>Interventions</h2><p class="subtitle">Conférences et médias.</p></div><button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention'})"><i data-lucide="plus"></i> Ajouter</button></div>
                 <div id="interventions-container"></div>
             </section>
 
             <section id="mod-perso" class="module hidden">
-                <div class="header-flex"><div><h2>Paramètres</h2><p class="subtitle">Réseaux sociaux & CV.</p></div></div>
+                <div class="header-flex"><div><h2>Paramètres</h2></div></div>
                 <div class="card">
                     <div class="form-row"><label>Lien LinkedIn</label><input type="url" id="field-linkedin" oninput="autoSave('profiles', null, 'linkedin_url', this.value)"></div>
                     <div class="form-row"><label>Google Scholar</label><input type="url" id="field-scholar" oninput="autoSave('profiles', null, 'scholar_url', this.value)"></div>
-                    <div class="form-row" style="background:#f8fafc; padding:25px; border-radius:8px; border:1px dashed #cbd5e1; margin-top:30px;">
-                        <label>Votre CV (PDF)</label>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                            <div id="cv-display-area" style="color:#64748b; font-size:0.9rem; display:flex; align-items:center; gap:8px;"><i data-lucide="file"></i> Aucun fichier</div>
-                            <label style="cursor:pointer; color:var(--accent); font-weight:700; font-size:0.85rem; text-decoration:underline;">
-                                Mettre à jour <input type="file" id="up-cv" hidden accept=".pdf" onchange="uploadFile('cv')">
-                            </label>
+                    <div class="form-row" style="margin-top:20px;">
+                        <label>CV (PDF)</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0; padding:10px; border-radius:6px;">
+                            <div id="cv-display-area" style="color:#64748b; font-size:0.9rem; display:flex; align-items:center; gap:8px;">Aucun fichier</div>
+                            <label style="cursor:pointer; color:var(--accent); font-weight:600; font-size:0.85rem;">Mettre à jour <input type="file" id="up-cv" hidden accept=".pdf" onchange="uploadFile('cv')"></label>
                         </div>
                     </div>
                 </div>
             </section>
-
             <section id="mod-rdv" class="module hidden">
                 <div class="header-flex"><div><h2>Rendez-vous</h2></div></div>
                 <div class="card">
-                    <label>Lien de prise de RDV</label><input type="url" id="rdv-url" placeholder="https://calendly.com/..." oninput="saveRDV()">
-                    <label style="margin-top:20px">Texte du bouton</label><input type="text" id="rdv-text" placeholder="Prendre RDV" oninput="saveRDV()">
+                    <label>Lien Calendly / RDV</label><input type="url" id="rdv-url" oninput="saveRDV()">
+                    <label style="margin-top:15px">Texte du bouton</label><input type="text" id="rdv-text" oninput="saveRDV()">
                 </div>
             </section>
 
         </main>
-
         <aside class="preview-side">
             <div class="computer-wrapper">
-                <div class="browser-chrome">
-                    <div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-                    <div class="url-bar" id="fake-url">monsite.com</div>
-                </div>
+                <div class="browser-chrome"><div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div><div class="url-bar" id="fake-url">monsite.com</div></div>
                 <iframe id="site-preview" src="about:blank"></iframe>
             </div>
         </aside>
     </div>
 
 <script>
-    // --- 1. CONFIGURATION ---
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
-    
-    // Initialisation
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    let profileData = null;
-    let saveTimer = null;
+    let profileData = null, saveTimer = null;
 
-    // --- 2. INITIALISATION ---
     async function init() {
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
-
         const { data, error } = await sb.from('profiles').select('*, publications(*), courses(*), interventions(*)').eq('id', session.user.id);
-        
-        if (error || !data.length) { alert("Erreur chargement profil"); return; }
+        if (error || !data.length) { alert("Erreur chargement"); return; }
         profileData = data[0];
 
-        // Tris (Plus récent en haut)
         const sortFn = (a,b) => new Date(b.created_at) - new Date(a.created_at);
         if(profileData.courses) profileData.courses.sort(sortFn);
         if(profileData.publications) profileData.publications.sort(sortFn);
@@ -483,105 +203,41 @@
         document.getElementById('field-name').value = profileData.name || '';
         document.getElementById('field-bio').value = profileData.bio || '';
         if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url + '?t=' + Date.now();
-        
         renderPubs(); renderCourses(); renderInter();
-        
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
-        if(profileData.cv_url) document.getElementById('cv-display-area').innerHTML = `<a href="${profileData.cv_url}" target="_blank" style="color:#0f172a; font-weight:600; text-decoration:none;"><i data-lucide="file-check"></i> Document chargé</a>`;
-        
+        if(profileData.cv_url) document.getElementById('cv-display-area').innerHTML = `<a href="${profileData.cv_url}" target="_blank" style="text-decoration:none; color:inherit;"><i data-lucide="file-check"></i> CV Chargé</a>`;
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
         lucide.createIcons();
     }
 
-    // --- 3. AUTO-SAVE ---
-    window.autoSave = (table, id, field, value) => {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(async () => {
-            showToast("Enregistrement...", false);
-            if(table === 'profiles') {
-                await sb.from('profiles').update({[field]: value}).eq('id', profileData.id);
-                profileData[field] = value;
-            } else {
-                await sb.from(table).update({[field]: value}).eq('id', id);
-                const item = profileData[table].find(x => x.id === id);
-                if(item) item[field] = value;
-            }
-            showToast("Modifications enregistrées");
-            reloadPreview();
-        }, 1000);
-    }
+    // --- RENDERERS ---
 
-    window.saveRDV = () => {
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(async () => {
-            const val = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value };
-            await sb.from('profiles').update({appointment_settings: val}).eq('id', profileData.id);
-            profileData.appointment_settings = val;
-            showToast("RDV mis à jour"); reloadPreview();
-        }, 1000);
-    }
-
-    // --- 4. NAVIGATION & PREVIEW ---
-    window.switchTab = (modId, pageHtml, el) => {
-        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden'));
-        document.getElementById('mod-' + modId).classList.remove('hidden');
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        if(el) el.classList.add('active');
-
-        const iframe = document.getElementById('site-preview');
-        const fakeUrl = document.getElementById('fake-url');
-        const slug = profileData.slug || profileData.id;
-        
-        iframe.src = `${pageHtml}?prof=${slug}&t=${Date.now()}`;
-        fakeUrl.innerText = `monsite.com/${pageHtml === 'index.html' ? '' : pageHtml.replace('.html','')}`;
-    }
-
-    function reloadPreview() {
-        const iframe = document.getElementById('site-preview');
-        iframe.src = iframe.src;
-    }
-
-    // --- 5. UPLOAD FICHIERS ---
-    window.uploadFile = async (type) => {
-        const inputId = type === 'avatar' ? 'up-avatar' : 'up-cv';
-        const file = document.getElementById(inputId).files[0];
-        if(!file) return;
-
-        showToast("Chargement...", false);
-        const bucket = type === 'avatar' ? 'avatars' : 'documents';
-        const path = `${profileData.id}/${type}_${Date.now()}.${file.name.split('.').pop()}`;
-
-        const { error } = await sb.storage.from(bucket).upload(path, file);
-        if(error) return alert("Erreur upload");
-
-        const url = sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
-        const field = type === 'avatar' ? 'image_url' : 'cv_url';
-        
-        await sb.from('profiles').update({[field]: url}).eq('id', profileData.id);
-        profileData[field] = url;
-
-        fillUI(); reloadPreview();
-        showToast("Fichier mis à jour");
-    }
-
-    // --- 6. RENDERERS ---
+    // 1. PUBLICATIONS (Avec Switch)
     function renderPubs() {
         const c = document.getElementById('pubs-container');
-        if(!profileData.publications?.length) { c.innerHTML='<div style="text-align:center; color:#94a3b8; padding:40px; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication</div>'; return; }
-        c.innerHTML = profileData.publications.map(p => `
+        c.innerHTML = (profileData.publications||[]).map(p => `
             <div class="item-card" id="card-${p.id}">
                 <div class="item-header" onclick="toggleCard('${p.id}')">
                     <i data-lucide="grip-vertical" class="drag-handle"></i>
-                    <div class="item-title">${p.texte}</div>
-                    <span class="item-badge">${p.categorie}</span>
-                    <i data-lucide="chevron-down" class="chevron" id="chev-${p.id}"></i>
+                    <div class="item-title">${p.texte}</div><span class="item-badge">${p.categorie}</span><i data-lucide="chevron-down" class="chevron" id="chev-${p.id}"></i>
                 </div>
                 <div class="item-body">
                     <div class="form-row"><label>Titre</label><input value="${p.texte}" oninput="autoSave('publications', '${p.id}', 'texte', this.value)"></div>
                     <div class="form-row"><label>Catégorie</label><select onchange="autoSave('publications', '${p.id}', 'categorie', this.value)">${["Articles","Ouvrages","Chapitres","Conférences"].map(x=>`<option ${p.categorie==x?'selected':''}>${x}</option>`).join('')}</select></div>
-                    <div class="form-row"><label>Lien URL</label><input value="${p.lien||''}" oninput="autoSave('publications', '${p.id}', 'lien', this.value)"></div>
+                    
+                    <div class="form-row">
+                        <label>Contenu associé</label>
+                        ${renderTypeSwitcher(p.id, !!p.fichier_url, 'pub')}
+                        <div id="group-link-pub-${p.id}" class="input-group-link ${!p.fichier_url?'visible':''}"><input value="${p.lien||''}" placeholder="https://..." oninput="autoSave('publications', '${p.id}', 'lien', this.value)"></div>
+                        <div id="group-file-pub-${p.id}" class="input-group-file ${p.fichier_url?'visible':''}">
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <label class="btn-primary" style="cursor:pointer;"><i data-lucide="upload"></i> PDF <input type="file" hidden id="file-pub-${p.id}" onchange="uploadItemFile('publications', '${p.id}', 'file-pub-${p.id}')"></label>
+                                ${p.fichier_url ? `<span style="font-size:0.8rem; color:#10b981;">Fichier OK</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
                     <div style="text-align:right"><button class="btn-danger" onclick="delItem('publications', '${p.id}')">Supprimer</button></div>
                 </div>
             </div>`).join('');
@@ -589,52 +245,27 @@
         lucide.createIcons();
     }
 
-    function renderCourses() {
-        const c = document.getElementById('courses-container');
-        if(!profileData.courses?.length) { c.innerHTML='<div style="text-align:center; color:#94a3b8; padding:40px; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours</div>'; return; }
-        c.innerHTML = profileData.courses.map(item => `
-            <div class="item-card" id="card-${item.id}">
-                <div class="item-header" onclick="toggleCard('${item.id}')">
-                    <i data-lucide="grip-vertical" class="drag-handle"></i>
-                    <div class="item-title">${item.title}</div>
-                    <span class="item-badge">${item.category}</span>
-                    <i data-lucide="chevron-down" class="chevron" id="chev-${item.id}"></i>
-                </div>
-                <div class="item-body">
-                    <div class="form-row"><label>Nom du cours</label><input value="${item.title}" oninput="autoSave('courses', '${item.id}', 'title', this.value)"></div>
-                    <div class="form-row"><label>Niveau</label><input value="${item.category}" oninput="autoSave('courses', '${item.id}', 'category', this.value)"></div>
-                    <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('courses', '${item.id}', 'description', this.value)">${item.description||''}</textarea></div>
-                    
-                    <div style="background:#f1f5f9; padding:20px; border-radius:8px; margin-top:20px;">
-                        <label style="margin-bottom:10px;">Contenus associés</label>
-                        <div id="secs-${item.id}">${(item.sections||[]).map((s,i)=>`<div style="display:flex;gap:10px;margin-bottom:8px;background:white;padding:8px 12px;align-items:center;border-radius:6px;border:1px solid #e2e8f0;"><i data-lucide="file-text" size="14" style="color:#64748b"></i><span style="flex:1;font-size:0.9rem">${s.label}</span><button style="border:none;background:none;color:#ef4444;cursor:pointer" onclick="delSec('${item.id}',${i})"><i data-lucide="x" size="14"></i></button></div>`).join('')}</div>
-                        <div style="display:flex; gap:10px; margin-top:15px;">
-                            <input id="new-sec-${item.id}" placeholder="Titre du document/chapitre" style="flex:1">
-                            <button class="btn-primary" style="padding:5px 12px;" onclick="addSec('${item.id}')"><i data-lucide="plus" size="14"></i></button>
-                        </div>
-                    </div>
-                    <div style="text-align:right; margin-top:15px;"><button class="btn-danger" onclick="delItem('courses', '${item.id}')">Supprimer ce cours</button></div>
-                </div>
-            </div>`).join('');
-        new Sortable(c, { handle: '.drag-handle', animation: 150 });
-        lucide.createIcons();
-    }
-
+    // 2. INTERVENTIONS (Avec Switch)
     function renderInter() {
         const c = document.getElementById('interventions-container');
-        if(!profileData.interventions?.length) { c.innerHTML='<div style="text-align:center; color:#94a3b8; padding:40px; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention</div>'; return; }
-        c.innerHTML = profileData.interventions.map(i => `
+        c.innerHTML = (profileData.interventions||[]).map(i => `
             <div class="item-card" id="card-${i.id}">
                 <div class="item-header" onclick="toggleCard('${i.id}')">
-                    <i data-lucide="grip-vertical" class="drag-handle"></i>
-                    <div class="item-title">${i.title}</div>
-                    <span class="item-badge">${i.event_date}</span>
-                    <i data-lucide="chevron-down" class="chevron" id="chev-${i.id}"></i>
+                    <i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title">${i.title}</div><span class="item-badge">${i.event_date}</span><i data-lucide="chevron-down" class="chevron" id="chev-${i.id}"></i>
                 </div>
                 <div class="item-body">
                     <div class="form-row"><label>Titre</label><input value="${i.title}" oninput="autoSave('interventions', '${i.id}', 'title', this.value)"></div>
-                    <div class="form-row"><label>Date</label><input type="date" value="${i.event_date}" onchange="autoSave('interventions', '${i.id}', 'event_date', this.value)"></div>
-                    <div class="form-row"><label>Lieu</label><input value="${i.location||''}" oninput="autoSave('interventions', '${i.id}', 'location', this.value)"></div>
+                    <div class="form-row"><label>Date & Lieu</label><div style="display:flex; gap:10px"><input type="date" value="${i.event_date}" onchange="autoSave('interventions', '${i.id}', 'event_date', this.value)"><input value="${i.location||''}" placeholder="Lieu" oninput="autoSave('interventions', '${i.id}', 'location', this.value)"></div></div>
+                    
+                    <div class="form-row">
+                        <label>Média / Document</label>
+                        ${renderTypeSwitcher(i.id, !!i.file_url, 'int')}
+                        <div id="group-link-int-${i.id}" class="input-group-link ${!i.file_url?'visible':''}"><input value="${i.link||''}" placeholder="Lien Replay..." oninput="autoSave('interventions', '${i.id}', 'link', this.value)"></div>
+                        <div id="group-file-int-${i.id}" class="input-group-file ${i.file_url?'visible':''}">
+                             <label class="btn-primary" style="cursor:pointer;"><i data-lucide="upload"></i> Document <input type="file" hidden id="file-int-${i.id}" onchange="uploadItemFile('interventions', '${i.id}', 'file-int-${i.id}')"></label>
+                             ${i.file_url ? `<span style="font-size:0.8rem; color:#10b981; margin-left:10px;">Fichier OK</span>` : ''}
+                        </div>
+                    </div>
                     <div style="text-align:right"><button class="btn-danger" onclick="delItem('interventions', '${i.id}')">Supprimer</button></div>
                 </div>
             </div>`).join('');
@@ -642,55 +273,190 @@
         lucide.createIcons();
     }
 
-    // --- 7. HELPER FUNCTIONS ---
-    window.toggleCard = (id) => {
-        document.querySelectorAll('.item-card').forEach(c => c.classList.remove('open'));
-        document.getElementById('card-'+id).classList.add('open');
+    // 3. COURS (HIERARCHIE COMPLETE + SWITCH)
+    function renderCourses() {
+        const c = document.getElementById('courses-container');
+        if(!profileData.courses?.length) { c.innerHTML='<div style="text-align:center; padding:30px; color:#94a3b8;">Aucun cours.</div>'; return; }
+        
+        c.innerHTML = profileData.courses.map(course => `
+            <div class="item-card" id="card-${course.id}">
+                <div class="item-header" onclick="toggleCard('${course.id}')">
+                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title">${course.title}</div><span class="item-badge">${course.category}</span><i data-lucide="chevron-down" class="chevron" id="chev-${course.id}"></i>
+                </div>
+                <div class="item-body">
+                    <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value)"></div>
+                    <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
+                    
+                    <div style="border-top:1px solid #e2e8f0; margin-top:20px; padding-top:20px;">
+                        <label style="margin-bottom:15px; font-size:0.8rem;">Contenu du cours (Sections)</label>
+                        <div id="sections-wrapper-${course.id}">
+                            ${(course.sections || []).map((sec, secIdx) => `
+                                <div class="section-block">
+                                    <div class="section-header">
+                                        <span class="section-title">${sec.title}</span>
+                                        <button class="btn-ghost" onclick="delCourseSection('${course.id}', ${secIdx})"><i data-lucide="trash-2" size="14"></i></button>
+                                    </div>
+                                    <div class="section-content">
+                                        ${(sec.items || []).map((item, itemIdx) => `
+                                            <div class="course-item-row">
+                                                <i data-lucide="${item.type==='file'?'file-text':'link'}" size="16" style="color:#64748b;"></i>
+                                                <div style="flex:1;">
+                                                    <div style="font-weight:600; font-size:0.9rem;">${item.label}</div>
+                                                    <div style="font-size:0.75rem; color:#94a3b8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:300px;">${item.value || 'Fichier'}</div>
+                                                </div>
+                                                <button class="btn-ghost" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
+                                            </div>
+                                        `).join('')}
+                                        
+                                        <div class="add-item-box">
+                                            <input type="text" id="new-item-label-${course.id}-${secIdx}" placeholder="Nom du document..." style="flex:1; min-width:150px;">
+                                            <div style="display:flex; gap:5px; align-items:center;">
+                                                <select id="new-item-type-${course.id}-${secIdx}" onchange="toggleAddInput('${course.id}', ${secIdx}, this.value)" style="width:auto;">
+                                                    <option value="link">Lien URL</option>
+                                                    <option value="file">Fichier PDF</option>
+                                                </select>
+                                                <input id="new-item-url-${course.id}-${secIdx}" placeholder="https://..." style="width:150px;">
+                                                <label id="new-item-file-lbl-${course.id}-${secIdx}" class="btn-primary hidden" style="cursor:pointer; padding:8px 12px; font-size:0.8rem;">
+                                                    Upload <input type="file" id="new-item-file-${course.id}-${secIdx}" hidden>
+                                                </label>
+                                                <button class="btn-primary" onclick="addCourseItem('${course.id}', ${secIdx})"><i data-lucide="plus" size="14"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="background:#f1f5f9; padding:15px; border-radius:8px; display:flex; gap:10px; align-items:center;">
+                            <input type="text" id="new-section-title-${course.id}" placeholder="Nouvelle Section (ex: Slides, TD...)" style="flex:1;">
+                            <button class="btn-primary" onclick="addCourseSection('${course.id}')">Ajouter une Section</button>
+                        </div>
+                    </div>
+                    <div style="text-align:right; margin-top:20px;"><button class="btn-danger" onclick="delItem('courses', '${course.id}')">Supprimer le cours</button></div>
+                </div>
+            </div>`).join('');
+        lucide.createIcons();
     }
 
-    window.createItem = async (table, def) => {
-        def.prof_id = profileData.id;
-        const { data, error } = await sb.from(table).insert([def]).select();
-        if(!error) { 
-            if(!profileData[table]) profileData[table]=[]; 
-            profileData[table].unshift(data[0]); 
-            fillUI(); reloadPreview(); showToast("Élément créé");
+    // --- LOGIC: SWITCHER UI ---
+    window.renderTypeSwitcher = (id, isFile, type) => `
+        <div class="type-switcher">
+            <div class="type-opt ${!isFile?'active':''}" onclick="switchMediaType('${id}', '${type}', 'link')"><i data-lucide="link" size="12"></i> Lien</div>
+            <div class="type-opt ${isFile?'active':''}" onclick="switchMediaType('${id}', '${type}', 'file')"><i data-lucide="file" size="12"></i> Fichier</div>
+        </div>`;
+
+    window.switchMediaType = (id, prefix, mode) => {
+        const linkDiv = document.getElementById(`group-link-${prefix}-${id}`);
+        const fileDiv = document.getElementById(`group-file-${prefix}-${id}`);
+        const linkBtn = linkDiv.parentElement.querySelector('.type-opt:nth-child(1)');
+        const fileBtn = fileDiv.parentElement.querySelector('.type-opt:nth-child(2)');
+
+        if(mode === 'link') {
+            linkDiv.classList.add('visible'); fileDiv.classList.remove('visible');
+            linkBtn.classList.add('active'); fileBtn.classList.remove('active');
+        } else {
+            linkDiv.classList.remove('visible'); fileDiv.classList.add('visible');
+            linkBtn.classList.remove('active'); fileBtn.classList.add('active');
         }
     }
-    
-    window.delItem = async (table, id) => {
-        if(!confirm("Confirmer la suppression ?")) return;
-        await sb.from(table).delete().eq('id', id);
-        profileData[table] = profileData[table].filter(x => x.id !== id);
-        fillUI(); reloadPreview();
-    }
 
-    window.addSec = async (cid) => {
-        const val = document.getElementById('new-sec-'+cid).value; if(!val) return;
+    // --- LOGIC: COURSES NESTED ---
+    window.addCourseSection = async (cid) => {
+        const title = document.getElementById(`new-section-title-${cid}`).value;
+        if(!title) return;
         const c = profileData.courses.find(x=>x.id===cid);
-        if(!c.sections) c.sections=[];
-        c.sections.push({label:val, type:'file'});
-        await sb.from('courses').update({sections:c.sections}).eq('id',cid);
-        fillUI(); reloadPreview();
+        if(!c.sections) c.sections = [];
+        c.sections.push({ title: title, items: [] });
+        await updateCourse(c);
     }
-    window.delSec = async (cid, idx) => {
+
+    window.delCourseSection = async (cid, sIdx) => {
+        if(!confirm("Supprimer cette section ?")) return;
         const c = profileData.courses.find(x=>x.id===cid);
-        c.sections.splice(idx,1);
-        await sb.from('courses').update({sections:c.sections}).eq('id',cid);
-        fillUI(); reloadPreview();
+        c.sections.splice(sIdx, 1);
+        await updateCourse(c);
     }
 
-    function showToast(msg, autoHide=true) {
-        const t = document.getElementById('toast');
-        document.getElementById('toast-msg').innerText = msg;
-        t.classList.add('visible');
-        if(autoHide) setTimeout(() => t.classList.remove('visible'), 2500);
+    window.toggleAddInput = (cid, sIdx, type) => {
+        const urlInput = document.getElementById(`new-item-url-${cid}-${sIdx}`);
+        const fileLbl = document.getElementById(`new-item-file-lbl-${cid}-${sIdx}`);
+        if(type === 'link') { urlInput.classList.remove('hidden'); fileLbl.classList.add('hidden'); }
+        else { urlInput.classList.add('hidden'); fileLbl.classList.remove('hidden'); }
     }
 
+    window.addCourseItem = async (cid, sIdx) => {
+        const label = document.getElementById(`new-item-label-${cid}-${sIdx}`).value;
+        const type = document.getElementById(`new-item-type-${cid}-${sIdx}`).value;
+        if(!label) return alert("Nom requis");
+
+        let value = "";
+        if(type === 'link') {
+            value = document.getElementById(`new-item-url-${cid}-${sIdx}`).value;
+        } else {
+            const file = document.getElementById(`new-item-file-${cid}-${sIdx}`).files[0];
+            if(!file) return alert("Fichier requis");
+            showToast("Upload en cours...", false);
+            const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
+            const { error } = await sb.storage.from('documents').upload(path, file);
+            if(error) return alert("Erreur upload");
+            value = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+        }
+
+        const c = profileData.courses.find(x=>x.id===cid);
+        if(!c.sections[sIdx].items) c.sections[sIdx].items = [];
+        c.sections[sIdx].items.push({ label, type, value });
+        await updateCourse(c);
+        showToast("Élément ajouté");
+    }
+
+    window.delCourseItem = async (cid, sIdx, iIdx) => {
+        const c = profileData.courses.find(x=>x.id===cid);
+        c.sections[sIdx].items.splice(iIdx, 1);
+        await updateCourse(c);
+    }
+
+    async function updateCourse(c) {
+        await sb.from('courses').update({sections: c.sections}).eq('id', c.id);
+        renderCourses(); reloadPreview();
+    }
+
+    // --- GENERIC ---
+    window.uploadFile = async (type) => { /* Code inchangé pour avatar/cv */ 
+        const inputId = type==='avatar'?'up-avatar':'up-cv';
+        const file = document.getElementById(inputId).files[0]; if(!file) return;
+        showToast("Upload...", false);
+        const path = `${profileData.id}/${type}_${Date.now()}.${file.name.split('.').pop()}`;
+        await sb.storage.from(type==='avatar'?'avatars':'documents').upload(path, file);
+        const url = sb.storage.from(type==='avatar'?'avatars':'documents').getPublicUrl(path).data.publicUrl;
+        const f = type==='avatar'?'image_url':'cv_url';
+        await sb.from('profiles').update({[f]: url}).eq('id', profileData.id);
+        profileData[f] = url; fillUI(); reloadPreview(); showToast("OK");
+    }
+
+    window.uploadItemFile = async (table, id, inputId) => {
+        const f = document.getElementById(inputId).files[0]; if(!f) return;
+        showToast("Upload...", false);
+        const path = `${profileData.id}/${table}/${Date.now()}.pdf`;
+        await sb.storage.from('documents').upload(path, f);
+        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+        const field = table==='publications'?'fichier_url':'file_url';
+        await sb.from(table).update({[field]: url}).eq('id', id);
+        const item = profileData[table].find(x=>x.id===id); item[field]=url;
+        if(table==='publications') renderPubs(); else renderInter();
+        showToast("Fichier lié !"); reloadPreview();
+    }
+
+    // Helpers
+    window.toggleCard = (id) => { document.querySelectorAll('.item-card').forEach(c=>c.classList.remove('open')); document.getElementById('card-'+id).classList.add('open'); }
+    window.createItem = async (t,d) => { d.prof_id=profileData.id; const {data,error}=await sb.from(t).insert([d]).select(); if(!error){ if(!profileData[t]) profileData[t]=[]; profileData[t].unshift(data[0]); fillUI(); reloadPreview(); } }
+    window.delItem = async (t,id) => { if(!confirm("Supprimer ?")) return; await sb.from(t).delete().eq('id',id); profileData[t]=profileData[t].filter(x=>x.id!==id); fillUI(); reloadPreview(); }
+    window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
+    window.switchTab = (id,p,el) => { document.querySelectorAll('.module').forEach(m=>m.classList.add('hidden')); document.getElementById('mod-'+id).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); if(el) el.classList.add('active'); document.getElementById('site-preview').src=`${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; document.getElementById('fake-url').innerText=`monsite.com/${p.replace('.html','')}`; }
+    window.reloadPreview = () => { document.getElementById('site-preview').src = document.getElementById('site-preview').src; }
+    function showToast(msg,h=true){ const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=msg; t.classList.add('visible'); if(h) setTimeout(()=>t.classList.remove('visible'),2000); }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
 
     init();
-
 </script>
 </body>
 </html>
