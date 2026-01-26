@@ -3,126 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creator Studio - DIAGNOSTIC</title>
+    <title>Creator Studio - V12 Stable</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> 
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; padding: 20px; color: #333; }
-        .debug-box { background: #fee2e2; border: 2px solid #ef4444; color: #b91c1c; padding: 20px; margin-bottom: 20px; border-radius: 8px; font-family: monospace; }
-        button { padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-        button:hover { background: #1d4ed8; }
-        .hidden { display: none; }
+        :root { 
+            --bg-body: #f8fafc; --sidebar: #0f172a; --accent: #2563eb; 
+            --border: #e2e8f0; --text-main: #334155; --text-muted: #64748b;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+
+        /* SIDEBAR */
+        nav { width: 260px; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; padding: 25px 15px; border-right: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-weight: 800; font-size: 1.1rem; margin-bottom: 40px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; }
+        .logo span { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+        
+        .nav-title { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin: 20px 0 10px 12px; letter-spacing: 0.05em; }
+        .nav-item { padding: 10px 14px; margin-bottom: 4px; cursor: pointer; border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .nav-item.active { background: var(--accent); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
+        .logout-btn { margin-top: auto; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-weight: 600; opacity: 0.8; transition: 0.2s; }
+        .logout-btn:hover { opacity: 1; background: rgba(239, 68, 68, 0.1); border-radius: 8px; }
+
+        /* LAYOUT PRINCIPAL */
+        .admin-layout { display: flex; flex: 1; overflow: hidden; background: var(--bg-body); border-radius: 24px 0 0 24px; box-shadow: -20px 0 50px rgba(0,0,0,0.3); position: relative; }
+        
+        /* ZONE D'EDITION (Gauche) */
+        .editor-side { flex: 1; padding: 40px 50px; overflow-y: auto; max-width: 800px; margin: 0 auto; scroll-behavior: smooth; }
+        
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+        h2 { font-size: 1.8rem; font-weight: 800; margin: 0; color: #0f172a; }
+        p.subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px; }
+
+        /* CARDS & FORMS */
+        .card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .form-row { margin-bottom: 20px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: var(--text-muted); letter-spacing: 0.03em; }
+        input, textarea, select { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; font-family: inherit; box-sizing: border-box; transition: 0.2s; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+        /* BOUTONS */
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .btn-danger { background: #fee2e2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+        .btn-danger:hover { background: #fecaca; }
+
+        /* LISTES ACCORDEON */
+        .item-card { background: white; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: 0.2s; }
+        .item-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        
+        .item-header { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; background: white; user-select: none; }
+        .item-header:hover { background: #f8fafc; }
+        .drag-handle { color: #cbd5e1; cursor: grab; padding: 4px; }
+        .item-title { flex: 1; font-weight: 600; color: #334155; font-size: 1rem; }
+        .item-badge { font-size: 0.75rem; background: #f1f5f9; color: #64748b; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
+        .chevron { color: #94a3b8; transition: transform 0.2s; }
+        
+        .item-body { display: none; padding: 25px; background: #fcfcfc; border-top: 1px solid var(--border); }
+        .item-card.open .item-body { display: block; }
+        .item-card.open .chevron { transform: rotate(180deg); }
+        .item-card.open .item-header { background: #f1f5f9; }
+
+        /* --- NOUVEAU : SIMULATION ORDINATEUR --- */
+        .preview-side { 
+            width: 620px; /* Largeur fixe pour le panneau */
+            background: #cbd5e1; 
+            border-left: 1px solid #94a3b8; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            overflow: hidden; /* Important pour masquer ce qui dépasse */
+        }
+        
+        .computer-wrapper {
+            /* Simulation d'un écran 1366px (Laptop standard) */
+            width: 1366px; 
+            height: 768px; 
+            background: white;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.4);
+            /* L'ASTUCE MAGIQUE : On réduit l'échelle pour que ça rentre */
+            transform: scale(0.42); 
+            transform-origin: center center;
+            display: flex; flex-direction: column;
+        }
+
+        .browser-chrome {
+            height: 40px; background: #e2e8f0; border-bottom: 1px solid #cbd5e1;
+            display: flex; align-items: center; padding: 0 15px; gap: 10px;
+        }
+        .dots { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ef4444; } .yellow { background: #f59e0b; } .green { background: #10b981; }
+        .url-bar { 
+            flex: 1; height: 28px; background: white; border-radius: 6px; 
+            display: flex; align-items: center; padding-left: 12px; 
+            font-size: 12px; color: #64748b; font-family: sans-serif;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        iframe { width: 100%; flex: 1; border: none; background: white; }
+
+        /* HELPER CLASSES */
+        .hidden { display: none !important; }
+        #toast { position: fixed; top: 20px; right: 20px; background: #0f172a; color: white; padding: 10px 20px; border-radius: 8px; transform: translateY(-100px); transition: 0.3s; z-index: 999; display: flex; gap: 10px; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        #toast.visible { transform: translateY(0); }
+        
+        /* Pour les écrans trop petits, on cache la preview */
+        @media (max-width: 1300px) { .preview-side { display: none; } }
     </style>
 </head>
 <body>
 
-    <div id="debug-console" class="debug-box">
-        <h3>🔧 CONSOLE DE DIAGNOSTIC</h3>
-        <p id="status-msg">Initialisation en cours...</p>
-        <button onclick="forceLogout()">Forcer la Déconnexion (Reset)</button>
-    </div>
+    <div id="toast"><i data-lucide="check" size="18"></i> <span id="toast-msg">Sauvegardé</span></div>
 
-    <div id="app-interface" class="hidden">
-        <h1>Admin Panel (Mode Réparation)</h1>
-        <p>Si vous voyez ceci, Supabase est connecté !</p>
-        <hr>
-        <div style="display:flex; gap:20px;">
-            <div style="flex:1; background:white; padding:20px; border-radius:8px;">
-                <h3>Profil</h3>
-                <label>Nom :</label> <input type="text" id="field-name" style="padding:5px; width:100%;">
-                <br><br>
-                <button onclick="testSave()">Tester la Sauvegarde</button>
+    <nav>
+        <div class="logo">CORPUS <span>PRO</span></div>
+        
+        <div class="nav-title">Site Web</div>
+        <div class="nav-item active" onclick="switchTab('profil', 'index.html', this)"><i data-lucide="user"></i> Accueil & Profil</div>
+        <div class="nav-item" onclick="switchTab('biblio', 'publications.html', this)"><i data-lucide="book-open"></i> Publications</div>
+        <div class="nav-item" onclick="switchTab('cours', 'cours.html', this)"><i data-lucide="graduation-cap"></i> Enseignements</div>
+        <div class="nav-item" onclick="switchTab('interventions', 'interventions.html', this)"><i data-lucide="mic"></i> Interventions</div>
+
+        <div class="nav-title">Configuration</div>
+        <div class="nav-item" onclick="switchTab('perso', 'index.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
+        <div class="nav-item" onclick="switchTab('rdv', 'index.html', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
+
+        <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Se déconnecter</button>
+    </nav>
+
+    <div class="admin-layout">
+        
+        <main class="editor-side">
+            
+            <section id="mod-profil" class="module">
+                <div class="header-flex">
+                    <div><h2>Profil</h2><p class="subtitle">Identité de la page d'accueil.</p></div>
+                    <div style="font-size:0.8rem; color:#64748b; background:#f1f5f9; padding:5px 10px; border-radius:20px;">
+                        <i data-lucide="zap" size="12" style="vertical-align:middle"></i> Auto-save actif
+                    </div>
+                </div>
+                <div class="card">
+                    <div style="display:flex; align-items:center; gap:25px; padding-bottom:25px; margin-bottom:25px; border-bottom:1px solid #f1f5f9;">
+                        <img id="preview-avatar" src="" style="width:90px; height:90px; border-radius:50%; object-fit:cover; background:#f1f5f9; border:1px solid #e2e8f0;">
+                        <div>
+                            <label style="cursor:pointer; background:white; border:1px solid #cbd5e1; padding:10px 18px; border-radius:8px; font-weight:600; font-size:0.9rem; display:inline-flex; align-items:center; gap:8px; transition:0.2s;">
+                                <i data-lucide="upload"></i> Changer la photo
+                                <input type="file" id="up-avatar" hidden accept="image/*" onchange="uploadFile('avatar')">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name" oninput="autoSave('profiles', null, 'name', this.value)"></div>
+                    <div class="form-row"><label>Biographie</label><textarea id="field-bio" rows="6" oninput="autoSave('profiles', null, 'bio', this.value)"></textarea></div>
+                </div>
+            </section>
+
+            <section id="mod-biblio" class="module hidden">
+                <div class="header-flex">
+                    <div><h2>Publications</h2><p class="subtitle">Vos travaux de recherche.</p></div>
+                    <button class="btn-primary" onclick="createItem('publications', {texte:'Nouvelle publication', categorie:'Articles'})"><i data-lucide="plus"></i> Ajouter</button>
+                </div>
+                <div id="pubs-container"></div>
+            </section>
+
+            <section id="mod-cours" class="module hidden">
+                <div class="header-flex">
+                    <div><h2>Enseignements</h2><p class="subtitle">Gérez vos cours et documents.</p></div>
+                    <button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence'})"><i data-lucide="plus"></i> Nouveau Cours</button>
+                </div>
+                <div id="courses-container"></div>
+            </section>
+
+            <section id="mod-interventions" class="module hidden">
+                <div class="header-flex">
+                    <div><h2>Interventions</h2><p class="subtitle">Conférences et médias.</p></div>
+                    <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention'})"><i data-lucide="plus"></i> Ajouter</button>
+                </div>
+                <div id="interventions-container"></div>
+            </section>
+
+            <section id="mod-perso" class="module hidden">
+                <div class="header-flex"><div><h2>Paramètres</h2><p class="subtitle">Réseaux sociaux & CV.</p></div></div>
+                <div class="card">
+                    <div class="form-row"><label>LinkedIn</label><input type="url" id="field-linkedin" oninput="autoSave('profiles', null, 'linkedin_url', this.value)"></div>
+                    <div class="form-row"><label>Google Scholar</label><input type="url" id="field-scholar" oninput="autoSave('profiles', null, 'scholar_url', this.value)"></div>
+                    <div class="form-row" style="background:#f8fafc; padding:20px; border-radius:10px; border:1px solid #e2e8f0; margin-top:30px;">
+                        <label>Votre CV (PDF)</label>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                            <div id="cv-display-area" style="color:#64748b; font-size:0.9rem; font-style:italic;">Aucun fichier</div>
+                            <label style="cursor:pointer; color:var(--accent); font-weight:700; font-size:0.9rem;">
+                                Mettre à jour <input type="file" id="up-cv" hidden accept=".pdf" onchange="uploadFile('cv')">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="mod-rdv" class="module hidden">
+                <div class="header-flex"><div><h2>Rendez-vous</h2></div></div>
+                <div class="card">
+                    <label>Lien de prise de RDV</label><input type="url" id="rdv-url" placeholder="https://calendly.com/..." oninput="saveRDV()">
+                    <label style="margin-top:15px">Texte du bouton</label><input type="text" id="rdv-text" placeholder="Prendre RDV" oninput="saveRDV()">
+                </div>
+            </section>
+
+        </main>
+
+        <aside class="preview-side">
+            <div class="computer-wrapper">
+                <div class="browser-chrome">
+                    <div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+                    <div class="url-bar" id="fake-url">https://monsite.com</div>
+                </div>
+                <iframe id="site-preview" src="about:blank"></iframe>
             </div>
-        </div>
+            <div style="margin-top:20px; color:#64748b; font-size:0.8rem; font-weight:500;">
+                <i data-lucide="monitor" size="14" style="vertical-align:text-bottom"></i> Simulation Desktop (1366px)
+            </div>
+        </aside>
     </div>
 
 <script>
-    // 1. CONFIGURATION (GLOBAL VARIABLE)
-    // Pas d'import module, on utilise l'objet global 'supabase'
+    // --- 1. CONFIGURATION ROBUSTE ---
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     
-    let sbClient = null;
-    let myUserId = null;
+    // On utilise l'objet global 'supabase' (plus d'import module)
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Fonction pour afficher les logs à l'écran
-    function log(msg) {
-        console.log(msg);
-        const el = document.getElementById('status-msg');
-        el.innerHTML += "<br>> " + msg;
+    let profileData = null;
+    let saveTimer = null;
+
+    // --- 2. INITIALISATION ---
+    async function init() {
+        lucide.createIcons();
+        
+        // Vérif Session
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session) { window.location.href = 'login.html'; return; }
+
+        // Chargement Données
+        const { data, error } = await sb.from('profiles').select('*, publications(*), courses(*), interventions(*)').eq('id', session.user.id);
+        
+        if (error) { alert("Erreur connexion DB"); return; }
+        if (!data || data.length === 0) { alert("Profil introuvable"); return; }
+
+        profileData = data[0];
+
+        // Tris
+        const sortFn = (a,b) => new Date(b.created_at) - new Date(a.created_at);
+        if(profileData.courses) profileData.courses.sort(sortFn);
+        if(profileData.publications) profileData.publications.sort(sortFn);
+        if(profileData.interventions) profileData.interventions.sort(sortFn);
+
+        fillUI();
+
+        // Lancement Preview
+        switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
     }
 
-    async function initDiagnostic() {
-        try {
-            log("1. Vérification de la librairie Supabase...");
-            if (typeof supabase === 'undefined') {
-                throw new Error("La librairie Supabase ne s'est pas chargée. Vérifiez votre connexion internet.");
-            }
+    function fillUI() {
+        // Identité
+        document.getElementById('field-name').value = profileData.name || '';
+        document.getElementById('field-bio').value = profileData.bio || '';
+        if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url + '?t=' + Date.now();
+        
+        // Listes
+        renderPubs(); renderCourses(); renderInter();
+        
+        // Perso & RDV
+        document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
+        document.getElementById('field-scholar').value = profileData.scholar_url || '';
+        if(profileData.cv_url) document.getElementById('cv-display-area').innerHTML = `<a href="${profileData.cv_url}" target="_blank" style="color:#2563eb; text-decoration:none;">Voir le PDF actuel</a>`;
+        
+        document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
+        document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
+    }
+
+    // --- 3. AUTO-SAVE & UPDATE ---
+    window.autoSave = (table, id, field, value) => {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(async () => {
+            showToast("Sauvegarde...", false);
             
-            log("2. Connexion au client...");
-            sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            
-            log("3. Vérification de la session utilisateur...");
-            const { data, error } = await sbClient.auth.getSession();
-            
-            if (error) throw error;
-
-            if (!data.session) {
-                log("❌ AUCUNE SESSION TROUVÉE.");
-                log("👉 Redirection vers login.html dans 3 secondes...");
-                setTimeout(() => { window.location.href = 'login.html'; }, 3000);
-                return;
-            }
-
-            myUserId = data.session.user.id;
-            log("✅ Session OK ! User ID: " + myUserId);
-
-            log("4. Tentative de récupération du profil...");
-            const { data: profile, error: profError } = await sbClient
-                .from('profiles')
-                .select('*')
-                .eq('id', myUserId);
-
-            if (profError) {
-                log("❌ Erreur accès Database: " + profError.message);
-                log("Vérifiez vos règles RLS (Row Level Security) sur Supabase.");
-            } else if (profile.length === 0) {
-                log("⚠️ Profil introuvable pour cet ID.");
+            if(table === 'profiles') {
+                await sb.from('profiles').update({[field]: value}).eq('id', profileData.id);
+                profileData[field] = value;
             } else {
-                log("✅ Données récupérées avec succès !");
-                log("Nom trouvé : " + profile[0].name);
-                
-                // Tout est OK, on affiche l'interface
-                document.getElementById('debug-console').style.display = 'none';
-                document.getElementById('app-interface').classList.remove('hidden');
-                document.getElementById('field-name').value = profile[0].name || '';
+                await sb.from(table).update({[field]: value}).eq('id', id);
+                const item = profileData[table].find(x => x.id === id);
+                if(item) item[field] = value;
             }
+            showToast("Sauvegardé");
+            reloadPreview();
+        }, 1000);
+    }
 
-        } catch (err) {
-            log("❌ ERREUR CRITIQUE : " + err.message);
-            alert("Erreur critique : " + err.message);
+    window.saveRDV = () => {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(async () => {
+            const val = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value };
+            await sb.from('profiles').update({appointment_settings: val}).eq('id', profileData.id);
+            profileData.appointment_settings = val;
+            showToast("RDV Sauvegardé"); reloadPreview();
+        }, 1000);
+    }
+
+    // --- 4. NAVIGATION & PREVIEW ---
+    window.switchTab = (modId, pageHtml, el) => {
+        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden'));
+        document.getElementById('mod-' + modId).classList.remove('hidden');
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if(el) el.classList.add('active');
+
+        // Update Preview
+        const iframe = document.getElementById('site-preview');
+        const fakeUrl = document.getElementById('fake-url');
+        const slug = profileData.slug || profileData.id;
+        
+        iframe.src = `${pageHtml}?prof=${slug}&t=${Date.now()}`;
+        fakeUrl.innerText = `https://monsite.com/${pageHtml === 'index.html' ? '' : pageHtml.replace('.html','')}`;
+    }
+
+    function reloadPreview() {
+        const iframe = document.getElementById('site-preview');
+        iframe.src = iframe.src; // Force reload
+    }
+
+    // --- 5. UPLOAD FICHIERS ---
+    window.uploadFile = async (type) => {
+        const inputId = type === 'avatar' ? 'up-avatar' : 'up-cv';
+        const file = document.getElementById(inputId).files[0];
+        if(!file) return;
+
+        showToast("Envoi...", false);
+        const bucket = type === 'avatar' ? 'avatars' : 'documents';
+        const path = `${profileData.id}/${type}_${Date.now()}.${file.name.split('.').pop()}`;
+
+        const { error } = await sb.storage.from(bucket).upload(path, file);
+        if(error) return alert("Erreur upload");
+
+        const url = sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+        
+        const field = type === 'avatar' ? 'image_url' : 'cv_url';
+        await sb.from('profiles').update({[field]: url}).eq('id', profileData.id);
+        profileData[field] = url;
+
+        fillUI(); // Rafraichit l'image ou le lien
+        showToast("Fichier mis à jour");
+        reloadPreview();
+    }
+
+    // --- 6. RENDER FUNCTIONS (HTML Generator) ---
+    function renderPubs() {
+        const c = document.getElementById('pubs-container');
+        if(!profileData.publications?.length) { c.innerHTML='<div style="text-align:center; color:#ccc; padding:20px;">Vide</div>'; return; }
+        c.innerHTML = profileData.publications.map(p => `
+            <div class="item-card" id="card-${p.id}">
+                <div class="item-header" onclick="toggleCard('${p.id}')">
+                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title">${p.texte}</div>
+                    <span class="item-badge">${p.categorie}</span>
+                    <i data-lucide="chevron-down" class="chevron" id="chev-${p.id}"></i>
+                </div>
+                <div class="item-body">
+                    <div class="form-row"><label>Titre</label><input value="${p.texte}" oninput="autoSave('publications', '${p.id}', 'texte', this.value)"></div>
+                    <div class="form-row"><label>Catégorie</label><select onchange="autoSave('publications', '${p.id}', 'categorie', this.value)">${["Articles","Ouvrages","Chapitres"].map(x=>`<option ${p.categorie==x?'selected':''}>${x}</option>`).join('')}</select></div>
+                    <div class="form-row"><label>Lien URL</label><input value="${p.lien||''}" oninput="autoSave('publications', '${p.id}', 'lien', this.value)"></div>
+                    <div style="text-align:right"><button class="btn-danger" onclick="delItem('publications', '${p.id}')">Supprimer</button></div>
+                </div>
+            </div>`).join('');
+        new Sortable(c, { handle: '.drag-handle', animation: 150 });
+        lucide.createIcons();
+    }
+
+    function renderCourses() {
+        const c = document.getElementById('courses-container');
+        if(!profileData.courses?.length) { c.innerHTML='<div style="text-align:center; color:#ccc; padding:20px;">Vide</div>'; return; }
+        c.innerHTML = profileData.courses.map(item => `
+            <div class="item-card" id="card-${item.id}">
+                <div class="item-header" onclick="toggleCard('${item.id}')">
+                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title">${item.title}</div>
+                    <span class="item-badge">${item.category}</span>
+                    <i data-lucide="chevron-down" class="chevron" id="chev-${item.id}"></i>
+                </div>
+                <div class="item-body">
+                    <div class="form-row"><label>Titre</label><input value="${item.title}" oninput="autoSave('courses', '${item.id}', 'title', this.value)"></div>
+                    <div class="form-row"><label>Niveau</label><input value="${item.category}" oninput="autoSave('courses', '${item.id}', 'category', this.value)"></div>
+                    <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('courses', '${item.id}', 'description', this.value)">${item.description||''}</textarea></div>
+                    
+                    <div style="background:#f1f5f9; padding:15px; border-radius:8px;">
+                        <label>Contenus</label>
+                        <div id="secs-${item.id}">${(item.sections||[]).map((s,i)=>`<div style="display:flex;gap:10px;margin-bottom:5px;background:white;padding:5px;align-items:center;border-radius:4px;"><span style="flex:1;font-size:0.9rem">${s.label}</span><button style="border:none;background:none;color:red;cursor:pointer" onclick="delSec('${item.id}',${i})">X</button></div>`).join('')}</div>
+                        <div style="display:flex; gap:10px; margin-top:10px;">
+                            <input id="new-sec-${item.id}" placeholder="Titre chapitre" style="flex:1">
+                            <button class="btn-primary" style="padding:5px 10px;" onclick="addSec('${item.id}')">+</button>
+                        </div>
+                    </div>
+                    <div style="text-align:right; margin-top:15px;"><button class="btn-danger" onclick="delItem('courses', '${item.id}')">Supprimer le cours</button></div>
+                </div>
+            </div>`).join('');
+        new Sortable(c, { handle: '.drag-handle', animation: 150 });
+        lucide.createIcons();
+    }
+
+    function renderInter() {
+        const c = document.getElementById('interventions-container');
+        if(!profileData.interventions?.length) { c.innerHTML='<div style="text-align:center; color:#ccc; padding:20px;">Vide</div>'; return; }
+        c.innerHTML = profileData.interventions.map(i => `
+            <div class="item-card" id="card-${i.id}">
+                <div class="item-header" onclick="toggleCard('${i.id}')">
+                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title">${i.title}</div>
+                    <span class="item-badge">${i.event_date}</span>
+                    <i data-lucide="chevron-down" class="chevron" id="chev-${i.id}"></i>
+                </div>
+                <div class="item-body">
+                    <div class="form-row"><label>Titre</label><input value="${i.title}" oninput="autoSave('interventions', '${i.id}', 'title', this.value)"></div>
+                    <div class="form-row"><label>Date</label><input type="date" value="${i.event_date}" onchange="autoSave('interventions', '${i.id}', 'event_date', this.value)"></div>
+                    <div class="form-row"><label>Lieu</label><input value="${i.location||''}" oninput="autoSave('interventions', '${i.id}', 'location', this.value)"></div>
+                    <div style="text-align:right"><button class="btn-danger" onclick="delItem('interventions', '${i.id}')">Supprimer</button></div>
+                </div>
+            </div>`).join('');
+        new Sortable(c, { handle: '.drag-handle', animation: 150 });
+        lucide.createIcons();
+    }
+
+    // --- 7. HELPER FUNCTIONS ---
+    window.toggleCard = (id) => {
+        document.querySelectorAll('.item-card').forEach(c => c.classList.remove('open'));
+        document.getElementById('card-'+id).classList.add('open');
+    }
+
+    window.createItem = async (table, def) => {
+        def.prof_id = profileData.id;
+        const { data, error } = await sb.from(table).insert([def]).select();
+        if(!error) { 
+            if(!profileData[table]) profileData[table]=[]; 
+            profileData[table].unshift(data[0]); 
+            fillUI(); reloadPreview(); showToast("Créé");
         }
     }
-
-    // Fonctions de test simples
-    window.testSave = async () => {
-        const newName = document.getElementById('field-name').value;
-        const { error } = await sbClient.from('profiles').update({ name: newName }).eq('id', myUserId);
-        if(error) alert("Erreur sauvegarde : " + error.message);
-        else alert("Sauvegarde RÉUSSIE ! La connexion fonctionne.");
+    
+    window.delItem = async (table, id) => {
+        if(!confirm("Supprimer ?")) return;
+        await sb.from(table).delete().eq('id', id);
+        profileData[table] = profileData[table].filter(x => x.id !== id);
+        fillUI(); reloadPreview();
     }
 
-    window.forceLogout = async () => {
-        if(sbClient) await sbClient.auth.signOut();
-        window.location.href = 'login.html';
+    // Helpers Cours Sections
+    window.addSec = async (cid) => {
+        const val = document.getElementById('new-sec-'+cid).value; if(!val) return;
+        const c = profileData.courses.find(x=>x.id===cid);
+        if(!c.sections) c.sections=[];
+        c.sections.push({label:val, type:'file'});
+        await sb.from('courses').update({sections:c.sections}).eq('id',cid);
+        fillUI(); reloadPreview();
+    }
+    window.delSec = async (cid, idx) => {
+        const c = profileData.courses.find(x=>x.id===cid);
+        c.sections.splice(idx,1);
+        await sb.from('courses').update({sections:c.sections}).eq('id',cid);
+        fillUI(); reloadPreview();
     }
 
-    // Lancement
-    initDiagnostic();
+    function showToast(msg, autoHide=true) {
+        const t = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = msg;
+        t.classList.add('visible');
+        if(autoHide) setTimeout(() => t.classList.remove('visible'), 2000);
+    }
+
+    window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
+
+    // Start
+    init();
 
 </script>
 </body>
