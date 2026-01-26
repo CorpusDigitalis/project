@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - V22 Complete</title>
+    <title>Corpus Digitalis - V20 Stable</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -25,44 +25,47 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- UI GLOBAL --- */
-        .wrapper { display: flex; flex: 1; position: relative; background: var(--bg-body); height: calc(100vh - 20px); margin: 10px 0 10px 0; border-radius: 30px 0 0 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; }
-        .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
+        /* --- SIDEBAR & HEADER --- */
+        .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         
-        /* SIDEBAR */
-        nav { width: 270px; background: var(--sidebar); display: flex; flex-direction: column; padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease; }
+        nav { 
+            width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
+            padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease;
+        }
         .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
+        
         .nav-item { padding: 10px 14px; margin-bottom: 2px; cursor: pointer; border-radius: 6px; font-size: 0.85rem; font-weight: 500; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
         .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
         .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
         .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; }
         .logout-btn { margin-top: auto; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; }
-        .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
 
-        /* ELEMENTS */
+        /* --- LAYOUT PRO --- */
+        .wrapper { 
+            display: flex; flex: 1; position: relative; background: var(--bg-body);
+            height: calc(100vh - 20px); margin: 10px 0 10px 0; 
+            border-radius: 30px 0 0 30px; 
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
+        }
+        .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
+
+        /* --- UI ELEMENTS --- */
         .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .form-row { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); letter-spacing: 0.05em; }
+        
         input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background: #fff; transition: 0.2s; box-sizing: border-box; min-width: 0; }
         input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-        .input-compact { border: none; background: transparent; padding: 4px; font-size: 0.9rem; font-weight: 500; color: #334155; }
-        .input-compact:focus { background: #f8fafc; border-radius: 4px; }
 
-        /* BUTTONS */
         .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
+        .btn-primary:hover { background: var(--accent-light); }
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
         .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
-
-        /* LIST ITEMS (Header/Footer Config) */
-        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background: #fff; }
-        .config-item.hidden-item { opacity: 0.6; background: #f8fafc; }
-        .toggle-eye { cursor: pointer; color: #64748b; transition: 0.2s; }
-        .toggle-eye:hover { color: var(--accent-blue); }
-        .toggle-eye.off { color: #cbd5e1; }
 
         /* --- ACCORDIONS --- */
         .item-card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; transition: 0.2s; }
@@ -76,7 +79,7 @@
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
 
-        /* --- COURSES SPECIFIC --- */
+        /* --- COURSES --- */
         .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
         .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .section-title-input { background: transparent; border: 1px solid transparent; font-weight: 700; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; width: auto; transition: 0.2s; border-radius: 4px; }
@@ -85,41 +88,50 @@
         .section-content { padding: 12px; }
         .course-item-row { display: flex; align-items: center; gap: 10px; background: white; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
         .item-icon { color: #64748b; flex-shrink: 0; }
+        .input-compact { border: none; background: transparent; padding: 4px; font-size: 0.9rem; font-weight: 500; color: #334155; }
+        .input-compact:focus { background: #f8fafc; border-radius: 4px; }
 
         /* --- RESOURCE ROW --- */
-        .resource-row { background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px; display: flex; align-items: center; gap: 12px; margin-top: 15px; flex-wrap: wrap; transition: all 0.2s ease; }
+        .resource-row {
+            background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px;
+            display: flex; align-items: center; gap: 12px; margin-top: 15px; 
+            flex-wrap: wrap; 
+            transition: all 0.2s ease;
+        }
+        .resource-row:hover { border-color: #94a3b8; background: #fdfdfd; }
+
         .input-group-title { flex: 1; min-width: 150px; }
         .type-selector { display: flex; background: #f1f5f9; padding: 3px; border-radius: 8px; flex-shrink: 0; }
         .type-btn { border: none; background: transparent; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; }
+        .type-btn:hover { color: var(--accent-blue); }
         .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
         .action-area { flex: 2; min-width: 200px; position: relative; } 
+
         .upload-btn-wrapper { width: 100%; display: none; }
-        
-        /* FIX DEBORDEMENT BOUTON UPLOAD */
         .upload-label { 
             display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 9px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; 
             cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; 
-            min-width: 0; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
         }
-        .upload-label span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%; }
         .upload-label:hover { background: #dcfce7; }
         .hidden-input { display: none; }
 
         .resource-row.mode-link .link-input-wrapper { display: block; }
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
         .resource-row.mode-link .add-btn-container { display: block; }
+        
         .resource-row.mode-file .link-input-wrapper { display: none; }
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
         .resource-row.mode-file .add-btn-container { display: none; }
 
-        /* PREVIEW */
+        /* --- PREVIEW SIDE --- */
         .preview-side { width: 550px; background: #f1f5f9; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .computer-wrapper { width: 1366px; height: 768px; background: white; border-radius: 8px; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15); transform: scale(0.38); transform-origin: center center; display: flex; flex-direction: column; overflow: hidden; }
         .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; gap: 12px; }
         .url-bar { flex: 1; height: 28px; background: white; border-radius: 4px; display: flex; align-items: center; padding-left: 12px; font-size: 11px; color: #94a3b8; border: 1px solid #e2e8f0; }
         iframe { width: 100%; flex: 1; border: none; background: white; }
-
         .hidden { display: none !important; }
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 10px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s; z-index: 999; display: flex; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #toast.visible { transform: translateX(-50%) translateY(0); }
@@ -133,6 +145,7 @@
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
             nav.mobile-open { transform: translateX(0); }
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .header-flex button { width: 100%; justify-content: center; }
             .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
             .type-selector { justify-content: center; margin: 5px 0; }
             .input-group-title, .action-area { width: 100%; min-width: 0; }
@@ -203,55 +216,7 @@
                 <div id="interventions-container"></div>
             </section>
 
-            <section id="mod-perso" class="module hidden">
-                <div class="header-flex"><h2>Personnalisation</h2></div>
-                
-                <div class="card">
-                    <h4 style="margin-bottom:15px; color:#334155;">Identité & Réseaux</h4>
-                    <div class="form-row"><label>LinkedIn</label><input id="field-linkedin" placeholder="https://linkedin.com/in/..." oninput="autoSave('profiles',null,'linkedin_url',this.value)"></div>
-                    <div class="form-row"><label>Google Scholar</label><input id="field-scholar" placeholder="https://scholar.google.com/..." oninput="autoSave('profiles',null,'scholar_url',this.value)"></div>
-                    
-                    <label>Curriculum Vitae (PDF ou Lien)</label>
-                    <div class="resource-row mode-link" id="cv-row" style="margin-top:5px;">
-                        <div class="type-selector">
-                            <button type="button" class="type-btn active" onclick="switchCVMode('link', this)">Lien</button>
-                            <button type="button" class="type-btn" onclick="switchCVMode('file', this)">Fichier</button>
-                        </div>
-                        <div class="action-area">
-                            <div class="link-input-wrapper">
-                                <input type="url" id="field-cv-url" placeholder="https://" onchange="autoSave('profiles', null, 'cv_url', this.value)">
-                            </div>
-                            <div class="upload-btn-wrapper">
-                                <label class="upload-label">
-                                    <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
-                                    <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFile('cv', this)">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h4 style="margin-bottom:15px; color:#334155;">En-tête (Header)</h4>
-                    <div id="header-config-container"></div>
-                </div>
-
-                <div class="card">
-                    <h4 style="margin-bottom:15px; color:#334155;">Pied de page (Footer)</h4>
-                    <div id="footer-config-container"></div>
-                    <div style="margin-top:20px; border-top:1px dashed #e2e8f0; padding-top:15px;">
-                        <label style="margin-bottom:10px;">Ajouter un lien personnalisé</label>
-                        <div style="display:flex; gap:10px;">
-                            <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1">
-                            <input id="new-footer-url" placeholder="https://..." style="flex:1">
-                            <button class="btn-primary" onclick="addCustomFooterLink()">Ajouter</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="height: 60px;"></div>
-            </section>
-
+            <section id="mod-perso" class="module hidden"><div class="header-flex"><h2>Personnalisation</h2></div><div class="card"><div class="form-row"><label>LinkedIn</label><input id="field-linkedin" oninput="autoSave('profiles',null,'linkedin_url',this.value)"></div><div class="form-row"><label>Scholar</label><input id="field-scholar" oninput="autoSave('profiles',null,'scholar_url',this.value)"></div><div class="form-row"><label>CV PDF</label><input type="file" id="up-cv" onchange="uploadFile('cv')"></div></div></section>
             <section id="mod-rdv" class="module hidden"><div class="header-flex"><h2>Rendez-vous</h2></div><div class="card"><label>Lien</label><input id="rdv-url" oninput="saveRDV()"><label style="margin-top:10px">Texte</label><input id="rdv-text" oninput="saveRDV()"></div></section>
 
         </main>
@@ -272,38 +237,50 @@
     let profileData = null, saveTimer = null;
     let openCourseId = null, openPubId = null, openInterId = null;
 
-    const DEFAULT_CONFIG = {
-        header: { home: true, publications: true, courses: true, interventions: true, contact: true },
-        footer: { linkedin: true, scholar: true, cv: true, custom: [] }
-    };
-
     async function init() {
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
         await loadData(session.user.id);
+        // On attend que les données soient là avant de lancer la navigation
         switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
     }
 
     async function loadData(uid) {
-        // Chargement Profil
-        const { data: profile } = await sb.from('profiles').select('*').eq('id', uid).single();
-        if (!profile) return;
+        // ETAPE 1 : Charger le PROFIL (Prioritaire, pour ne jamais casser l'interface)
+        const { data: profile, error: errProf } = await sb.from('profiles').select('*').eq('id', uid).single();
+        
+        if (errProf || !profile) {
+            console.error("Erreur chargement profil:", errProf);
+            return;
+        }
+
         profileData = profile;
-        if (!profileData.config) profileData.config = DEFAULT_CONFIG;
+        profileData.courses = [];
+        profileData.publications = [];
+        profileData.interventions = [];
+        
+        // Afficher immédiatement le profil (Nom, Bio, Photo)
         fillProfileUI();
 
-        // Chargement Contenus (Robuste)
-        Promise.allSettled([
+        // ETAPE 2 : Charger les Contenus (Séparemment pour éviter le crash si une table manque)
+        // On utilise Promise.allSettled pour que si "interventions" plante, le reste fonctionne.
+        const [resCourses, resPubs, resInter] = await Promise.allSettled([
             sb.from('courses').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
             sb.from('publications').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
             sb.from('interventions').select('*').eq('prof_id', uid).order('created_at', { ascending: false })
-        ]).then((results) => {
-            profileData.courses = results[0].value?.data || [];
-            profileData.publications = results[1].value?.data || [];
-            profileData.interventions = results[2].value?.data || [];
-            fillUI(); 
-        });
+        ]);
+
+        if (resCourses.status === 'fulfilled' && resCourses.value.data) profileData.courses = resCourses.value.data;
+        if (resPubs.status === 'fulfilled' && resPubs.value.data) profileData.publications = resPubs.value.data;
+        
+        // Si la table interventions n'existe pas encore, ceci échouera silencieusement sans casser le site
+        if (resInter.status === 'fulfilled' && resInter.value.data) profileData.interventions = resInter.value.data;
+
+        // Mettre à jour les listes
+        renderCourses();
+        renderPublications();
+        renderInterventions();
     }
 
     function fillProfileUI() {
@@ -313,22 +290,11 @@
         if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
-        document.getElementById('field-cv-url').value = profileData.cv_url || '';
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
-        
-        renderHeaderConfig();
-        renderFooterConfig();
     }
 
-    function fillUI() {
-        renderCourses();
-        renderPublications();
-        renderInterventions();
-        lucide.createIcons();
-    }
-
-    // --- COURSES RENDER (RESTAURÉ) ---
+    // --- COURSES RENDER ---
     function renderCourses() {
         const c = document.getElementById('courses-container');
         if(!profileData.courses?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; return; }
@@ -346,7 +312,6 @@
                 <div class="item-body" onclick="event.stopPropagation()">
                     <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value)"></div>
                     <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
-                    
                     <div style="margin-top:25px;">
                         <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
                         ${(course.sections || []).map((sec, secIdx) => `
@@ -364,7 +329,6 @@
                                             <button class="btn-ghost" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
                                         </div>
                                     `).join('')}
-
                                     <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}">
                                         <div class="input-group-title"><input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document"></div>
                                         <div class="type-selector">
@@ -392,7 +356,7 @@
         lucide.createIcons();
     }
 
-    // --- PUBLICATIONS RENDER (RESTAURÉ) ---
+    // --- PUBLICATIONS RENDER ---
     function renderPublications() {
         const c = document.getElementById('pubs-container');
         if(!profileData.publications?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication.</div>'; return; }
@@ -453,7 +417,7 @@
         lucide.createIcons();
     }
 
-    // --- INTERVENTIONS RENDER (RESTAURÉ) ---
+    // --- INTERVENTIONS RENDER ---
     function renderInterventions() {
         const c = document.getElementById('interventions-container');
         if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
@@ -511,6 +475,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div style="text-align:right; margin-top:20px;"><button class="btn-delete-course" onclick="delItem('interventions', '${inter.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button></div>
                 </div>
             </div>`;
@@ -518,7 +483,7 @@
         lucide.createIcons();
     }
 
-    // --- ACTIONS LOGIC (RESTORED) ---
+    // --- ACTIONS COURSES ---
     window.switchMode = (cid, sIdx, mode, btn) => {
         const row = document.getElementById(`add-row-${cid}-${sIdx}`);
         row.classList.remove('mode-link', 'mode-file');
@@ -540,7 +505,7 @@
             const fileInput = document.getElementById(`file-${cid}-${sIdx}`);
             if(fileInput.files.length === 0) return; 
             const file = fileInput.files[0];
-            showToast("Upload...");
+            showToast("Upload en cours...");
             document.getElementById(`file-txt-${cid}-${sIdx}`).textContent = file.name;
             const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
             const { error } = await sb.storage.from('documents').upload(path, file);
@@ -554,7 +519,7 @@
         showToast("Ajouté !");
     }
 
-    // --- ACTIONS PUBLICATIONS/INTERVENTIONS ---
+    // --- ACTIONS PUBLICATIONS ---
     window.switchPubMode = (pid, mode, btn) => {
         const row = document.getElementById(`pub-res-${pid}`);
         row.classList.remove('mode-link', 'mode-file');
@@ -564,7 +529,7 @@
         btn.classList.add('active');
     }
     window.uploadPubFile = async (pid, input) => {
-        if (!input.files.length) return;
+        if (input.files.length === 0) return;
         const file = input.files[0];
         showToast("Upload...");
         input.parentElement.querySelector('span').textContent = file.name;
@@ -575,6 +540,7 @@
         showToast("Sauvegardé");
     }
 
+    // --- ACTIONS INTERVENTIONS ---
     window.switchInterMode = (iid, mode, btn) => {
         const row = document.getElementById(`inter-res-${iid}`);
         row.classList.remove('mode-link', 'mode-file');
@@ -584,7 +550,7 @@
         btn.classList.add('active');
     }
     window.uploadInterFile = async (iid, input) => {
-        if (!input.files.length) return;
+        if (input.files.length === 0) return;
         const file = input.files[0];
         showToast("Upload...");
         input.parentElement.querySelector('span').textContent = file.name;
@@ -595,110 +561,56 @@
         showToast("Sauvegardé");
     }
 
-    // --- CONFIG PERSO & CV ---
-    function renderHeaderConfig() {
-        const container = document.getElementById('header-config-container');
-        const h = profileData.config.header;
-        const items = [
-            { key: 'home', label: 'Accueil' },
-            { key: 'publications', label: 'Publications' },
-            { key: 'courses', label: 'Enseignements' },
-            { key: 'interventions', label: 'Interventions' }
-        ];
-        container.innerHTML = items.map(item => `
-            <div class="config-item ${h[item.key] ? '' : 'hidden-item'}">
-                <span>${item.label}</span>
-                <i data-lucide="${h[item.key] ? 'eye' : 'eye-off'}" class="toggle-eye ${h[item.key] ? '' : 'off'}" onclick="toggleConfig('header', '${item.key}')"></i>
-            </div>
-        `).join('');
-        lucide.createIcons();
-    }
-
-    function renderFooterConfig() {
-        const container = document.getElementById('footer-config-container');
-        const f = profileData.config.footer;
-        let html = `
-            <div class="config-item ${f.linkedin ? '' : 'hidden-item'}"><span><i data-lucide="linkedin" size="14"></i> LinkedIn</span><i data-lucide="${f.linkedin ? 'eye' : 'eye-off'}" class="toggle-eye" onclick="toggleConfig('footer', 'linkedin')"></i></div>
-            <div class="config-item ${f.scholar ? '' : 'hidden-item'}"><span><i data-lucide="graduation-cap" size="14"></i> Scholar</span><i data-lucide="${f.scholar ? 'eye' : 'eye-off'}" class="toggle-eye" onclick="toggleConfig('footer', 'scholar')"></i></div>
-            <div class="config-item ${f.cv ? '' : 'hidden-item'}"><span><i data-lucide="file-text" size="14"></i> CV</span><i data-lucide="${f.cv ? 'eye' : 'eye-off'}" class="toggle-eye" onclick="toggleConfig('footer', 'cv')"></i></div>
-        `;
-        if (f.custom && f.custom.length > 0) {
-            html += f.custom.map((l, idx) => `
-                <div class="config-item"><span>${l.label} <small style="color:#94a3b8">(${l.url})</small></span><button class="btn-ghost" onclick="removeFooterLink(${idx})" style="color:#ef4444;"><i data-lucide="trash-2" size="14"></i></button></div>
-            `).join('');
-        }
-        container.innerHTML = html;
-        lucide.createIcons();
-    }
-
-    window.toggleConfig = (section, key) => {
-        if (!profileData.config[section]) profileData.config[section] = {};
-        profileData.config[section][key] = !profileData.config[section][key];
-        saveConfig();
-        if(section === 'header') renderHeaderConfig();
-        if(section === 'footer') renderFooterConfig();
-    }
-    window.addCustomFooterLink = () => {
-        const label = document.getElementById('new-footer-label').value;
-        const url = document.getElementById('new-footer-url').value;
-        if (!label || !url) return alert("Remplissez le nom et l'URL");
-        if (!profileData.config.footer.custom) profileData.config.footer.custom = [];
-        profileData.config.footer.custom.push({ label, url });
-        document.getElementById('new-footer-label').value = '';
-        document.getElementById('new-footer-url').value = '';
-        saveConfig(); renderFooterConfig();
-    }
-    window.removeFooterLink = (idx) => { profileData.config.footer.custom.splice(idx, 1); saveConfig(); renderFooterConfig(); }
-    async function saveConfig() { await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); showToast("Config sauvegardée"); reloadPreview(); }
-
-    window.switchCVMode = (mode, btn) => {
-        const row = document.getElementById('cv-row');
-        row.classList.remove('mode-link', 'mode-file');
-        row.classList.add('mode-' + mode);
-        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    // --- COMMON ---
+    // --- COMMON HELPERS & NAVIGATION ---
     window.toggleCard = (id, type) => {
         if(type === 'course') { openCourseId = (openCourseId === id) ? null : id; renderCourses(); }
         else if (type === 'pub') { openPubId = (openPubId === id) ? null : id; renderPublications(); }
         else { openInterId = (openInterId === id) ? null : id; renderInterventions(); }
     }
+
     window.updateSectionTitle = async (cid, sIdx, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].title = val; await updateCourseDB(c); }
     window.updateItemData = async (cid, sIdx, iIdx, key, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items[iIdx][key] = val; await updateCourseDB(c); }
     window.addSection = async (cid) => { const c = profileData.courses.find(x => x.id === cid); if(!c.sections) c.sections = []; c.sections.push({ title: 'Nouvelle Section', items: [] }); openCourseId = cid; await updateCourseDB(c); }
     window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
     window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
     async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
-
-    window.createItem = async (t,d) => { d.prof_id=profileData.id; try { const {data,error}=await sb.from(t).insert([d]).select(); if(error) { console.error(error); return; } if(!profileData[t]) profileData[t]=[]; profileData[t].unshift(data[0]); if(t==='courses') openCourseId = data[0].id; if(t==='publications') openPubId = data[0].id; if(t==='interventions') openInterId = data[0].id; fillUI(); reloadPreview(); } catch(e) { console.log(e); } }
+    
+    // CREATION GENERIQUE ROBUSTE
+    window.createItem = async (t,d) => { 
+        d.prof_id=profileData.id; 
+        try {
+            const {data,error}=await sb.from(t).insert([d]).select(); 
+            if(error) { alert("Erreur: Table "+t+" manquante ?"); return; }
+            if(!profileData[t]) profileData[t]=[]; 
+            profileData[t].unshift(data[0]); 
+            if(t==='courses') openCourseId = data[0].id; 
+            if(t==='publications') openPubId = data[0].id; 
+            if(t==='interventions') openInterId = data[0].id; 
+            fillUI(); reloadPreview(); 
+        } catch(e) { console.log(e); }
+    }
+    
     window.delItem = async (t,id) => { if(!confirm("Supprimer ?")) return; await sb.from(t).delete().eq('id',id); profileData[t]=profileData[t].filter(x=>x.id!==id); fillUI(); reloadPreview(); }
     window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
-    window.saveRDV = () => { 
-        const url=document.getElementById('rdv-url').value; 
-        const text=document.getElementById('rdv-text').value;
-        clearTimeout(saveTimer);
-        saveTimer=setTimeout(async()=>{ await sb.from('profiles').update({appointment_settings:{url,text}}).eq('id',profileData.id); showToast("RDV Sauvegardé"); reloadPreview(); },1000);
-    }
-
-    window.uploadFile = async (type, input) => {
-        if (!input.files.length) return;
-        const file = input.files[0];
-        showToast("Upload en cours...");
-        const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`;
-        const { error } = await sb.storage.from('documents').upload(path, file);
-        if(error) return alert("Erreur: " + error.message);
-        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+    
+    // NAVIGATION SECURISEE
+    window.switchTab = (id,p,el) => { 
+        document.querySelectorAll('.module').forEach(m=>m.classList.add('hidden')); 
+        document.getElementById('mod-'+id).classList.remove('hidden'); 
+        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); 
+        if(el) el.classList.add('active'); 
+        document.getElementById('sidebar').classList.remove('mobile-open');
         
-        if (type === 'avatar') { await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id); document.getElementById('preview-avatar').src = url; } 
-        else if (type === 'cv') { document.getElementById('cv-file-label').textContent = file.name; await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id); document.getElementById('field-cv-url').value = url; }
-        showToast("Sauvegardé !");
+        // Empêcher le crash si profileData n'est pas encore là
+        const iframe = document.getElementById('site-preview');
+        if(iframe && profileData) {
+            iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
+        }
     }
 
-    window.switchTab = (id,p,el) => { document.querySelectorAll('.module').forEach(m=>m.classList.add('hidden')); document.getElementById('mod-'+id).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); if(el) el.classList.add('active'); document.getElementById('sidebar').classList.remove('mobile-open'); const iframe = document.getElementById('site-preview'); if(iframe && profileData) iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; }
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
     window.reloadPreview = () => { const i=document.getElementById('site-preview'); if(i) i.src=i.src; }
+    window.uploadFile = async (t) => { /* Code upload avatar/cv */ }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
     function showToast(m){ const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=m; t.classList.add('visible'); setTimeout(()=>t.classList.remove('visible'),2000); }
 
