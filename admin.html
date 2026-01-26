@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - V19 Interventions & Fixes</title>
+    <title>Corpus Digitalis - V20 Stable</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -91,11 +91,11 @@
         .input-compact { border: none; background: transparent; padding: 4px; font-size: 0.9rem; font-weight: 500; color: #334155; }
         .input-compact:focus { background: #f8fafc; border-radius: 4px; }
 
-        /* --- RESOURCE ROW (FIX RESPONSIVE & OVERFLOW) --- */
+        /* --- RESOURCE ROW --- */
         .resource-row {
             background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px;
             display: flex; align-items: center; gap: 12px; margin-top: 15px; 
-            flex-wrap: wrap; /* IMPORTANT: Permet le retour à la ligne si trop petit */
+            flex-wrap: wrap; 
             transition: all 0.2s ease;
         }
         .resource-row:hover { border-color: #94a3b8; background: #fdfdfd; }
@@ -106,7 +106,6 @@
         .type-btn:hover { color: var(--accent-blue); }
         .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
-        /* Action Area : min-width 0 pour permettre le shrink, flex-basis ajusté */
         .action-area { flex: 2; min-width: 200px; position: relative; } 
 
         .upload-btn-wrapper { width: 100%; display: none; }
@@ -114,12 +113,11 @@
             display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 9px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; 
             cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* FIX TEXTE TROP LONG */
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
         }
         .upload-label:hover { background: #dcfce7; }
         .hidden-input { display: none; }
 
-        /* Mécanique d'affichage */
         .resource-row.mode-link .link-input-wrapper { display: block; }
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
         .resource-row.mode-link .add-btn-container { display: block; }
@@ -148,8 +146,6 @@
             nav.mobile-open { transform: translateX(0); }
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
-            
-            /* Responsive du resource-row sur mobile */
             .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
             .type-selector { justify-content: center; margin: 5px 0; }
             .input-group-title, .action-area { width: 100%; min-width: 0; }
@@ -246,20 +242,49 @@
         const { data: { session } } = await sb.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
         await loadData(session.user.id);
+        // On attend que les données soient là avant de lancer la navigation
         switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
     }
 
     async function loadData(uid) {
-        const { data } = await sb.from('profiles').select('*, publications(*), courses(*), interventions(*)').eq('id', uid);
-        if(data && data.length) {
-            profileData = data[0];
-            const sortFn = (a,b) => new Date(b.created_at) - new Date(a.created_at);
-            ['courses','publications','interventions'].forEach(k => { if(profileData[k]) profileData[k].sort(sortFn) });
-            fillUI();
+        // ETAPE 1 : Charger le PROFIL (Prioritaire, pour ne jamais casser l'interface)
+        const { data: profile, error: errProf } = await sb.from('profiles').select('*').eq('id', uid).single();
+        
+        if (errProf || !profile) {
+            console.error("Erreur chargement profil:", errProf);
+            return;
         }
+
+        profileData = profile;
+        profileData.courses = [];
+        profileData.publications = [];
+        profileData.interventions = [];
+        
+        // Afficher immédiatement le profil (Nom, Bio, Photo)
+        fillProfileUI();
+
+        // ETAPE 2 : Charger les Contenus (Séparemment pour éviter le crash si une table manque)
+        // On utilise Promise.allSettled pour que si "interventions" plante, le reste fonctionne.
+        const [resCourses, resPubs, resInter] = await Promise.allSettled([
+            sb.from('courses').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
+            sb.from('publications').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
+            sb.from('interventions').select('*').eq('prof_id', uid).order('created_at', { ascending: false })
+        ]);
+
+        if (resCourses.status === 'fulfilled' && resCourses.value.data) profileData.courses = resCourses.value.data;
+        if (resPubs.status === 'fulfilled' && resPubs.value.data) profileData.publications = resPubs.value.data;
+        
+        // Si la table interventions n'existe pas encore, ceci échouera silencieusement sans casser le site
+        if (resInter.status === 'fulfilled' && resInter.value.data) profileData.interventions = resInter.value.data;
+
+        // Mettre à jour les listes
+        renderCourses();
+        renderPublications();
+        renderInterventions();
     }
 
-    function fillUI() {
+    function fillProfileUI() {
+        if(!profileData) return;
         document.getElementById('field-name').value = profileData.name || '';
         document.getElementById('field-bio').value = profileData.bio || '';
         if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
@@ -267,11 +292,6 @@
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
-        
-        renderCourses();
-        renderPublications();
-        renderInterventions();
-        lucide.createIcons();
     }
 
     // --- COURSES RENDER ---
@@ -397,7 +417,7 @@
         lucide.createIcons();
     }
 
-    // --- INTERVENTIONS RENDER (NEW) ---
+    // --- INTERVENTIONS RENDER ---
     function renderInterventions() {
         const c = document.getElementById('interventions-container');
         if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
@@ -541,7 +561,7 @@
         showToast("Sauvegardé");
     }
 
-    // --- COMMON HELPERS ---
+    // --- COMMON HELPERS & NAVIGATION ---
     window.toggleCard = (id, type) => {
         if(type === 'course') { openCourseId = (openCourseId === id) ? null : id; renderCourses(); }
         else if (type === 'pub') { openPubId = (openPubId === id) ? null : id; renderPublications(); }
@@ -554,4 +574,47 @@
     window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
     window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
     async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
-    window.createItem = async (t,d) => { d.prof_id=profileData.id; const {data,error}=await sb.from(t).insert([d]).select(); if(!error){ if(!profileData[t]) profileData[t]=[]; profileData[t].unshift(data[0]); if(t==='courses') openCourseId = data[0].id; if(t==='publications') openPubId = data
+    
+    // CREATION GENERIQUE ROBUSTE
+    window.createItem = async (t,d) => { 
+        d.prof_id=profileData.id; 
+        try {
+            const {data,error}=await sb.from(t).insert([d]).select(); 
+            if(error) { alert("Erreur: Table "+t+" manquante ?"); return; }
+            if(!profileData[t]) profileData[t]=[]; 
+            profileData[t].unshift(data[0]); 
+            if(t==='courses') openCourseId = data[0].id; 
+            if(t==='publications') openPubId = data[0].id; 
+            if(t==='interventions') openInterId = data[0].id; 
+            fillUI(); reloadPreview(); 
+        } catch(e) { console.log(e); }
+    }
+    
+    window.delItem = async (t,id) => { if(!confirm("Supprimer ?")) return; await sb.from(t).delete().eq('id',id); profileData[t]=profileData[t].filter(x=>x.id!==id); fillUI(); reloadPreview(); }
+    window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
+    
+    // NAVIGATION SECURISEE
+    window.switchTab = (id,p,el) => { 
+        document.querySelectorAll('.module').forEach(m=>m.classList.add('hidden')); 
+        document.getElementById('mod-'+id).classList.remove('hidden'); 
+        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); 
+        if(el) el.classList.add('active'); 
+        document.getElementById('sidebar').classList.remove('mobile-open');
+        
+        // Empêcher le crash si profileData n'est pas encore là
+        const iframe = document.getElementById('site-preview');
+        if(iframe && profileData) {
+            iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
+        }
+    }
+
+    window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
+    window.reloadPreview = () => { const i=document.getElementById('site-preview'); if(i) i.src=i.src; }
+    window.uploadFile = async (t) => { /* Code upload avatar/cv */ }
+    window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
+    function showToast(m){ const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=m; t.classList.add('visible'); setTimeout(()=>t.classList.remove('visible'),2000); }
+
+    init();
+</script>
+</body>
+</html>
