@@ -109,13 +109,18 @@
         .action-area { flex: 2; min-width: 200px; position: relative; } 
 
         .upload-btn-wrapper { width: 100%; display: none; }
+        
+        /* 2. Fix du bouton Upload qui déborde (Important pour le CV) */
         .upload-label { 
             display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 9px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; 
             cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            min-width: 0; /* Empêche le débordement flex */
         }
         .upload-label:hover { background: #dcfce7; }
+        .upload-label span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%; }
+        
         .hidden-input { display: none; }
 
         .resource-row.mode-link .link-input-wrapper { display: block; }
@@ -136,6 +141,14 @@
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 10px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s; z-index: 999; display: flex; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #toast.visible { transform: translateX(-50%) translateY(0); }
         
+        /* --- AJOUTS POUR LA PERSONNALISATION --- */
+        /* 1. Style des listes Header/Footer */
+        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background: #fff; }
+        .config-item.hidden-item { opacity: 0.6; background: #f8fafc; }
+        .toggle-eye { cursor: pointer; color: #64748b; transition: 0.2s; }
+        .toggle-eye:hover { color: #3b82f6; }
+        .toggle-eye.off { color: #cbd5e1; }
+
         @media (max-width: 1200px) { .preview-side { display: none; } }
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
@@ -184,7 +197,7 @@
                         <img id="preview-avatar" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover; background:#f8fafc; border:1px solid #e2e8f0;">
                         <label style="cursor:pointer; background:white; border:1px solid #cbd5e1; padding:8px 16px; border-radius:6px; font-weight:600; font-size:0.85rem; display:inline-flex; align-items:center; gap:8px;">
                             <i data-lucide="upload" size="16"></i> Modifier photo
-                            <input type="file" id="up-avatar" hidden accept="image/*" onchange="uploadFile('avatar')">
+                            <input type="file" id="up-avatar" hidden accept="image/*" onchange="uploadFile('avatar', this)">
                         </label>
                     </div>
                     <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name" oninput="autoSave('profiles', null, 'name', this.value)"></div>
@@ -216,7 +229,56 @@
                 <div id="interventions-container"></div>
             </section>
 
-            <section id="mod-perso" class="module hidden"><div class="header-flex"><h2>Personnalisation</h2></div><div class="card"><div class="form-row"><label>LinkedIn</label><input id="field-linkedin" oninput="autoSave('profiles',null,'linkedin_url',this.value)"></div><div class="form-row"><label>Scholar</label><input id="field-scholar" oninput="autoSave('profiles',null,'scholar_url',this.value)"></div><div class="form-row"><label>CV PDF</label><input type="file" id="up-cv" onchange="uploadFile('cv')"></div></div></section>
+            <section id="mod-perso" class="module hidden">
+                <div class="header-flex"><h2>Personnalisation</h2></div>
+                
+                <div class="card">
+                    <h4 style="margin-bottom:15px; color:#334155;">Identité & Réseaux</h4>
+                    <div class="form-row"><label>LinkedIn</label><input id="field-linkedin" placeholder="https://linkedin.com/in/..." oninput="autoSave('profiles',null,'linkedin_url',this.value)"></div>
+                    <div class="form-row"><label>Google Scholar</label><input id="field-scholar" placeholder="https://scholar.google.com/..." oninput="autoSave('profiles',null,'scholar_url',this.value)"></div>
+                    
+                    <label>Curriculum Vitae (PDF ou Lien)</label>
+                    <div class="resource-row mode-link" id="cv-row" style="margin-top:5px;">
+                        <div class="type-selector">
+                            <button type="button" class="type-btn active" onclick="switchCVMode('link', this)">Lien</button>
+                            <button type="button" class="type-btn" onclick="switchCVMode('file', this)">Fichier</button>
+                        </div>
+                        <div class="action-area">
+                            <div class="link-input-wrapper">
+                                <input type="url" id="field-cv-url" placeholder="https://" onchange="autoSave('profiles', null, 'cv_url', this.value)">
+                            </div>
+                            <div class="upload-btn-wrapper">
+                                <label class="upload-label">
+                                    <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
+                                    <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFile('cv', this)">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:15px; color:#334155;">En-tête (Header)</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:15px;">Cliquez sur l'œil pour afficher ou masquer.</p>
+                    <div id="header-config-container"></div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:15px; color:#334155;">Pied de page (Footer)</h4>
+                    <div id="footer-config-container"></div>
+                    
+                    <div style="margin-top:20px; border-top:1px dashed #e2e8f0; padding-top:15px;">
+                        <label style="margin-bottom:10px;">Ajouter un lien personnalisé</label>
+                        <div style="display:flex; gap:10px;">
+                            <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1">
+                            <input id="new-footer-url" placeholder="https://..." style="flex:1">
+                            <button class="btn-primary" onclick="addCustomFooterLink()">Ajouter</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="height: 80px;"></div>
+            </section>
             <section id="mod-rdv" class="module hidden"><div class="header-flex"><h2>Rendez-vous</h2></div><div class="card"><label>Lien</label><input id="rdv-url" oninput="saveRDV()"><label style="margin-top:10px">Texte</label><input id="rdv-text" oninput="saveRDV()"></div></section>
 
         </main>
@@ -234,6 +296,12 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
+    // CONFIGURATION PAR DEFAUT
+    const DEFAULT_CONFIG = {
+        header: { home: true, publications: true, courses: true, interventions: true, contact: true },
+        footer: { linkedin: true, scholar: true, cv: true, custom: [] }
+    };
+
     let profileData = null, saveTimer = null;
     let openCourseId = null, openPubId = null, openInterId = null;
 
@@ -242,12 +310,10 @@
         const { data: { session } } = await sb.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
         await loadData(session.user.id);
-        // On attend que les données soient là avant de lancer la navigation
         switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
     }
 
     async function loadData(uid) {
-        // ETAPE 1 : Charger le PROFIL (Prioritaire, pour ne jamais casser l'interface)
         const { data: profile, error: errProf } = await sb.from('profiles').select('*').eq('id', uid).single();
         
         if (errProf || !profile) {
@@ -260,11 +326,13 @@
         profileData.publications = [];
         profileData.interventions = [];
         
-        // Afficher immédiatement le profil (Nom, Bio, Photo)
+        // Initialiser la config si elle n'existe pas
+        if (!profileData.config) profileData.config = DEFAULT_CONFIG;
+        
+        // Afficher immédiatement le profil
         fillProfileUI();
 
-        // ETAPE 2 : Charger les Contenus (Séparemment pour éviter le crash si une table manque)
-        // On utilise Promise.allSettled pour que si "interventions" plante, le reste fonctionne.
+        // Charger le reste
         const [resCourses, resPubs, resInter] = await Promise.allSettled([
             sb.from('courses').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
             sb.from('publications').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
@@ -273,11 +341,8 @@
 
         if (resCourses.status === 'fulfilled' && resCourses.value.data) profileData.courses = resCourses.value.data;
         if (resPubs.status === 'fulfilled' && resPubs.value.data) profileData.publications = resPubs.value.data;
-        
-        // Si la table interventions n'existe pas encore, ceci échouera silencieusement sans casser le site
         if (resInter.status === 'fulfilled' && resInter.value.data) profileData.interventions = resInter.value.data;
 
-        // Mettre à jour les listes
         renderCourses();
         renderPublications();
         renderInterventions();
@@ -290,8 +355,14 @@
         if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
+        
+        document.getElementById('field-cv-url').value = profileData.cv_url || '';
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
+
+        // RENDU DES NOUVELLES LISTES DE CONFIG
+        renderHeaderConfig();
+        renderFooterConfig();
     }
 
     // --- COURSES RENDER ---
@@ -601,16 +672,117 @@
         if(el) el.classList.add('active'); 
         document.getElementById('sidebar').classList.remove('mobile-open');
         
-        // Empêcher le crash si profileData n'est pas encore là
         const iframe = document.getElementById('site-preview');
         if(iframe && profileData) {
             iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
         }
     }
 
+    // --- FONCTIONS PERSONNALISATION & CV ---
+    function renderHeaderConfig() {
+        const container = document.getElementById('header-config-container');
+        const h = profileData.config.header || DEFAULT_CONFIG.header;
+        const items = [
+            { key: 'home', label: 'Accueil' },
+            { key: 'publications', label: 'Publications' },
+            { key: 'courses', label: 'Enseignements' },
+            { key: 'interventions', label: 'Interventions' }
+        ];
+        container.innerHTML = items.map(item => `
+            <div class="config-item ${h[item.key] ? '' : 'hidden-item'}">
+                <span>${item.label}</span>
+                <i data-lucide="${h[item.key] ? 'eye' : 'eye-off'}" class="toggle-eye ${h[item.key] ? '' : 'off'}" onclick="toggleConfig('header', '${item.key}')"></i>
+            </div>
+        `).join('');
+        lucide.createIcons();
+    }
+
+    function renderFooterConfig() {
+        const container = document.getElementById('footer-config-container');
+        const f = profileData.config.footer || DEFAULT_CONFIG.footer;
+        
+        let html = `
+            <div class="config-item ${f.linkedin ? '' : 'hidden-item'}"><span><i data-lucide="linkedin" size="14"></i> LinkedIn</span><i data-lucide="${f.linkedin ? 'eye' : 'eye-off'}" class="toggle-eye" onclick="toggleConfig('footer', 'linkedin')"></i></div>
+            <div class="config-item ${f.scholar ? '' : 'hidden-item'}"><span><i data-lucide="graduation-cap" size="14"></i> Scholar</span><i data-lucide="${f.scholar ? 'eye' : 'eye-off'}" class="toggle-eye" onclick="toggleConfig('footer', 'scholar')"></i></div>
+            <div class="config-item ${f.cv ? '' : 'hidden-item'}"><span><i data-lucide="file-text" size="14"></i> CV</span><i data-lucide="${f.cv ? 'eye' : 'eye-off'}" class="toggle-eye" onclick="toggleConfig('footer', 'cv')"></i></div>
+        `;
+        
+        if (f.custom && f.custom.length > 0) {
+            html += f.custom.map((l, idx) => `
+                <div class="config-item">
+                    <span>${l.label} <small style="color:#94a3b8">(${l.url})</small></span>
+                    <button class="btn-ghost" onclick="removeFooterLink(${idx})" style="color:#ef4444;"><i data-lucide="trash-2" size="14"></i></button>
+                </div>
+            `).join('');
+        }
+        container.innerHTML = html;
+        lucide.createIcons();
+    }
+
+    window.toggleConfig = (section, key) => {
+        if (!profileData.config[section]) profileData.config[section] = {};
+        profileData.config[section][key] = !profileData.config[section][key];
+        saveConfig();
+        if(section === 'header') renderHeaderConfig();
+        if(section === 'footer') renderFooterConfig();
+    }
+
+    window.addCustomFooterLink = () => {
+        const label = document.getElementById('new-footer-label').value;
+        const url = document.getElementById('new-footer-url').value;
+        if (!label || !url) return alert("Remplissez le nom et l'URL");
+        
+        if (!profileData.config.footer.custom) profileData.config.footer.custom = [];
+        profileData.config.footer.custom.push({ label, url });
+        
+        document.getElementById('new-footer-label').value = '';
+        document.getElementById('new-footer-url').value = '';
+        saveConfig(); renderFooterConfig();
+    }
+
+    window.removeFooterLink = (idx) => {
+        profileData.config.footer.custom.splice(idx, 1);
+        saveConfig(); renderFooterConfig();
+    }
+
+    async function saveConfig() {
+        await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id);
+        showToast("Configuration sauvegardée");
+        reloadPreview();
+    }
+
+    window.switchCVMode = (mode, btn) => {
+        const row = document.getElementById('cv-row');
+        row.classList.remove('mode-link', 'mode-file');
+        row.classList.add('mode-' + mode);
+        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    window.uploadFile = async (type, input) => {
+        if (!input.files.length) return;
+        const file = input.files[0];
+        showToast("Upload en cours...");
+        
+        const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`;
+        const { error } = await sb.storage.from('documents').upload(path, file);
+        if(error) return alert("Erreur: " + error.message);
+        
+        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+        
+        if (type === 'avatar') {
+            await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id);
+            document.getElementById('preview-avatar').src = url;
+        } else if (type === 'cv') {
+            document.getElementById('cv-file-label').textContent = file.name;
+            await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id);
+            document.getElementById('field-cv-url').value = url;
+        }
+        showToast("Sauvegardé !");
+    }
+
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
     window.reloadPreview = () => { const i=document.getElementById('site-preview'); if(i) i.src=i.src; }
-    window.uploadFile = async (t) => { /* Code upload avatar/cv */ }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
     function showToast(m){ const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=m; t.classList.add('visible'); setTimeout(()=>t.classList.remove('visible'),2000); }
 
