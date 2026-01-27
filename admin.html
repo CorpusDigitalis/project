@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - V20 Stable</title>
+    <title>Corpus Digitalis - V21 CSS Fix</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -110,16 +110,15 @@
 
         .upload-btn-wrapper { width: 100%; display: none; }
         
-        /* 2. Fix du bouton Upload qui déborde (Important pour le CV) */
+        /* 2. Fix du bouton Upload qui déborde */
         .upload-label { 
             display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 9px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; 
             cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            min-width: 0; /* Empêche le débordement flex */
+            box-sizing: border-box; overflow: hidden;
         }
-        .upload-label:hover { background: #dcfce7; }
         .upload-label span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%; }
+        .upload-label:hover { background: #dcfce7; }
         
         .hidden-input { display: none; }
 
@@ -142,7 +141,6 @@
         #toast.visible { transform: translateX(-50%) translateY(0); }
         
         /* --- AJOUTS POUR LA PERSONNALISATION --- */
-        /* 1. Style des listes Header/Footer */
         .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background: #fff; }
         .config-item.hidden-item { opacity: 0.6; background: #f8fafc; }
         .toggle-eye { cursor: pointer; color: #64748b; transition: 0.2s; }
@@ -279,6 +277,7 @@
                 
                 <div style="height: 80px;"></div>
             </section>
+
             <section id="mod-rdv" class="module hidden"><div class="header-flex"><h2>Rendez-vous</h2></div><div class="card"><label>Lien</label><input id="rdv-url" oninput="saveRDV()"><label style="margin-top:10px">Texte</label><input id="rdv-text" oninput="saveRDV()"></div></section>
 
         </main>
@@ -296,7 +295,6 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
-    // CONFIGURATION PAR DEFAUT
     const DEFAULT_CONFIG = {
         header: { home: true, publications: true, courses: true, interventions: true, contact: true },
         footer: { linkedin: true, scholar: true, cv: true, custom: [] }
@@ -326,13 +324,10 @@
         profileData.publications = [];
         profileData.interventions = [];
         
-        // Initialiser la config si elle n'existe pas
         if (!profileData.config) profileData.config = DEFAULT_CONFIG;
         
-        // Afficher immédiatement le profil
         fillProfileUI();
 
-        // Charger le reste
         const [resCourses, resPubs, resInter] = await Promise.allSettled([
             sb.from('courses').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
             sb.from('publications').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
@@ -360,7 +355,6 @@
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
 
-        // RENDU DES NOUVELLES LISTES DE CONFIG
         renderHeaderConfig();
         renderFooterConfig();
     }
