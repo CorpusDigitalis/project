@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin V21</title>
+    <title>Corpus Digitalis - Admin V22</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,7 +27,10 @@
 
         /* --- SIDEBAR & HEADER --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        
+        /* Style spécifique pour le logo dans le header mobile */
+        .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
+        .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
+
         nav { 
             width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
             padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease;
@@ -59,6 +62,7 @@
         
         input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background: #fff; transition: 0.2s; box-sizing: border-box; min-width: 0; }
         input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+        input::placeholder { color: #cbd5e1; }
 
         .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
         .btn-primary:hover { background: var(--accent-light); }
@@ -110,7 +114,6 @@
 
         .upload-btn-wrapper { width: 100%; display: none; }
         
-        /* CORRECTIF : Bouton Upload qui ne déborde plus */
         .upload-label { 
             display: flex; 
             align-items: center; 
@@ -127,7 +130,7 @@
             font-size: 0.85rem; 
             transition: 0.2s; 
             box-sizing: border-box; 
-            overflow: hidden; /* Important */
+            overflow: hidden; 
         }
         .upload-label span { 
             white-space: nowrap; 
@@ -160,6 +163,8 @@
         
         /* --- PERSONNALISATION --- */
         .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background: #fff; }
+        /* Correction alignement icônes/texte */
+        .config-item > span { display: flex; align-items: center; gap: 12px; line-height: 1; }
         .config-item.hidden-item { opacity: 0.6; background: #f8fafc; }
         .toggle-eye { cursor: pointer; color: #64748b; transition: 0.2s; }
         .toggle-eye:hover { color: #3b82f6; }
@@ -173,6 +178,8 @@
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
             nav.mobile-open { transform: translateX(0); }
+            /* Cacher le logo de la sidebar en mobile car présent dans le header */
+            nav .logo { display: none; }
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
             .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
@@ -186,7 +193,7 @@
     <div id="toast"><i data-lucide="check" size="16"></i> <span id="toast-msg">Sauvegardé</span></div>
 
     <div class="mobile-header">
-        <div style="font-weight:800; letter-spacing: 0.05em;">CORPUS DIGITALIS</div>
+        <div class="logo-text">CORPUS DIGITALIS <span>PRO</span></div>
         <button onclick="toggleMobileMenu()" style="background:none; border:none; color:white;"><i data-lucide="menu"></i></button>
     </div>
 
@@ -261,7 +268,7 @@
                         </div>
                         <div class="action-area">
                             <div class="link-input-wrapper">
-                                <input type="url" id="field-cv-url" placeholder="https://" onchange="autoSave('profiles', null, 'cv_url', this.value)">
+                                <input type="url" id="field-cv-url" placeholder="https://drive.google.com/file/d/..." onchange="autoSave('profiles', null, 'cv_url', this.value)">
                             </div>
                             <div class="upload-btn-wrapper">
                                 <label class="upload-label">
@@ -296,7 +303,19 @@
                 <div style="height: 80px;"></div>
             </section>
 
-            <section id="mod-rdv" class="module hidden"><div class="header-flex"><h2>Rendez-vous</h2></div><div class="card"><label>Lien</label><input id="rdv-url" oninput="saveRDV()"><label style="margin-top:10px">Texte</label><input id="rdv-text" oninput="saveRDV()"></div></section>
+            <section id="mod-rdv" class="module hidden">
+                <div class="header-flex"><h2>Rendez-vous</h2></div>
+                <div class="card">
+                    <label>Lien de prise de rendez-vous</label>
+                    <input id="rdv-url" oninput="saveRDV()" placeholder="https://cal.com/votre-lien">
+                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                        <strong>Note :</strong> La gestion des disponibilités et des créneaux horaires s'effectue directement sur la plateforme tierce <strong>Cal.com</strong>.
+                        Une documentation complète et des tutoriels sont mis à votre disposition par notre équipe pour vous accompagner dans cette configuration.
+                    </p>
+                    <label style="margin-top:20px">Texte du bouton</label>
+                    <input id="rdv-text" oninput="saveRDV()" placeholder="Prendre rendez-vous">
+                </div>
+            </section>
 
         </main>
 
@@ -673,8 +692,31 @@
         } catch(e) { console.log(e); }
     }
     
-    window.delItem = async (t,id) => { if(!confirm("Supprimer ?")) return; await sb.from(t).delete().eq('id',id); profileData[t]=profileData[t].filter(x=>x.id!==id); fillUI(); reloadPreview(); }
+    // MISE A JOUR : SUPPRESSION IMMEDIATE SANS ATTENDRE REFRESH
+    window.delItem = async (t,id) => { 
+        if(!confirm("Supprimer ?")) return; 
+        const { error } = await sb.from(t).delete().eq('id',id);
+        if(error) { alert("Erreur de suppression"); return; }
+        
+        // Mise à jour locale immédiate
+        profileData[t] = profileData[t].filter(x => x.id !== id);
+        
+        // Force le re-rendu de la liste spécifique
+        if(t === 'courses') renderCourses();
+        if(t === 'publications') renderPublications();
+        if(t === 'interventions') renderInterventions();
+        
+        reloadPreview(); 
+        showToast("Élément supprimé");
+    }
+    
     window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
+    window.saveRDV = () => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ 
+        const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value };
+        await sb.from('profiles').update({appointment_settings: settings}).eq('id',profileData.id);
+        profileData.appointment_settings = settings;
+        showToast("RDV sauvegardé"); reloadPreview(); 
+    }, 1000); }
     
     // NAVIGATION SECURISEE
     window.switchTab = (id,p,el) => { 
