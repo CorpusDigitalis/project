@@ -3,51 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Tristan Arbona</title>
-    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <title>Chargement...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        /* Respect des sauts de ligne de la bio saisie en admin */
-        #profil-desc { white-space: pre-line; }
-        
-        /* Styles pour la navigation dynamique */
-        .dynamic-nav { display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; }
-        .dynamic-nav a { text-decoration: none; color: inherit; font-weight: 500; transition: opacity 0.2s; }
-        .dynamic-nav a:hover { opacity: 0.6; }
-        
-        header, footer { 
-            padding: 30px 5%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            max-width: 1200px; 
-            margin: 0 auto;
-        }
-
-        #profil-img {
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-            max-width: 300px;
-            border-radius: 8px;
-        }
-
-        .rdv-btn-container { margin-top: 30px; }
-        
-        /* Style responsive simple */
-        @media (max-width: 768px) {
-            header, footer { flex-direction: column; gap: 20px; text-align: center; }
-            .dynamic-nav { justify-content: center; font-size: 0.9rem; }
-        }
-    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
 
     <header>
-        <div class="logo" style="font-weight: 800; letter-spacing: -1px;">
-            <span class="site-name-display">CHARGEMENT...</span>
-        </div>
+        <div class="logo" id="header-logo">MON SITE</div>
         <nav>
             <ul id="header-menu" class="dynamic-nav">
                 </ul>
@@ -55,101 +21,126 @@
     </header>
 
     <div class="container">
-        <main class="main-content">
-            <img id="profil-img" src="" alt="Portrait" />
-            
-            <div class="description">
-                <h1 id="profil-titre">Chargement...</h1>
+        <main class="hero-section">
+            <img id="profil-img" src="" alt="Portrait" style="display:none;" /> <div class="description">
+                <h1 id="profil-titre"></h1>
                 <p id="profil-desc"></p>
-                
-                <div id="rdv-container" class="rdv-btn-container"></div>
+                <div id="rdv-container"></div>
             </div>
         </main>
     </div>
 
     <footer>
-        <p>© <span id="current-year"></span> <span class="site-name-display"></span></p>
+        <p>© <span id="current-year"></span> <span id="footer-name"></span></p>
         <nav>
             <ul id="footer-menu" class="dynamic-nav">
                 </ul>
         </nav>
     </footer>
 
-    <script type="module">
-        // Configuration Supabase
+    <script>
+        // --- 1. CONFIGURATION ---
         const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o'; // Clé publique OK
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Détection du profil (via ?prof=nom ou par défaut 'tristan')
-        const urlParams = new URLSearchParams(window.location.search);
-        const slug = urlParams.get('prof') || 'tristan';
+        // --- 2. LOGIQUE PRINCIPALE ---
+        async function loadSite() {
+            // Récupérer le paramètre 'prof' (soit un ID, soit un SLUG)
+            const params = new URLSearchParams(window.location.search);
+            const profParam = params.get('prof');
 
-       async function loadSiteContent() {
-    // Récupération des données du profil
-    const { data: prof, error } = await supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('slug', slug)
-        .single();
+            if (!profParam) {
+                document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable (URL incomplète).</div>";
+                return;
+            }
 
-    // SÉCURITÉ : Si la ligne n'existe pas ou s'il y a une erreur 406
-    if (error || !prof) {
-        console.error("Profil non trouvé dans Supabase:", error);
-        document.getElementById('profil-titre').innerText = "Profil en cours de configuration";
-        document.querySelectorAll('.site-name-display').forEach(el => el.innerText = "MON SITE");
-        return; // On arrête la fonction ici pour éviter le crash
-    }
+            // Stratégie : On essaie de trouver par ID d'abord (format UUID), sinon par Slug
+            let query = sb.from('profiles').select('*');
+            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
 
-    // 1. Mise à jour de l'identité (avec protections contre le "null")
-    const safeName = prof.name || "Identité à remplir";
-    
-    document.title = safeName;
-    
-    // On transforme en majuscules SEULEMENT si safeName n'est pas vide
-    document.querySelectorAll('.site-name-display').forEach(el => {
-        el.innerText = safeName.toUpperCase();
-    });
+            if (isUUID) {
+                query = query.eq('id', profParam);
+            } else {
+                query = query.eq('slug', profParam);
+            }
 
-    document.getElementById('profil-titre').innerText = safeName;
-    document.getElementById('profil-desc').innerHTML = (prof.bio || "Votre biographie apparaîtra ici après modification dans l'admin.").replace(/\n/g, '<br>');
-    document.getElementById('current-year').innerText = new Date().getFullYear();
+            const { data: profile, error } = await query.single();
 
-    // 2. Image de profil
-    const img = document.getElementById('profil-img');
-    if (prof.image_url) {
-        img.src = prof.image_url;
-        img.style.opacity = 1;
-    }
+            if (error || !profile) {
+                console.error("Erreur:", error);
+                document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Ce profil n'existe pas encore.</div>";
+                return;
+            }
 
-    // 3. Menus Header & Footer
-    renderMenu('header-menu', prof.header_menu);
-    renderMenu('footer-menu', prof.footer_menu);
+            // --- 3. INJECTION DES DONNÉES ---
+            document.title = profile.name || "Site Personnel";
+            document.getElementById('header-logo').textContent = (profile.name || "Mon Site").toUpperCase();
+            document.getElementById('footer-name').textContent = profile.name;
+            document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // 4. Bouton RDV
-    if (prof.appointment_settings?.url) {
-        const container = document.getElementById('rdv-container');
-        container.innerHTML = `<a href="${prof.appointment_settings.url}" class="rdv-button" target="_blank">
-            ${prof.appointment_settings.text || 'Prendre RDV'}
-        </a>`;
-    }
-}
+            document.getElementById('profil-titre').textContent = profile.name || "Bienvenue";
+            document.getElementById('profil-desc').textContent = profile.bio || "Biographie non renseignée.";
+            
+            // Image
+            const img = document.getElementById('profil-img');
+            if (profile.image_url) {
+                img.src = profile.image_url;
+                img.style.display = 'block';
+            } else {
+                // Placeholder si pas d'image
+                img.style.display = 'none'; 
+            }
 
-        // Fonction utilitaire pour construire les menus JSON
-        function renderMenu(elementId, menuItems) {
-            const list = document.getElementById(elementId);
-            list.innerHTML = '';
-            if (menuItems && Array.isArray(menuItems)) {
-                menuItems.forEach(item => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a href="${item.link}">${item.text}</a>`;
-                    list.appendChild(li);
+            // Bouton RDV
+            if (profile.appointment_settings && profile.appointment_settings.url) {
+                const btn = document.getElementById('rdv-container');
+                btn.innerHTML = `<a href="${profile.appointment_settings.url}" target="_blank" class="rdv-button">${profile.appointment_settings.text || "Prendre rendez-vous"}</a>`;
+            }
+
+            // --- 4. CONSTRUCTION DES MENUS (Basé sur CONFIG de l'admin) ---
+            const config = profile.config || {}; 
+            const hConfig = config.header || {};
+            const fConfig = config.footer || {};
+
+            // MENU HEADER
+            const hMenu = document.getElementById('header-menu');
+            let hHtml = '';
+            // On ajoute l'ID/Slug dans les liens pour garder la navigation fluide
+            const pLink = `?prof=${profParam}`; 
+
+            if (hConfig.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
+            if (hConfig.publications) hHtml += `<li><a href="publications.html${pLink}">Publications</a></li>`;
+            if (hConfig.courses) hHtml += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
+            if (hConfig.interventions) hHtml += `<li><a href="interventions.html${pLink}">Interventions</a></li>`;
+            
+            hMenu.innerHTML = hHtml;
+
+            // MENU FOOTER (Icônes)
+            const fMenu = document.getElementById('footer-menu');
+            let fHtml = '';
+
+            if (fConfig.linkedin && profile.linkedin_url) {
+                fHtml += `<li><a href="${profile.linkedin_url}" target="_blank" title="LinkedIn"><i data-lucide="linkedin"></i></a></li>`;
+            }
+            if (fConfig.scholar && profile.scholar_url) {
+                fHtml += `<li><a href="${profile.scholar_url}" target="_blank" title="Google Scholar"><i data-lucide="graduation-cap"></i></a></li>`;
+            }
+            if (fConfig.cv && profile.cv_url) {
+                fHtml += `<li><a href="${profile.cv_url}" target="_blank" title="Télécharger CV"><i data-lucide="file-text"></i></a></li>`;
+            }
+            // Liens custom footer
+            if (fConfig.custom && fConfig.custom.length > 0) {
+                fConfig.custom.forEach(link => {
+                    fHtml += `<li><a href="${link.url}" target="_blank">${link.label}</a></li>`;
                 });
             }
+
+            fMenu.innerHTML = fHtml;
+            lucide.createIcons();
         }
 
-        // Lancement
-        loadSiteContent();
+        loadSite();
     </script>
 </body>
 </html>
