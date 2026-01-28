@@ -3,185 +3,146 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Interventions & Colloques - Tristan Arbona</title>
-    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <title>Interventions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* ====== Style de Navigation Dynamique (Commun) ====== */
-        .dynamic-nav { display: flex; gap: 25px; list-style: none; padding: 0; margin: 0; }
-        .dynamic-nav a { text-decoration: none; color: inherit; font-weight: 500; }
-        header, footer { padding: 30px 5%; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
-
-        /* ====== Layout Interventions ====== */
-        .top-fade-voile {
-            position: fixed; top: 0; left: 0; width: 100%;
-            height: var(--voile-height, 150px); 
-            background: linear-gradient(to bottom, #fefaf5 90%, rgba(254, 250, 245, 0) 100%);
-            z-index: 9; pointer-events: none; 
+        .timeline-container { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
+        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
+        
+        .event-item { position: relative; padding-left: 50px; margin-bottom: 40px; }
+        .event-dot { 
+            position: absolute; left: 11px; top: 0; width: 20px; height: 20px; 
+            background: #0f172a; border-radius: 50%; border: 4px solid #f8fafc; z-index: 10;
         }
-
-        #titre-interventions { text-align: center; margin-top: 2rem; position: relative; z-index: 10; font-size: 2.5rem; }
-        #texte-intro-interventions { text-align: center; max-width: 760px; margin: 0.5rem auto 2rem auto; position: relative; z-index: 10; color: #666; }
-
-        /* zone filtres sticky */
-        #tools-box {
-            position: sticky; top: 20px; z-index: 100;
-            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
-            margin: 2rem auto; padding: 1.5rem; border-radius: 12px; border: 1px solid #eee;
-            display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
-            max-width: 1000px;
+        
+        .event-date { font-weight: 700; color: #64748b; font-size: 0.9rem; margin-bottom: 5px; }
+        .event-title { font-size: 1.3rem; font-weight: 700; color: #0f172a; margin: 0 0 5px 0; line-height: 1.3; }
+        .event-meta { font-size: 0.9rem; color: #3b82f6; font-weight: 600; margin-bottom: 10px; }
+        .event-desc { color: #475569; line-height: 1.6; margin-bottom: 15px; }
+        
+        .event-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.9rem; font-weight: 600; color: #0f172a; text-decoration: none; border-bottom: 1px solid transparent;
         }
-        #search-keyword { flex: 1; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
-        #tools-right { display: flex; gap: 0.5rem; align-items: center; }
-        #btn-reset { padding: 0.8rem 1.2rem; background: #000; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .event-link:hover { border-bottom-color: #0f172a; }
 
-        /* TIMELINE */
-        #timeline-wrapper { position: relative; margin-top: 4rem; padding-bottom: 5rem; }
-        #timeline-line { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 2px; background: #ddd; z-index: 1; }
-        .timeline-grid { display: grid; grid-template-columns: 1fr 50px 1fr; column-gap: 2rem; row-gap: 3rem; align-items: center; position: relative; z-index: 2; }
-        .timeline-event { display: contents; }
-        .timeline-dot { grid-column: 2; width: 12px; height: 12px; background: #000; border-radius: 50%; justify-self: center; border: 4px solid #fefaf5; }
-
-        .event-card { background: #fff; border: 1px solid #eee; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .event-date { font-weight: 700; color: #000; margin-bottom: 5px; }
-        .event-type { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
-        .event-link a { color: #0077cc; text-decoration: none; font-weight: 600; }
-
-        @media (max-width: 880px) {
-            #tools-box { flex-direction: column; top: 10px; }
-            .timeline-grid { grid-template-columns: 50px 1fr; }
-            #timeline-line { left: 25px; }
-            .timeline-dot { grid-column: 1; }
-            .event-left, .event-right { grid-column: 2; }
-        }
+        .empty-msg { text-align: center; color: #94a3b8; font-style: italic; margin-top: 4rem; }
     </style>
 </head>
 <body>
 
-    <div class="top-fade-voile" aria-hidden="true"></div>
-
     <header>
-        <div class="logo" style="font-weight: 800;"><span class="site-name-display">CHARGEMENT...</span></div>
-        <nav><ul id="header-menu" class="dynamic-nav"></ul></nav>
+        <div class="logo" id="header-logo">MON SITE</div>
+        <nav>
+            <ul id="header-menu" class="dynamic-nav"></ul>
+        </nav>
     </header>
 
     <div class="container">
-        <h1 id="titre-interventions">Interventions & Colloques</h1>
-        <p id="texte-intro-interventions">
-            Explorez mes prises de parole et participations scientifiques.
-        </p>
-
-        <aside id="tools-box">
-            <input type="text" id="search-keyword" placeholder="Rechercher par mot-clé (lieu, sujet, type)..." />
-            <div id="tools-right">
-                <input type="date" id="date-start" />
-                <input type="date" id="date-end" />
-                <button id="btn-reset">Réinitialiser</button>
+        <div style="width: 100%;">
+            <h1 style="text-align: center; margin-bottom: 1rem;">Interventions & Colloques</h1>
+            <p style="text-align: center; color: #64748b; margin-bottom: 3rem;">Conférences, séminaires et prises de parole.</p>
+            
+            <div id="timeline-box">
+                <p class="empty-msg">Chargement...</p>
             </div>
-        </aside>
-
-        <section id="timeline-wrapper">
-            <div id="timeline-line"></div>
-            <div class="timeline-grid" id="timeline-grid">Chargement de la chronologie...</div>
-        </section>
+        </div>
     </div>
 
     <footer>
-        <p>© <span id="current-year"></span> <span class="site-name-display"></span></p>
-        <nav><ul id="footer-menu" class="dynamic-nav"></ul></nav>
+        <p>© <span id="current-year"></span> <span id="footer-name"></span></p>
+        <nav>
+            <ul id="footer-menu" class="dynamic-nav"></ul>
+        </nav>
     </footer>
 
-    <script type="module">
+    <script>
         const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const slug = "tristan";
+        async function init() {
+            const params = new URLSearchParams(window.location.search);
+            const profParam = params.get('prof');
+            if (!profParam) { document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>"; return; }
 
-        async function initInterventions() {
-            // 1. Récupération des données
-            const { data: prof, error } = await supabaseClient
-                .from('profiles')
-                .select('*, interventions(*)')
-                .eq('slug', slug)
-                .single();
+            let query = sb.from('profiles').select('*, interventions(*)');
+            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
+            query = isUUID ? query.eq('id', profParam) : query.eq('slug', profParam);
 
-            if (error || !prof) return;
+            const { data: profile, error } = await query.single();
 
-            // 2. Mise à jour Identité/Menus
-            document.querySelectorAll('.site-name-display').forEach(el => el.innerText = prof.name);
-            document.getElementById('current-year').innerText = new Date().getFullYear();
-            renderMenu('header-menu', prof.header_menu);
-            renderMenu('footer-menu', prof.footer_menu);
+            if (error || !profile) { document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>"; return; }
 
-            // 3. Génération Timeline
-            const container = document.getElementById('timeline-grid');
-            container.innerHTML = "";
-            
-            const list = prof.interventions || [];
-            list.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // Identité
+            document.title = `Interventions - ${profile.name}`;
+            document.getElementById('header-logo').textContent = (profile.name).toUpperCase();
+            document.getElementById('footer-name').textContent = profile.name;
+            document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            list.forEach((item, index) => {
-                const isEven = index % 2 === 0;
-                const keywords = `${item.lieu} ${item.type} ${item.description}`.toLowerCase();
-                
-                const html = `
-                    <div class="timeline-event" data-date="${item.date}" data-keywords="${keywords}">
-                        <div class="${isEven ? 'event-left' : 'event-right'}">
-                            <div class="event-card">
-                                <p class="event-date">${new Date(item.date).toLocaleDateString('fr-FR')}</p>
-                                <p style="color:#888; font-size:0.9rem; margin-bottom:10px;">${item.lieu || ''}</p>
-                                <h3 class="event-type">${item.type || ''}</h3>
-                                <p style="line-height:1.6;">${item.description || ''}</p>
-                                ${item.lien_url ? `<p class="event-link"><a href="${item.lien_url}" target="_blank">→ Consulter</a></p>` : ''}
-                            </div>
-                        </div>
-                        <div class="timeline-dot"></div>
-                        <div class="${isEven ? 'event-right' : 'event-left'}"></div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', html);
-            });
+            // Menu
+            const pLink = `?prof=${profParam}`;
+            const conf = profile.config || {};
+            const h = conf.header || {};
+            let hHtml = '';
+            if (h.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
+            if (h.publications) hHtml += `<li><a href="publications.html${pLink}">Publications</a></li>`;
+            if (h.courses) hHtml += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
+            if (h.interventions) hHtml += `<li><a href="interventions.html${pLink}" style="color:white;">Interventions</a></li>`;
+            document.getElementById('header-menu').innerHTML = hHtml;
 
-            setupFilters();
-        }
+            const f = conf.footer || {};
+            let fHtml = '';
+            if (f.linkedin && profile.linkedin_url) fHtml += `<li><a href="${profile.linkedin_url}" target="_blank"><i data-lucide="linkedin"></i></a></li>`;
+            if (f.scholar && profile.scholar_url) fHtml += `<li><a href="${profile.scholar_url}" target="_blank"><i data-lucide="graduation-cap"></i></a></li>`;
+            if (f.cv && profile.cv_url) fHtml += `<li><a href="${profile.cv_url}" target="_blank"><i data-lucide="file-text"></i></a></li>`;
+            document.getElementById('footer-menu').innerHTML = fHtml;
 
-        function renderMenu(id, items) {
-            const list = document.getElementById(id);
-            if (items) list.innerHTML = items.map(i => `<li><a href="${i.link}">${i.text}</a></li>`).join('');
-        }
+            // Affichage Timeline
+            const container = document.getElementById('timeline-box');
+            const items = profile.interventions || [];
 
-        function setupFilters() {
-            const $search = document.getElementById('search-keyword');
-            const $start = document.getElementById('date-start');
-            const $end = document.getElementById('date-end');
-            const $reset = document.getElementById('btn-reset');
-
-            function apply() {
-                const kw = $search.value.toLowerCase();
-                const start = $start.value ? new Date($start.value) : null;
-                const end = $end.value ? new Date($end.value) : null;
-
-                document.querySelectorAll('.timeline-event').forEach(ev => {
-                    const evDate = new Date(ev.dataset.date);
-                    const evKw = ev.dataset.keywords;
-                    let visible = true;
-
-                    if (kw && !evKw.includes(kw)) visible = false;
-                    if (start && evDate < start) visible = false;
-                    if (end && evDate > end) visible = false;
-
-                    ev.style.display = visible ? 'contents' : 'none';
-                });
+            if (items.length === 0) {
+                container.innerHTML = "<p class='empty-msg'>Aucune intervention pour le moment.</p>";
+                return;
             }
 
-            [$search, $start, $end].forEach(el => el.addEventListener('input', apply));
-            $reset.onclick = () => { $search.value = ""; $start.value = ""; $end.value = ""; apply(); };
+            // Tri date
+            items.sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
+
+            let html = '<div class="timeline-container"><div class="timeline-line"></div>';
+            
+            items.forEach(item => {
+                const dateStr = item.event_date ? new Date(item.event_date).toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric'}) : 'Date inconnue';
+                const locationStr = item.location ? `• ${item.location}` : '';
+                
+                let linkHtml = '';
+                if(item.link_value) {
+                    const label = item.link_type === 'file' ? 'Télécharger le support' : 'Voir le lien';
+                    linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="link" size="14"></i> ${label}</a>`;
+                }
+
+                html += `
+                    <div class="event-item">
+                        <div class="event-dot"></div>
+                        <div class="event-date">${dateStr}</div>
+                        <h3 class="event-title">${item.title}</h3>
+                        <div class="event-meta">${item.category || 'Conférence'} ${locationStr}</div>
+                        <p class="event-desc">${item.description || ''}</p>
+                        ${linkHtml}
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+            lucide.createIcons();
         }
 
-        initInterventions();
+        init();
     </script>
 </body>
 </html>
