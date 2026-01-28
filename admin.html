@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin V22</title>
+    <title>Corpus Digitalis - Admin V23</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,7 +27,6 @@
 
         /* --- SIDEBAR & HEADER --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        /* Style spécifique pour le logo dans le header mobile */
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
 
@@ -677,22 +676,31 @@
     window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
     async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
     
-    // CREATION GENERIQUE ROBUSTE
+    // CREATION GENERIQUE ROBUSTE (CORRIGEE)
     window.createItem = async (t,d) => { 
         d.prof_id=profileData.id; 
         try {
             const {data,error}=await sb.from(t).insert([d]).select(); 
-            if(error) { alert("Erreur: Table "+t+" manquante ?"); return; }
+            if(error) { alert("Erreur : " + error.message); return; }
+            
             if(!profileData[t]) profileData[t]=[]; 
             profileData[t].unshift(data[0]); 
+            
+            // Ouvrir l'accordéon du nouvel élément
             if(t==='courses') openCourseId = data[0].id; 
             if(t==='publications') openPubId = data[0].id; 
             if(t==='interventions') openInterId = data[0].id; 
-            fillUI(); reloadPreview(); 
+            
+            // Rafraîchir UNIQUEMENT la liste concernée pour éviter les erreurs
+            if(t==='courses') renderCourses();
+            if(t==='publications') renderPublications();
+            if(t==='interventions') renderInterventions();
+            
+            showToast("Élément créé !");
+            reloadPreview(); 
         } catch(e) { console.log(e); }
     }
     
-    // MISE A JOUR : SUPPRESSION IMMEDIATE SANS ATTENDRE REFRESH
     window.delItem = async (t,id) => { 
         if(!confirm("Supprimer ?")) return; 
         const { error } = await sb.from(t).delete().eq('id',id);
