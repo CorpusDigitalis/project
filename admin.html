@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin V23</title>
+    <title>Corpus Digitalis - Admin V24</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,6 +16,8 @@
             --sidebar: #0f172a; 
             --accent: #0f172a; 
             --accent-blue: #3b82f6; 
+            --accent-green: #10b981;
+            --accent-green-light: #ecfdf5;
             --accent-light: #1e293b; 
             --border: #e2e8f0; 
             --text-main: #334155; 
@@ -23,7 +25,12 @@
             --radius-pro: 30px; 
         }
 
+        /* --- GLOBAL RESET & FONTS --- */
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Harmonisation des polices pour tous les inputs */
+        input, textarea, select, button { font-family: 'Inter', sans-serif; }
+        textarea { font-size: 0.9rem; line-height: 1.5; }
 
         /* --- SIDEBAR & HEADER --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
@@ -33,15 +40,18 @@
         nav { 
             width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
             padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease;
+            height: 100vh; box-sizing: border-box; overflow-y: auto; /* Scroll si menu trop long */
         }
-        .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
         .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
         
-        .nav-item { padding: 10px 14px; margin-bottom: 2px; cursor: pointer; border-radius: 6px; font-size: 0.85rem; font-weight: 500; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-item { padding: 10px 14px; margin-bottom: 2px; cursor: pointer; border-radius: 6px; font-size: 0.85rem; font-weight: 500; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
         .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
         .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
-        .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; }
-        .logout-btn { margin-top: auto; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; }
+        .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; flex-shrink: 0; }
+        
+        /* Correction Logout Mobile */
+        .logout-btn { margin-top: auto; margin-bottom: 20px; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; flex-shrink: 0; }
 
         /* --- LAYOUT PRO --- */
         .wrapper { 
@@ -50,7 +60,9 @@
             border-radius: 30px 0 0 30px; 
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
         }
-        .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
+        /* Marge de scroll en bas pour le confort */
+        .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px 150px 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
+        
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
 
@@ -60,13 +72,19 @@
         label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); letter-spacing: 0.05em; }
         
         input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background: #fff; transition: 0.2s; box-sizing: border-box; min-width: 0; }
-        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
         input::placeholder { color: #cbd5e1; }
 
         .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
         .btn-primary:hover { background: var(--accent-light); }
+        
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
         .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
+        
+        .btn-icon-small { padding: 4px; color: #94a3b8; cursor: pointer; border-radius: 4px; border: 1px solid transparent; background: transparent; }
+        .btn-icon-small:hover { color: var(--accent-blue); background: #eff6ff; border-color: #dbeafe; }
+        .btn-icon-small.delete:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
+
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
 
@@ -82,6 +100,21 @@
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
 
+        /* --- FILE BADGE (Le carré vert) --- */
+        .file-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--accent-green-light);
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .file-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
         /* --- COURSES --- */
         .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
         .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
@@ -89,19 +122,31 @@
         .section-title-input:hover { border-color: #cbd5e1; background: white; }
         .section-title-input:focus { background: white; border-color: var(--accent); box-shadow: none; }
         .section-content { padding: 12px; }
-        .course-item-row { display: flex; align-items: center; gap: 10px; background: white; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
-        .item-icon { color: #64748b; flex-shrink: 0; }
-        .input-compact { border: none; background: transparent; padding: 4px; font-size: 0.9rem; font-weight: 500; color: #334155; }
-        .input-compact:focus { background: #f8fafc; border-radius: 4px; }
+        
+        /* Cours : Mode Lecture */
+        .course-item-row { 
+            display: flex; flex-direction: column; gap: 6px;
+            background: white; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; 
+        }
+        .course-row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .course-label-read { font-weight: 600; font-size: 0.9rem; color: #334155; }
+        .course-row-bottom { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .course-link-read { color: #64748b; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; text-decoration: none; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
+        .course-link-read:hover { color: var(--accent-blue); }
 
-        /* --- RESOURCE ROW --- */
+        /* Cours : Mode Edition (Hidden by default) */
+        .course-edit-block { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #cbd5e1; }
+        .course-edit-block.visible { display: block; }
+
+        /* --- RESOURCE ROW (Utilisé pour ajout & edition) --- */
         .resource-row {
             background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px;
             display: flex; align-items: center; gap: 12px; margin-top: 15px; 
             flex-wrap: wrap; 
             transition: all 0.2s ease;
         }
-        .resource-row:hover { border-color: #94a3b8; background: #fdfdfd; }
+        /* Style "actif" pour le mode édition */
+        .resource-row.edit-mode { border-color: var(--accent-blue); background: #f8fafc; margin-top: 10px; }
 
         .input-group-title { flex: 1; min-width: 150px; }
         .type-selector { display: flex; background: #f1f5f9; padding: 3px; border-radius: 8px; flex-shrink: 0; }
@@ -110,45 +155,28 @@
         .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
         .action-area { flex: 2; min-width: 200px; position: relative; } 
-
         .upload-btn-wrapper { width: 100%; display: none; }
-        
         .upload-label { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 8px; 
-            width: 100%; 
-            padding: 9px; 
-            background: #f0fdf4; 
-            color: #16a34a; 
-            border: 1px dashed #16a34a; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            transition: 0.2s; 
-            box-sizing: border-box; 
-            overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; 
+            padding: 9px; background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; 
+            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; 
+            transition: 0.2s; box-sizing: border-box; overflow: hidden; 
         }
-        .upload-label span { 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            display: block; 
-            max-width: 100%; 
-        }
+        .upload-label span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%; }
         .upload-label:hover { background: #dcfce7; }
-        
         .hidden-input { display: none; }
 
         .resource-row.mode-link .link-input-wrapper { display: block; }
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
-        .resource-row.mode-link .add-btn-container { display: block; }
-        
         .resource-row.mode-file .link-input-wrapper { display: none; }
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
-        .resource-row.mode-file .add-btn-container { display: none; }
+
+        .hidden-edit-container { display: none; margin-top: 10px; }
+        .hidden-edit-container.visible { display: block; }
+
+        /* --- FOOTER EDIT --- */
+        .footer-edit-row { display: flex; gap: 8px; flex: 1; }
+        .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
         /* --- PREVIEW SIDE --- */
         .preview-side { width: 550px; background: #f1f5f9; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
@@ -161,9 +189,8 @@
         #toast.visible { transform: translateX(-50%) translateY(0); }
         
         /* --- PERSONNALISATION --- */
-        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background: #fff; }
-        /* Correction alignement icônes/texte */
-        .config-item > span { display: flex; align-items: center; gap: 12px; line-height: 1; }
+        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background: #fff; min-height: 40px; }
+        .config-item > span { display: flex; align-items: center; gap: 12px; line-height: 1; font-weight: 500; font-size: 0.9rem; }
         .config-item.hidden-item { opacity: 0.6; background: #f8fafc; }
         .toggle-eye { cursor: pointer; color: #64748b; transition: 0.2s; }
         .toggle-eye:hover { color: #3b82f6; }
@@ -173,11 +200,10 @@
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
             .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; }
-            .editor-side { height: auto; overflow-y: visible; padding: 20px; }
+            .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 100px 20px; }
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
             nav.mobile-open { transform: translateX(0); }
-            /* Cacher le logo de la sidebar en mobile car présent dans le header */
             nav .logo { display: none; }
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
@@ -260,20 +286,24 @@
                     <div class="form-row"><label>Google Scholar</label><input id="field-scholar" placeholder="https://scholar.google.com/..." oninput="autoSave('profiles',null,'scholar_url',this.value)"></div>
                     
                     <label>Curriculum Vitae (PDF ou Lien)</label>
-                    <div class="resource-row mode-link" id="cv-row" style="margin-top:5px;">
-                        <div class="type-selector">
-                            <button type="button" class="type-btn active" onclick="switchCVMode('link', this)">Lien</button>
-                            <button type="button" class="type-btn" onclick="switchCVMode('file', this)">Fichier</button>
+                    <div id="cv-display-area" style="margin-top:10px;">
                         </div>
-                        <div class="action-area">
-                            <div class="link-input-wrapper">
-                                <input type="url" id="field-cv-url" placeholder="https://drive.google.com/file/d/..." onchange="autoSave('profiles', null, 'cv_url', this.value)">
+                    <div class="hidden-edit-container" id="cv-edit-container">
+                        <div class="resource-row mode-link" id="cv-row">
+                            <div class="type-selector">
+                                <button type="button" class="type-btn active" onclick="switchCVMode('link', this)">Lien</button>
+                                <button type="button" class="type-btn" onclick="switchCVMode('file', this)">Fichier</button>
                             </div>
-                            <div class="upload-btn-wrapper">
-                                <label class="upload-label">
-                                    <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
-                                    <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFile('cv', this)">
-                                </label>
+                            <div class="action-area">
+                                <div class="link-input-wrapper">
+                                    <input type="url" id="field-cv-url" placeholder="https://drive.google.com/file/d/..." onchange="autoSave('profiles', null, 'cv_url', this.value)">
+                                </div>
+                                <div class="upload-btn-wrapper">
+                                    <label class="upload-label">
+                                        <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
+                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFile('cv', this)">
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -298,8 +328,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <div style="height: 80px;"></div>
             </section>
 
             <section id="mod-rdv" class="module hidden">
@@ -309,7 +337,6 @@
                     <input id="rdv-url" oninput="saveRDV()" placeholder="https://cal.com/votre-lien">
                     <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
                         <strong>Note :</strong> La gestion des disponibilités et des créneaux horaires s'effectue directement sur la plateforme tierce <strong>Cal.com</strong>.
-                        Une documentation complète et des tutoriels sont mis à votre disposition par notre équipe pour vous accompagner dans cette configuration.
                     </p>
                     <label style="margin-top:20px">Texte du bouton</label>
                     <input id="rdv-text" oninput="saveRDV()" placeholder="Prendre rendez-vous">
@@ -339,6 +366,20 @@
     let profileData = null, saveTimer = null;
     let openCourseId = null, openPubId = null, openInterId = null;
 
+    // --- UTILS ---
+    function getCleanFileName(url) {
+        if (!url) return '';
+        const parts = url.split('/');
+        const rawName = parts[parts.length - 1];
+        // Enlève le timestamp (chiffres + underscore) au début
+        return rawName.replace(/^\d+_/, '');
+    }
+
+    function toggleEditBlock(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('visible');
+    }
+
     async function init() {
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
@@ -349,11 +390,7 @@
 
     async function loadData(uid) {
         const { data: profile, error: errProf } = await sb.from('profiles').select('*').eq('id', uid).single();
-        
-        if (errProf || !profile) {
-            console.error("Erreur chargement profil:", errProf);
-            return;
-        }
+        if (errProf || !profile) return;
 
         profileData = profile;
         profileData.courses = [];
@@ -387,12 +424,33 @@
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         
-        document.getElementById('field-cv-url').value = profileData.cv_url || '';
+        // Gestion CV : Affichage Badge + Bouton Edit
+        const cvArea = document.getElementById('cv-display-area');
+        const cvUrl = profileData.cv_url;
+        const isFile = cvUrl && cvUrl.includes('/documents/'); 
+        
+        let html = '';
+        if (cvUrl) {
+            html += `<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">`;
+            if (isFile) {
+                html += `<div class="file-badge"><i data-lucide="file-check" size="16"></i> <span>${getCleanFileName(cvUrl)}</span></div>`;
+            } else {
+                html += `<a href="${cvUrl}" target="_blank" style="color:#3b82f6; text-decoration:underline; font-size:0.9rem;">${cvUrl}</a>`;
+            }
+            html += `<button class="btn-icon-small" onclick="toggleEditBlock('cv-edit-container')" title="Modifier"><i data-lucide="pencil" size="16"></i></button></div>`;
+        } else {
+            // Si pas de CV, on affiche le bloc d'édition direct
+             document.getElementById('cv-edit-container').classList.add('visible');
+        }
+        cvArea.innerHTML = html;
+        document.getElementById('field-cv-url').value = cvUrl || '';
+
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
 
         renderHeaderConfig();
         renderFooterConfig();
+        lucide.createIcons();
     }
 
     // --- COURSES RENDER ---
@@ -422,14 +480,47 @@
                                     <button class="btn-ghost" onclick="delSection('${course.id}', ${secIdx})" title="Supprimer section"><i data-lucide="trash-2" size="14"></i></button>
                                 </div>
                                 <div class="section-content">
-                                    ${(sec.items || []).map((item, itemIdx) => `
+                                    ${(sec.items || []).map((item, itemIdx) => {
+                                        const isFile = item.type === 'file';
+                                        const editId = `edit-c-${course.id}-${secIdx}-${itemIdx}`;
+                                        
+                                        return `
                                         <div class="course-item-row">
-                                            <i class="item-icon" data-lucide="${item.type==='file'?'file-text':'link'}" size="16"></i>
-                                            <input class="input-compact" style="flex:1; font-weight:600;" value="${item.label}" onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'label', this.value)">
-                                            <input class="input-compact" style="flex:1; font-weight:400; font-size:0.8rem; color:#64748b;" value="${item.value||''}" placeholder="URL..." onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'value', this.value)">
-                                            <button class="btn-ghost" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
-                                        </div>
-                                    `).join('')}
+                                            <div class="course-row-top">
+                                                <span class="course-label-read">${item.label}</span>
+                                                <div style="display:flex; gap:5px;">
+                                                    <button class="btn-icon-small" onclick="toggleEditBlock('${editId}')"><i data-lucide="pencil" size="14"></i></button>
+                                                    <button class="btn-icon-small delete" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="course-row-bottom">
+                                                ${isFile 
+                                                  ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(item.value)}</span></div>` 
+                                                  : `<a href="${item.value}" target="_blank" class="course-link-read"><i data-lucide="link" size="14"></i> ${item.value}</a>`
+                                                }
+                                            </div>
+                                            
+                                            <div id="${editId}" class="resource-row mode-${item.type} course-edit-block">
+                                                <div class="input-group-title"><input type="text" value="${item.label}" class="form-input" placeholder="Titre" onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'label', this.value)"></div>
+                                                <div class="type-selector">
+                                                    <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien</button>
+                                                    <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier</button>
+                                                </div>
+                                                <div class="action-area">
+                                                    <div class="link-input-wrapper">
+                                                        <input type="url" value="${item.type==='link'?item.value:''}" class="form-input" placeholder="https://..." onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'value', this.value)">
+                                                    </div>
+                                                    <div class="upload-btn-wrapper">
+                                                        <label class="upload-label">
+                                                            <i data-lucide="cloud-upload"></i> <span id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span>
+                                                            <input type="file" class="hidden-input" onchange="updateItemFile('${course.id}', ${secIdx}, ${itemIdx}, this)">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>`;
+                                    }).join('')}
+                                    
                                     <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}">
                                         <div class="input-group-title"><input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document"></div>
                                         <div class="type-selector">
@@ -448,7 +539,7 @@
                                 </div>
                             </div>
                         `).join('')}
-                        <button class="btn-dashed" onclick="addSection('${course.id}')" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">+ Ajouter une Section (ex: TD, Examens)</button>
+                        <button class="btn-ghost" onclick="addSection('${course.id}')" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">+ Ajouter une Section (ex: TD, Examens)</button>
                     </div>
                     <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button></div>
                 </div>
@@ -464,6 +555,8 @@
         
         c.innerHTML = profileData.publications.map(pub => {
             const isOpen = (openPubId === pub.id) ? 'open' : '';
+            const isFile = pub.link_value && pub.link_value.includes('/documents/');
+            
             return `
             <div class="item-card ${isOpen}" id="pub-${pub.id}">
                 <div class="item-header" onclick="toggleCard('${pub.id}', 'pub')">
@@ -494,20 +587,27 @@
                         </div>
                     </div>
                     <label>Document associé</label>
-                    <div class="resource-row mode-link" id="pub-res-${pub.id}" style="margin-top:5px;">
-                        <div class="type-selector">
-                            <button type="button" class="type-btn active" onclick="switchPubMode('${pub.id}', 'link', this)">Lien</button>
-                            <button type="button" class="type-btn" onclick="switchPubMode('${pub.id}', 'file', this)">Fichier</button>
-                        </div>
-                        <div class="action-area">
-                            <div class="link-input-wrapper">
-                                <input type="url" value="${pub.link_value || ''}" placeholder="https://doi.org/..." onchange="autoSave('publications', '${pub.id}', 'link_value', this.value)">
+                    <div style="margin-bottom:10px;">
+                         ${pub.link_value ? (isFile ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(pub.link_value)}</span></div>` : `<a href="${pub.link_value}" target="_blank" style="color:#3b82f6;text-decoration:underline;">${pub.link_value}</a>`) : ''}
+                         <button class="btn-icon-small" onclick="toggleEditBlock('pub-res-${pub.id}')" title="Modifier document"><i data-lucide="pencil" size="14"></i></button>
+                    </div>
+
+                    <div class="hidden-edit-container" id="pub-res-${pub.id}">
+                        <div class="resource-row mode-link">
+                            <div class="type-selector">
+                                <button type="button" class="type-btn active" onclick="switchPubMode('${pub.id}', 'link', this)">Lien</button>
+                                <button type="button" class="type-btn" onclick="switchPubMode('${pub.id}', 'file', this)">Fichier</button>
                             </div>
-                            <div class="upload-btn-wrapper">
-                                <label class="upload-label">
-                                    <i data-lucide="cloud-upload"></i> <span>Uploader PDF</span>
-                                    <input type="file" class="hidden-input" onchange="uploadPubFile('${pub.id}', this)">
-                                </label>
+                            <div class="action-area">
+                                <div class="link-input-wrapper">
+                                    <input type="url" value="${pub.link_value || ''}" placeholder="https://doi.org/..." onchange="autoSave('publications', '${pub.id}', 'link_value', this.value)">
+                                </div>
+                                <div class="upload-btn-wrapper">
+                                    <label class="upload-label">
+                                        <i data-lucide="cloud-upload"></i> <span>Remplacer PDF</span>
+                                        <input type="file" class="hidden-input" onchange="uploadPubFile('${pub.id}', this)">
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -525,6 +625,8 @@
         
         c.innerHTML = profileData.interventions.map(inter => {
             const isOpen = (openInterId === inter.id) ? 'open' : '';
+            const isFile = inter.link_value && inter.link_value.includes('/documents/');
+
             return `
             <div class="item-card ${isOpen}" id="inter-${inter.id}">
                 <div class="item-header" onclick="toggleCard('${inter.id}', 'inter')">
@@ -559,20 +661,27 @@
                     </div>
 
                     <label>Support (Lien ou PDF)</label>
-                    <div class="resource-row mode-link" id="inter-res-${inter.id}" style="margin-top:5px;">
-                        <div class="type-selector">
-                            <button type="button" class="type-btn active" onclick="switchInterMode('${inter.id}', 'link', this)">Lien</button>
-                            <button type="button" class="type-btn" onclick="switchInterMode('${inter.id}', 'file', this)">Fichier</button>
-                        </div>
-                        <div class="action-area">
-                            <div class="link-input-wrapper">
-                                <input type="url" value="${inter.link_value || ''}" placeholder="https://..." onchange="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                    <div style="margin-bottom:10px;">
+                         ${inter.link_value ? (isFile ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(inter.link_value)}</span></div>` : `<a href="${inter.link_value}" target="_blank" style="color:#3b82f6;text-decoration:underline;">${inter.link_value}</a>`) : ''}
+                         <button class="btn-icon-small" onclick="toggleEditBlock('inter-res-${inter.id}')" title="Modifier support"><i data-lucide="pencil" size="14"></i></button>
+                    </div>
+
+                    <div class="hidden-edit-container" id="inter-res-${inter.id}">
+                        <div class="resource-row mode-link">
+                            <div class="type-selector">
+                                <button type="button" class="type-btn active" onclick="switchInterMode('${inter.id}', 'link', this)">Lien</button>
+                                <button type="button" class="type-btn" onclick="switchInterMode('${inter.id}', 'file', this)">Fichier</button>
                             </div>
-                            <div class="upload-btn-wrapper">
-                                <label class="upload-label">
-                                    <i data-lucide="cloud-upload"></i> <span>Uploader support</span>
-                                    <input type="file" class="hidden-input" onchange="uploadInterFile('${inter.id}', this)">
-                                </label>
+                            <div class="action-area">
+                                <div class="link-input-wrapper">
+                                    <input type="url" value="${inter.link_value || ''}" placeholder="https://..." onchange="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                                </div>
+                                <div class="upload-btn-wrapper">
+                                    <label class="upload-label">
+                                        <i data-lucide="cloud-upload"></i> <span>Remplacer support</span>
+                                        <input type="file" class="hidden-input" onchange="uploadInterFile('${inter.id}', this)">
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -584,7 +693,7 @@
         lucide.createIcons();
     }
 
-    // --- ACTIONS COURSES ---
+    // --- ACTIONS COURSES (Création et Edition) ---
     window.switchMode = (cid, sIdx, mode, btn) => {
         const row = document.getElementById(`add-row-${cid}-${sIdx}`);
         row.classList.remove('mode-link', 'mode-file');
@@ -592,6 +701,19 @@
         document.getElementById(`type-val-${cid}-${sIdx}`).value = mode;
         row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+    }
+
+    // Gestion de l'affichage du bloc d'édition pour les items existants
+    window.switchExistingMode = (cid, sIdx, iIdx, mode, btn) => {
+        const editId = `edit-c-${cid}-${sIdx}-${iIdx}`;
+        const row = document.getElementById(editId);
+        row.classList.remove('mode-link', 'mode-file');
+        row.classList.add('mode-' + mode);
+        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Mise à jour du type en base direct
+        updateItemData(cid, sIdx, iIdx, 'type', mode);
     }
 
     window.addItem = async (cid, sIdx, isFileAuto) => {
@@ -620,9 +742,25 @@
         showToast("Ajouté !");
     }
 
+    // Upload spécifique pour le remplacement de fichier dans un cours existant
+    window.updateItemFile = async (cid, sIdx, iIdx, input) => {
+        if(input.files.length === 0) return;
+        const file = input.files[0];
+        showToast("Upload en cours...");
+        input.parentElement.querySelector('span').textContent = file.name;
+        
+        const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
+        const { error } = await sb.storage.from('documents').upload(path, file);
+        if(error) return alert("Erreur upload");
+        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+        
+        await updateItemData(cid, sIdx, iIdx, 'value', url);
+        showToast("Fichier mis à jour");
+    }
+
     // --- ACTIONS PUBLICATIONS ---
     window.switchPubMode = (pid, mode, btn) => {
-        const row = document.getElementById(`pub-res-${pid}`);
+        const row = document.getElementById(`pub-res-${pid}`).querySelector('.resource-row');
         row.classList.remove('mode-link', 'mode-file');
         row.classList.add('mode-' + mode);
         autoSave('publications', pid, 'link_type', mode);
@@ -639,11 +777,12 @@
         if(error) return alert("Erreur upload");
         await autoSave('publications', pid, 'link_value', sb.storage.from('documents').getPublicUrl(path).data.publicUrl);
         showToast("Sauvegardé");
+        fillProfileUI(); // Refresh UI si besoin
     }
 
     // --- ACTIONS INTERVENTIONS ---
     window.switchInterMode = (iid, mode, btn) => {
-        const row = document.getElementById(`inter-res-${iid}`);
+        const row = document.getElementById(`inter-res-${iid}`).querySelector('.resource-row');
         row.classList.remove('mode-link', 'mode-file');
         row.classList.add('mode-' + mode);
         autoSave('interventions', iid, 'link_type', mode);
@@ -676,26 +815,19 @@
     window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
     async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
     
-    // CREATION GENERIQUE ROBUSTE (CORRIGEE)
     window.createItem = async (t,d) => { 
         d.prof_id=profileData.id; 
         try {
             const {data,error}=await sb.from(t).insert([d]).select(); 
             if(error) { alert("Erreur : " + error.message); return; }
-            
             if(!profileData[t]) profileData[t]=[]; 
             profileData[t].unshift(data[0]); 
-            
-            // Ouvrir l'accordéon du nouvel élément
             if(t==='courses') openCourseId = data[0].id; 
             if(t==='publications') openPubId = data[0].id; 
             if(t==='interventions') openInterId = data[0].id; 
-            
-            // Rafraîchir UNIQUEMENT la liste concernée pour éviter les erreurs
             if(t==='courses') renderCourses();
             if(t==='publications') renderPublications();
             if(t==='interventions') renderInterventions();
-            
             showToast("Élément créé !");
             reloadPreview(); 
         } catch(e) { console.log(e); }
@@ -705,15 +837,10 @@
         if(!confirm("Supprimer ?")) return; 
         const { error } = await sb.from(t).delete().eq('id',id);
         if(error) { alert("Erreur de suppression"); return; }
-        
-        // Mise à jour locale immédiate
         profileData[t] = profileData[t].filter(x => x.id !== id);
-        
-        // Force le re-rendu de la liste spécifique
         if(t === 'courses') renderCourses();
         if(t === 'publications') renderPublications();
         if(t === 'interventions') renderInterventions();
-        
         reloadPreview(); 
         showToast("Élément supprimé");
     }
@@ -726,14 +853,12 @@
         showToast("RDV sauvegardé"); reloadPreview(); 
     }, 1000); }
     
-    // NAVIGATION SECURISEE
     window.switchTab = (id,p,el) => { 
         document.querySelectorAll('.module').forEach(m=>m.classList.add('hidden')); 
         document.getElementById('mod-'+id).classList.remove('hidden'); 
         document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); 
         if(el) el.classList.add('active'); 
         document.getElementById('sidebar').classList.remove('mobile-open');
-        
         const iframe = document.getElementById('site-preview');
         if(iframe && profileData) {
             iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
@@ -759,6 +884,7 @@
         lucide.createIcons();
     }
 
+    // --- FOOTER LOGIC (EDIT MODE) ---
     function renderFooterConfig() {
         const container = document.getElementById('footer-config-container');
         const f = profileData.config.footer || DEFAULT_CONFIG.footer;
@@ -771,14 +897,38 @@
         
         if (f.custom && f.custom.length > 0) {
             html += f.custom.map((l, idx) => `
-                <div class="config-item">
-                    <span>${l.label} <small style="color:#94a3b8">(${l.url})</small></span>
-                    <button class="btn-ghost" onclick="removeFooterLink(${idx})" style="color:#ef4444;"><i data-lucide="trash-2" size="14"></i></button>
+                <div class="config-item" id="footer-item-${idx}">
+                    <div class="footer-view-row" id="footer-view-${idx}">
+                        <span>${l.label} <small style="color:#94a3b8">(${l.url})</small></span>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn-icon-small" onclick="toggleFooterEdit(${idx})"><i data-lucide="pencil" size="14"></i></button>
+                            <button class="btn-icon-small delete" onclick="removeFooterLink(${idx})"><i data-lucide="trash-2" size="14"></i></button>
+                        </div>
+                    </div>
+                    <div class="footer-edit-row hidden" id="footer-edit-${idx}">
+                        <input value="${l.label}" id="f-lbl-${idx}" style="width:120px; font-size:0.85rem; padding:4px;">
+                        <input value="${l.url}" id="f-url-${idx}" style="flex:1; font-size:0.85rem; padding:4px;">
+                        <button class="btn-icon-small" style="color:var(--accent-green); border-color:var(--accent-green);" onclick="saveFooterEdit(${idx})"><i data-lucide="check" size="16"></i></button>
+                    </div>
                 </div>
             `).join('');
         }
         container.innerHTML = html;
         lucide.createIcons();
+    }
+    
+    window.toggleFooterEdit = (idx) => {
+        document.getElementById(`footer-view-${idx}`).classList.toggle('hidden');
+        document.getElementById(`footer-edit-${idx}`).classList.toggle('hidden');
+    }
+
+    window.saveFooterEdit = (idx) => {
+        const lbl = document.getElementById(`f-lbl-${idx}`).value;
+        const url = document.getElementById(`f-url-${idx}`).value;
+        if(!lbl || !url) return alert('Champs requis');
+        profileData.config.footer.custom[idx] = { label: lbl, url: url };
+        saveConfig();
+        renderFooterConfig();
     }
 
     window.toggleConfig = (section, key) => {
@@ -793,10 +943,8 @@
         const label = document.getElementById('new-footer-label').value;
         const url = document.getElementById('new-footer-url').value;
         if (!label || !url) return alert("Remplissez le nom et l'URL");
-        
         if (!profileData.config.footer.custom) profileData.config.footer.custom = [];
         profileData.config.footer.custom.push({ label, url });
-        
         document.getElementById('new-footer-label').value = '';
         document.getElementById('new-footer-url').value = '';
         saveConfig(); renderFooterConfig();
@@ -836,9 +984,9 @@
             await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id);
             document.getElementById('preview-avatar').src = url;
         } else if (type === 'cv') {
-            document.getElementById('cv-file-label').textContent = file.name;
             await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id);
             document.getElementById('field-cv-url').value = url;
+            fillProfileUI(); // Refresh pour voir le badge
         }
         showToast("Sauvegardé !");
     }
