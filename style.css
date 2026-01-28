@@ -4,44 +4,49 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Inter', 'Alata', sans-serif;
-    background-color: #fefaf5; /* Ton fond crème léger */
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc; /* Gris très clair pro */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     width: 100%;
+    color: #334155;
 }
 
-/* --- HEADER & FOOTER PLEINE LARGEUR --- */
+/* --- HEADER & FOOTER (NOIR PRO) --- */
 header, footer {
-    width: 100% !important; /* Force la pleine largeur */
-    background: #ffffff;    /* Fond blanc épuré */
-    padding: 20px 5%;       /* Respiration sur les côtés */
+    width: 100% !important;
+    background: #0f172a;    /* Noir bleuté pro */
+    color: white;
+    padding: 20px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 1px solid #1e293b;
     z-index: 1000;
 }
 
 footer {
     border-bottom: none;
-    border-top: 1px solid #eeeeee;
-    margin-top: auto; /* Pousse le footer tout en bas */
+    border-top: 1px solid #1e293b;
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: #94a3b8;
 }
 
-/* --- LOGO & NAVIGATION --- */
+/* --- NAVIGATION --- */
 .logo {
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: -0.5px;
-    font-size: 1rem;
+    letter-spacing: 0.05em;
+    font-size: 1.1rem;
+    color: white;
 }
 
 .dynamic-nav {
     display: flex;
-    flex-direction: row; /* Aligne les boutons horizontalement */
-    gap: 30px;           /* Espace entre les boutons */
+    flex-direction: row;
+    gap: 25px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -49,26 +54,85 @@ footer {
 
 .dynamic-nav li a {
     text-decoration: none;
-    color: #666;
+    color: #cbd5e1;
     font-size: 0.9rem;
     font-weight: 500;
     transition: 0.2s;
 }
 
-.dynamic-nav li a:hover { color: #000; }
+.dynamic-nav li a:hover { color: white; }
 
-/* --- CONTENU CENTRAL --- */
+/* --- CONTENU CENTRAL (LAYOUT PHOTO GAUCHE / TEXTE DROITE) --- */
 .container {
-    flex: 1; /* Prend tout l'espace restant entre header et footer */
+    flex: 1;
     width: 100%;
-    max-width: 1000px; /* Le texte reste lisible et centré */
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 60px 20px;
+    padding: 80px 20px;
+    display: flex;
+    align-items: center; /* Centrage vertical */
+    justify-content: center;
 }
 
-/* Image de profil (Index) */
+.hero-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    width: 100%;
+}
+
 #profil-img {
-    width: 250px;
-    border-radius: 12px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%; /* Rond ou carré arrondi selon préférence */
     object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
+}
+
+.description {
+    flex: 1;
+    padding-top: 10px;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 2.5rem;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+#profil-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #475569;
+    margin-top: 20px;
+    white-space: pre-line;
+}
+
+/* Bouton RDV */
+.rdv-button {
+    display: inline-block;
+    margin-top: 30px;
+    background: #0f172a;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.rdv-button:hover {
+    background: #334155;
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 768px) {
+    header, footer { flex-direction: column; gap: 15px; text-align: center; }
+    .hero-section { flex-direction: column; align-items: center; text-align: center; gap: 30px; }
+    #profil-img { width: 200px; height: 200px; }
+    h1 { font-size: 2rem; }
 }
