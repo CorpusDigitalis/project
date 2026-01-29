@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin V26</title>
+    <title>Corpus Digitalis - Admin Final</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,7 +16,7 @@
             --sidebar: #0f172a; 
             --accent: #0f172a; 
             --accent-blue: #3b82f6; 
-            --accent-blue-light: #eff6ff; /* Pour le badge lien */
+            --accent-blue-light: #eff6ff; 
             --accent-green: #10b981;
             --accent-green-light: #ecfdf5;
             --accent-light: #1e293b; 
@@ -24,6 +24,7 @@
             --text-main: #334155; 
             --text-muted: #64748b; 
             --radius-pro: 30px; 
+            --input-height: 42px; /* Hauteur standardisée pour l'alignement */
         }
 
         /* --- GLOBAL RESET & FONTS --- */
@@ -57,8 +58,26 @@
             border-radius: 30px 0 0 30px; 
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
         }
-        /* SCROLL MARGIN UPDATE : 60vh pour un scroll libre sur PC et Mobile */
-        .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px 60vh 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
+        
+        /* SCROLL FIX : overflow-y-auto sur le parent direct du contenu */
+        .editor-side { 
+            height: 100%; 
+            overflow-y: auto; 
+            flex: 1; 
+            padding: 40px 50px 0 50px; /* Pas de margin-bottom ici, géré par le spacer */
+            max-width: 1000px; 
+            margin: 0 auto; 
+            scroll-behavior: smooth; 
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ESPACEUR EN BAS DE PAGE (50% de l'écran) */
+        .scroll-spacer {
+            width: 100%;
+            height: 50vh; /* La moitié de l'écran vide en bas */
+            flex-shrink: 0;
+        }
         
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
@@ -78,15 +97,10 @@
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
         .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
         
-        /* Boutons carrés pour édition */
         .btn-square { width: 32px; height: 32px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
         .btn-square:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: #eff6ff; }
         .btn-square.delete:hover { border-color: #fee2e2; color: #ef4444; background: #fef2f2; }
         
-        /* Bouton VALIDATION (V) */
-        .btn-validate { width: 42px; height: 42px; background: var(--accent); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; flex-shrink: 0; transition: 0.2s; }
-        .btn-validate:hover { opacity: 0.9; transform: scale(1.02); }
-
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
 
@@ -104,37 +118,9 @@
 
         /* --- BADGES (Files & Links) --- */
         .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; overflow: hidden; }
-        
-        .file-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: var(--accent-green-light);
-            border: 1px solid #bbf7d0;
-            color: #15803d;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            max-width: 100%; 
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-        
-        /* NOUVEAU : Badge pour les Liens (Esthétique améliorée) */
-        .link-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: var(--accent-blue-light);
-            border: 1px solid #bfdbfe;
-            color: #2563eb;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            max-width: 100%;
-            overflow: hidden;
-            box-sizing: border-box;
-            text-decoration: none;
-        }
-        
+        .file-badge, .link-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; max-width: 100%; overflow: hidden; box-sizing: border-box; text-decoration: none; }
+        .file-badge { background: var(--accent-green-light); border: 1px solid #bbf7d0; color: #15803d; }
+        .link-badge { background: var(--accent-blue-light); border: 1px solid #bfdbfe; color: #2563eb; }
         .file-badge span, .link-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* --- COURSES --- */
@@ -145,53 +131,124 @@
         .section-title-input:focus { background: white; border-color: var(--accent); box-shadow: none; }
         .section-content { padding: 12px; }
         
-        .course-item-row { 
-            display: flex; flex-direction: column; gap: 8px;
-            background: white; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; 
-        }
+        .course-item-row { display: flex; flex-direction: column; gap: 8px; background: white; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; }
         .course-row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .course-label-read { font-weight: 600; font-size: 0.9rem; color: #334155; }
         .course-row-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
-
-        /* IMPORTANT : Display none par défaut pour le mode édition des cours */
         .course-edit-block { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
         .course-edit-block.visible { display: block; }
 
-        /* --- RESOURCE ROW --- */
+        /* --- RESOURCE ROW (NOUVEAU DESIGN ALIGNÉ) --- */
+        .hidden-edit-container { display: none; margin-top: 15px; }
+        .hidden-edit-container.visible { display: block; }
+
+        /* Container FLEX qui force l'alignement */
         .resource-row {
-            background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px;
-            display: flex; align-items: center; gap: 12px; margin-top: 15px; 
-            flex-wrap: wrap; transition: all 0.2s ease;
+            display: flex;
+            align-items: center; /* Centre verticalement */
+            gap: 10px;
+            background: #fff;
+            padding: 0;
+            border: none;
+            width: 100%;
         }
-        .resource-row.edit-mode { border-color: var(--accent-blue); background: #f8fafc; margin-top: 10px; }
 
-        .input-group-title { flex: 1; min-width: 150px; }
-        .type-selector { display: flex; background: #f1f5f9; padding: 3px; border-radius: 8px; flex-shrink: 0; }
-        .type-btn { border: none; background: transparent; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; }
+        /* 1. Toggle Switch (Lien/Fichier) */
+        .type-selector {
+            display: flex;
+            background: #f1f5f9;
+            padding: 2px;
+            border-radius: 6px;
+            flex-shrink: 0;
+            height: var(--input-height); /* Hauteur fixe 42px */
+            box-sizing: border-box;
+        }
+        .type-btn {
+            border: none;
+            background: transparent;
+            padding: 0 12px; /* Padding horizontal uniquement */
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #64748b;
+            transition: 0.2s;
+            height: 100%; /* Prend toute la hauteur */
+            display: flex;
+            align-items: center;
+        }
         .type-btn:hover { color: var(--accent-blue); }
-        .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
-        .action-area { flex: 2; min-width: 200px; position: relative; } 
-        .upload-btn-wrapper { width: 100%; display: none; }
-        .upload-label { 
-            display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; 
-            padding: 9px; background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; 
-            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; 
-            transition: 0.2s; box-sizing: border-box; overflow: hidden; 
+        /* 2. Zone d'action (Input ou Bouton Vert) */
+        .action-area {
+            flex: 1; /* Prend toute la place restante */
+            position: relative;
+            height: var(--input-height); /* Hauteur fixe 42px */
+            min-width: 0; /* Important pour flexbox */
         }
-        .upload-label span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%; }
+
+        /* Input URL classique */
+        .link-input-wrapper { width: 100%; height: 100%; }
+        .link-input-wrapper input {
+            height: 100%;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            padding: 0 12px;
+            width: 100%;
+        }
+
+        /* Bouton Upload Vert */
+        .upload-btn-wrapper { width: 100%; height: 100%; display: none; }
+        .upload-label { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; /* Ecarte icone et texte */
+            gap: 8px; 
+            width: 100%; 
+            height: 100%;
+            padding: 0 15px; 
+            background: #f0fdf4; 
+            color: #16a34a; 
+            border: 1px dashed #16a34a; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            transition: 0.2s; 
+            box-sizing: border-box; 
+            overflow: hidden; 
+        }
         .upload-label:hover { background: #dcfce7; }
         .hidden-input { display: none; }
 
+        /* Gestion de l'affichage selon le mode (Lien ou Fichier) */
         .resource-row.mode-link .link-input-wrapper { display: block; }
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
         .resource-row.mode-file .link-input-wrapper { display: none; }
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
 
-        .hidden-edit-container { display: none; margin-top: 10px; }
-        .hidden-edit-container.visible { display: block; }
+        /* 3. Bouton VALIDATION (V) */
+        .btn-validate { 
+            width: var(--input-height); /* Carré 42x42 */
+            height: var(--input-height); 
+            background: var(--accent); 
+            color: white; 
+            border-radius: 6px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            border: none; 
+            flex-shrink: 0; 
+            transition: 0.2s; 
+        }
+        .btn-validate:hover { opacity: 0.9; transform: scale(1.02); }
 
-        /* --- FOOTER EDIT --- */
+        /* Autres styles */
+        .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
+        .input-group-title input { height: 100%; }
+
         .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
@@ -217,8 +274,10 @@
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
             .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; }
-            /* Marge énorme pour le mobile aussi */
-            .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 60vh 20px; }
+            /* Sur mobile, on garde le padding et le spacer */
+            .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 0 20px; } 
+            .scroll-spacer { height: 50vh; }
+
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
             nav.mobile-open { transform: translateX(0); }
@@ -226,10 +285,13 @@
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
             
-            .resource-row { flex-direction: column; align-items: stretch; gap: 15px; }
-            .type-selector { justify-content: center; margin: 5px 0; }
-            .input-group-title, .action-area { width: 100%; min-width: 0; }
-            .btn-validate { width: 100%; margin-top: 5px; }
+            /* Responsive pour la resource-row */
+            .resource-row { flex-direction: column; align-items: stretch; height: auto; gap: 10px; }
+            .type-selector { width: 100%; justify-content: center; }
+            .type-btn { flex: 1; justify-content: center; }
+            .action-area { width: 100%; }
+            .btn-validate { width: 100%; } /* Bouton V prend toute la largeur sur mobile */
+            .input-group-title { width: 100%; }
         }
     </style>
 </head>
@@ -271,6 +333,7 @@
                     <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name" oninput="autoSave('profiles', null, 'name', this.value)"></div>
                     <div class="form-row"><label>Biographie</label><textarea id="field-bio" rows="6" oninput="autoSave('profiles', null, 'bio', this.value)"></textarea></div>
                 </div>
+                <div class="scroll-spacer"></div>
             </section>
 
             <section id="mod-cours" class="module hidden">
@@ -279,6 +342,7 @@
                     <button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence', sections:[{title:'Slides', items:[]}]})"><i data-lucide="plus"></i> Créer Cours</button>
                 </div>
                 <div id="courses-container"></div>
+                <div class="scroll-spacer"></div>
             </section>
 
             <section id="mod-biblio" class="module hidden">
@@ -287,6 +351,7 @@
                     <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]})"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
                 <div id="pubs-container"></div>
+                <div class="scroll-spacer"></div>
             </section>
 
             <section id="mod-interventions" class="module hidden">
@@ -295,6 +360,7 @@
                     <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention', category:'Conférence', event_date: new Date().toISOString().split('T')[0]})"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
                 <div id="interventions-container"></div>
+                <div class="scroll-spacer"></div>
             </section>
 
             <section id="mod-perso" class="module hidden">
@@ -320,7 +386,9 @@
                                 </div>
                                 <div class="upload-btn-wrapper">
                                     <label class="upload-label">
-                                        <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
+                                        </div>
                                         <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv', this)">
                                     </label>
                                 </div>
@@ -349,6 +417,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="scroll-spacer"></div>
             </section>
 
             <section id="mod-rdv" class="module hidden">
@@ -362,6 +431,7 @@
                     <label style="margin-top:20px">Texte du bouton</label>
                     <input id="rdv-text" oninput="saveRDV()" placeholder="Prendre rendez-vous">
                 </div>
+                <div class="scroll-spacer"></div>
             </section>
 
         </main>
@@ -448,7 +518,6 @@
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         
-        // Gestion CV : Affichage Badge + Bouton Edit
         const cvArea = document.getElementById('cv-display-area');
         const cvUrl = profileData.cv_url;
         const isFile = isSupabaseUrl(cvUrl);
@@ -528,29 +597,33 @@
                                                 }
                                             </div>
                                             
-                                            <div id="${editId}" class="resource-row mode-${item.type} course-edit-block">
-                                                <div class="input-group-title"><input type="text" id="edit-lbl-${course.id}-${secIdx}-${itemIdx}" value="${item.label}" class="form-input" placeholder="Titre"></div>
-                                                <div class="type-selector">
-                                                    <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien</button>
-                                                    <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier</button>
-                                                </div>
-                                                <div class="action-area">
-                                                    <div class="link-input-wrapper">
-                                                        <input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://...">
+                                            <div id="${editId}" class="course-edit-block">
+                                                <div class="resource-row mode-${item.type}">
+                                                    <div class="input-group-title"><input type="text" id="edit-lbl-${course.id}-${secIdx}-${itemIdx}" value="${item.label}" class="form-input" placeholder="Titre"></div>
+                                                    <div class="type-selector">
+                                                        <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien</button>
+                                                        <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier</button>
                                                     </div>
-                                                    <div class="upload-btn-wrapper">
-                                                        <label class="upload-label">
-                                                            <i data-lucide="cloud-upload"></i> <span id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span>
-                                                            <input type="file" class="hidden-input" onchange="uploadFileForEdit('courses', this, 'edit-val-${course.id}-${secIdx}-${itemIdx}', 'file-txt-edit-${course.id}-${secIdx}-${itemIdx}')">
-                                                        </label>
+                                                    <div class="action-area">
+                                                        <div class="link-input-wrapper">
+                                                            <input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://...">
+                                                        </div>
+                                                        <div class="upload-btn-wrapper">
+                                                            <label class="upload-label">
+                                                                <div style="display:flex; align-items:center; gap:8px;">
+                                                                    <i data-lucide="cloud-upload"></i> <span id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span>
+                                                                </div>
+                                                                <input type="file" class="hidden-input" onchange="uploadFileForEdit('courses', this, 'edit-val-${course.id}-${secIdx}-${itemIdx}', 'file-txt-edit-${course.id}-${secIdx}-${itemIdx}')">
+                                                            </label>
+                                                        </div>
                                                     </div>
+                                                    <button class="btn-validate" onclick="confirmCourseItemUpdate('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="check" size="20"></i></button>
                                                 </div>
-                                                <button class="btn-validate" onclick="confirmCourseItemUpdate('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="check" size="20"></i></button>
                                             </div>
                                         </div>`;
                                     }).join('')}
                                     
-                                    <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}">
+                                    <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}" style="margin-top:10px;">
                                         <div class="input-group-title"><input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document"></div>
                                         <div class="type-selector">
                                             <input type="hidden" id="type-val-${course.id}-${secIdx}" value="link">
@@ -560,10 +633,15 @@
                                         <div class="action-area">
                                             <div class="link-input-wrapper"><input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="https://..."></div>
                                             <div class="upload-btn-wrapper">
-                                                <label class="upload-label"><i data-lucide="cloud-upload"></i> <span id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span><input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="addItem('${course.id}', ${secIdx}, true)"></label>
+                                                <label class="upload-label">
+                                                    <div style="display:flex; align-items:center; gap:8px;">
+                                                        <i data-lucide="cloud-upload"></i> <span id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span>
+                                                    </div>
+                                                    <input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="addItem('${course.id}', ${secIdx}, true)">
+                                                </label>
                                             </div>
                                         </div>
-                                        <div class="add-btn-container"><button class="btn-primary" style="padding:10px;" onclick="addItem('${course.id}', ${secIdx}, false)"><i data-lucide="plus" size="18"></i></button></div>
+                                        <button class="btn-validate" onclick="addItem('${course.id}', ${secIdx}, false)"><i data-lucide="plus" size="18"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -637,7 +715,9 @@
                                 </div>
                                 <div class="upload-btn-wrapper">
                                     <label class="upload-label">
-                                        <i data-lucide="cloud-upload"></i> <span id="pub-file-txt-${pub.id}">Remplacer PDF</span>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <i data-lucide="cloud-upload"></i> <span id="pub-file-txt-${pub.id}">Remplacer PDF</span>
+                                        </div>
                                         <input type="file" class="hidden-input" onchange="uploadFileForEdit('publications', this, 'pub-url-${pub.id}', 'pub-file-txt-${pub.id}')">
                                     </label>
                                 </div>
@@ -652,7 +732,7 @@
         lucide.createIcons();
     }
 
-    // --- INTERVENTIONS RENDER ---
+    // --- INTERVENTIONS RENDER (UPDATED ALIGNMENT) ---
     function renderInterventions() {
         const c = document.getElementById('interventions-container');
         if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
@@ -716,7 +796,9 @@
                                 </div>
                                 <div class="upload-btn-wrapper">
                                     <label class="upload-label">
-                                        <i data-lucide="cloud-upload"></i> <span id="inter-file-txt-${inter.id}">Remplacer support</span>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <i data-lucide="cloud-upload"></i> <span id="inter-file-txt-${inter.id}">Remplacer support</span>
+                                        </div>
                                         <input type="file" class="hidden-input" onchange="uploadFileForEdit('interventions', this, 'inter-url-${inter.id}', 'inter-file-txt-${inter.id}')">
                                     </label>
                                 </div>
@@ -732,20 +814,16 @@
         lucide.createIcons();
     }
 
-    // --- ACTIONS GENERIC (NEW EDIT SYSTEM) ---
+    // --- ACTIONS GENERIC ---
 
-    // Upload le fichier et met l'URL dans le champ input caché, SANS sauvegarder en base
     window.uploadFileForEdit = async (folder, input, urlFieldId, labelId) => {
         if(input.files.length === 0) return;
         const file = input.files[0];
         showToast("Upload en cours...");
-        
         document.getElementById(labelId).textContent = file.name;
-        
         const path = `${profileData.id}/${folder}/${Date.now()}_${file.name}`;
         const { error } = await sb.storage.from('documents').upload(path, file);
         if(error) return alert("Erreur upload: " + error.message);
-        
         const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
         document.getElementById(urlFieldId).value = url;
         showToast("Fichier prêt. Validez pour enregistrer.");
@@ -761,39 +839,27 @@
 
     window.confirmPubUpdate = async (id) => {
         const url = document.getElementById(`pub-url-${id}`).value;
-        const mode = document.querySelector(`#pub-res-${id} .mode-file`) ? 'file' : 'link';
-        // Note: 'link_type' n'est plus vraiment nécessaire si on a l'URL, mais on garde pour compatibilité
+        const mode = document.querySelector(`#pub-res-${id} .resource-row`).classList.contains('mode-file') ? 'file' : 'link';
         await sb.from('publications').update({ link_value: url, link_type: mode }).eq('id', id);
-        
-        // Update local
         const p = profileData.publications.find(x => x.id === id);
-        p.link_value = url;
-        p.link_type = mode;
-        
-        renderPublications();
-        showToast("Publication mise à jour !");
-        reloadPreview();
+        p.link_value = url; p.link_type = mode;
+        renderPublications(); showToast("Publication mise à jour !"); reloadPreview();
     }
 
     window.confirmInterUpdate = async (id) => {
         const url = document.getElementById(`inter-url-${id}`).value;
-        const mode = document.querySelector(`#inter-res-${id} .mode-file`) ? 'file' : 'link';
+        const mode = document.querySelector(`#inter-res-${id} .resource-row`).classList.contains('mode-file') ? 'file' : 'link';
         await sb.from('interventions').update({ link_value: url, link_type: mode }).eq('id', id);
-        
         const p = profileData.interventions.find(x => x.id === id);
-        p.link_value = url;
-        p.link_type = mode;
-        
-        renderInterventions();
-        showToast("Intervention mise à jour !");
-        reloadPreview();
+        p.link_value = url; p.link_type = mode;
+        renderInterventions(); showToast("Intervention mise à jour !"); reloadPreview();
     }
 
     window.confirmCourseItemUpdate = async (cid, sIdx, iIdx) => {
         const label = document.getElementById(`edit-lbl-${cid}-${sIdx}-${iIdx}`).value;
         const url = document.getElementById(`edit-val-${cid}-${sIdx}-${iIdx}`).value;
         const editId = `edit-c-${cid}-${sIdx}-${iIdx}`;
-        const mode = document.getElementById(editId).classList.contains('mode-file') ? 'file' : 'link';
+        const mode = document.querySelector(`#${editId} .resource-row`).classList.contains('mode-file') ? 'file' : 'link';
 
         const c = profileData.courses.find(x => x.id === cid);
         c.sections[sIdx].items[iIdx].label = label;
@@ -814,10 +880,9 @@
         btn.classList.add('active');
     }
 
-    // Gestion de l'affichage du bloc d'édition pour les items existants (Cours)
     window.switchExistingMode = (cid, sIdx, iIdx, mode, btn) => {
         const editId = `edit-c-${cid}-${sIdx}-${iIdx}`;
-        const row = document.getElementById(editId);
+        const row = document.querySelector(`#${editId} .resource-row`);
         row.classList.remove('mode-link', 'mode-file');
         row.classList.add('mode-' + mode);
         row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
@@ -909,7 +974,6 @@
         showToast("Élément supprimé");
     }
     
-    // AutoSave pour les champs TEXTE simples uniquement
     window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
     window.saveRDV = () => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ 
         const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value };
@@ -930,7 +994,6 @@
         }
     }
 
-    // --- FONCTIONS PERSONNALISATION ---
     function renderHeaderConfig() {
         const container = document.getElementById('header-config-container');
         const h = profileData.config.header || DEFAULT_CONFIG.header;
@@ -949,7 +1012,6 @@
         lucide.createIcons();
     }
 
-    // --- FOOTER LOGIC (EDIT MODE) ---
     function renderFooterConfig() {
         const container = document.getElementById('footer-config-container');
         const f = profileData.config.footer || DEFAULT_CONFIG.footer;
