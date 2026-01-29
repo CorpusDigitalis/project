@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin V24</title>
+    <title>Corpus Digitalis - Admin V25</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,8 +27,6 @@
 
         /* --- GLOBAL RESET & FONTS --- */
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
-        /* Harmonisation des polices pour tous les inputs */
         input, textarea, select, button { font-family: 'Inter', sans-serif; }
         textarea { font-size: 0.9rem; line-height: 1.5; }
 
@@ -40,7 +38,7 @@
         nav { 
             width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
             padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease;
-            height: 100vh; box-sizing: border-box; overflow-y: auto; /* Scroll si menu trop long */
+            height: 100vh; box-sizing: border-box; overflow-y: auto; 
         }
         .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
         .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
@@ -49,9 +47,7 @@
         .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
         .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
         .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; flex-shrink: 0; }
-        
-        /* Correction Logout Mobile */
-        .logout-btn { margin-top: auto; margin-bottom: 20px; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; flex-shrink: 0; }
+        .logout-btn { margin-top: auto; margin-bottom: 40px; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; flex-shrink: 0; }
 
         /* --- LAYOUT PRO --- */
         .wrapper { 
@@ -60,8 +56,8 @@
             border-radius: 30px 0 0 30px; 
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
         }
-        /* Marge de scroll en bas pour le confort */
-        .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px 150px 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
+        /* Marge de scroll ENORME pour liberté de mouvement */
+        .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px 60vh 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
         
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
@@ -81,9 +77,14 @@
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
         .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
         
-        .btn-icon-small { padding: 4px; color: #94a3b8; cursor: pointer; border-radius: 4px; border: 1px solid transparent; background: transparent; }
-        .btn-icon-small:hover { color: var(--accent-blue); background: #eff6ff; border-color: #dbeafe; }
-        .btn-icon-small.delete:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
+        /* Boutons carrés pour édition */
+        .btn-square { width: 32px; height: 32px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
+        .btn-square:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: #eff6ff; }
+        .btn-square.delete:hover { border-color: #fee2e2; color: #ef4444; background: #fef2f2; }
+        
+        /* Bouton VALIDATION (V) */
+        .btn-validate { width: 42px; height: 42px; background: var(--accent); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; flex-shrink: 0; transition: 0.2s; }
+        .btn-validate:hover { opacity: 0.9; transform: scale(1.02); }
 
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
@@ -100,7 +101,8 @@
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
 
-        /* --- FILE BADGE (Le carré vert) --- */
+        /* --- FILE BADGE --- */
+        .file-badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; overflow: hidden; }
         .file-badge {
             display: inline-flex; align-items: center; gap: 8px;
             background: var(--accent-green-light);
@@ -110,8 +112,9 @@
             border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
-            max-width: 100%;
+            max-width: 100%; /* Empêche le débordement */
             overflow: hidden;
+            box-sizing: border-box;
         }
         .file-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -123,29 +126,25 @@
         .section-title-input:focus { background: white; border-color: var(--accent); box-shadow: none; }
         .section-content { padding: 12px; }
         
-        /* Cours : Mode Lecture */
         .course-item-row { 
-            display: flex; flex-direction: column; gap: 6px;
-            background: white; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; 
+            display: flex; flex-direction: column; gap: 8px;
+            background: white; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; 
         }
         .course-row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .course-label-read { font-weight: 600; font-size: 0.9rem; color: #334155; }
-        .course-row-bottom { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .course-link-read { color: #64748b; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; text-decoration: none; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
+        .course-row-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
+        .course-link-read { color: #64748b; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; text-decoration: none; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
         .course-link-read:hover { color: var(--accent-blue); }
 
-        /* Cours : Mode Edition (Hidden by default) */
-        .course-edit-block { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #cbd5e1; }
+        .course-edit-block { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
         .course-edit-block.visible { display: block; }
 
-        /* --- RESOURCE ROW (Utilisé pour ajout & edition) --- */
+        /* --- RESOURCE ROW --- */
         .resource-row {
             background: #fff; padding: 15px; border: 1px dashed #cbd5e1; border-radius: 12px;
             display: flex; align-items: center; gap: 12px; margin-top: 15px; 
-            flex-wrap: wrap; 
-            transition: all 0.2s ease;
+            flex-wrap: wrap; transition: all 0.2s ease;
         }
-        /* Style "actif" pour le mode édition */
         .resource-row.edit-mode { border-color: var(--accent-blue); background: #f8fafc; margin-top: 10px; }
 
         .input-group-title { flex: 1; min-width: 150px; }
@@ -175,7 +174,7 @@
         .hidden-edit-container.visible { display: block; }
 
         /* --- FOOTER EDIT --- */
-        .footer-edit-row { display: flex; gap: 8px; flex: 1; }
+        .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
         /* --- PREVIEW SIDE --- */
@@ -200,16 +199,20 @@
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
             .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; }
-            .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 100px 20px; }
+            /* Marge énorme pour le mobile */
+            .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 60vh 20px; }
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
             nav.mobile-open { transform: translateX(0); }
             nav .logo { display: none; }
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
-            .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
+            
+            /* Responsive FIX for Publications/Resource Row */
+            .resource-row { flex-direction: column; align-items: stretch; gap: 15px; }
             .type-selector { justify-content: center; margin: 5px 0; }
             .input-group-title, .action-area { width: 100%; min-width: 0; }
+            .btn-validate { width: 100%; margin-top: 5px; } /* Bouton valider pleine largeur */
         }
     </style>
 </head>
@@ -296,15 +299,16 @@
                             </div>
                             <div class="action-area">
                                 <div class="link-input-wrapper">
-                                    <input type="url" id="field-cv-url" placeholder="https://drive.google.com/file/d/..." onchange="autoSave('profiles', null, 'cv_url', this.value)">
+                                    <input type="url" id="field-cv-url" placeholder="https://..." >
                                 </div>
                                 <div class="upload-btn-wrapper">
                                     <label class="upload-label">
                                         <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
-                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFile('cv', this)">
+                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv', this)">
                                     </label>
                                 </div>
                             </div>
+                            <button class="btn-validate" onclick="confirmCVUpdate()"><i data-lucide="check" size="20"></i></button>
                         </div>
                     </div>
                 </div>
@@ -371,8 +375,12 @@
         if (!url) return '';
         const parts = url.split('/');
         const rawName = parts[parts.length - 1];
-        // Enlève le timestamp (chiffres + underscore) au début
-        return rawName.replace(/^\d+_/, '');
+        // Enlève le timestamp (chiffres + underscore) au début et décode les %20
+        return decodeURIComponent(rawName.replace(/^\d+_/, ''));
+    }
+
+    function isSupabaseUrl(url) {
+        return url && url.includes('supabase.co');
     }
 
     function toggleEditBlock(id) {
@@ -427,23 +435,28 @@
         // Gestion CV : Affichage Badge + Bouton Edit
         const cvArea = document.getElementById('cv-display-area');
         const cvUrl = profileData.cv_url;
-        const isFile = cvUrl && cvUrl.includes('/documents/'); 
+        const isFile = isSupabaseUrl(cvUrl);
         
         let html = '';
         if (cvUrl) {
-            html += `<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">`;
+            html += `<div class="file-badge-container">`;
             if (isFile) {
                 html += `<div class="file-badge"><i data-lucide="file-check" size="16"></i> <span>${getCleanFileName(cvUrl)}</span></div>`;
             } else {
                 html += `<a href="${cvUrl}" target="_blank" style="color:#3b82f6; text-decoration:underline; font-size:0.9rem;">${cvUrl}</a>`;
             }
-            html += `<button class="btn-icon-small" onclick="toggleEditBlock('cv-edit-container')" title="Modifier"><i data-lucide="pencil" size="16"></i></button></div>`;
+            html += `<button class="btn-square" onclick="toggleEditBlock('cv-edit-container')" title="Modifier"><i data-lucide="pencil" size="16"></i></button></div>`;
         } else {
-            // Si pas de CV, on affiche le bloc d'édition direct
              document.getElementById('cv-edit-container').classList.add('visible');
         }
         cvArea.innerHTML = html;
-        document.getElementById('field-cv-url').value = cvUrl || '';
+        
+        // Logique champ CV
+        if (isFile) {
+            document.getElementById('field-cv-url').value = ""; // Vide car c'est un fichier technique
+        } else {
+            document.getElementById('field-cv-url').value = cvUrl || '';
+        }
 
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || '';
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
@@ -489,8 +502,8 @@
                                             <div class="course-row-top">
                                                 <span class="course-label-read">${item.label}</span>
                                                 <div style="display:flex; gap:5px;">
-                                                    <button class="btn-icon-small" onclick="toggleEditBlock('${editId}')"><i data-lucide="pencil" size="14"></i></button>
-                                                    <button class="btn-icon-small delete" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
+                                                    <button class="btn-square" onclick="toggleEditBlock('${editId}')"><i data-lucide="pencil" size="14"></i></button>
+                                                    <button class="btn-square delete" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
                                                 </div>
                                             </div>
                                             <div class="course-row-bottom">
@@ -501,22 +514,23 @@
                                             </div>
                                             
                                             <div id="${editId}" class="resource-row mode-${item.type} course-edit-block">
-                                                <div class="input-group-title"><input type="text" value="${item.label}" class="form-input" placeholder="Titre" onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'label', this.value)"></div>
+                                                <div class="input-group-title"><input type="text" id="edit-lbl-${course.id}-${secIdx}-${itemIdx}" value="${item.label}" class="form-input" placeholder="Titre"></div>
                                                 <div class="type-selector">
                                                     <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien</button>
                                                     <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier</button>
                                                 </div>
                                                 <div class="action-area">
                                                     <div class="link-input-wrapper">
-                                                        <input type="url" value="${item.type==='link'?item.value:''}" class="form-input" placeholder="https://..." onchange="updateItemData('${course.id}', ${secIdx}, ${itemIdx}, 'value', this.value)">
+                                                        <input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://...">
                                                     </div>
                                                     <div class="upload-btn-wrapper">
                                                         <label class="upload-label">
                                                             <i data-lucide="cloud-upload"></i> <span id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span>
-                                                            <input type="file" class="hidden-input" onchange="updateItemFile('${course.id}', ${secIdx}, ${itemIdx}, this)">
+                                                            <input type="file" class="hidden-input" onchange="uploadFileForEdit('courses', this, 'edit-val-${course.id}-${secIdx}-${itemIdx}', 'file-txt-edit-${course.id}-${secIdx}-${itemIdx}')">
                                                         </label>
                                                     </div>
                                                 </div>
+                                                <button class="btn-validate" onclick="confirmCourseItemUpdate('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="check" size="20"></i></button>
                                             </div>
                                         </div>`;
                                     }).join('')}
@@ -555,7 +569,7 @@
         
         c.innerHTML = profileData.publications.map(pub => {
             const isOpen = (openPubId === pub.id) ? 'open' : '';
-            const isFile = pub.link_value && pub.link_value.includes('/documents/');
+            const isFile = isSupabaseUrl(pub.link_value);
             
             return `
             <div class="item-card ${isOpen}" id="pub-${pub.id}">
@@ -587,9 +601,9 @@
                         </div>
                     </div>
                     <label>Document associé</label>
-                    <div style="margin-bottom:10px;">
-                         ${pub.link_value ? (isFile ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(pub.link_value)}</span></div>` : `<a href="${pub.link_value}" target="_blank" style="color:#3b82f6;text-decoration:underline;">${pub.link_value}</a>`) : ''}
-                         <button class="btn-icon-small" onclick="toggleEditBlock('pub-res-${pub.id}')" title="Modifier document"><i data-lucide="pencil" size="14"></i></button>
+                    <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+                         ${pub.link_value ? (isFile ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(pub.link_value)}</span></div>` : `<a href="${pub.link_value}" target="_blank" style="color:#3b82f6;text-decoration:underline; max-width:80%; overflow:hidden; text-overflow:ellipsis;">${pub.link_value}</a>`) : ''}
+                         <button class="btn-square" onclick="toggleEditBlock('pub-res-${pub.id}')" title="Modifier document"><i data-lucide="pencil" size="14"></i></button>
                     </div>
 
                     <div class="hidden-edit-container" id="pub-res-${pub.id}">
@@ -600,15 +614,16 @@
                             </div>
                             <div class="action-area">
                                 <div class="link-input-wrapper">
-                                    <input type="url" value="${pub.link_value || ''}" placeholder="https://doi.org/..." onchange="autoSave('publications', '${pub.id}', 'link_value', this.value)">
+                                    <input type="url" id="pub-url-${pub.id}" value="${isFile ? '' : (pub.link_value || '')}" placeholder="https://doi.org/...">
                                 </div>
                                 <div class="upload-btn-wrapper">
                                     <label class="upload-label">
-                                        <i data-lucide="cloud-upload"></i> <span>Remplacer PDF</span>
-                                        <input type="file" class="hidden-input" onchange="uploadPubFile('${pub.id}', this)">
+                                        <i data-lucide="cloud-upload"></i> <span id="pub-file-txt-${pub.id}">Remplacer PDF</span>
+                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('publications', this, 'pub-url-${pub.id}', 'pub-file-txt-${pub.id}')">
                                     </label>
                                 </div>
                             </div>
+                            <button class="btn-validate" onclick="confirmPubUpdate('${pub.id}')"><i data-lucide="check" size="20"></i></button>
                         </div>
                     </div>
                     <div style="text-align:right; margin-top:20px;"><button class="btn-delete-course" onclick="delItem('publications', '${pub.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button></div>
@@ -625,7 +640,7 @@
         
         c.innerHTML = profileData.interventions.map(inter => {
             const isOpen = (openInterId === inter.id) ? 'open' : '';
-            const isFile = inter.link_value && inter.link_value.includes('/documents/');
+            const isFile = isSupabaseUrl(inter.link_value);
 
             return `
             <div class="item-card ${isOpen}" id="inter-${inter.id}">
@@ -661,9 +676,9 @@
                     </div>
 
                     <label>Support (Lien ou PDF)</label>
-                    <div style="margin-bottom:10px;">
+                    <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
                          ${inter.link_value ? (isFile ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(inter.link_value)}</span></div>` : `<a href="${inter.link_value}" target="_blank" style="color:#3b82f6;text-decoration:underline;">${inter.link_value}</a>`) : ''}
-                         <button class="btn-icon-small" onclick="toggleEditBlock('inter-res-${inter.id}')" title="Modifier support"><i data-lucide="pencil" size="14"></i></button>
+                         <button class="btn-square" onclick="toggleEditBlock('inter-res-${inter.id}')" title="Modifier support"><i data-lucide="pencil" size="14"></i></button>
                     </div>
 
                     <div class="hidden-edit-container" id="inter-res-${inter.id}">
@@ -674,15 +689,16 @@
                             </div>
                             <div class="action-area">
                                 <div class="link-input-wrapper">
-                                    <input type="url" value="${inter.link_value || ''}" placeholder="https://..." onchange="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                                    <input type="url" id="inter-url-${inter.id}" value="${isFile ? '' : (inter.link_value || '')}" placeholder="https://...">
                                 </div>
                                 <div class="upload-btn-wrapper">
                                     <label class="upload-label">
-                                        <i data-lucide="cloud-upload"></i> <span>Remplacer support</span>
-                                        <input type="file" class="hidden-input" onchange="uploadInterFile('${inter.id}', this)">
+                                        <i data-lucide="cloud-upload"></i> <span id="inter-file-txt-${inter.id}">Remplacer support</span>
+                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('interventions', this, 'inter-url-${inter.id}', 'inter-file-txt-${inter.id}')">
                                     </label>
                                 </div>
                             </div>
+                            <button class="btn-validate" onclick="confirmInterUpdate('${inter.id}')"><i data-lucide="check" size="20"></i></button>
                         </div>
                     </div>
                     
@@ -693,7 +709,79 @@
         lucide.createIcons();
     }
 
-    // --- ACTIONS COURSES (Création et Edition) ---
+    // --- ACTIONS GENERIC (NEW EDIT SYSTEM) ---
+
+    // Upload le fichier et met l'URL dans le champ input caché, SANS sauvegarder en base
+    window.uploadFileForEdit = async (folder, input, urlFieldId, labelId) => {
+        if(input.files.length === 0) return;
+        const file = input.files[0];
+        showToast("Upload en cours...");
+        
+        document.getElementById(labelId).textContent = file.name;
+        
+        const path = `${profileData.id}/${folder}/${Date.now()}_${file.name}`;
+        const { error } = await sb.storage.from('documents').upload(path, file);
+        if(error) return alert("Erreur upload: " + error.message);
+        
+        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+        document.getElementById(urlFieldId).value = url;
+        showToast("Fichier prêt. Validez pour enregistrer.");
+    }
+
+    window.confirmCVUpdate = async () => {
+        const url = document.getElementById('field-cv-url').value;
+        await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id);
+        profileData.cv_url = url;
+        fillProfileUI();
+        showToast("CV mis à jour !");
+    }
+
+    window.confirmPubUpdate = async (id) => {
+        const url = document.getElementById(`pub-url-${id}`).value;
+        const mode = document.querySelector(`#pub-res-${id} .mode-file`) ? 'file' : 'link';
+        // Note: 'link_type' n'est plus vraiment nécessaire si on a l'URL, mais on garde pour compatibilité
+        await sb.from('publications').update({ link_value: url, link_type: mode }).eq('id', id);
+        
+        // Update local
+        const p = profileData.publications.find(x => x.id === id);
+        p.link_value = url;
+        p.link_type = mode;
+        
+        renderPublications();
+        showToast("Publication mise à jour !");
+        reloadPreview();
+    }
+
+    window.confirmInterUpdate = async (id) => {
+        const url = document.getElementById(`inter-url-${id}`).value;
+        const mode = document.querySelector(`#inter-res-${id} .mode-file`) ? 'file' : 'link';
+        await sb.from('interventions').update({ link_value: url, link_type: mode }).eq('id', id);
+        
+        const p = profileData.interventions.find(x => x.id === id);
+        p.link_value = url;
+        p.link_type = mode;
+        
+        renderInterventions();
+        showToast("Intervention mise à jour !");
+        reloadPreview();
+    }
+
+    window.confirmCourseItemUpdate = async (cid, sIdx, iIdx) => {
+        const label = document.getElementById(`edit-lbl-${cid}-${sIdx}-${iIdx}`).value;
+        const url = document.getElementById(`edit-val-${cid}-${sIdx}-${iIdx}`).value;
+        const editId = `edit-c-${cid}-${sIdx}-${iIdx}`;
+        const mode = document.getElementById(editId).classList.contains('mode-file') ? 'file' : 'link';
+
+        const c = profileData.courses.find(x => x.id === cid);
+        c.sections[sIdx].items[iIdx].label = label;
+        c.sections[sIdx].items[iIdx].value = url;
+        c.sections[sIdx].items[iIdx].type = mode;
+
+        await updateCourseDB(c);
+        showToast("Élément modifié !");
+    }
+
+    // --- ACTIONS COURSES (Création) ---
     window.switchMode = (cid, sIdx, mode, btn) => {
         const row = document.getElementById(`add-row-${cid}-${sIdx}`);
         row.classList.remove('mode-link', 'mode-file');
@@ -703,7 +791,7 @@
         btn.classList.add('active');
     }
 
-    // Gestion de l'affichage du bloc d'édition pour les items existants
+    // Gestion de l'affichage du bloc d'édition pour les items existants (Cours)
     window.switchExistingMode = (cid, sIdx, iIdx, mode, btn) => {
         const editId = `edit-c-${cid}-${sIdx}-${iIdx}`;
         const row = document.getElementById(editId);
@@ -711,9 +799,6 @@
         row.classList.add('mode-' + mode);
         row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
-        // Mise à jour du type en base direct
-        updateItemData(cid, sIdx, iIdx, 'type', mode);
     }
 
     window.addItem = async (cid, sIdx, isFileAuto) => {
@@ -742,63 +827,20 @@
         showToast("Ajouté !");
     }
 
-    // Upload spécifique pour le remplacement de fichier dans un cours existant
-    window.updateItemFile = async (cid, sIdx, iIdx, input) => {
-        if(input.files.length === 0) return;
-        const file = input.files[0];
-        showToast("Upload en cours...");
-        input.parentElement.querySelector('span').textContent = file.name;
-        
-        const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
-        const { error } = await sb.storage.from('documents').upload(path, file);
-        if(error) return alert("Erreur upload");
-        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
-        
-        await updateItemData(cid, sIdx, iIdx, 'value', url);
-        showToast("Fichier mis à jour");
-    }
-
-    // --- ACTIONS PUBLICATIONS ---
+    // --- ACTIONS PUBLICATIONS / INTERVENTIONS (SWITCH MODES) ---
     window.switchPubMode = (pid, mode, btn) => {
-        const row = document.getElementById(`pub-res-${pid}`).querySelector('.resource-row');
+        const row = document.querySelector(`#pub-res-${pid} .resource-row`);
         row.classList.remove('mode-link', 'mode-file');
         row.classList.add('mode-' + mode);
-        autoSave('publications', pid, 'link_type', mode);
         row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-    window.uploadPubFile = async (pid, input) => {
-        if (input.files.length === 0) return;
-        const file = input.files[0];
-        showToast("Upload...");
-        input.parentElement.querySelector('span').textContent = file.name;
-        const path = `${profileData.id}/publications/${Date.now()}_${file.name}`;
-        const { error } = await sb.storage.from('documents').upload(path, file);
-        if(error) return alert("Erreur upload");
-        await autoSave('publications', pid, 'link_value', sb.storage.from('documents').getPublicUrl(path).data.publicUrl);
-        showToast("Sauvegardé");
-        fillProfileUI(); // Refresh UI si besoin
-    }
-
-    // --- ACTIONS INTERVENTIONS ---
     window.switchInterMode = (iid, mode, btn) => {
-        const row = document.getElementById(`inter-res-${iid}`).querySelector('.resource-row');
+        const row = document.querySelector(`#inter-res-${iid} .resource-row`);
         row.classList.remove('mode-link', 'mode-file');
         row.classList.add('mode-' + mode);
-        autoSave('interventions', iid, 'link_type', mode);
         row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-    }
-    window.uploadInterFile = async (iid, input) => {
-        if (input.files.length === 0) return;
-        const file = input.files[0];
-        showToast("Upload...");
-        input.parentElement.querySelector('span').textContent = file.name;
-        const path = `${profileData.id}/interventions/${Date.now()}_${file.name}`;
-        const { error } = await sb.storage.from('documents').upload(path, file);
-        if(error) return alert("Erreur upload");
-        await autoSave('interventions', iid, 'link_value', sb.storage.from('documents').getPublicUrl(path).data.publicUrl);
-        showToast("Sauvegardé");
     }
 
     // --- COMMON HELPERS & NAVIGATION ---
@@ -809,7 +851,6 @@
     }
 
     window.updateSectionTitle = async (cid, sIdx, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].title = val; await updateCourseDB(c); }
-    window.updateItemData = async (cid, sIdx, iIdx, key, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items[iIdx][key] = val; await updateCourseDB(c); }
     window.addSection = async (cid) => { const c = profileData.courses.find(x => x.id === cid); if(!c.sections) c.sections = []; c.sections.push({ title: 'Nouvelle Section', items: [] }); openCourseId = cid; await updateCourseDB(c); }
     window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
     window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
@@ -845,6 +886,7 @@
         showToast("Élément supprimé");
     }
     
+    // AutoSave pour les champs TEXTE simples uniquement
     window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
     window.saveRDV = () => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ 
         const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value };
@@ -865,7 +907,7 @@
         }
     }
 
-    // --- FONCTIONS PERSONNALISATION & CV ---
+    // --- FONCTIONS PERSONNALISATION ---
     function renderHeaderConfig() {
         const container = document.getElementById('header-config-container');
         const h = profileData.config.header || DEFAULT_CONFIG.header;
@@ -901,14 +943,14 @@
                     <div class="footer-view-row" id="footer-view-${idx}">
                         <span>${l.label} <small style="color:#94a3b8">(${l.url})</small></span>
                         <div style="display:flex; gap:5px;">
-                            <button class="btn-icon-small" onclick="toggleFooterEdit(${idx})"><i data-lucide="pencil" size="14"></i></button>
-                            <button class="btn-icon-small delete" onclick="removeFooterLink(${idx})"><i data-lucide="trash-2" size="14"></i></button>
+                            <button class="btn-square" onclick="toggleFooterEdit(${idx})"><i data-lucide="pencil" size="14"></i></button>
+                            <button class="btn-square delete" onclick="removeFooterLink(${idx})"><i data-lucide="trash-2" size="14"></i></button>
                         </div>
                     </div>
                     <div class="footer-edit-row hidden" id="footer-edit-${idx}">
                         <input value="${l.label}" id="f-lbl-${idx}" style="width:120px; font-size:0.85rem; padding:4px;">
                         <input value="${l.url}" id="f-url-${idx}" style="flex:1; font-size:0.85rem; padding:4px;">
-                        <button class="btn-icon-small" style="color:var(--accent-green); border-color:var(--accent-green);" onclick="saveFooterEdit(${idx})"><i data-lucide="check" size="16"></i></button>
+                        <button class="btn-validate" style="width:32px; height:32px;" onclick="saveFooterEdit(${idx})"><i data-lucide="check" size="16"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -983,10 +1025,6 @@
         if (type === 'avatar') {
             await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id);
             document.getElementById('preview-avatar').src = url;
-        } else if (type === 'cv') {
-            await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id);
-            document.getElementById('field-cv-url').value = url;
-            fillProfileUI(); // Refresh pour voir le badge
         }
         showToast("Sauvegardé !");
     }
