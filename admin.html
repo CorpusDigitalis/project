@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin V25</title>
+    <title>Corpus Digitalis - Admin V26</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,6 +16,7 @@
             --sidebar: #0f172a; 
             --accent: #0f172a; 
             --accent-blue: #3b82f6; 
+            --accent-blue-light: #eff6ff; /* Pour le badge lien */
             --accent-green: #10b981;
             --accent-green-light: #ecfdf5;
             --accent-light: #1e293b; 
@@ -56,7 +57,7 @@
             border-radius: 30px 0 0 30px; 
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
         }
-        /* Marge de scroll ENORME pour liberté de mouvement */
+        /* SCROLL MARGIN UPDATE : 60vh pour un scroll libre sur PC et Mobile */
         .editor-side { height: 100%; overflow-y: auto; flex: 1; padding: 40px 50px 60vh 50px; max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; }
         
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
@@ -101,8 +102,9 @@
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
 
-        /* --- FILE BADGE --- */
-        .file-badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; overflow: hidden; }
+        /* --- BADGES (Files & Links) --- */
+        .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; overflow: hidden; }
+        
         .file-badge {
             display: inline-flex; align-items: center; gap: 8px;
             background: var(--accent-green-light);
@@ -112,11 +114,28 @@
             border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
-            max-width: 100%; /* Empêche le débordement */
+            max-width: 100%; 
             overflow: hidden;
             box-sizing: border-box;
         }
-        .file-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* NOUVEAU : Badge pour les Liens (Esthétique améliorée) */
+        .link-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--accent-blue-light);
+            border: 1px solid #bfdbfe;
+            color: #2563eb;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            max-width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            text-decoration: none;
+        }
+        
+        .file-badge span, .link-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* --- COURSES --- */
         .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
@@ -133,9 +152,8 @@
         .course-row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
         .course-label-read { font-weight: 600; font-size: 0.9rem; color: #334155; }
         .course-row-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
-        .course-link-read { color: #64748b; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; text-decoration: none; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-        .course-link-read:hover { color: var(--accent-blue); }
 
+        /* IMPORTANT : Display none par défaut pour le mode édition des cours */
         .course-edit-block { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
         .course-edit-block.visible { display: block; }
 
@@ -199,7 +217,7 @@
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
             .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; }
-            /* Marge énorme pour le mobile */
+            /* Marge énorme pour le mobile aussi */
             .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 60vh 20px; }
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
@@ -208,11 +226,10 @@
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
             
-            /* Responsive FIX for Publications/Resource Row */
             .resource-row { flex-direction: column; align-items: stretch; gap: 15px; }
             .type-selector { justify-content: center; margin: 5px 0; }
             .input-group-title, .action-area { width: 100%; min-width: 0; }
-            .btn-validate { width: 100%; margin-top: 5px; } /* Bouton valider pleine largeur */
+            .btn-validate { width: 100%; margin-top: 5px; }
         }
     </style>
 </head>
@@ -375,7 +392,6 @@
         if (!url) return '';
         const parts = url.split('/');
         const rawName = parts[parts.length - 1];
-        // Enlève le timestamp (chiffres + underscore) au début et décode les %20
         return decodeURIComponent(rawName.replace(/^\d+_/, ''));
     }
 
@@ -439,11 +455,11 @@
         
         let html = '';
         if (cvUrl) {
-            html += `<div class="file-badge-container">`;
+            html += `<div class="badge-container">`;
             if (isFile) {
                 html += `<div class="file-badge"><i data-lucide="file-check" size="16"></i> <span>${getCleanFileName(cvUrl)}</span></div>`;
             } else {
-                html += `<a href="${cvUrl}" target="_blank" style="color:#3b82f6; text-decoration:underline; font-size:0.9rem;">${cvUrl}</a>`;
+                html += `<a href="${cvUrl}" target="_blank" class="link-badge"><i data-lucide="link" size="16"></i> <span>${cvUrl}</span></a>`;
             }
             html += `<button class="btn-square" onclick="toggleEditBlock('cv-edit-container')" title="Modifier"><i data-lucide="pencil" size="16"></i></button></div>`;
         } else {
@@ -451,9 +467,8 @@
         }
         cvArea.innerHTML = html;
         
-        // Logique champ CV
         if (isFile) {
-            document.getElementById('field-cv-url').value = ""; // Vide car c'est un fichier technique
+            document.getElementById('field-cv-url').value = "";
         } else {
             document.getElementById('field-cv-url').value = cvUrl || '';
         }
@@ -509,7 +524,7 @@
                                             <div class="course-row-bottom">
                                                 ${isFile 
                                                   ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(item.value)}</span></div>` 
-                                                  : `<a href="${item.value}" target="_blank" class="course-link-read"><i data-lucide="link" size="14"></i> ${item.value}</a>`
+                                                  : `<a href="${item.value}" target="_blank" class="link-badge"><i data-lucide="link" size="14"></i> <span>${item.value}</span></a>`
                                                 }
                                             </div>
                                             
@@ -570,6 +585,7 @@
         c.innerHTML = profileData.publications.map(pub => {
             const isOpen = (openPubId === pub.id) ? 'open' : '';
             const isFile = isSupabaseUrl(pub.link_value);
+            const hasContent = pub.link_value && pub.link_value !== "";
             
             return `
             <div class="item-card ${isOpen}" id="pub-${pub.id}">
@@ -602,11 +618,14 @@
                     </div>
                     <label>Document associé</label>
                     <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
-                         ${pub.link_value ? (isFile ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(pub.link_value)}</span></div>` : `<a href="${pub.link_value}" target="_blank" style="color:#3b82f6;text-decoration:underline; max-width:80%; overflow:hidden; text-overflow:ellipsis;">${pub.link_value}</a>`) : ''}
-                         <button class="btn-square" onclick="toggleEditBlock('pub-res-${pub.id}')" title="Modifier document"><i data-lucide="pencil" size="14"></i></button>
+                         ${hasContent ? (isFile ? 
+                            `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(pub.link_value)}</span></div>` : 
+                            `<a href="${pub.link_value}" target="_blank" class="link-badge"><i data-lucide="link" size="14"></i> <span>${pub.link_value}</span></a>`
+                         ) : ''}
+                         ${hasContent ? `<button class="btn-square" onclick="toggleEditBlock('pub-res-${pub.id}')" title="Modifier document"><i data-lucide="pencil" size="14"></i></button>` : ''}
                     </div>
 
-                    <div class="hidden-edit-container" id="pub-res-${pub.id}">
+                    <div class="hidden-edit-container ${!hasContent ? 'visible' : ''}" id="pub-res-${pub.id}">
                         <div class="resource-row mode-link">
                             <div class="type-selector">
                                 <button type="button" class="type-btn active" onclick="switchPubMode('${pub.id}', 'link', this)">Lien</button>
@@ -641,6 +660,7 @@
         c.innerHTML = profileData.interventions.map(inter => {
             const isOpen = (openInterId === inter.id) ? 'open' : '';
             const isFile = isSupabaseUrl(inter.link_value);
+            const hasContent = inter.link_value && inter.link_value !== "";
 
             return `
             <div class="item-card ${isOpen}" id="inter-${inter.id}">
@@ -677,11 +697,14 @@
 
                     <label>Support (Lien ou PDF)</label>
                     <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
-                         ${inter.link_value ? (isFile ? `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(inter.link_value)}</span></div>` : `<a href="${inter.link_value}" target="_blank" style="color:#3b82f6;text-decoration:underline;">${inter.link_value}</a>`) : ''}
-                         <button class="btn-square" onclick="toggleEditBlock('inter-res-${inter.id}')" title="Modifier support"><i data-lucide="pencil" size="14"></i></button>
+                         ${hasContent ? (isFile ? 
+                            `<div class="file-badge"><i data-lucide="file-check" size="14"></i> <span>${getCleanFileName(inter.link_value)}</span></div>` : 
+                            `<a href="${inter.link_value}" target="_blank" class="link-badge"><i data-lucide="link" size="14"></i> <span>${inter.link_value}</span></a>`
+                         ) : ''}
+                         ${hasContent ? `<button class="btn-square" onclick="toggleEditBlock('inter-res-${inter.id}')" title="Modifier support"><i data-lucide="pencil" size="14"></i></button>` : ''}
                     </div>
 
-                    <div class="hidden-edit-container" id="inter-res-${inter.id}">
+                    <div class="hidden-edit-container ${!hasContent ? 'visible' : ''}" id="inter-res-${inter.id}">
                         <div class="resource-row mode-link">
                             <div class="type-selector">
                                 <button type="button" class="type-btn active" onclick="switchInterMode('${inter.id}', 'link', this)">Lien</button>
