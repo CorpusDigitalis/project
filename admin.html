@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin Final</title>
+    <title>Corpus Digitalis - Admin V26</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -24,7 +24,7 @@
             --text-main: #334155; 
             --text-muted: #64748b; 
             --radius-pro: 30px; 
-            --input-height: 42px; /* Hauteur standardisée pour l'alignement */
+            --input-height: 42px; 
         }
 
         /* --- GLOBAL RESET & FONTS --- */
@@ -36,6 +36,9 @@
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
+        
+        .mobile-actions { display: flex; gap: 15px; align-items: center; }
+        .btn-view-site-mobile { color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; }
 
         nav { 
             width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
@@ -59,28 +62,17 @@
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
         }
         
-        /* SCROLL FIX : overflow-y-auto sur le parent direct du contenu */
         .editor-side { 
-            height: 100%; 
-            overflow-y: auto; 
-            flex: 1; 
-            padding: 40px 50px 0 50px; /* Pas de margin-bottom ici, géré par le spacer */
-            max-width: 1000px; 
-            margin: 0 auto; 
-            scroll-behavior: smooth; 
-            display: flex;
-            flex-direction: column;
+            height: 100%; overflow-y: auto; flex: 1; 
+            padding: 40px 50px 0 50px; 
+            max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; 
+            display: flex; flex-direction: column;
         }
+        .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
         
-        /* ESPACEUR EN BAS DE PAGE (50% de l'écran) */
-        .scroll-spacer {
-            width: 100%;
-            height: 50vh; /* La moitié de l'écran vide en bas */
-            flex-shrink: 0;
-        }
-        
-        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
+        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
+        .page-desc { color: #64748b; font-size: 0.9rem; margin-top: 5px; max-width: 600px; line-height: 1.5; }
 
         /* --- UI ELEMENTS --- */
         .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
@@ -109,12 +101,17 @@
         .item-header { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; background: white; user-select: none; }
         .item-header:hover { background: #fafafa; }
         .drag-handle { color: #cbd5e1; cursor: grab; padding: 4px; flex-shrink: 0; }
+        .drag-handle:active { cursor: grabbing; color: var(--accent); }
+        
         .item-title { flex: 1; font-weight: 600; color: #334155; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .item-badge { font-size: 0.7rem; background: #f1f5f9; color: #64748b; padding: 4px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
         .chevron { color: #cbd5e1; transition: transform 0.2s; flex-shrink: 0; }
         .item-body { display: none; padding: 25px; background: #fafafa; border-top: 1px solid var(--border); }
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
+        
+        /* Drag Ghost */
+        .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed #94a3b8; }
 
         /* --- BADGES (Files & Links) --- */
         .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; overflow: hidden; }
@@ -138,117 +135,36 @@
         .course-edit-block { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
         .course-edit-block.visible { display: block; }
 
-        /* --- RESOURCE ROW (NOUVEAU DESIGN ALIGNÉ) --- */
+        /* --- RESOURCE ROW (FLEX) --- */
         .hidden-edit-container { display: none; margin-top: 15px; }
         .hidden-edit-container.visible { display: block; }
 
-        /* Container FLEX qui force l'alignement */
-        .resource-row {
-            display: flex;
-            align-items: center; /* Centre verticalement */
-            gap: 10px;
-            background: #fff;
-            padding: 0;
-            border: none;
-            width: 100%;
-        }
-
-        /* 1. Toggle Switch (Lien/Fichier) */
-        .type-selector {
-            display: flex;
-            background: #f1f5f9;
-            padding: 2px;
-            border-radius: 6px;
-            flex-shrink: 0;
-            height: var(--input-height); /* Hauteur fixe 42px */
-            box-sizing: border-box;
-        }
-        .type-btn {
-            border: none;
-            background: transparent;
-            padding: 0 12px; /* Padding horizontal uniquement */
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: #64748b;
-            transition: 0.2s;
-            height: 100%; /* Prend toute la hauteur */
-            display: flex;
-            align-items: center;
-        }
+        .resource-row { display: flex; align-items: center; gap: 10px; background: #fff; padding: 0; border: none; width: 100%; }
+        .type-selector { display: flex; background: #f1f5f9; padding: 2px; border-radius: 6px; flex-shrink: 0; height: var(--input-height); box-sizing: border-box; }
+        .type-btn { border: none; background: transparent; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; height: 100%; display: flex; align-items: center; }
         .type-btn:hover { color: var(--accent-blue); }
         .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
-        /* 2. Zone d'action (Input ou Bouton Vert) */
-        .action-area {
-            flex: 1; /* Prend toute la place restante */
-            position: relative;
-            height: var(--input-height); /* Hauteur fixe 42px */
-            min-width: 0; /* Important pour flexbox */
-        }
-
-        /* Input URL classique */
+        .action-area { flex: 1; position: relative; height: var(--input-height); min-width: 0; }
         .link-input-wrapper { width: 100%; height: 100%; }
-        .link-input-wrapper input {
-            height: 100%;
-            border-radius: 6px;
-            border: 1px solid #cbd5e1;
-            padding: 0 12px;
-            width: 100%;
-        }
+        .link-input-wrapper input { height: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; width: 100%; }
 
-        /* Bouton Upload Vert */
         .upload-btn-wrapper { width: 100%; height: 100%; display: none; }
-        .upload-label { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; /* Ecarte icone et texte */
-            gap: 8px; 
-            width: 100%; 
-            height: 100%;
-            padding: 0 15px; 
-            background: #f0fdf4; 
-            color: #16a34a; 
-            border: 1px dashed #16a34a; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            transition: 0.2s; 
-            box-sizing: border-box; 
-            overflow: hidden; 
-        }
+        .upload-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; height: 100%; padding: 0 15px; background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; box-sizing: border-box; overflow: hidden; }
         .upload-label:hover { background: #dcfce7; }
+        .upload-label.loading { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
         .hidden-input { display: none; }
 
-        /* Gestion de l'affichage selon le mode (Lien ou Fichier) */
         .resource-row.mode-link .link-input-wrapper { display: block; }
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
         .resource-row.mode-file .link-input-wrapper { display: none; }
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
 
-        /* 3. Bouton VALIDATION (V) */
-        .btn-validate { 
-            width: var(--input-height); /* Carré 42x42 */
-            height: var(--input-height); 
-            background: var(--accent); 
-            color: white; 
-            border-radius: 6px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            border: none; 
-            flex-shrink: 0; 
-            transition: 0.2s; 
-        }
+        .btn-validate { width: var(--input-height); height: var(--input-height); background: var(--accent); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; flex-shrink: 0; transition: 0.2s; }
         .btn-validate:hover { opacity: 0.9; transform: scale(1.02); }
 
-        /* Autres styles */
         .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
         .input-group-title input { height: 100%; }
-
         .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
@@ -259,38 +175,30 @@
         .url-bar { flex: 1; height: 28px; background: white; border-radius: 4px; display: flex; align-items: center; padding-left: 12px; font-size: 11px; color: #94a3b8; border: 1px solid #e2e8f0; }
         iframe { width: 100%; flex: 1; border: none; background: white; }
         .hidden { display: none !important; }
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 10px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s; z-index: 999; display: flex; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        #toast.visible { transform: translateX(-50%) translateY(0); }
         
-        /* --- PERSONNALISATION --- */
-        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 8px; background: #fff; min-height: 40px; }
-        .config-item > span { display: flex; align-items: center; gap: 12px; line-height: 1; font-weight: 500; font-size: 0.9rem; }
-        .config-item.hidden-item { opacity: 0.6; background: #f8fafc; }
-        .toggle-eye { cursor: pointer; color: #64748b; transition: 0.2s; }
-        .toggle-eye:hover { color: #3b82f6; }
-        .toggle-eye.off { color: #cbd5e1; }
+        /* --- TOAST SYSTEM --- */
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 10px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 999; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        #toast.visible { transform: translateX(-50%) translateY(0); }
+        #toast.error { background: #ef4444; }
+        #toast.success { background: #10b981; }
 
         @media (max-width: 1200px) { .preview-side { display: none; } }
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
             .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; }
-            /* Sur mobile, on garde le padding et le spacer */
             .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 0 20px; } 
             .scroll-spacer { height: 50vh; }
-
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
             nav.mobile-open { transform: translateX(0); }
             nav .logo { display: none; }
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
-            
-            /* Responsive pour la resource-row */
             .resource-row { flex-direction: column; align-items: stretch; height: auto; gap: 10px; }
             .type-selector { width: 100%; justify-content: center; }
             .type-btn { flex: 1; justify-content: center; }
             .action-area { width: 100%; }
-            .btn-validate { width: 100%; } /* Bouton V prend toute la largeur sur mobile */
+            .btn-validate { width: 100%; } 
             .input-group-title { width: 100%; }
         }
     </style>
@@ -301,7 +209,10 @@
 
     <div class="mobile-header">
         <div class="logo-text">CORPUS DIGITALIS <span>PRO</span></div>
-        <button onclick="toggleMobileMenu()" style="background:none; border:none; color:white;"><i data-lucide="menu"></i></button>
+        <div class="mobile-actions">
+            <a href="#" id="mobile-view-site" target="_blank" class="btn-view-site-mobile"><i data-lucide="eye" size="16"></i> Voir le site</a>
+            <button onclick="toggleMobileMenu()" style="background:none; border:none; color:white;"><i data-lucide="menu"></i></button>
+        </div>
     </div>
 
     <nav id="sidebar">
@@ -364,7 +275,14 @@
             </section>
 
             <section id="mod-perso" class="module hidden">
-                <div class="header-flex"><h2>Personnalisation</h2></div>
+                <div class="header-flex">
+                    <div>
+                        <h2>Personnalisation</h2>
+                        <p class="page-desc">
+                            Personnalisez l'apparence globale de votre site académique. Ces réglages affectent l'en-tête, le pied de page et les mentions légales sur toutes les pages publiques visibles par vos étudiants et collègues.
+                        </p>
+                    </div>
+                </div>
                 
                 <div class="card">
                     <h4 style="margin-bottom:15px; color:#334155;">Identité & Réseaux</h4>
@@ -372,8 +290,7 @@
                     <div class="form-row"><label>Google Scholar</label><input id="field-scholar" placeholder="https://scholar.google.com/..." oninput="autoSave('profiles',null,'scholar_url',this.value)"></div>
                     
                     <label>Curriculum Vitae (PDF ou Lien)</label>
-                    <div id="cv-display-area" style="margin-top:10px;">
-                        </div>
+                    <div id="cv-display-area" style="margin-top:10px;"></div>
                     <div class="hidden-edit-container" id="cv-edit-container">
                         <div class="resource-row mode-link" id="cv-row">
                             <div class="type-selector">
@@ -385,11 +302,11 @@
                                     <input type="url" id="field-cv-url" placeholder="https://..." >
                                 </div>
                                 <div class="upload-btn-wrapper">
-                                    <label class="upload-label">
+                                    <label class="upload-label" id="cv-upload-label">
                                         <div style="display:flex; align-items:center; gap:8px;">
                                             <i data-lucide="cloud-upload"></i> <span id="cv-file-label">Choisir CV PDF</span>
                                         </div>
-                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv', this)">
+                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv', this, 'field-cv-url', 'cv-file-label', 'cv-upload-label')">
                                     </label>
                                 </div>
                             </div>
@@ -493,12 +410,17 @@
         
         if (!profileData.config) profileData.config = DEFAULT_CONFIG;
         
+        // Update Mobile Link
+        const viewSiteLink = document.getElementById('mobile-view-site');
+        if(viewSiteLink) viewSiteLink.href = `index.html?prof=${profileData.slug||profileData.id}`;
+
         fillProfileUI();
 
+        // Ajout du tri par 'position'
         const [resCourses, resPubs, resInter] = await Promise.allSettled([
-            sb.from('courses').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
-            sb.from('publications').select('*').eq('prof_id', uid).order('created_at', { ascending: false }),
-            sb.from('interventions').select('*').eq('prof_id', uid).order('created_at', { ascending: false })
+            sb.from('courses').select('*').eq('prof_id', uid).order('position', { ascending: true }).order('created_at', { ascending: false }),
+            sb.from('publications').select('*').eq('prof_id', uid).order('position', { ascending: true }).order('created_at', { ascending: false }),
+            sb.from('interventions').select('*').eq('prof_id', uid).order('position', { ascending: true }).order('created_at', { ascending: false })
         ]);
 
         if (resCourses.status === 'fulfilled' && resCourses.value.data) profileData.courses = resCourses.value.data;
@@ -530,7 +452,10 @@
             } else {
                 html += `<a href="${cvUrl}" target="_blank" class="link-badge"><i data-lucide="link" size="16"></i> <span>${cvUrl}</span></a>`;
             }
-            html += `<button class="btn-square" onclick="toggleEditBlock('cv-edit-container')" title="Modifier"><i data-lucide="pencil" size="16"></i></button></div>`;
+            html += `
+                <button class="btn-square" onclick="toggleEditBlock('cv-edit-container')" title="Modifier"><i data-lucide="pencil" size="16"></i></button>
+                <button class="btn-square delete" onclick="deleteCV()" title="Supprimer"><i data-lucide="trash-2" size="16"></i></button>
+            </div>`;
         } else {
              document.getElementById('cv-edit-container').classList.add('visible');
         }
@@ -550,6 +475,43 @@
         lucide.createIcons();
     }
 
+    // --- DRAG & DROP INIT ---
+    function initSortable(containerId, dataKey) {
+        const el = document.getElementById(containerId);
+        if(!el) return;
+        new Sortable(el, {
+            handle: '.drag-handle',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+                // Mise à jour de l'ordre en base
+                const itemIds = Array.from(el.children).map(child => child.id.replace(/^(card-|pub-|inter-)/, ''));
+                updateOrder(dataKey, itemIds);
+            }
+        });
+    }
+
+    async function updateOrder(table, ids) {
+        // Optimisation : Idéalement via RPC, ici loop simple pour vanilla JS
+        const updates = ids.map((id, index) => ({ id, position: index }));
+        
+        // Mise à jour locale pour éviter le scintillement
+        if(table === 'courses') {
+            profileData.courses.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+        } else if (table === 'publications') {
+            profileData.publications.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+        } else if (table === 'interventions') {
+            profileData.interventions.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+        }
+
+        // Sauvegarde DB (On utilise upsert pour batcher si possible, ou loop)
+        for (const up of updates) {
+            await sb.from(table).update({ position: up.position }).eq('id', up.id);
+        }
+        showToast("Ordre sauvegardé", "success");
+        reloadPreview();
+    }
+
     // --- COURSES RENDER ---
     function renderCourses() {
         const c = document.getElementById('courses-container');
@@ -561,12 +523,12 @@
             <div class="item-card ${isOpen}" id="card-${course.id}">
                 <div class="item-header" onclick="toggleCard('${course.id}', 'course')">
                     <i data-lucide="grip-vertical" class="drag-handle"></i>
-                    <div class="item-title">${course.title}</div>
+                    <div class="item-title" id="title-course-${course.id}">${course.title}</div>
                     <span class="item-badge">${course.category}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value)"></div>
+                    <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value); document.getElementById('title-course-${course.id}').innerText=this.value"></div>
                     <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
                     <div style="margin-top:25px;">
                         <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
@@ -609,11 +571,11 @@
                                                             <input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://...">
                                                         </div>
                                                         <div class="upload-btn-wrapper">
-                                                            <label class="upload-label">
+                                                            <label class="upload-label" id="lbl-up-${course.id}-${secIdx}-${itemIdx}">
                                                                 <div style="display:flex; align-items:center; gap:8px;">
                                                                     <i data-lucide="cloud-upload"></i> <span id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span>
                                                                 </div>
-                                                                <input type="file" class="hidden-input" onchange="uploadFileForEdit('courses', this, 'edit-val-${course.id}-${secIdx}-${itemIdx}', 'file-txt-edit-${course.id}-${secIdx}-${itemIdx}')">
+                                                                <input type="file" class="hidden-input" onchange="uploadFileForEdit('courses', this, 'edit-val-${course.id}-${secIdx}-${itemIdx}', 'file-txt-edit-${course.id}-${secIdx}-${itemIdx}', 'lbl-up-${course.id}-${secIdx}-${itemIdx}')">
                                                             </label>
                                                         </div>
                                                     </div>
@@ -633,15 +595,15 @@
                                         <div class="action-area">
                                             <div class="link-input-wrapper"><input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="https://..."></div>
                                             <div class="upload-btn-wrapper">
-                                                <label class="upload-label">
+                                                <label class="upload-label" id="lbl-up-new-${course.id}-${secIdx}">
                                                     <div style="display:flex; align-items:center; gap:8px;">
                                                         <i data-lucide="cloud-upload"></i> <span id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span>
                                                     </div>
-                                                    <input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="addItem('${course.id}', ${secIdx}, true)">
+                                                    <input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="addItem('${course.id}', ${secIdx}, true, 'lbl-up-new-${course.id}-${secIdx}')">
                                                 </label>
                                             </div>
                                         </div>
-                                        <button class="btn-validate" onclick="addItem('${course.id}', ${secIdx}, false)"><i data-lucide="plus" size="18"></i></button>
+                                        <button class="btn-validate" onclick="addItem('${course.id}', ${secIdx}, false, null)"><i data-lucide="plus" size="18"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -653,6 +615,7 @@
             </div>`;
         }).join('');
         lucide.createIcons();
+        initSortable('courses-container', 'courses');
     }
 
     // --- PUBLICATIONS RENDER ---
@@ -668,13 +631,14 @@
             return `
             <div class="item-card ${isOpen}" id="pub-${pub.id}">
                 <div class="item-header" onclick="toggleCard('${pub.id}', 'pub')">
-                    <div class="item-title">${pub.title || 'Sans titre'}</div>
+                     <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title" id="title-pub-${pub.id}">${pub.title || 'Sans titre'}</div>
                     <span class="item-badge">${pub.category || 'Article'}</span>
                     <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${pub.date || ''}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Titre</label><input value="${pub.title || ''}" oninput="autoSave('publications', '${pub.id}', 'title', this.value)"></div>
+                    <div class="form-row"><label>Titre</label><input value="${pub.title || ''}" oninput="autoSave('publications', '${pub.id}', 'title', this.value); document.getElementById('title-pub-${pub.id}').innerText=this.value"></div>
                     <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('publications', '${pub.id}', 'description', this.value)">${pub.description || ''}</textarea></div>
                     
                     <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
@@ -714,11 +678,11 @@
                                     <input type="url" id="pub-url-${pub.id}" value="${isFile ? '' : (pub.link_value || '')}" placeholder="https://doi.org/...">
                                 </div>
                                 <div class="upload-btn-wrapper">
-                                    <label class="upload-label">
+                                    <label class="upload-label" id="lbl-up-pub-${pub.id}">
                                         <div style="display:flex; align-items:center; gap:8px;">
                                             <i data-lucide="cloud-upload"></i> <span id="pub-file-txt-${pub.id}">Remplacer PDF</span>
                                         </div>
-                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('publications', this, 'pub-url-${pub.id}', 'pub-file-txt-${pub.id}')">
+                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('publications', this, 'pub-url-${pub.id}', 'pub-file-txt-${pub.id}', 'lbl-up-pub-${pub.id}')">
                                     </label>
                                 </div>
                             </div>
@@ -730,9 +694,10 @@
             </div>`;
         }).join('');
         lucide.createIcons();
+        initSortable('pubs-container', 'publications');
     }
 
-    // --- INTERVENTIONS RENDER (UPDATED ALIGNMENT) ---
+    // --- INTERVENTIONS RENDER ---
     function renderInterventions() {
         const c = document.getElementById('interventions-container');
         if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
@@ -745,13 +710,14 @@
             return `
             <div class="item-card ${isOpen}" id="inter-${inter.id}">
                 <div class="item-header" onclick="toggleCard('${inter.id}', 'inter')">
-                    <div class="item-title">${inter.title || 'Sans titre'}</div>
+                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title" id="title-inter-${inter.id}">${inter.title || 'Sans titre'}</div>
                     <span class="item-badge">${inter.category || 'Conférence'}</span>
                     <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${inter.event_date || ''}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Titre de l'intervention</label><input value="${inter.title || ''}" oninput="autoSave('interventions', '${inter.id}', 'title', this.value)"></div>
+                    <div class="form-row"><label>Titre de l'intervention</label><input value="${inter.title || ''}" oninput="autoSave('interventions', '${inter.id}', 'title', this.value); document.getElementById('title-inter-${inter.id}').innerText=this.value"></div>
                     <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('interventions', '${inter.id}', 'description', this.value)">${inter.description || ''}</textarea></div>
                     
                     <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
@@ -795,11 +761,11 @@
                                     <input type="url" id="inter-url-${inter.id}" value="${isFile ? '' : (inter.link_value || '')}" placeholder="https://...">
                                 </div>
                                 <div class="upload-btn-wrapper">
-                                    <label class="upload-label">
+                                    <label class="upload-label" id="lbl-up-inter-${inter.id}">
                                         <div style="display:flex; align-items:center; gap:8px;">
                                             <i data-lucide="cloud-upload"></i> <span id="inter-file-txt-${inter.id}">Remplacer support</span>
                                         </div>
-                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('interventions', this, 'inter-url-${inter.id}', 'inter-file-txt-${inter.id}')">
+                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('interventions', this, 'inter-url-${inter.id}', 'inter-file-txt-${inter.id}', 'lbl-up-inter-${inter.id}')">
                                     </label>
                                 </div>
                             </div>
@@ -812,21 +778,42 @@
             </div>`;
         }).join('');
         lucide.createIcons();
+        initSortable('interventions-container', 'interventions');
     }
 
     // --- ACTIONS GENERIC ---
 
-    window.uploadFileForEdit = async (folder, input, urlFieldId, labelId) => {
+    window.uploadFileForEdit = async (folder, input, urlFieldId, labelId, labelWrapperId) => {
         if(input.files.length === 0) return;
         const file = input.files[0];
-        showToast("Upload en cours...");
-        document.getElementById(labelId).textContent = file.name;
-        const path = `${profileData.id}/${folder}/${Date.now()}_${file.name}`;
-        const { error } = await sb.storage.from('documents').upload(path, file);
-        if(error) return alert("Erreur upload: " + error.message);
-        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
-        document.getElementById(urlFieldId).value = url;
-        showToast("Fichier prêt. Validez pour enregistrer.");
+        
+        // Visual Feedback Start
+        const lblWrapper = document.getElementById(labelWrapperId);
+        const originalContent = lblWrapper.innerHTML;
+        lblWrapper.classList.add('loading');
+        lblWrapper.innerHTML = `<i data-lucide="loader" class="spin"></i> Envoi...`;
+        lucide.createIcons();
+
+        showToast("Upload en cours...", "success");
+        
+        try {
+            const path = `${profileData.id}/${folder}/${Date.now()}_${file.name}`;
+            const { error } = await sb.storage.from('documents').upload(path, file);
+            if(error) throw error;
+            
+            const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+            document.getElementById(urlFieldId).value = url;
+            document.getElementById(labelId).textContent = file.name;
+            showToast("Fichier prêt. Validez pour enregistrer.", "success");
+        } catch(e) {
+            showToast("Erreur upload: " + e.message, "error");
+        } finally {
+            // Visual Feedback End
+            lblWrapper.classList.remove('loading');
+            lblWrapper.innerHTML = originalContent;
+            document.getElementById(labelId).textContent = file.name;
+            lucide.createIcons();
+        }
     }
 
     window.confirmCVUpdate = async () => {
@@ -834,7 +821,15 @@
         await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id);
         profileData.cv_url = url;
         fillProfileUI();
-        showToast("CV mis à jour !");
+        showToast("CV mis à jour !", "success");
+    }
+    
+    window.deleteCV = async () => {
+        if(!confirm("Supprimer le CV ?")) return;
+        await sb.from('profiles').update({ cv_url: null }).eq('id', profileData.id);
+        profileData.cv_url = null;
+        fillProfileUI();
+        showToast("CV supprimé.", "success");
     }
 
     window.confirmPubUpdate = async (id) => {
@@ -843,7 +838,7 @@
         await sb.from('publications').update({ link_value: url, link_type: mode }).eq('id', id);
         const p = profileData.publications.find(x => x.id === id);
         p.link_value = url; p.link_type = mode;
-        renderPublications(); showToast("Publication mise à jour !"); reloadPreview();
+        renderPublications(); showToast("Publication mise à jour !", "success"); reloadPreview();
     }
 
     window.confirmInterUpdate = async (id) => {
@@ -852,7 +847,7 @@
         await sb.from('interventions').update({ link_value: url, link_type: mode }).eq('id', id);
         const p = profileData.interventions.find(x => x.id === id);
         p.link_value = url; p.link_type = mode;
-        renderInterventions(); showToast("Intervention mise à jour !"); reloadPreview();
+        renderInterventions(); showToast("Intervention mise à jour !", "success"); reloadPreview();
     }
 
     window.confirmCourseItemUpdate = async (cid, sIdx, iIdx) => {
@@ -867,7 +862,7 @@
         c.sections[sIdx].items[iIdx].type = mode;
 
         await updateCourseDB(c);
-        showToast("Élément modifié !");
+        showToast("Élément modifié !", "success");
     }
 
     // --- ACTIONS COURSES (Création) ---
@@ -889,30 +884,40 @@
         btn.classList.add('active');
     }
 
-    window.addItem = async (cid, sIdx, isFileAuto) => {
+    window.addItem = async (cid, sIdx, isFileAuto, lblId) => {
         const type = document.getElementById(`type-val-${cid}-${sIdx}`).value; 
         const label = document.getElementById(`lbl-${cid}-${sIdx}`).value;
-        if(!label) return alert("Titre requis.");
+        if(!label) return showToast("Titre requis", "error");
+        
         let value = "";
         if(type === 'link' && !isFileAuto) {
             value = document.getElementById(`url-${cid}-${sIdx}`).value;
-            if(!value) return alert("URL requise");
+            if(!value) return showToast("URL requise", "error");
         } else if (type === 'file') {
             const fileInput = document.getElementById(`file-${cid}-${sIdx}`);
             if(fileInput.files.length === 0) return; 
+            
+            // Visual Loading
+            const lbl = document.getElementById(lblId);
+            const content = lbl.innerHTML;
+            lbl.innerHTML = `<i data-lucide="loader" class="spin"></i> Upload...`;
+            
             const file = fileInput.files[0];
-            showToast("Upload en cours...");
-            document.getElementById(`file-txt-${cid}-${sIdx}`).textContent = file.name;
-            const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
-            const { error } = await sb.storage.from('documents').upload(path, file);
-            if(error) return alert("Erreur upload");
-            value = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+            try {
+                const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
+                const { error } = await sb.storage.from('documents').upload(path, file);
+                if(error) throw error;
+                value = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+            } catch(e) {
+                lbl.innerHTML = content;
+                return showToast("Erreur upload", "error");
+            }
         }
         const c = profileData.courses.find(x => x.id === cid);
         c.sections[sIdx].items.push({ label, type, value });
         openCourseId = cid;
         await updateCourseDB(c);
-        showToast("Ajouté !");
+        showToast("Ajouté !", "success");
     }
 
     // --- ACTIONS PUBLICATIONS / INTERVENTIONS (SWITCH MODES) ---
@@ -945,19 +950,29 @@
     async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
     
     window.createItem = async (t,d) => { 
-        d.prof_id=profileData.id; 
+        d.prof_id=profileData.id;
+        // Nouvel item en haut (position 0) ? Ou en bas ?
+        // Pour faire propre, il faudrait recalculer l'index. Ici on met 0 par défaut.
+        d.position = -1; // Pour qu'il soit au top après le tri
         try {
             const {data,error}=await sb.from(t).insert([d]).select(); 
-            if(error) { alert("Erreur : " + error.message); return; }
+            if(error) { showToast("Erreur : " + error.message, "error"); return; }
             if(!profileData[t]) profileData[t]=[]; 
-            profileData[t].unshift(data[0]); 
-            if(t==='courses') openCourseId = data[0].id; 
-            if(t==='publications') openPubId = data[0].id; 
-            if(t==='interventions') openInterId = data[0].id; 
+            
+            // Recharger la donnée pour avoir le bon tri et ID
+            await loadData(profileData.id);
+
+            // Ouvrir l'item créé
+            const newItem = data[0];
+            if(t==='courses') openCourseId = newItem.id; 
+            if(t==='publications') openPubId = newItem.id; 
+            if(t==='interventions') openInterId = newItem.id; 
+            
             if(t==='courses') renderCourses();
             if(t==='publications') renderPublications();
             if(t==='interventions') renderInterventions();
-            showToast("Élément créé !");
+            
+            showToast("Élément créé !", "success");
             reloadPreview(); 
         } catch(e) { console.log(e); }
     }
@@ -965,21 +980,21 @@
     window.delItem = async (t,id) => { 
         if(!confirm("Supprimer ?")) return; 
         const { error } = await sb.from(t).delete().eq('id',id);
-        if(error) { alert("Erreur de suppression"); return; }
+        if(error) { showToast("Erreur de suppression", "error"); return; }
         profileData[t] = profileData[t].filter(x => x.id !== id);
         if(t === 'courses') renderCourses();
         if(t === 'publications') renderPublications();
         if(t === 'interventions') renderInterventions();
         reloadPreview(); 
-        showToast("Élément supprimé");
+        showToast("Élément supprimé", "success");
     }
     
-    window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé"); reloadPreview(); },1000); }
+    window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé", "success"); reloadPreview(); },1000); }
     window.saveRDV = () => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ 
         const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value };
         await sb.from('profiles').update({appointment_settings: settings}).eq('id',profileData.id);
         profileData.appointment_settings = settings;
-        showToast("RDV sauvegardé"); reloadPreview(); 
+        showToast("RDV sauvegardé", "success"); reloadPreview(); 
     }, 1000); }
     
     window.switchTab = (id,p,el) => { 
@@ -1052,7 +1067,7 @@
     window.saveFooterEdit = (idx) => {
         const lbl = document.getElementById(`f-lbl-${idx}`).value;
         const url = document.getElementById(`f-url-${idx}`).value;
-        if(!lbl || !url) return alert('Champs requis');
+        if(!lbl || !url) return showToast('Champs requis', "error");
         profileData.config.footer.custom[idx] = { label: lbl, url: url };
         saveConfig();
         renderFooterConfig();
@@ -1069,7 +1084,7 @@
     window.addCustomFooterLink = () => {
         const label = document.getElementById('new-footer-label').value;
         const url = document.getElementById('new-footer-url').value;
-        if (!label || !url) return alert("Remplissez le nom et l'URL");
+        if (!label || !url) return showToast("Remplissez le nom et l'URL", "error");
         if (!profileData.config.footer.custom) profileData.config.footer.custom = [];
         profileData.config.footer.custom.push({ label, url });
         document.getElementById('new-footer-label').value = '';
@@ -1084,7 +1099,7 @@
 
     async function saveConfig() {
         await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id);
-        showToast("Configuration sauvegardée");
+        showToast("Configuration sauvegardée", "success");
         reloadPreview();
     }
 
@@ -1099,11 +1114,11 @@
     window.uploadFile = async (type, input) => {
         if (!input.files.length) return;
         const file = input.files[0];
-        showToast("Upload en cours...");
+        showToast("Upload en cours...", "success");
         
         const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`;
         const { error } = await sb.storage.from('documents').upload(path, file);
-        if(error) return alert("Erreur: " + error.message);
+        if(error) return showToast("Erreur: " + error.message, "error");
         
         const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
         
@@ -1111,13 +1126,26 @@
             await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id);
             document.getElementById('preview-avatar').src = url;
         }
-        showToast("Sauvegardé !");
+        showToast("Sauvegardé !", "success");
     }
 
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
     window.reloadPreview = () => { const i=document.getElementById('site-preview'); if(i) i.src=i.src; }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
-    function showToast(m){ const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=m; t.classList.add('visible'); setTimeout(()=>t.classList.remove('visible'),2000); }
+    
+    function showToast(m, type = 'success'){ 
+        const t = document.getElementById('toast'); 
+        t.className = type; // Reset classes
+        document.getElementById('toast-msg').innerText = m; 
+        t.classList.add('visible'); 
+        
+        // Icône dynamique
+        const icon = type === 'success' ? 'check' : 'alert-circle';
+        t.querySelector('i').setAttribute('data-lucide', icon);
+        lucide.createIcons();
+
+        setTimeout(() => t.classList.remove('visible'), 3000); 
+    }
 
     init();
 </script>
