@@ -1170,18 +1170,30 @@
     window.reloadPreview = () => { const i=document.getElementById('site-preview'); if(i) i.src=i.src; }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
     
+    let toastTimer;
+
     function showToast(m, type = 'success'){ 
         const t = document.getElementById('toast'); 
-        t.className = type; // Reset classes
-        document.getElementById('toast-msg').innerText = m; 
-        t.classList.add('visible'); 
         
+        // Reset des classes et du texte
+        t.className = type; 
+        document.getElementById('toast-msg').innerText = m; 
+        
+        // Icône dynamique
         const icon = type === 'success' ? 'check' : 'alert-circle';
-        t.querySelector('i').setAttribute('data-lucide', icon);
-        lucide.createIcons();
+        // Vérification de sécurité si l'icône existe
+        const iconEl = t.querySelector('i');
+        if(iconEl) iconEl.setAttribute('data-lucide', icon);
+        
+        // Affiche le toast
+        t.classList.add('visible'); 
+        if(window.lucide) lucide.createIcons();
 
-        // 4.5 secondes avant disparition
-        setTimeout(() => t.classList.remove('visible'), 4500); 
+        // Annule le précédent timer s'il y en avait un (pour éviter que ça reste bloqué)
+        clearTimeout(toastTimer);
+
+        // Disparait après 2 secondes (2000 ms)
+        toastTimer = setTimeout(() => t.classList.remove('visible'), 2000); 
     }
 
     init();
