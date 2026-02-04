@@ -1,156 +1,168 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Chargement...</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chargement...</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    
-    <link rel="stylesheet" href="style.css" />
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <script defer data-domain="corpusdigitalis.github.io/premiere-copie-tristan-test" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script defer data-domain="corpusdigitalis.github.io/premiere-copie-tristan-test" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 
-<body>
+<body style="outline: none;">
 
-    <header>
-        <div class="logo" id="header-logo">MON SITE</div>
-        <nav>
-            <ul id="header-menu" class="dynamic-nav">
-                </ul>
-        </nav>
-    </header>
+  <div id="header-placeholder"></div>
 
-    <div class="container">
-        <main class="hero-section">
-            <img id="profil-img" src="" alt="Portrait" style="display:none;" />
-            
-            <div class="description">
-                <h1 id="profil-titre">Bienvenue</h1>
-                <p id="profil-desc"></p>
-                <div id="rdv-container"></div>
-            </div>
-        </main>
+  <div class="container">
+    <div class="main-content">
+      <img id="profil-img" src="" alt="Portrait" style="display:none;" />
+      
+      <div class="description">
+        <h1 id="titre-accueil">Bienvenue</h1>
+
+        <p id="texte-description">
+          Chargement du profil...
+        </p>
+        
+        <div id="rdv-container" style="margin-top: 20px;"></div>
+      </div>
     </div>
+  </div>
 
-    <footer>
-        <p>© <span id="current-year"></span> <span id="footer-name"></span></p>
-        <nav>
-            <ul id="footer-menu" class="dynamic-nav">
-                </ul>
-        </nav>
-    </footer>
+  <div id="footer-placeholder"></div>
 
-    <script>
-        // --- 1. CONFIGURATION SUPABASE ---
-        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script>
+    // --- 1. CONFIGURATION SUPABASE ---
+    const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // --- 2. LOGIQUE PRINCIPALE ---
-        async function loadSite() {
-            // Récupération du paramètre 'prof'
-            const params = new URLSearchParams(window.location.search);
-            const profParam = params.get('prof');
+    // --- 2. LOGIQUE PRINCIPALE ---
+    async function loadSite() {
+        const params = new URLSearchParams(window.location.search);
+        const profParam = params.get('prof');
 
-            if (!profParam) {
-                document.querySelector('.container').innerHTML = "<div style='text-align:center;'>Profil introuvable. Ajoutez ?prof=votre-slug</div>";
-                return;
-            }
-
-            // Requête DB
-            let query = sb.from('profiles').select('*');
-            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
-
-            if (isUUID) {
-                query = query.eq('id', profParam);
-            } else {
-                query = query.eq('slug', profParam);
-            }
-
-            const { data: profile, error } = await query.single();
-
-            if (error || !profile) {
-                console.error("Erreur:", error);
-                document.querySelector('.container').innerHTML = "<div style='text-align:center;'>Ce profil n'existe pas.</div>";
-                return;
-            }
-
-            // --- 3. INJECTION DES DONNÉES ---
-            
-            // Méta
-            document.title = profile.name || "Site Personnel";
-            document.getElementById('header-logo').textContent = (profile.name || "Mon Site").toUpperCase();
-            document.getElementById('footer-name').textContent = profile.name;
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // Contenu Hero
-            // Logique : "Bienvenue" + Prénom (on suppose que profile.name contient le nom complet, on prend le premier mot ou tout le nom selon ton choix. Ici je mets le nom complet pour être sûr).
-            document.getElementById('profil-titre').textContent = `Bienvenue ${profile.name}`;
-            
-            document.getElementById('profil-desc').innerHTML = profile.bio ? profile.bio.replace(/\n/g, '<br>') : "";
-
-            // Image
-            const img = document.getElementById('profil-img');
-            if (profile.image_url) {
-                img.src = profile.image_url;
-                img.style.display = 'block';
-            }
-
-            // Bouton RDV
-            if (profile.appointment_settings && profile.appointment_settings.url) {
-                const btnContainer = document.getElementById('rdv-container');
-                // La classe .rdv-button est définie dans ton CSS
-                btnContainer.innerHTML = `<a href="${profile.appointment_settings.url}" target="_blank" class="rdv-button">${profile.appointment_settings.text || "Prendre rendez-vous"}</a>`;
-            }
-
-            // --- 4. CONSTRUCTION DES MENUS ---
-            const config = profile.config || {}; 
-            const hConfig = config.header || {};
-            const fConfig = config.footer || {};
-            const pLink = `?prof=${profParam}`; 
-
-            // Menu Header
-            const hMenu = document.getElementById('header-menu');
-            let hHtml = '';
-            
-            // Note: Les noms de fichiers (publications.html, etc.) doivent exister dans ton repo
-            if (hConfig.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
-            if (hConfig.publications) hHtml += `<li><a href="publications.html${pLink}">Publications</a></li>`;
-            if (hConfig.courses) hHtml += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
-            if (hConfig.interventions) hHtml += `<li><a href="interventions.html${pLink}">Interventions</a></li>`;
-            
-            hMenu.innerHTML = hHtml;
-
-            // Menu Footer (Icônes)
-            const fMenu = document.getElementById('footer-menu');
-            let fHtml = '';
-
-            if (fConfig.linkedin && profile.linkedin_url) {
-                fHtml += `<li><a href="${profile.linkedin_url}" target="_blank" title="LinkedIn"><i data-lucide="linkedin"></i></a></li>`;
-            }
-            if (fConfig.scholar && profile.scholar_url) {
-                fHtml += `<li><a href="${profile.scholar_url}" target="_blank" title="Google Scholar"><i data-lucide="graduation-cap"></i></a></li>`;
-            }
-            if (fConfig.cv && profile.cv_url) {
-                fHtml += `<li><a href="${profile.cv_url}" target="_blank" title="CV"><i data-lucide="file-text"></i></a></li>`;
-            }
-            // Liens custom footer
-            if (fConfig.custom && fConfig.custom.length > 0) {
-                fConfig.custom.forEach(link => {
-                    fHtml += `<li><a href="${link.url}" target="_blank">${link.label}</a></li>`;
-                });
-            }
-
-            fMenu.innerHTML = fHtml;
-            lucide.createIcons(); // Active les icônes
+        if (!profParam) {
+            document.getElementById('texte-description').innerText = "Profil introuvable. Ajoutez ?prof=votre-slug dans l'URL.";
+            return;
         }
 
-        loadSite();
-    </script>
+        // Récupération Profil
+        let query = sb.from('profiles').select('*');
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
+
+        if (isUUID) {
+            query = query.eq('id', profParam);
+        } else {
+            query = query.eq('slug', profParam);
+        }
+
+        const { data: profile, error } = await query.single();
+
+        if (error || !profile) {
+            console.error("Erreur:", error);
+            document.getElementById('texte-description').innerText = "Ce profil n'existe pas.";
+            return;
+        }
+
+        // --- 3. INJECTION DU CONTENU (DESIGN INDEX 5) ---
+        
+        // Titre de la page
+        document.title = profile.name || "Site Personnel";
+
+        // Image (On garde ta balise img mais on change la source)
+        const img = document.getElementById('profil-img');
+        if (profile.image_url) {
+            img.src = profile.image_url;
+            img.style.display = 'block'; // On l'affiche une fois chargée
+        }
+
+        // Textes
+        // Tu as dit "Bienvenue c'est le prenom", donc on met le nom ici.
+        document.getElementById('titre-accueil').textContent = profile.name || "Bienvenue";
+        
+        // Description (Bio)
+        const descElement = document.getElementById('texte-description');
+        if (profile.bio) {
+            // Conversion des sauts de ligne en <br> pour garder la mise en forme
+            descElement.innerHTML = profile.bio.replace(/\n/g, '<br>');
+        } else {
+            descElement.textContent = "";
+        }
+
+        // Bouton RDV (si existant)
+        if (profile.appointment_settings && profile.appointment_settings.url) {
+            const btnContainer = document.getElementById('rdv-container');
+            // Style inline basique pour s'adapter à ton CSS existant sans le casser
+            btnContainer.innerHTML = `<a href="${profile.appointment_settings.url}" target="_blank" class="rdv-button" style="text-decoration:none; background:#000; color:#fff; padding:10px 20px; border-radius:5px; font-weight:bold;">${profile.appointment_settings.text || "Prendre rendez-vous"}</a>`;
+        }
+
+        // --- 4. INJECTION DU HEADER ET FOOTER ---
+        generateHeader(profile, profParam);
+        generateFooter(profile);
+    }
+
+    function generateHeader(profile, profParam) {
+        const config = profile.config || {};
+        const hConfig = config.header || {};
+        const pLink = `?prof=${profParam}`; 
+
+        // On recrée la structure HTML d'un header classique pour l'insérer dans le placeholder
+        let html = `
+        <header>
+            <div class="logo"><a href="index.html${pLink}" style="text-decoration:none; color:inherit;">${(profile.name || "MON SITE").toUpperCase()}</a></div>
+            <nav>
+                <ul class="dynamic-nav">`;
+        
+        if (hConfig.home) html += `<li><a href="index.html${pLink}">Accueil</a></li>`;
+        if (hConfig.publications) html += `<li><a href="publications.html${pLink}">Publications</a></li>`;
+        if (hConfig.courses) html += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
+        if (hConfig.interventions) html += `<li><a href="interventions.html${pLink}">Interventions</a></li>`;
+        
+        html += `   </ul>
+            </nav>
+        </header>`;
+
+        document.getElementById('header-placeholder').innerHTML = html;
+    }
+
+    function generateFooter(profile) {
+        const config = profile.config || {};
+        const fConfig = config.footer || {};
+        
+        let html = `
+        <footer>
+            <div class="footer-content">
+                <nav>
+                    <ul style="display:flex; justify-content:center; gap:20px; list-style:none; padding:0; margin-bottom:10px;">`;
+
+        if (fConfig.linkedin && profile.linkedin_url) html += `<li><a href="${profile.linkedin_url}" target="_blank"><i data-lucide="linkedin"></i></a></li>`;
+        if (fConfig.scholar && profile.scholar_url) html += `<li><a href="${profile.scholar_url}" target="_blank"><i data-lucide="graduation-cap"></i></a></li>`;
+        if (fConfig.cv && profile.cv_url) html += `<li><a href="${profile.cv_url}" target="_blank"><i data-lucide="file-text"></i></a></li>`;
+        
+        if (fConfig.custom && fConfig.custom.length > 0) {
+            fConfig.custom.forEach(link => {
+                html += `<li><a href="${link.url}" target="_blank">${link.label}</a></li>`;
+            });
+        }
+
+        html += `   </ul>
+                </nav>
+                <p style="text-align:center;">© ${new Date().getFullYear()} ${profile.name}</p>
+            </div>
+        </footer>`;
+
+        document.getElementById('footer-placeholder').innerHTML = html;
+        lucide.createIcons();
+    }
+
+    loadSite();
+  </script>
 </body>
 </html>
