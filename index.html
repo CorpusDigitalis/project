@@ -4,10 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Chargement...</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
     <link rel="stylesheet" href="style.css" />
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script defer data-domain="corpusdigitalis.github.io/premiere-copie-tristan-test" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 
 <body>
@@ -22,8 +27,10 @@
 
     <div class="container">
         <main class="hero-section">
-            <img id="profil-img" src="" alt="Portrait" style="display:none;" /> <div class="description">
-                <h1 id="profil-titre"></h1>
+            <img id="profil-img" src="" alt="Portrait" style="display:none;" />
+            
+            <div class="description">
+                <h1 id="profil-titre">Bienvenue</h1>
                 <p id="profil-desc"></p>
                 <div id="rdv-container"></div>
             </div>
@@ -39,23 +46,23 @@
     </footer>
 
     <script>
-        // --- 1. CONFIGURATION ---
+        // --- 1. CONFIGURATION SUPABASE ---
         const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o'; // Clé publique OK
+        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // --- 2. LOGIQUE PRINCIPALE ---
         async function loadSite() {
-            // Récupérer le paramètre 'prof' (soit un ID, soit un SLUG)
+            // Récupération du paramètre 'prof'
             const params = new URLSearchParams(window.location.search);
             const profParam = params.get('prof');
 
             if (!profParam) {
-                document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable (URL incomplète).</div>";
+                document.querySelector('.container').innerHTML = "<div style='text-align:center;'>Profil introuvable. Ajoutez ?prof=votre-slug</div>";
                 return;
             }
 
-            // Stratégie : On essaie de trouver par ID d'abord (format UUID), sinon par Slug
+            // Requête DB
             let query = sb.from('profiles').select('*');
             const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
 
@@ -69,46 +76,49 @@
 
             if (error || !profile) {
                 console.error("Erreur:", error);
-                document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Ce profil n'existe pas encore.</div>";
+                document.querySelector('.container').innerHTML = "<div style='text-align:center;'>Ce profil n'existe pas.</div>";
                 return;
             }
 
             // --- 3. INJECTION DES DONNÉES ---
+            
+            // Méta
             document.title = profile.name || "Site Personnel";
             document.getElementById('header-logo').textContent = (profile.name || "Mon Site").toUpperCase();
             document.getElementById('footer-name').textContent = profile.name;
             document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            document.getElementById('profil-titre').textContent = profile.name || "Bienvenue";
-            document.getElementById('profil-desc').textContent = profile.bio || "Biographie non renseignée.";
+            // Contenu Hero
+            // Logique : "Bienvenue" + Prénom (on suppose que profile.name contient le nom complet, on prend le premier mot ou tout le nom selon ton choix. Ici je mets le nom complet pour être sûr).
+            document.getElementById('profil-titre').textContent = `Bienvenue ${profile.name}`;
             
+            document.getElementById('profil-desc').innerHTML = profile.bio ? profile.bio.replace(/\n/g, '<br>') : "";
+
             // Image
             const img = document.getElementById('profil-img');
             if (profile.image_url) {
                 img.src = profile.image_url;
                 img.style.display = 'block';
-            } else {
-                // Placeholder si pas d'image
-                img.style.display = 'none'; 
             }
 
             // Bouton RDV
             if (profile.appointment_settings && profile.appointment_settings.url) {
-                const btn = document.getElementById('rdv-container');
-                btn.innerHTML = `<a href="${profile.appointment_settings.url}" target="_blank" class="rdv-button">${profile.appointment_settings.text || "Prendre rendez-vous"}</a>`;
+                const btnContainer = document.getElementById('rdv-container');
+                // La classe .rdv-button est définie dans ton CSS
+                btnContainer.innerHTML = `<a href="${profile.appointment_settings.url}" target="_blank" class="rdv-button">${profile.appointment_settings.text || "Prendre rendez-vous"}</a>`;
             }
 
-            // --- 4. CONSTRUCTION DES MENUS (Basé sur CONFIG de l'admin) ---
+            // --- 4. CONSTRUCTION DES MENUS ---
             const config = profile.config || {}; 
             const hConfig = config.header || {};
             const fConfig = config.footer || {};
-
-            // MENU HEADER
-            const hMenu = document.getElementById('header-menu');
-            let hHtml = '';
-            // On ajoute l'ID/Slug dans les liens pour garder la navigation fluide
             const pLink = `?prof=${profParam}`; 
 
+            // Menu Header
+            const hMenu = document.getElementById('header-menu');
+            let hHtml = '';
+            
+            // Note: Les noms de fichiers (publications.html, etc.) doivent exister dans ton repo
             if (hConfig.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
             if (hConfig.publications) hHtml += `<li><a href="publications.html${pLink}">Publications</a></li>`;
             if (hConfig.courses) hHtml += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
@@ -116,7 +126,7 @@
             
             hMenu.innerHTML = hHtml;
 
-            // MENU FOOTER (Icônes)
+            // Menu Footer (Icônes)
             const fMenu = document.getElementById('footer-menu');
             let fHtml = '';
 
@@ -127,7 +137,7 @@
                 fHtml += `<li><a href="${profile.scholar_url}" target="_blank" title="Google Scholar"><i data-lucide="graduation-cap"></i></a></li>`;
             }
             if (fConfig.cv && profile.cv_url) {
-                fHtml += `<li><a href="${profile.cv_url}" target="_blank" title="Télécharger CV"><i data-lucide="file-text"></i></a></li>`;
+                fHtml += `<li><a href="${profile.cv_url}" target="_blank" title="CV"><i data-lucide="file-text"></i></a></li>`;
             }
             // Liens custom footer
             if (fConfig.custom && fConfig.custom.length > 0) {
@@ -137,7 +147,7 @@
             }
 
             fMenu.innerHTML = fHtml;
-            lucide.createIcons();
+            lucide.createIcons(); // Active les icônes
         }
 
         loadSite();
