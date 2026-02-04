@@ -3,166 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chargement...</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-  
+  <title>Chargement...</title> <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <script defer data-domain="corpusdigitalis.github.io/premiere-copie-tristan-test" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
+<body>
 
-<body style="outline: none;">
-
-  <div id="header-placeholder"></div>
+  <header>
+      <div class="logo site-name">...</div>
+      
+      <ul class="dynamic-nav" id="header-menu">
+          </ul>
+  </header>
 
   <div class="container">
-    <div class="main-content">
-      <img id="profil-img" src="" alt="Portrait" style="display:none;" />
+    <div class="hero-section">
+      <img id="profil-img" src="" alt="" />
       
       <div class="description">
-        <h1 id="titre-accueil">Bienvenue</h1>
+        <h1 class="site-name">...</h1>
 
-        <p id="texte-description">
-          Chargement du profil...
+        <p id="profil-desc">
+            Chargement du profil...
         </p>
-        
-        <div id="rdv-container" style="margin-top: 20px;"></div>
+
+        <div id="social-links" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+            </div>
       </div>
     </div>
   </div>
 
-  <div id="footer-placeholder"></div>
+  <footer>
+      <span id="current-year-text">© 2024</span>
+      <ul class="dynamic-nav" id="footer-list">
+          </ul>
+  </footer>
 
-  <script>
-    // --- 1. CONFIGURATION SUPABASE ---
-    const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import { initLayout } from './theme.js';
 
-    // --- 2. LOGIQUE PRINCIPALE ---
-    async function loadSite() {
-        const params = new URLSearchParams(window.location.search);
-        const profParam = params.get('prof');
+    async function loadHome() {
+        // 1. Initialiser le layout (Header/Footer/Nom)
+        const prof = await initLayout();
+        if (!prof) return; // Stop si 404
 
-        if (!profParam) {
-            document.getElementById('texte-description').innerText = "Profil introuvable. Ajoutez ?prof=votre-slug dans l'URL.";
-            return;
-        }
-
-        // Récupération Profil
-        let query = sb.from('profiles').select('*');
-        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
-
-        if (isUUID) {
-            query = query.eq('id', profParam);
+        // 2. Remplir l'image
+        const imgEl = document.getElementById('profil-img');
+        if (prof.image_url) {
+            imgEl.src = prof.image_url;
+            imgEl.alt = `Portrait de ${prof.name}`;
         } else {
-            query = query.eq('slug', profParam);
+            imgEl.style.display = 'none'; // Cache l'image si vide
         }
 
-        const { data: profile, error } = await query.single();
-
-        if (error || !profile) {
-            console.error("Erreur:", error);
-            document.getElementById('texte-description').innerText = "Ce profil n'existe pas.";
-            return;
-        }
-
-        // --- 3. INJECTION DU CONTENU (DESIGN INDEX 5) ---
-        
-        // Titre de la page
-        document.title = profile.name || "Site Personnel";
-
-        // Image (On garde ta balise img mais on change la source)
-        const img = document.getElementById('profil-img');
-        if (profile.image_url) {
-            img.src = profile.image_url;
-            img.style.display = 'block'; // On l'affiche une fois chargée
-        }
-
-        // Textes
-        // Tu as dit "Bienvenue c'est le prenom", donc on met le nom ici.
-        document.getElementById('titre-accueil').textContent = profile.name || "Bienvenue";
-        
-        // Description (Bio)
-        const descElement = document.getElementById('texte-description');
-        if (profile.bio) {
-            // Conversion des sauts de ligne en <br> pour garder la mise en forme
-            descElement.innerHTML = profile.bio.replace(/\n/g, '<br>');
+        // 3. Remplir la description (Bio)
+        const bioEl = document.getElementById('profil-desc');
+        if (prof.bio) {
+            // Remplace les retours à la ligne (\n) par des <br> pour l'HTML
+            bioEl.innerHTML = prof.bio.replace(/\n/g, '<br>');
         } else {
-            descElement.textContent = "";
+            bioEl.innerText = "";
         }
 
-        // Bouton RDV (si existant)
-        if (profile.appointment_settings && profile.appointment_settings.url) {
-            const btnContainer = document.getElementById('rdv-container');
-            // Style inline basique pour s'adapter à ton CSS existant sans le casser
-            btnContainer.innerHTML = `<a href="${profile.appointment_settings.url}" target="_blank" class="rdv-button" style="text-decoration:none; background:#000; color:#fff; padding:10px 20px; border-radius:5px; font-weight:bold;">${profile.appointment_settings.text || "Prendre rendez-vous"}</a>`;
+        // 4. Liens Sociaux & CV (Utilise le style .rdv-button ou liens simples)
+        const socialContainer = document.getElementById('social-links');
+        let socialHtml = '';
+
+        // Style inline simple pour respecter "pas de modif CSS", 
+        // ou réutilisation de la classe .rdv-button si tu veux des boutons.
+        // Ici je mets des liens textuels propres qui héritent de la font Inter.
+        
+        if (prof.cv_url) {
+            socialHtml += `<a href="${prof.cv_url}" target="_blank" class="rdv-button">Télécharger CV</a>`;
+        }
+        if (prof.linkedin_url) {
+            // On réutilise rdv-button ou un style lien simple selon ton goût
+            // Pour l'instant, je mets un style lien simple pour différencier du bouton principal
+            socialHtml += `<a href="${prof.linkedin_url}" target="_blank" style="text-decoration: underline; color: #0f172a; font-weight: 600; padding: 12px 0;">LinkedIn</a>`;
+        }
+        if (prof.scholar_url) {
+            socialHtml += `<a href="${prof.scholar_url}" target="_blank" style="text-decoration: underline; color: #0f172a; font-weight: 600; padding: 12px 0;">Scholar</a>`;
         }
 
-        // --- 4. INJECTION DU HEADER ET FOOTER ---
-        generateHeader(profile, profParam);
-        generateFooter(profile);
+        socialContainer.innerHTML = socialHtml;
     }
 
-    function generateHeader(profile, profParam) {
-        const config = profile.config || {};
-        const hConfig = config.header || {};
-        const pLink = `?prof=${profParam}`; 
-
-        // On recrée la structure HTML d'un header classique pour l'insérer dans le placeholder
-        let html = `
-        <header>
-            <div class="logo"><a href="index.html${pLink}" style="text-decoration:none; color:inherit;">${(profile.name || "MON SITE").toUpperCase()}</a></div>
-            <nav>
-                <ul class="dynamic-nav">`;
-        
-        if (hConfig.home) html += `<li><a href="index.html${pLink}">Accueil</a></li>`;
-        if (hConfig.publications) html += `<li><a href="publications.html${pLink}">Publications</a></li>`;
-        if (hConfig.courses) html += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
-        if (hConfig.interventions) html += `<li><a href="interventions.html${pLink}">Interventions</a></li>`;
-        
-        html += `   </ul>
-            </nav>
-        </header>`;
-
-        document.getElementById('header-placeholder').innerHTML = html;
-    }
-
-    function generateFooter(profile) {
-        const config = profile.config || {};
-        const fConfig = config.footer || {};
-        
-        let html = `
-        <footer>
-            <div class="footer-content">
-                <nav>
-                    <ul style="display:flex; justify-content:center; gap:20px; list-style:none; padding:0; margin-bottom:10px;">`;
-
-        if (fConfig.linkedin && profile.linkedin_url) html += `<li><a href="${profile.linkedin_url}" target="_blank"><i data-lucide="linkedin"></i></a></li>`;
-        if (fConfig.scholar && profile.scholar_url) html += `<li><a href="${profile.scholar_url}" target="_blank"><i data-lucide="graduation-cap"></i></a></li>`;
-        if (fConfig.cv && profile.cv_url) html += `<li><a href="${profile.cv_url}" target="_blank"><i data-lucide="file-text"></i></a></li>`;
-        
-        if (fConfig.custom && fConfig.custom.length > 0) {
-            fConfig.custom.forEach(link => {
-                html += `<li><a href="${link.url}" target="_blank">${link.label}</a></li>`;
-            });
-        }
-
-        html += `   </ul>
-                </nav>
-                <p style="text-align:center;">© ${new Date().getFullYear()} ${profile.name}</p>
-            </div>
-        </footer>`;
-
-        document.getElementById('footer-placeholder').innerHTML = html;
-        lucide.createIcons();
-    }
-
-    loadSite();
+    loadHome();
   </script>
+
 </body>
 </html>
