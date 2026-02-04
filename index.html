@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chargement...</title> <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
+  <title>Chargement...</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -18,23 +20,21 @@
 
   <div class="container">
     <div class="hero-section">
-      <img id="profil-img" src="" alt="" />
+      
+      <img id="profil-img" src="" alt="Portrait" />
       
       <div class="description">
-        <h1 class="site-name">...</h1>
+        <h1 id="main-title" class="site-name">...</h1>
 
         <p id="profil-desc">
-            Chargement du profil...
+          Chargement...
         </p>
-
-        <div id="social-links" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-            </div>
       </div>
+
     </div>
   </div>
 
   <footer>
-      <span id="current-year-text">© 2024</span>
       <ul class="dynamic-nav" id="footer-list">
           </ul>
   </footer>
@@ -43,49 +43,25 @@
     import { initLayout } from './theme.js';
 
     async function loadHome() {
-        // 1. Initialiser le layout (Header/Footer/Nom)
         const prof = await initLayout();
-        if (!prof) return; // Stop si 404
+        if (!prof) return;
 
-        // 2. Remplir l'image
+        // 1. Image
         const imgEl = document.getElementById('profil-img');
         if (prof.image_url) {
             imgEl.src = prof.image_url;
-            imgEl.alt = `Portrait de ${prof.name}`;
         } else {
-            imgEl.style.display = 'none'; // Cache l'image si vide
+            imgEl.style.display = 'none';
         }
 
-        // 3. Remplir la description (Bio)
+        // 2. Bio
         const bioEl = document.getElementById('profil-desc');
         if (prof.bio) {
-            // Remplace les retours à la ligne (\n) par des <br> pour l'HTML
             bioEl.innerHTML = prof.bio.replace(/\n/g, '<br>');
-        } else {
-            bioEl.innerText = "";
         }
 
-        // 4. Liens Sociaux & CV (Utilise le style .rdv-button ou liens simples)
-        const socialContainer = document.getElementById('social-links');
-        let socialHtml = '';
-
-        // Style inline simple pour respecter "pas de modif CSS", 
-        // ou réutilisation de la classe .rdv-button si tu veux des boutons.
-        // Ici je mets des liens textuels propres qui héritent de la font Inter.
-        
-        if (prof.cv_url) {
-            socialHtml += `<a href="${prof.cv_url}" target="_blank" class="rdv-button">Télécharger CV</a>`;
-        }
-        if (prof.linkedin_url) {
-            // On réutilise rdv-button ou un style lien simple selon ton goût
-            // Pour l'instant, je mets un style lien simple pour différencier du bouton principal
-            socialHtml += `<a href="${prof.linkedin_url}" target="_blank" style="text-decoration: underline; color: #0f172a; font-weight: 600; padding: 12px 0;">LinkedIn</a>`;
-        }
-        if (prof.scholar_url) {
-            socialHtml += `<a href="${prof.scholar_url}" target="_blank" style="text-decoration: underline; color: #0f172a; font-weight: 600; padding: 12px 0;">Scholar</a>`;
-        }
-
-        socialContainer.innerHTML = socialHtml;
+        // Note : initLayout s'occupe déjà de remplir 
+        // les menus (Header/Footer) et le Nom (site-name).
     }
 
     loadHome();
