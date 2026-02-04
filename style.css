@@ -4,49 +4,50 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: #f8fafc; /* Gris très clair pro */
+    font-family: 'Inter', sans-serif; /* Assure-toi d'avoir importé cette font ou une similaire */
+    background-color: #fcfcfc; /* Fond très blanc cassé comme sur le screen */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     width: 100%;
-    color: #334155;
+    color: #1a1a1a;
 }
 
-/* --- HEADER & FOOTER (NOIR PRO) --- */
+/* --- HEADER & FOOTER (NOIR) --- */
 header, footer {
-    width: 100% !important;
-    background: #0f172a;    /* Noir bleuté pro */
+    width: 100%;
+    background: #111; /* Noir profond */
     color: white;
-    padding: 20px 5%;
+    padding: 20px 40px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #1e293b;
-    z-index: 1000;
 }
 
+/* Header : Logo à gauche, Menu à droite */
+header {
+    justify-content: space-between;
+}
+
+/* Footer : Tout centré */
 footer {
-    border-bottom: none;
-    border-top: 1px solid #1e293b;
-    margin-top: auto;
-    font-size: 0.85rem;
-    color: #94a3b8;
+    justify-content: center;
+    padding: 30px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
-/* --- NAVIGATION --- */
+/* --- LOGO & MENU --- */
 .logo {
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
     color: white;
+    text-transform: none; /* "Jean Paul" n'est pas tout en majuscule sur le screen */
 }
 
 .dynamic-nav {
     display: flex;
-    flex-direction: row;
-    gap: 25px;
+    gap: 30px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -54,85 +55,81 @@ footer {
 
 .dynamic-nav li a {
     text-decoration: none;
-    color: #cbd5e1;
-    font-size: 0.9rem;
+    color: #e0e0e0;
     font-weight: 500;
-    transition: 0.2s;
+    font-size: 1rem;
+    transition: color 0.2s;
 }
 
 .dynamic-nav li a:hover { color: white; }
 
-/* --- CONTENU CENTRAL (LAYOUT PHOTO GAUCHE / TEXTE DROITE) --- */
+/* --- CONTENU CENTRAL --- */
 .container {
-    flex: 1;
+    flex: 1; /* Prend toute la hauteur dispo */
     width: 100%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 80px 20px;
     display: flex;
-    align-items: center; /* Centrage vertical */
+    align-items: center;
     justify-content: center;
+    padding: 60px 20px;
 }
 
 .hero-section {
     display: flex;
-    align-items: flex-start;
-    gap: 60px;
+    align-items: center; /* Centré verticalement */
+    gap: 80px; /* Espace entre photo et texte */
     width: 100%;
+    justify-content: center;
 }
 
+/* --- IMAGE (RECTANGULAIRE PORTRAIT) --- */
 #profil-img {
-    width: 280px;
-    height: 280px;
-    border-radius: 50%; /* Rond ou carré arrondi selon préférence */
-    object-fit: cover;
-    border: 4px solid white;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    flex-shrink: 0;
+    width: 350px;      /* Largeur fixe */
+    height: 500px;     /* Hauteur type portrait */
+    object-fit: cover; /* L'image remplit le cadre sans déformation */
+    border-radius: 8px; /* Coins légèrement arrondis comme sur le screen */
+    box-shadow: none;   /* Le screen Jean Paul semble sans ombre ou très légère */
 }
 
+/* --- TEXTE --- */
 .description {
-    flex: 1;
-    padding-top: 10px;
+    max-width: 500px;
 }
 
 h1 {
-    margin-top: 0;
-    font-size: 2.5rem;
-    color: #0f172a;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    color: #000;
 }
 
 #profil-desc {
     font-size: 1.1rem;
     line-height: 1.6;
-    color: #475569;
-    margin-top: 20px;
-    white-space: pre-line;
+    color: #333;
+    font-weight: 400;
 }
 
-/* Bouton RDV */
-.rdv-button {
-    display: inline-block;
-    margin-top: 30px;
-    background: #0f172a;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.2s;
-}
-.rdv-button:hover {
-    background: #334155;
-    transform: translateY(-2px);
-}
-
-/* RESPONSIVE MOBILE */
-@media (max-width: 768px) {
-    header, footer { flex-direction: column; gap: 15px; text-align: center; }
-    .hero-section { flex-direction: column; align-items: center; text-align: center; gap: 30px; }
-    #profil-img { width: 200px; height: 200px; }
-    h1 { font-size: 2rem; }
+/* RESPONSIVE (Mobile) */
+@media (max-width: 900px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+    header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .dynamic-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    #profil-img {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        aspect-ratio: 3/4;
+    }
 }
