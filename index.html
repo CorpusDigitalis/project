@@ -5,67 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chargement...</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+
+  <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
-<body>
+<body style="outline: none;">
 
   <header>
       <div class="logo site-name">...</div>
-      
-      <ul class="dynamic-nav" id="header-menu">
-          </ul>
+      <ul class="dynamic-nav" id="header-menu"></ul>
   </header>
 
   <div class="container">
-    <div class="hero-section">
+    <div class="main-content">
       
       <img id="profil-img" src="" alt="Portrait" />
       
       <div class="description">
-        <h1 id="main-title" class="site-name">...</h1>
+        <h1 id="titre-accueil" class="site-name">Chargement...</h1>
 
-        <p id="profil-desc">
-          Chargement...
+        <p id="texte-description">
+          Chargement des informations du profil...
         </p>
       </div>
-
     </div>
   </div>
 
   <footer>
-      <ul class="dynamic-nav" id="footer-list">
-          </ul>
+      <ul class="dynamic-nav" id="footer-list"></ul>
   </footer>
 
   <script type="module">
     import { initLayout } from './theme.js';
 
     async function loadHome() {
+        // Initialise le layout (récupère le profil, gère le menu, le footer, et le nom du site)
         const prof = await initLayout();
         if (!prof) return;
 
-        // 1. Image
+        // 1. Mise à jour de l'image
         const imgEl = document.getElementById('profil-img');
         if (prof.image_url) {
             imgEl.src = prof.image_url;
         } else {
-            imgEl.style.display = 'none';
+            imgEl.style.display = 'none'; // Cache l'image s'il n'y en a pas
         }
 
-        // 2. Bio
-        const bioEl = document.getElementById('profil-desc');
+        // 2. Mise à jour de la description (on cible l'ID 'texte-description' du bon design)
+        const bioEl = document.getElementById('texte-description');
         if (prof.bio) {
-            bioEl.innerHTML = prof.bio.replace(/\n/g, '<br>');
+            bioEl.innerHTML = prof.bio.replace(/\n/g, '<br>'); // Conserve les retours à la ligne
         }
-
-        // Note : initLayout s'occupe déjà de remplir 
-        // les menus (Header/Footer) et le Nom (site-name).
     }
 
+    // Lance la fonction au chargement
     loadHome();
   </script>
 
+  <script src="modifications.js"></script>
 </body>
 </html>
