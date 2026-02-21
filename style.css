@@ -1,135 +1,150 @@
 /* --- RESET GLOBAL --- */
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif; /* Assure-toi d'avoir importé cette font ou une similaire */
-    background-color: #fcfcfc; /* Fond très blanc cassé comme sur le screen */
+    font-family: 'Alata', sans-serif;
+    background-color: #fefaf5; /* Le blanc chaud de ta maquette */
+    color: #1a1a1a;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    width: 100%;
-    color: #1a1a1a;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
 }
 
-/* --- HEADER & FOOTER (NOIR) --- */
+/* --- HEADER & FOOTER --- */
 header, footer {
+    background: #1a1a1a; /* Gris anthracite très sombre */
+    color: white;
     width: 100%;
-    background: #111; /* Noir profond */
-    color: white;
-    padding: 20px 40px;
-    display: flex;
-    align-items: center;
 }
 
-/* Header : Logo à gauche, Menu à droite */
-header {
+header nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-/* Footer : Tout centré */
-footer {
-    justify-content: center;
-    padding: 30px 20px;
-    font-size: 0.95rem;
-    font-weight: 600;
-}
-
-/* --- LOGO & MENU --- */
-.logo {
+/* Logo / Nom du site */
+.site-name.no-animation {
     font-weight: 700;
-    font-size: 1.2rem;
-    letter-spacing: 0.5px;
+    font-size: 1.25rem;
     color: white;
-    text-transform: none; /* "Jean Paul" n'est pas tout en majuscule sur le screen */
-}
-
-.dynamic-nav {
-    display: flex;
-    gap: 30px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.dynamic-nav li a {
     text-decoration: none;
-    color: #e0e0e0;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.2s;
+    letter-spacing: 0.05em;
 }
 
-.dynamic-nav li a:hover { color: white; }
+/* --- MENUS DYNAMIQUES (Header & Footer) --- */
+.dynamic-nav, .footer-links {
+    display: flex;
+    gap: 25px; /* Espace entre les liens */
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Style des liens injectés par theme.js */
+.dynamic-nav a, .footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.05rem;
+    display: inline-block;
+    transition: transform 0.2s ease, color 0.15s ease;
+}
+
+/* Effet de rétrécissement au survol demandé ! */
+.dynamic-nav a:hover, .footer-links a:hover {
+    transform: scale(0.92);
+    color: #e0e0e0;
+}
 
 /* --- CONTENU CENTRAL --- */
 .container {
-    flex: 1; /* Prend toute la hauteur dispo */
+    flex: 1; /* Pousse le footer tout en bas */
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
+    padding: 80px 20px; /* Grand espace au-dessus et en-dessous */
+    border-bottom: 1px solid #e0e0e0; /* Le petit trait gris discret */
 }
 
 .hero-section {
     display: flex;
-    align-items: center; /* Centré verticalement */
-    gap: 80px; /* Espace entre photo et texte */
-    width: 100%;
-    justify-content: center;
+    align-items: center;
+    gap: 60px; /* Espace entre la photo et le texte */
 }
 
-/* --- IMAGE (RECTANGULAIRE PORTRAIT) --- */
+/* --- IMAGE (FORCÉE EN PORTRAIT) --- */
 #profil-img {
-    width: 350px;      /* Largeur fixe */
-    height: 500px;     /* Hauteur type portrait */
-    object-fit: cover; /* L'image remplit le cadre sans déformation */
-    border-radius: 8px; /* Coins légèrement arrondis comme sur le screen */
-    box-shadow: none;   /* Le screen Jean Paul semble sans ombre ou très légère */
+    width: 350px;
+    height: 500px; /* Hauteur fixe pour forcer le portrait */
+    object-fit: cover; /* Recadre sans déformer */
+    border-radius: 12px; /* Bords arrondis élégants */
+    flex-shrink: 0; /* Empêche l'image de s'écraser si le texte est long */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Légère ombre pour détacher l'image */
 }
 
 /* --- TEXTE --- */
 .description {
-    max-width: 500px;
+    flex: 1;
 }
 
 h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin: 0 0 20px 0;
-    color: #000;
+    font-size: 2.8rem;
+    color: #1a1a1a;
+    margin-top: 0;
+    margin-bottom: 25px;
 }
 
 #profil-desc {
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: 1.15rem;
     color: #333;
-    font-weight: 400;
 }
 
-/* RESPONSIVE (Mobile) */
-@media (max-width: 900px) {
+/* --- FOOTER (Contenu) --- */
+footer {
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.small-text {
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 10px;
+}
+
+/* --- RESPONSIVE (MOBILES & TABLETTES) --- */
+@media (max-width: 850px) {
     .hero-section {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: column; /* La photo passe au-dessus du texte ! */
+        text-align: left;
         gap: 40px;
     }
-    header {
+
+    #profil-img {
+        width: 100%; /* L'image s'adapte à l'écran */
+        max-width: 400px;
+        height: auto;
+        aspect-ratio: 3 / 4; /* Conserve un format portrait */
+    }
+
+    header nav {
         flex-direction: column;
         gap: 20px;
+        text-align: center;
     }
-    .dynamic-nav {
-        flex-wrap: wrap;
+
+    .dynamic-nav, .footer-links {
         justify-content: center;
-    }
-    #profil-img {
-        width: 100%;
-        max-width: 350px;
-        height: auto;
-        aspect-ratio: 3/4;
     }
 }
