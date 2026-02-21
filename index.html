@@ -5,29 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chargement...</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
   
   <link rel="stylesheet" href="style.css" />
+
+  <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 <body>
 
   <header>
-      <div class="logo site-name">...</div>
+    <nav>
+      <a href="#" class="site-name no-animation">...</a>
       
-      <ul class="dynamic-nav" id="header-menu">
-          </ul>
+      <div class="dynamic-nav" id="header-menu"></div>
+    </nav>
   </header>
 
   <div class="container">
     <div class="hero-section">
       
-      <img id="profil-img" src="" alt="Portrait" />
+      <img id="profil-img" src="" alt="Portrait" style="display: none;" />
       
       <div class="description">
-        <h1 id="main-title" class="site-name">...</h1>
+        <h1 id="main-title" class="site-name">Chargement...</h1>
 
         <p id="profil-desc">
-          Chargement...
+          Chargement des informations du profil...
         </p>
       </div>
 
@@ -35,8 +38,9 @@
   </div>
 
   <footer>
-      <ul class="dynamic-nav" id="footer-list">
-          </ul>
+      <div class="footer-links" id="footer-list"></div>
+      
+      <div class="small-text" id="current-year-text"></div>
   </footer>
 
   <script type="module">
@@ -50,18 +54,14 @@
         const imgEl = document.getElementById('profil-img');
         if (prof.image_url) {
             imgEl.src = prof.image_url;
-        } else {
-            imgEl.style.display = 'none';
+            imgEl.style.display = 'block';
         }
 
         // 2. Bio
         const bioEl = document.getElementById('profil-desc');
         if (prof.bio) {
-            bioEl.innerHTML = prof.bio.replace(/\n/g, '<br>');
+            bioEl.innerHTML = prof.bio.replace(/\n/g, '<br><br>'); // J'ai doublé le <br> pour un meilleur espacement des paragraphes
         }
-
-        // Note : initLayout s'occupe déjà de remplir 
-        // les menus (Header/Footer) et le Nom (site-name).
     }
 
     loadHome();
