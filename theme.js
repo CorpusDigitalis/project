@@ -13,16 +13,17 @@ export function getSlug() {
 export async function initLayout() {
     const slug = getSlug();
 
-    // 1. Récupération du profil
+// 1. Récupération du profil
     const { data: prof, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('slug', slug)
         .single();
 
-    // 2. Sécurité : Redirection 404 si profil introuvable
+    // REMPLACE LE BLOC IF PAR CELUI-CI :
     if (error || !prof) {
-        window.location.href = '/404.html'; 
+        console.error("Erreur Supabase ou profil introuvable :", error);
+        document.body.innerHTML = "<h1>Erreur de connexion à la base de données. Ouvrez la console (F12) pour voir les détails.</h1>";
         return null;
     }
 
