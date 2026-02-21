@@ -27,12 +27,12 @@ export async function initLayout() {
         return null;
     }
 
-    // 3. Remplir le Header (Menu)
+// 3. Remplir le Header (Menu)
     const headerMenu = document.getElementById('header-menu');
     if (headerMenu && prof.header_menu) {
         headerMenu.innerHTML = prof.header_menu.map(item => {
             const separator = item.link.includes('?') ? '&' : '?';
-            return `<li><a href="${item.link}${separator}prof=${slug}">${item.text}</a></li>`;
+            return `<a href="${item.link}${separator}prof=${slug}">${item.text}</a>`; // <-- Plus de <li> !
         }).join('');
     }
 
@@ -41,7 +41,7 @@ export async function initLayout() {
     if (footerMenu && prof.footer_menu) {
         footerMenu.innerHTML = prof.footer_menu.map(item => {
             const separator = item.link.includes('?') ? '&' : '?';
-            return `<li><a href="${item.link}${separator}prof=${slug}">${item.text}</a></li>`;
+            return `<a href="${item.link}${separator}prof=${slug}">${item.text}</a>`; // <-- Plus de <li> !
         }).join('');
     }
 
