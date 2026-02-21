@@ -20,10 +20,10 @@ export async function initLayout() {
         .eq('slug', slug)
         .single();
 
-    // REMPLACE LE BLOC IF PAR CELUI-CI :
+    // 2. Sécurité : Affichage de l'erreur dans la console au lieu de rediriger
     if (error || !prof) {
-        console.error("Erreur Supabase ou profil introuvable :", error);
-        document.body.innerHTML = "<h1>Erreur de connexion à la base de données. Ouvrez la console (F12) pour voir les détails.</h1>";
+        console.error("DÉTAIL DE L'ERREUR SUPABASE :", error);
+        console.error("PROFIL TROUVÉ :", prof);
         return null;
     }
 
