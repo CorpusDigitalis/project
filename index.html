@@ -26,7 +26,7 @@
       <img id="profil-img" src="" alt="Portrait" style="display: none;" />
       
       <div class="description">
-        <h1 id="main-title" class="site-name">Chargement...</h1>
+        <h1 id="main-title">Chargement...</h1>
 
         <p id="profil-desc">
           Chargement des informations du profil...
@@ -56,7 +56,16 @@
             imgEl.style.display = 'block';
         }
 
-        // 2. Bio
+        // 2. Titre (en gras) personnalisé
+        const titleEl = document.getElementById('main-title');
+        if (prof.title) {
+            titleEl.innerText = prof.title;
+        } else {
+            // Si le prof n'a pas rempli le champ "Titre", on met son nom par défaut
+            titleEl.innerText = prof.name; 
+        }
+
+        // 3. Bio
         const bioEl = document.getElementById('profil-desc');
         if (prof.bio) {
             bioEl.innerHTML = prof.bio.replace(/\n/g, '<br><br>');
