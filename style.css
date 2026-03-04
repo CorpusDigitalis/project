@@ -7,7 +7,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Alata', sans-serif;
-    background-color: #fefaf5; /* Le blanc chaud de ta maquette */
+    background-color: #fefaf5;
     color: #1a1a1a;
     display: flex;
     flex-direction: column;
@@ -18,15 +18,16 @@ body {
 
 /* --- HEADER & FOOTER --- */
 header, footer {
-    background: #1a1a1a; /* Gris anthracite très sombre */
+    background: #1a1a1a;
     color: white;
     width: 100%;
 }
 
 header nav {
-    max-width: 1100px;
+    max-width: 1400px; /* Plus large que le contenu central (1100px) */
+    width: 100%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 5%; /* 5% de marge interne pour rester responsive sur les côtés */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,7 +36,7 @@ header nav {
 
 /* Logo / Nom du site */
 .site-name.no-animation {
-    font-weight: 700;
+    font-weight: 600; /* Moins gras que 700, mais plus gras que le menu */
     font-size: 1.25rem;
     color: white;
     text-decoration: none;
@@ -45,7 +46,7 @@ header nav {
 /* --- MENUS DYNAMIQUES (Header & Footer) --- */
 .dynamic-nav, .footer-links {
     display: flex;
-    gap: 25px; /* Espace entre les liens */
+    gap: 25px;
     align-items: center;
     flex-wrap: wrap;
 }
@@ -59,7 +60,6 @@ header nav {
     transition: transform 0.2s ease, color 0.15s ease;
 }
 
-/* Effet de rétrécissement au survol demandé ! */
 .dynamic-nav a:hover, .footer-links a:hover {
     transform: scale(0.92);
     color: #e0e0e0;
@@ -67,28 +67,28 @@ header nav {
 
 /* --- CONTENU CENTRAL --- */
 .container {
-    flex: 1; /* Pousse le footer tout en bas */
+    flex: 1;
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 80px 20px; /* Grand espace au-dessus et en-dessous */
-    border-bottom: 1px solid #e0e0e0; /* Le petit trait gris discret */
+    padding: 80px 20px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .hero-section {
     display: flex;
     align-items: center;
-    gap: 60px; /* Espace entre la photo et le texte */
+    gap: 60px;
 }
 
 /* --- IMAGE (FORCÉE EN PORTRAIT) --- */
 #profil-img {
     width: 350px;
-    height: 500px; /* Hauteur fixe pour forcer le portrait */
-    object-fit: cover; /* Recadre sans déformer */
-    border-radius: 12px; /* Bords arrondis élégants */
-    flex-shrink: 0; /* Empêche l'image de s'écraser si le texte est long */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Légère ombre pour détacher l'image */
+    height: 500px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 /* --- TEXTE --- */
@@ -117,25 +117,28 @@ footer {
     gap: 15px;
 }
 
-.small-text {
-    font-size: 0.85rem;
-    color: #888;
-    margin-top: 10px;
+/* Le texte ™ CorpusDigitalis très discret */
+.corpus-tm {
+    font-size: 0.8rem;
+    color: #444444; /* Gris très foncé, à peine visible sur fond #1a1a1a */
+    margin-top: 15px;
+    letter-spacing: 0.05em;
+    user-select: none; /* Optionnel : empêche de le surligner pour faire un effet filigrane */
 }
 
 /* --- RESPONSIVE (MOBILES & TABLETTES) --- */
 @media (max-width: 850px) {
     .hero-section {
-        flex-direction: column; /* La photo passe au-dessus du texte ! */
+        flex-direction: column;
         text-align: left;
         gap: 40px;
     }
 
     #profil-img {
-        width: 100%; /* L'image s'adapte à l'écran */
+        width: 100%;
         max-width: 400px;
         height: auto;
-        aspect-ratio: 3 / 4; /* Conserve un format portrait */
+        aspect-ratio: 3 / 4;
     }
 
     header nav {
