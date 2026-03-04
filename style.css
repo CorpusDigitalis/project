@@ -24,10 +24,10 @@ header, footer {
 }
 
 header nav {
-    max-width: 1400px; /* Plus large que le contenu central (1100px) */
+    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
-    padding: 20px 5%; /* 5% de marge interne pour rester responsive sur les côtés */
+    padding: 20px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -36,7 +36,7 @@ header nav {
 
 /* Logo / Nom du site */
 .site-name.no-animation {
-    font-weight: 600; /* Moins gras que 700, mais plus gras que le menu */
+    font-weight: 600;
     font-size: 1.25rem;
     color: white;
     text-decoration: none;
@@ -77,11 +77,11 @@ header nav {
 
 .hero-section {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Aligne STRICTEMENT le haut du texte avec le haut de la photo */
     gap: 60px;
 }
 
-/* --- IMAGE (FORCÉE EN PORTRAIT) --- */
+/* --- IMAGE (FORCÉE EN PORTRAIT STRICT) --- */
 #profil-img {
     width: 350px;
     height: 500px;
@@ -91,21 +91,27 @@ header nav {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* --- TEXTE --- */
+/* --- TEXTE (LIBRE ET FLUIDE) --- */
 .description {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* Plus de limite de hauteur : le texte descend naturellement */
 }
 
 h1 {
-    font-size: 2.8rem;
+    font-size: 2.3rem;
     color: #1a1a1a;
-    margin-top: 0;
-    margin-bottom: 25px;
+    margin-top: -8px; /* Ajustement optique pour contrer l'espace invisible au-dessus des lettres de la police Alata et s'aligner pile avec l'image */
+    margin-bottom: 20px;
+    line-height: 1.1;
 }
 
 #profil-desc {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     color: #333;
+    margin: 0;
+    line-height: 1.6; /* Espacement aéré mais sans casser la page */
 }
 
 /* --- FOOTER (Contenu) --- */
@@ -117,19 +123,19 @@ footer {
     gap: 15px;
 }
 
-/* Le texte ™ CorpusDigitalis très discret */
 .corpus-tm {
     font-size: 0.8rem;
-    color: #444444; /* Gris très foncé, à peine visible sur fond #1a1a1a */
+    color: #444444; 
     margin-top: 15px;
     letter-spacing: 0.05em;
-    user-select: none; /* Optionnel : empêche de le surligner pour faire un effet filigrane */
+    user-select: none;
 }
 
 /* --- RESPONSIVE (MOBILES & TABLETTES) --- */
 @media (max-width: 850px) {
     .hero-section {
         flex-direction: column;
+        align-items: center; /* Sur mobile, l'image passe au-dessus et tout est centré */
         text-align: left;
         gap: 40px;
     }
@@ -139,6 +145,10 @@ footer {
         max-width: 400px;
         height: auto;
         aspect-ratio: 3 / 4;
+    }
+
+    h1 {
+        margin-top: 0; /* On retire l'ajustement optique sur mobile */
     }
 
     header nav {
