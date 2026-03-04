@@ -30,7 +30,6 @@ export async function initLayout() {
     const headerMenu = document.getElementById('header-menu');
     if (headerMenu) {
         let hLinks = '';
-        // On récupère la configuration ou on met celle par défaut
         const conf = prof.config?.header || { home: true, courses: true, publications: true, interventions: true };
         
         if (conf.home) hLinks += `<a href="index.html?prof=${slug}">Accueil</a>`;
@@ -47,7 +46,6 @@ export async function initLayout() {
         let fLinks = '';
         const fConf = prof.config?.footer || { linkedin: true, scholar: true, cv: true, custom: [] };
 
-        // Liens dynamiques renseignés dans l'admin
         if (fConf.linkedin && prof.linkedin_url) {
             fLinks += `<a href="${prof.linkedin_url}" target="_blank">LinkedIn</a>`;
         }
@@ -58,7 +56,6 @@ export async function initLayout() {
             fLinks += `<a href="${prof.cv_url}" target="_blank">CV</a>`;
         }
         
-        // Liens personnalisés du footer (ex: Université)
         if (fConf.custom && fConf.custom.length > 0) {
             fConf.custom.forEach(link => {
                 fLinks += `<a href="${link.url}" target="_blank">${link.label}</a>`;
@@ -72,9 +69,7 @@ export async function initLayout() {
     document.title = prof.name;
     document.querySelectorAll('.site-name').forEach(el => el.innerText = prof.name);
 
-    // 5. Copyright année
-    const yearEl = document.getElementById('current-year-text');
-    if (yearEl) yearEl.innerText = `© ${new Date().getFullYear()} ${prof.name}`;
+    // FIN: J'ai supprimé la partie qui générait le copyright dynamique pour que ton TM reste intact.
 
     return prof; 
 }
