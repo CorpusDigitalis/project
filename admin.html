@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin Final V27</title>
+    <title>Corpus Digitalis - Admin Final V29</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -88,7 +88,7 @@
         input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
         input::placeholder { color: #cbd5e1; }
 
-        .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; flex-shrink: 0; transition: 0.2s; }
         .btn-primary:hover:not(:disabled) { background: var(--accent-light); }
         
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
@@ -171,7 +171,7 @@
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
 
         .btn-validate { width: var(--input-height); height: var(--input-height); background: var(--accent); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; flex-shrink: 0; transition: 0.2s; }
-        .btn-validate:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-validate:hover:not(:disabled) { opacity: 0.9; transform: scale(1.02); }
 
         .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
         .input-group-title input { height: 100%; }
@@ -576,8 +576,8 @@
                                             <div class="course-row-top">
                                                 <span class="course-label-read">${item.label}</span>
                                                 <div style="display:flex; gap:5px;">
-                                                    <button class="btn-square" onclick="toggleEditBlock('${editId}')"><i data-lucide="pencil" size="14"></i></button>
-                                                    <button class="btn-square delete" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="x" size="14"></i></button>
+                                                    <button class="btn-square" onclick="toggleEditBlock('${editId}')" title="Modifier ce document"><i data-lucide="pencil" size="14"></i></button>
+                                                    <button class="btn-square delete" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})" title="Supprimer ce document"><i data-lucide="x" size="14"></i></button>
                                                 </div>
                                             </div>
                                             <div class="course-row-bottom">
@@ -588,47 +588,69 @@
                                             </div>
                                             
                                             <div id="${editId}" class="course-edit-block">
-                                                <div class="resource-row mode-${item.type}">
-                                                    <div class="input-group-title"><input type="text" id="edit-lbl-${course.id}-${secIdx}-${itemIdx}" value="${item.label}" class="form-input" placeholder="Titre"></div>
-                                                    <div class="type-selector">
-                                                        <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien</button>
-                                                        <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier</button>
-                                                    </div>
-                                                    <div class="action-area">
-                                                        <div class="link-input-wrapper">
-                                                            <input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://...">
+                                                <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                                    <h5 style="margin: 0 0 10px 0; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Modifier ce document</h5>
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                        <input type="text" id="edit-lbl-${course.id}-${secIdx}-${itemIdx}" value="${item.label}" class="form-input" placeholder="Titre du document">
+                                                        
+                                                        <div class="resource-row mode-${item.type}" style="flex-direction: column; align-items: stretch; height: auto; padding: 0;">
+                                                            <div class="type-selector" style="width: 100%; display: flex; margin-bottom: 5px;">
+                                                                <button type="button" class="type-btn ${item.type==='link'?'active':''}" style="flex: 1; justify-content: center;" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien URL</button>
+                                                                <button type="button" class="type-btn ${item.type==='file'?'active':''}" style="flex: 1; justify-content: center;" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier PDF/Doc</button>
+                                                            </div>
+                                                            <div class="action-area" style="width: 100%; height: var(--input-height);">
+                                                                <div class="link-input-wrapper">
+                                                                    <input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://...">
+                                                                </div>
+                                                                <div class="upload-btn-wrapper">
+                                                                    <label class="upload-label" id="lbl-up-${course.id}-${secIdx}-${itemIdx}">
+                                                                        <i data-lucide="cloud-upload"></i> <span class="label-text" id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer le fichier...</span>
+                                                                        <input type="file" id="edit-file-${course.id}-${secIdx}-${itemIdx}" class="hidden-input" onchange="document.getElementById('file-txt-edit-${course.id}-${secIdx}-${itemIdx}').innerText = this.files[0] ? this.files[0].name : 'Remplacer le fichier...'">
+                                                                    </label>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="upload-btn-wrapper">
-                                                            <label class="upload-label" id="lbl-up-${course.id}-${secIdx}-${itemIdx}">
-                                                                <i data-lucide="cloud-upload"></i> <span class="label-text" id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span>
-                                                                <input type="file" class="hidden-input" onchange="uploadFileForEdit('courses', this, 'edit-val-${course.id}-${secIdx}-${itemIdx}', 'file-txt-edit-${course.id}-${secIdx}-${itemIdx}', 'lbl-up-${course.id}-${secIdx}-${itemIdx}')">
-                                                            </label>
-                                                        </div>
                                                     </div>
-                                                    <button class="btn-validate" onclick="confirmCourseItemUpdate('${course.id}', ${secIdx}, ${itemIdx})"><i data-lucide="check" size="20"></i></button>
+                                                    <button class="btn-primary" style="width: 100%; margin-top: 15px;" onclick="confirmCourseItemUpdate('${course.id}', ${secIdx}, ${itemIdx}, this)">
+                                                        <i data-lucide="check" size="16"></i> Enregistrer les modifications
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>`;
                                     }).join('')}
                                     
-                                    <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}" style="margin-top:10px;">
-                                        <div class="input-group-title"><input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document"></div>
-                                        <div class="type-selector">
-                                            <input type="hidden" id="type-val-${course.id}-${secIdx}" value="link">
-                                            <button type="button" class="type-btn active" onclick="switchMode('${course.id}', ${secIdx}, 'link', this)">Lien</button>
-                                            <button type="button" class="type-btn" onclick="switchMode('${course.id}', ${secIdx}, 'file', this)">Fichier</button>
-                                        </div>
-                                        <div class="action-area">
-                                            <div class="link-input-wrapper"><input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="https://..."></div>
-                                            <div class="upload-btn-wrapper">
-                                                <label class="upload-label" id="lbl-up-new-${course.id}-${secIdx}">
-                                                    <i data-lucide="cloud-upload"></i> <span class="label-text" id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span>
-                                                    <input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="addItem('${course.id}', ${secIdx}, true, 'lbl-up-new-${course.id}-${secIdx}')">
-                                                </label>
+                                    <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-top: 15px;">
+                                        <h5 style="margin: 0 0 10px 0; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Ajouter un document à cette section</h5>
+                                        
+                                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                                            <input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document (ex: Diapositives Chapitre 1)">
+                                            
+                                            <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}" style="flex-direction: column; align-items: stretch; height: auto; padding: 0;">
+                                                <div class="type-selector" style="width: 100%; display: flex; margin-bottom: 5px;">
+                                                    <input type="hidden" id="type-val-${course.id}-${secIdx}" value="link">
+                                                    <button type="button" class="type-btn active" style="flex: 1; justify-content: center;" onclick="switchMode('${course.id}', ${secIdx}, 'link', this)">Lien URL</button>
+                                                    <button type="button" class="type-btn" style="flex: 1; justify-content: center;" onclick="switchMode('${course.id}', ${secIdx}, 'file', this)">Fichier (PDF, Doc...)</button>
+                                                </div>
+                                                
+                                                <div class="action-area" style="width: 100%; height: var(--input-height);">
+                                                    <div class="link-input-wrapper">
+                                                        <input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="Collez votre lien ici (https://...)">
+                                                    </div>
+                                                    <div class="upload-btn-wrapper">
+                                                        <label class="upload-label" id="lbl-up-new-${course.id}-${secIdx}">
+                                                            <i data-lucide="file-up"></i> <span class="label-text" id="file-txt-${course.id}-${secIdx}">Parcourir vos fichiers...</span>
+                                                            <input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="document.getElementById('file-txt-${course.id}-${secIdx}').innerText = this.files[0] ? this.files[0].name : 'Parcourir vos fichiers...'">
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <button class="btn-validate" onclick="addItem('${course.id}', ${secIdx}, false, null)"><i data-lucide="plus" size="18"></i></button>
+                                        
+                                        <button class="btn-primary" style="width: 100%; margin-top: 15px; background: #0f172a; color: white;" onclick="addItem('${course.id}', ${secIdx}, this)">
+                                            <i data-lucide="plus" size="16"></i> Nouveau document
+                                        </button>
                                     </div>
+                                    
                                 </div>
                             </div>
                         `).join('')}
@@ -807,7 +829,6 @@
         if(input.files.length === 0) return;
         const file = input.files[0];
         
-        // Visual Feedback Start
         const lblWrapper = document.getElementById(labelWrapperId);
         const originalContent = lblWrapper.innerHTML;
         lblWrapper.classList.add('loading');
@@ -817,7 +838,8 @@
         showToast("Upload en cours...", "success");
         
         try {
-            const path = `${profileData.id}/${folder}/${Date.now()}_${file.name}`;
+            const cleanFileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_'); // Sécurité pour Supabase
+            const path = `${profileData.id}/${folder}/${Date.now()}_${cleanFileName}`;
             const { error } = await sb.storage.from('documents').upload(path, file);
             if(error) throw error;
             
@@ -828,7 +850,6 @@
         } catch(e) {
             showToast("Erreur upload: " + e.message, "error");
         } finally {
-            // Visual Feedback End
             lblWrapper.classList.remove('loading');
             lblWrapper.innerHTML = originalContent;
             document.getElementById(labelId).textContent = file.name;
@@ -870,22 +891,65 @@
         renderInterventions(); showToast("Intervention mise à jour !", "success"); reloadPreview();
     }
 
-    window.confirmCourseItemUpdate = async (cid, sIdx, iIdx) => {
+    // --- ACTIONS COURSES (AJOUT / MODIFICATION DÉFINITIFS ET SÉCURISÉS) ---
+    
+    window.confirmCourseItemUpdate = async (cid, sIdx, iIdx, btn) => {
         const label = document.getElementById(`edit-lbl-${cid}-${sIdx}-${iIdx}`).value;
-        const url = document.getElementById(`edit-val-${cid}-${sIdx}-${iIdx}`).value;
+        const urlInput = document.getElementById(`edit-val-${cid}-${sIdx}-${iIdx}`).value;
         const editId = `edit-c-${cid}-${sIdx}-${iIdx}`;
         const mode = document.querySelector(`#${editId} .resource-row`).classList.contains('mode-file') ? 'file' : 'link';
 
-        const c = profileData.courses.find(x => x.id === cid);
-        c.sections[sIdx].items[iIdx].label = label;
-        c.sections[sIdx].items[iIdx].value = url;
-        c.sections[sIdx].items[iIdx].type = mode;
+        if(!label) return showToast("Veuillez donner un titre au document", "error");
 
-        await updateCourseDB(c);
-        showToast("Élément modifié !", "success");
+        let finalValue = urlInput;
+        
+        // Bloque le bouton visuellement
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Sauvegarde en cours...`;
+        if(window.lucide) lucide.createIcons();
+
+        // Si on est en mode fichier, on gère l'upload maintenant
+        if (mode === 'file') {
+            const fileInput = document.getElementById(`edit-file-${cid}-${sIdx}-${iIdx}`);
+            if (fileInput && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                try {
+                    const cleanFileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+                    const path = `${profileData.id}/courses/${Date.now()}_${cleanFileName}`;
+                    const { error } = await sb.storage.from('documents').upload(path, file);
+                    if(error) throw error;
+                    finalValue = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                } catch(e) {
+                    btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons();
+                    return showToast("Erreur lors de l'upload", "error");
+                }
+            } else {
+                const c = profileData.courses.find(x => x.id === cid);
+                finalValue = c.sections[sIdx].items[iIdx].value; // Garde l'ancienne valeur si aucun nouveau fichier n'est choisi
+            }
+        } else {
+             if(!finalValue) {
+                 btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons();
+                 return showToast("Veuillez fournir un lien valide", "error");
+             }
+        }
+
+        // Sauvegarde DB
+        try {
+            const c = profileData.courses.find(x => x.id === cid);
+            c.sections[sIdx].items[iIdx].label = label;
+            c.sections[sIdx].items[iIdx].value = finalValue;
+            c.sections[sIdx].items[iIdx].type = mode;
+
+            await updateCourseDB(c);
+            showToast("Document modifié avec succès !", "success");
+        } catch (e) {
+            showToast("Erreur de modification", "error");
+            btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons();
+        }
     }
 
-    // --- ACTIONS COURSES (Création) ---
     window.switchMode = (cid, sIdx, mode, btn) => {
         const row = document.getElementById(`add-row-${cid}-${sIdx}`);
         row.classList.remove('mode-link', 'mode-file');
@@ -904,40 +968,58 @@
         btn.classList.add('active');
     }
 
-    window.addItem = async (cid, sIdx, isFileAuto, lblId) => {
+    // Le fameux bouton "Nouveau document" sécurisé !
+    window.addItem = async (cid, sIdx, btn) => {
         const type = document.getElementById(`type-val-${cid}-${sIdx}`).value; 
         const label = document.getElementById(`lbl-${cid}-${sIdx}`).value;
-        if(!label) return showToast("Titre requis", "error");
+        
+        if(!label) return showToast("Veuillez donner un titre au document", "error");
         
         let value = "";
-        if(type === 'link' && !isFileAuto) {
+        
+        if (type === 'link') {
             value = document.getElementById(`url-${cid}-${sIdx}`).value;
-            if(!value) return showToast("URL requise", "error");
-        } else if (type === 'file') {
+            if(!value) return showToast("Veuillez entrer une URL", "error");
+        } 
+        
+        // Bloque le bouton et lance le chargement
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Enregistrement...`;
+        if(window.lucide) lucide.createIcons();
+
+        // Gestion de l'upload du fichier (uniquement quand on valide)
+        if (type === 'file') {
             const fileInput = document.getElementById(`file-${cid}-${sIdx}`);
-            if(fileInput.files.length === 0) return; 
-            
-            // Visual Loading
-            const lbl = document.getElementById(lblId);
-            const content = lbl.innerHTML;
-            lbl.innerHTML = `<i data-lucide="loader" class="spin"></i> Upload...`;
+            if(!fileInput.files || fileInput.files.length === 0) {
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons();
+                return showToast("Veuillez choisir un fichier sur votre ordinateur", "error"); 
+            }
             
             const file = fileInput.files[0];
             try {
-                const path = `${profileData.id}/courses/${Date.now()}_${file.name}`;
+                const cleanFileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+                const path = `${profileData.id}/courses/${Date.now()}_${cleanFileName}`;
                 const { error } = await sb.storage.from('documents').upload(path, file);
                 if(error) throw error;
                 value = sb.storage.from('documents').getPublicUrl(path).data.publicUrl;
             } catch(e) {
-                lbl.innerHTML = content;
-                return showToast("Erreur upload", "error");
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons();
+                return showToast("Erreur lors de l'upload du fichier", "error");
             }
         }
-        const c = profileData.courses.find(x => x.id === cid);
-        c.sections[sIdx].items.push({ label, type, value });
-        openCourseId = cid;
-        await updateCourseDB(c);
-        showToast("Ajouté !", "success");
+
+        // Sauvegarde dans la base de données
+        try {
+            const c = profileData.courses.find(x => x.id === cid);
+            c.sections[sIdx].items.push({ label, type, value });
+            openCourseId = cid;
+            await updateCourseDB(c); // Rappelle renderCourses() qui affiche la modif et vide la zone de saisie !
+            showToast("Nouveau document ajouté !", "success");
+        } catch(e) {
+            showToast("Erreur lors de la sauvegarde", "error");
+            btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons();
+        }
     }
 
     // --- ACTIONS PUBLICATIONS / INTERVENTIONS (SWITCH MODES) ---
@@ -965,33 +1047,28 @@
 
     window.updateSectionTitle = async (cid, sIdx, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].title = val; await updateCourseDB(c); }
     
-    // NOUVEAU addSection OPTIMISÉ (AVEC CHARGEMENT)
     window.addSection = async (cid, btn) => { 
         const c = profileData.courses.find(x => x.id === cid); 
         if(!c.sections) c.sections = []; 
         c.sections.push({ title: 'Nouvelle Section', items: [] }); 
         openCourseId = cid; 
         
-        // Bloque le bouton et met le spinner
         const originalText = btn.innerHTML;
         btn.disabled = true;
-        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Ajout...`;
+        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Ajout en cours...`;
         if(window.lucide) lucide.createIcons();
 
         await updateCourseDB(c); 
-        // Pas besoin de le réactiver ici, updateCourseDB appelle renderCourses() qui redessine le bouton tout neuf !
     }
 
-    window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
+    window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer la section entière ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
     window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
     async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
     
-    // NOUVEAU createItem OPTIMISÉ (AVEC CHARGEMENT ET SANS RECHARGEMENT TOTAL)
     window.createItem = async (t, d, btn) => { 
         d.prof_id = profileData.id;
         d.position = -1; // Top
         
-        // 1. On bloque le bouton
         const originalText = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Création...`;
@@ -1006,9 +1083,8 @@
             }
             if(!profileData[t]) profileData[t]=[]; 
             
-            // L'OPTIMISATION EST LÀ : Plus de 'await loadData()', on injecte directement la donnée reçue
             const newItem = data[0];
-            profileData[t].unshift(newItem); // Ajoute en haut de la liste
+            profileData[t].unshift(newItem); 
             
             if(t==='courses') { openCourseId = newItem.id; renderCourses(); }
             if(t==='publications') { openPubId = newItem.id; renderPublications(); }
@@ -1019,7 +1095,6 @@
         } catch(e) { 
             console.log(e); 
         } finally {
-            // S'assure que le bouton est réactivé
             if(btn && document.body.contains(btn)) {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
@@ -1029,7 +1104,7 @@
     }
     
     window.delItem = async (t,id) => { 
-        if(!confirm("Supprimer ?")) return; 
+        if(!confirm("Supprimer cet élément ?")) return; 
         const { error } = await sb.from(t).delete().eq('id',id);
         if(error) { showToast("Erreur de suppression", "error"); return; }
         profileData[t] = profileData[t].filter(x => x.id !== id);
