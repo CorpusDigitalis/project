@@ -4,121 +4,157 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Enseignements</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+
     <style>
+        /* Styles spécifiques aux cours (adaptés au nouveau design) */
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            color: #1a1a1a;
+        }
+
         .course-card {
-            background: white; border-radius: 8px; border: 1px solid #e2e8f0; 
-            margin-bottom: 20px; overflow: hidden;
+            background: white; 
+            border-radius: 12px; 
+            border: 1px solid #e0e0e0; 
+            margin-bottom: 30px; 
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
         }
+
         .course-header {
-            background: #f8fafc; padding: 20px; border-bottom: 1px solid #e2e8f0;
-            display: flex; justify-content: space-between; align-items: center;
+            background: #fefaf5; /* Rappel élégant du fond de page */
+            padding: 20px 25px; 
+            border-bottom: 1px solid #e0e0e0;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        .course-title { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0; }
-        .course-badge { background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+
+        .course-title { 
+            font-size: 1.4rem; 
+            color: #1a1a1a; 
+            margin: 0; 
+        }
+
+        .course-badge { 
+            background: #1a1a1a; 
+            color: white; 
+            padding: 5px 12px; 
+            border-radius: 6px; 
+            font-size: 0.85rem; 
+            letter-spacing: 0.05em;
+        }
         
-        .section-list { padding: 20px; }
-        .section-item { margin-bottom: 25px; }
+        .section-list { padding: 25px; }
+        .section-item { margin-bottom: 30px; }
+        .section-item:last-child { margin-bottom: 0; }
+        
         .section-title { 
-            font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; 
-            color: #64748b; font-weight: 700; margin-bottom: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 5px;
+            font-size: 1.1rem; 
+            color: #333; 
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #f0f0f0; 
+            padding-bottom: 8px;
         }
         
-        .resource-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+        .resource-links { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+            display: grid; 
+            gap: 12px; 
+        }
+        
         .resource-links li a {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
-            text-decoration: none; color: #334155; font-weight: 500; transition: 0.2s;
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            padding: 12px 18px; 
+            background: #fff; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px;
+            text-decoration: none; 
+            color: #1a1a1a; 
+            transition: transform 0.2s ease, border-color 0.2s ease;
         }
-        .resource-links li a:hover { border-color: #94a3b8; background: #f8fafc; color: #0f172a; }
         
-        .empty-msg { text-align: center; color: #94a3b8; font-style: italic; margin-top: 4rem; }
+        /* Effet élégant au survol d'un document */
+        .resource-links li a:hover { 
+            border-color: #1a1a1a; 
+            transform: translateX(5px);
+        }
+        
+        .empty-msg { 
+            text-align: center; 
+            color: #888; 
+            font-style: italic; 
+            margin-top: 4rem; 
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" id="header-logo">MON SITE</div>
         <nav>
-            <ul id="header-menu" class="dynamic-nav"></ul>
+            <a href="#" class="site-name no-animation">...</a>
+            <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
 
     <div class="container">
-        <div style="width: 100%;">
-            <h1 style="text-align: center; margin-bottom: 3rem;">Cours & Ressources</h1>
+        <div style="width: 100%; max-width: 900px; margin: 0 auto;">
+            <h1 class="page-title">Enseignements</h1>
             
             <div id="courses-container">
-                <p class="empty-msg">Chargement...</p>
+                <p class="empty-msg">Chargement des enseignements...</p>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>© <span id="current-year"></span> <span id="footer-name"></span></p>
-        <nav>
-            <ul id="footer-menu" class="dynamic-nav"></ul>
-        </nav>
+        <div class="footer-links" id="footer-list"></div>
+        <div class="corpus-tm">™ CorpusDigitalis</div>
     </footer>
 
-    <script>
-        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script type="module">
+        import { initLayout, supabase } from './theme.js';
 
-        async function init() {
-            const params = new URLSearchParams(window.location.search);
-            const profParam = params.get('prof');
-            if (!profParam) { document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>"; return; }
+        async function loadCourses() {
+            // 1. Initialise le Layout (Header, Footer, Titre, Couleur de fond...)
+            const prof = await initLayout();
+            if (!prof) return;
 
-            let query = sb.from('profiles').select('*, courses(*)');
-            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
-            query = isUUID ? query.eq('id', profParam) : query.eq('slug', profParam);
+            // 2. Récupération des cours dans Supabase (Triés par position)
+            const { data: courses, error } = await supabase
+                .from('courses')
+                .select('*')
+                .eq('prof_id', prof.id)
+                .order('position', { ascending: true })
+                .order('created_at', { ascending: false });
 
-            const { data: profile, error } = await query.single();
-
-            if (error || !profile) { document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>"; return; }
-
-            // Identité
-            document.title = `Cours - ${profile.name}`;
-            document.getElementById('header-logo').textContent = (profile.name).toUpperCase();
-            document.getElementById('footer-name').textContent = profile.name;
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // Menu
-            const pLink = `?prof=${profParam}`;
-            const conf = profile.config || {};
-            const h = conf.header || {};
-            let hHtml = '';
-            if (h.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
-            if (h.publications) hHtml += `<li><a href="publications.html${pLink}">Publications</a></li>`;
-            if (h.courses) hHtml += `<li><a href="cours.html${pLink}" style="color:white;">Enseignements</a></li>`;
-            if (h.interventions) hHtml += `<li><a href="interventions.html${pLink}">Interventions</a></li>`;
-            document.getElementById('header-menu').innerHTML = hHtml;
-
-            const f = conf.footer || {};
-            let fHtml = '';
-            if (f.linkedin && profile.linkedin_url) fHtml += `<li><a href="${profile.linkedin_url}" target="_blank"><i data-lucide="linkedin"></i></a></li>`;
-            if (f.scholar && profile.scholar_url) fHtml += `<li><a href="${profile.scholar_url}" target="_blank"><i data-lucide="graduation-cap"></i></a></li>`;
-            if (f.cv && profile.cv_url) fHtml += `<li><a href="${profile.cv_url}" target="_blank"><i data-lucide="file-text"></i></a></li>`;
-            document.getElementById('footer-menu').innerHTML = fHtml;
-
-            // Affichage Cours (Nouvelle structure JSON)
             const container = document.getElementById('courses-container');
-            const courses = profile.courses || [];
 
-            if (courses.length === 0) {
-                container.innerHTML = "<p class='empty-msg'>Aucun cours disponible.</p>";
+            if (error || !courses || courses.length === 0) {
+                container.innerHTML = "<p class='empty-msg'>Aucun enseignement disponible pour le moment.</p>";
                 return;
             }
 
             container.innerHTML = "";
 
+            // 3. Génération des cartes de cours
             courses.forEach(course => {
-                // Structure JSON sauvegardée par Admin V22 : [{ title: "...", items: [{ label: "...", value: "...", type: "link/file" }] }]
                 const sections = course.sections || []; 
 
                 let sectionsHtml = '';
@@ -128,13 +164,13 @@
                         itemsHtml = sec.items.map(item => `
                             <li>
                                 <a href="${item.value}" target="_blank">
-                                    <i data-lucide="${item.type === 'file' ? 'file-text' : 'link'}" size="16"></i>
+                                    <i data-lucide="${item.type === 'file' ? 'file-text' : 'link'}" size="18"></i>
                                     ${item.label}
                                 </a>
                             </li>
                         `).join('');
                     } else {
-                        itemsHtml = '<li style="color:#94a3b8; font-size:0.9rem;">Aucun document.</li>';
+                        itemsHtml = '<li style="color:#888; font-size:0.9rem; padding-left: 10px;">Aucun document.</li>';
                     }
 
                     sectionsHtml += `
@@ -152,15 +188,17 @@
                             <span class="course-badge">${course.category || 'Cours'}</span>
                         </div>
                         <div class="section-list">
-                            ${sectionsHtml || '<p style="color:#94a3b8">Contenu en construction.</p>'}
+                            ${sectionsHtml || '<p style="color:#888; margin:0;">Contenu en construction.</p>'}
                         </div>
                     </div>
                 `;
             });
+            
+            // 4. Initialise les icônes Lucide une fois injectées dans le HTML
             lucide.createIcons();
         }
 
-        init();
+        loadCourses();
     </script>
 </body>
 </html>
