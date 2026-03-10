@@ -61,14 +61,13 @@
         if (prof.title) {
             titleEl.innerText = prof.title;
         } else {
-            // Si le prof n'a pas rempli le champ "Titre", on met son nom par défaut
             titleEl.innerText = prof.name; 
         }
 
-        // 3. Bio
+        // 3. Bio : Utilisation de innerText (méthode la plus propre et sécurisée)
         const bioEl = document.getElementById('profil-desc');
         if (prof.bio) {
-            bioEl.innerHTML = prof.bio.replace(/\n/g, '<br><br>');
+            bioEl.innerText = prof.bio;
         }
     }
 
