@@ -32,6 +32,11 @@
         input, textarea, select, button { font-family: 'Inter', sans-serif; }
         textarea { font-size: 0.9rem; line-height: 1.5; }
 
+        /* Animation de chargement pour les boutons */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spin { animation: spin 1s linear infinite; }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
+
         /* --- SIDEBAR & HEADER --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
@@ -83,11 +88,11 @@
         input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
         input::placeholder { color: #cbd5e1; }
 
-        .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
-        .btn-primary:hover { background: var(--accent-light); }
+        .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
+        .btn-primary:hover:not(:disabled) { background: var(--accent-light); }
         
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-        .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
+        .btn-ghost:hover:not(:disabled) { background: #f1f5f9; color: #0f172a; }
         
         .btn-square { width: 32px; height: 32px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
         .btn-square:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: #eff6ff; }
@@ -272,7 +277,6 @@
                     </div>
                     <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name" oninput="autoSave('profiles', null, 'name', this.value)"></div>
                     <div class="form-row"><label>Titre (en gras)</label><input type="text" id="field-title" placeholder="Ex: Bienvenue, ou Jean Dupont..." oninput="autoSave('profiles', null, 'title', this.value)"></div>
-                    
                     <div class="form-row"><label>Biographie</label><textarea id="field-bio" rows="6" oninput="autoSave('profiles', null, 'bio', this.value)"></textarea></div>
                 </div>
                 <div class="scroll-spacer"></div>
@@ -281,7 +285,7 @@
             <section id="mod-cours" class="module hidden">
                 <div class="header-flex">
                     <div><h2>Enseignements</h2><p class="subtitle">Structurez vos cours par chapitres.</p></div>
-                    <button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence', sections:[{title:'Slides', items:[]}]})"><i data-lucide="plus"></i> Créer Cours</button>
+                    <button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence', sections:[{title:'Slides', items:[]}]}, this)"><i data-lucide="plus"></i> Créer Cours</button>
                 </div>
                 <div id="courses-container"></div>
                 <div class="scroll-spacer"></div>
@@ -290,7 +294,7 @@
             <section id="mod-biblio" class="module hidden">
                 <div class="header-flex">
                     <div><h2>Publications</h2><p class="subtitle">Vos articles, thèses et ouvrages.</p></div>
-                    <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]})"><i data-lucide="plus"></i> Ajouter</button>
+                    <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]}, this)"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
                 <div id="pubs-container"></div>
                 <div class="scroll-spacer"></div>
@@ -299,7 +303,7 @@
             <section id="mod-interventions" class="module hidden">
                 <div class="header-flex">
                     <div><h2>Interventions</h2><p class="subtitle">Colloques, conférences et séminaires.</p></div>
-                    <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention', category:'Conférence', event_date: new Date().toISOString().split('T')[0]})"><i data-lucide="plus"></i> Ajouter</button>
+                    <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention', category:'Conférence', event_date: new Date().toISOString().split('T')[0]}, this)"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
                 <div id="interventions-container"></div>
                 <div class="scroll-spacer"></div>
@@ -462,9 +466,7 @@
     function fillProfileUI() {
         if(!profileData) return;
         document.getElementById('field-name').value = profileData.name || '';
-        // AJOUT : CHARGEMENT DU TITRE
         if(document.getElementById('field-title')) document.getElementById('field-title').value = profileData.title || '';
-        
         document.getElementById('field-bio').value = profileData.bio || '';
         if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
@@ -630,7 +632,7 @@
                                 </div>
                             </div>
                         `).join('')}
-                        <button class="btn-ghost" onclick="addSection('${course.id}')" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">+ Ajouter une Section (ex: TD, Examens)</button>
+                        <button class="btn-ghost" onclick="addSection('${course.id}', this)" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">+ Ajouter une Section (ex: TD, Examens)</button>
                     </div>
                     <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button></div>
                 </div>
@@ -962,33 +964,68 @@
     }
 
     window.updateSectionTitle = async (cid, sIdx, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].title = val; await updateCourseDB(c); }
-    window.addSection = async (cid) => { const c = profileData.courses.find(x => x.id === cid); if(!c.sections) c.sections = []; c.sections.push({ title: 'Nouvelle Section', items: [] }); openCourseId = cid; await updateCourseDB(c); }
+    
+    // NOUVEAU addSection OPTIMISÉ (AVEC CHARGEMENT)
+    window.addSection = async (cid, btn) => { 
+        const c = profileData.courses.find(x => x.id === cid); 
+        if(!c.sections) c.sections = []; 
+        c.sections.push({ title: 'Nouvelle Section', items: [] }); 
+        openCourseId = cid; 
+        
+        // Bloque le bouton et met le spinner
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Ajout...`;
+        if(window.lucide) lucide.createIcons();
+
+        await updateCourseDB(c); 
+        // Pas besoin de le réactiver ici, updateCourseDB appelle renderCourses() qui redessine le bouton tout neuf !
+    }
+
     window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
     window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
     async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
     
-    window.createItem = async (t,d) => { 
-        d.prof_id=profileData.id;
+    // NOUVEAU createItem OPTIMISÉ (AVEC CHARGEMENT ET SANS RECHARGEMENT TOTAL)
+    window.createItem = async (t, d, btn) => { 
+        d.prof_id = profileData.id;
         d.position = -1; // Top
+        
+        // 1. On bloque le bouton
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Création...`;
+        if(window.lucide) lucide.createIcons();
+
         try {
-            const {data,error}=await sb.from(t).insert([d]).select(); 
-            if(error) { showToast("Erreur : " + error.message, "error"); return; }
+            const {data, error} = await sb.from(t).insert([d]).select(); 
+            if(error) { 
+                showToast("Erreur : " + error.message, "error"); 
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons();
+                return; 
+            }
             if(!profileData[t]) profileData[t]=[]; 
             
-            await loadData(profileData.id);
-
+            // L'OPTIMISATION EST LÀ : Plus de 'await loadData()', on injecte directement la donnée reçue
             const newItem = data[0];
-            if(t==='courses') openCourseId = newItem.id; 
-            if(t==='publications') openPubId = newItem.id; 
-            if(t==='interventions') openInterId = newItem.id; 
+            profileData[t].unshift(newItem); // Ajoute en haut de la liste
             
-            if(t==='courses') renderCourses();
-            if(t==='publications') renderPublications();
-            if(t==='interventions') renderInterventions();
+            if(t==='courses') { openCourseId = newItem.id; renderCourses(); }
+            if(t==='publications') { openPubId = newItem.id; renderPublications(); }
+            if(t==='interventions') { openInterId = newItem.id; renderInterventions(); }
             
             showToast("Élément créé !", "success");
             reloadPreview(); 
-        } catch(e) { console.log(e); }
+        } catch(e) { 
+            console.log(e); 
+        } finally {
+            // S'assure que le bouton est réactivé
+            if(btn && document.body.contains(btn)) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                if(window.lucide) lucide.createIcons();
+            }
+        }
     }
     
     window.delItem = async (t,id) => { 
