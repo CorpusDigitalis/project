@@ -149,9 +149,8 @@
         .link-input-wrapper input { height: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; width: 100%; }
 
         .upload-btn-wrapper { width: 100%; height: 100%; display: none; }
-        /* CORRECTION BOUTON UPLOAD : Centré + Responsive */
         .upload-label { 
-            display: flex; align-items: center; justify-content: center; /* Centré */
+            display: flex; align-items: center; justify-content: center;
             gap: 8px; width: 100%; height: 100%; padding: 0 15px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; 
             border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; 
@@ -172,7 +171,7 @@
         .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
         .input-group-title input { height: 100%; }
         
-        /* --- PERSONNALISATION LISTS (CORRECTION PRO) --- */
+        /* --- PERSONNALISATION LISTS --- */
         .config-list-container { display: flex; flex-direction: column; gap: 8px; }
         .config-item { 
             display: flex; align-items: center; justify-content: space-between; 
@@ -184,7 +183,6 @@
         .config-item.hidden-item { opacity: 0.7; background: #f8fafc; border-style: dashed; }
         .config-item span { font-weight: 600; font-size: 0.9rem; color: #334155; display: flex; align-items: center; gap: 10px; }
         
-        /* Toggle Button Carré pour les Yeux */
         .config-toggle-btn {
             width: 36px; height: 36px;
             display: flex; align-items: center; justify-content: center;
@@ -230,8 +228,6 @@
             .action-area { width: 100%; }
             .btn-validate { width: 100%; } 
             .input-group-title { width: 100%; }
-            
-            /* Responsive Upload Button: Cache le texte sur mobile */
             .upload-label span.label-text { display: none; }
         }
     </style>
@@ -275,6 +271,8 @@
                         </label>
                     </div>
                     <div class="form-row"><label>Nom Affiché</label><input type="text" id="field-name" oninput="autoSave('profiles', null, 'name', this.value)"></div>
+                    <div class="form-row"><label>Titre (en gras)</label><input type="text" id="field-title" placeholder="Ex: Bienvenue, ou Jean Dupont..." oninput="autoSave('profiles', null, 'title', this.value)"></div>
+                    
                     <div class="form-row"><label>Biographie</label><textarea id="field-bio" rows="6" oninput="autoSave('profiles', null, 'bio', this.value)"></textarea></div>
                 </div>
                 <div class="scroll-spacer"></div>
@@ -441,13 +439,11 @@
         
         if (!profileData.config) profileData.config = DEFAULT_CONFIG;
         
-        // Update Mobile Link
         const viewSiteLink = document.getElementById('mobile-view-site');
         if(viewSiteLink) viewSiteLink.href = `index.html?prof=${profileData.slug||profileData.id}`;
 
         fillProfileUI();
 
-        // Ajout du tri par 'position'
         const [resCourses, resPubs, resInter] = await Promise.allSettled([
             sb.from('courses').select('*').eq('prof_id', uid).order('position', { ascending: true }).order('created_at', { ascending: false }),
             sb.from('publications').select('*').eq('prof_id', uid).order('position', { ascending: true }).order('created_at', { ascending: false }),
@@ -466,6 +462,9 @@
     function fillProfileUI() {
         if(!profileData) return;
         document.getElementById('field-name').value = profileData.name || '';
+        // AJOUT : CHARGEMENT DU TITRE
+        if(document.getElementById('field-title')) document.getElementById('field-title').value = profileData.title || '';
+        
         document.getElementById('field-bio').value = profileData.bio || '';
         if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
