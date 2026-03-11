@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin Final V35</title>
+    <title>Corpus Digitalis - Admin Final V36</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,7 +27,6 @@
             --input-height: 42px; 
         }
 
-        /* --- GLOBAL RESET & FONTS --- */
         * { box-sizing: border-box; }
         
         body { 
@@ -38,12 +37,10 @@
         input, textarea, select, button { font-family: 'Inter', sans-serif; }
         textarea { font-size: 0.9rem; line-height: 1.5; }
 
-        /* Animation de chargement pour les boutons */
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .spin { animation: spin 1s linear infinite; }
         button:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        /* --- SIDEBAR & HEADER --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; width: 100%; }
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
@@ -65,7 +62,6 @@
         .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; flex-shrink: 0; }
         .logout-btn { margin-top: auto; margin-bottom: 40px; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; flex-shrink: 0; }
 
-        /* --- LAYOUT PRO --- */
         .wrapper { 
             display: flex; flex: 1; position: relative; background: var(--bg-body);
             height: calc(100vh - 20px); margin: 10px 0 10px 0; 
@@ -86,7 +82,6 @@
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
         .page-desc { color: #64748b; font-size: 0.9rem; margin-top: 5px; max-width: 600px; line-height: 1.5; }
 
-        /* --- UI ELEMENTS --- */
         .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .form-row { margin-bottom: 20px; width: 100%; }
         label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); letter-spacing: 0.05em; }
@@ -108,7 +103,7 @@
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
 
-        /* --- NOUVEAU SYSTÈME ACCORDÉON FLUIDE (CSS GRID) --- */
+        /* ACCORDIONS */
         .item-card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; transition: 0.2s; }
         .item-header { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; background: white; user-select: none; }
         .item-header:hover { background: #fafafa; }
@@ -130,22 +125,15 @@
         
         .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed #94a3b8; }
 
-        /* --- BADGES --- */
+        /* BADGES */
         .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; min-width: 0; overflow: hidden; }
-        .file-badge, .link-badge { 
-            display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; 
-            border-radius: 6px; font-size: 0.85rem; font-weight: 600; 
-            max-width: 100%; overflow: hidden; box-sizing: border-box; text-decoration: none; 
-            min-width: 0; white-space: nowrap;
-        }
+        .file-badge, .link-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; max-width: 100%; overflow: hidden; box-sizing: border-box; text-decoration: none; min-width: 0; white-space: nowrap; }
         .file-badge { background: var(--accent-green-light); border: 1px solid #bbf7d0; color: #15803d; }
         .link-badge { background: var(--accent-blue-light); border: 1px solid #bfdbfe; color: #2563eb; }
         .file-badge i, .file-badge svg, .link-badge i, .link-badge svg { flex-shrink: 0; }
-        .file-badge span, .link-badge span { 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; max-width: 100%; flex-shrink: 1;
-        }
+        .file-badge span, .link-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; max-width: 100%; flex-shrink: 1; }
 
-        /* --- COURSES & DOCUMENTS --- */
+        /* COURSES & DOCUMENTS */
         .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
         .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .section-title-input { background: transparent; border: 1px solid transparent; font-weight: 700; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; width: auto; transition: 0.2s; border-radius: 4px; }
@@ -153,8 +141,6 @@
         .section-title-input:focus { background: white; border-color: var(--accent); box-shadow: none; }
         .section-content { padding: 12px; }
         
-        .course-row-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; min-width: 0; }
-
         .resource-row { display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; }
         .type-selector { display: flex; background: #f1f5f9; padding: 3px; border-radius: 6px; flex-shrink: 0; height: var(--input-height); width: 30%; min-width: 180px; }
         .type-btn { border: none; background: transparent; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; min-width: 0; }
@@ -166,18 +152,9 @@
         .link-input-wrapper input { height: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; width: 100%; }
 
         .upload-btn-wrapper { width: 100%; height: 100%; display: none; }
-        .upload-label { 
-            display: flex; align-items: center; justify-content: center; 
-            gap: 8px; width: 100%; height: 100%; padding: 0 15px; 
-            background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; 
-            border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; 
-            transition: 0.2s; box-sizing: border-box; overflow: hidden; min-width: 0;
-            white-space: nowrap; 
-        }
+        .upload-label { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 100%; padding: 0 15px; background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; box-sizing: border-box; overflow: hidden; min-width: 0; white-space: nowrap; }
         .upload-label i, .upload-label svg { flex-shrink: 0; }
-        .upload-label .label-text {
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; max-width: 100%; flex-shrink: 1;
-        }
+        .upload-label .label-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; max-width: 100%; flex-shrink: 1; }
         .upload-label:hover { background: #dcfce7; }
         .upload-label.loading { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
         .hidden-input { display: none; }
@@ -187,24 +164,13 @@
         .resource-row.mode-file .link-input-wrapper { display: none; }
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
         
-        /* --- PERSONNALISATION LISTS --- */
         .config-list-container { display: flex; flex-direction: column; gap: 8px; }
-        .config-item { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 10px 15px; 
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
-            transition: 0.2s; min-height: 40px;
-        }
+        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; transition: 0.2s; min-height: 40px; }
         .config-item:hover { border-color: #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .config-item.hidden-item { opacity: 0.7; background: #f8fafc; border-style: dashed; }
         .config-item span { font-weight: 600; font-size: 0.9rem; color: #334155; display: flex; align-items: center; gap: 10px; }
         
-        .config-toggle-btn {
-            width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; cursor: pointer; border: 1px solid transparent;
-            background: #f1f5f9; color: #64748b; transition: 0.2s;
-        }
+        .config-toggle-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: #f1f5f9; color: #64748b; transition: 0.2s; }
         .config-toggle-btn:hover { background: #e2e8f0; color: #334155; }
         .config-toggle-btn.active { background: #eff6ff; color: #3b82f6; border-color: #bfdbfe; }
         .config-toggle-btn.off { color: #cbd5e1; }
@@ -212,7 +178,6 @@
         .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
-        /* --- PREVIEW SIDE --- */
         .preview-side { width: 550px; background: #f1f5f9; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .computer-wrapper { width: 1366px; height: 768px; background: white; border-radius: 8px; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15); transform: scale(0.38); transform-origin: center center; display: flex; flex-direction: column; overflow: hidden; }
         .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; gap: 12px; }
@@ -220,7 +185,6 @@
         iframe { width: 100%; flex: 1; border: none; background: white; }
         .hidden { display: none !important; }
         
-        /* --- TOAST SYSTEM --- */
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 999; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #toast.visible { transform: translateX(-50%) translateY(0); }
         #toast.error { background: #ef4444; }
@@ -228,7 +192,7 @@
 
         @media (max-width: 1200px) { .preview-side { display: none; } }
         
-        /* --- RESPONSIVE MOBILE FIX ULTIME --- */
+        /* RESPONSIVE MOBILE */
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); overflow-x: hidden; }
             .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; width: 100%; max-width: 100vw; }
@@ -297,14 +261,12 @@
                     <div><h2>Enseignements</h2><p class="subtitle">Structurez vos cours par chapitres.</p></div>
                     <button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence', sections:[{title:'Chapitre 1', items:[]}]}, this)"><i data-lucide="plus"></i> Créer Cours</button>
                 </div>
-                
                 <div class="card" style="margin-bottom: 20px;">
                     <div class="form-row">
                         <label>Texte d'introduction de la page Enseignements</label>
                         <textarea id="field-courses-desc" rows="2" placeholder="Ex: Retrouvez ici tous les supports de mes cours..." oninput="autoSave('profiles', null, 'courses_desc', this.value)"></textarea>
                     </div>
                 </div>
-
                 <div id="courses-container"></div>
                 <div class="scroll-spacer"></div>
             </section>
@@ -314,14 +276,12 @@
                     <div><h2>Publications</h2><p class="subtitle">Vos articles, thèses et ouvrages.</p></div>
                     <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]}, this)"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
-                
                 <div class="card" style="margin-bottom: 20px;">
                     <div class="form-row">
                         <label>Texte d'introduction de la page Publications</label>
                         <textarea id="field-publications-desc" rows="2" placeholder="Ex: Travaux de recherche, articles et ouvrages..." oninput="autoSave('profiles', null, 'publications_desc', this.value)"></textarea>
                     </div>
                 </div>
-
                 <div id="pubs-container"></div>
                 <div class="scroll-spacer"></div>
             </section>
@@ -331,14 +291,12 @@
                     <div><h2>Interventions</h2><p class="subtitle">Colloques, conférences et séminaires.</p></div>
                     <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention', category:'Conférence', event_date: new Date().toISOString().split('T')[0]}, this)"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
-                
                 <div class="card" style="margin-bottom: 20px;">
                     <div class="form-row">
                         <label>Texte d'introduction de la page Interventions</label>
                         <textarea id="field-interventions-desc" rows="2" placeholder="Ex: Liste de mes séminaires et colloques..." oninput="autoSave('profiles', null, 'interventions_desc', this.value)"></textarea>
                     </div>
                 </div>
-
                 <div id="interventions-container"></div>
                 <div class="scroll-spacer"></div>
             </section>
@@ -347,9 +305,7 @@
                 <div class="header-flex">
                     <div>
                         <h2>Personnalisation</h2>
-                        <p class="page-desc">
-                            Personnalisez l'apparence globale de votre site académique. Ces réglages affectent l'en-tête, le pied de page et les mentions légales sur toutes les pages publiques visibles par vos étudiants et collègues.
-                        </p>
+                        <p class="page-desc">Personnalisez l'apparence globale de votre site académique.</p>
                     </div>
                 </div>
                 
@@ -389,9 +345,6 @@
                 <div class="card">
                     <label>Lien de prise de rendez-vous</label>
                     <input id="rdv-url" oninput="saveRDV()" placeholder="https://cal.com/votre-lien">
-                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
-                        <strong>Note :</strong> La gestion des disponibilités et des créneaux horaires s'effectue directement sur la plateforme tierce <strong>Cal.com</strong>.
-                    </p>
                     <label style="margin-top:20px">Texte du bouton</label>
                     <input id="rdv-text" oninput="saveRDV()" placeholder="Prendre rendez-vous">
                 </div>
@@ -478,7 +431,6 @@
         if(document.getElementById('field-title')) document.getElementById('field-title').value = profileData.title || '';
         document.getElementById('field-bio').value = profileData.bio || '';
         
-        // Remplissage des nouvelles descriptions
         if(document.getElementById('field-courses-desc')) document.getElementById('field-courses-desc').value = profileData.courses_desc || '';
         if(document.getElementById('field-publications-desc')) document.getElementById('field-publications-desc').value = profileData.publications_desc || '';
         if(document.getElementById('field-interventions-desc')) document.getElementById('field-interventions-desc').value = profileData.interventions_desc || '';
@@ -520,7 +472,6 @@
         lucide.createIcons();
     }
 
-    // --- ACCORDION MANAGER ---
     window.toggleCard = (elId) => {
         const card = document.getElementById(elId);
         if(card) {
@@ -530,7 +481,6 @@
         }
     }
 
-    // --- DRAG & DROP INIT ---
     function initSortable(containerId, dataKey) {
         const el = document.getElementById(containerId);
         if(!el) return;
@@ -687,20 +637,25 @@
                             </div>
                             
                             <label>Document associé</label>
-                            <div class="resource-row mode-${mode}" style="margin-top: 5px; padding: 15px; padding-right: 55px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
-                                <div class="type-selector">
-                                    <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
-                                    <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
-                                </div>
-                                <div class="action-area">
-                                    <div class="link-input-wrapper">
-                                        <input type="url" class="form-input" value="${mode === 'link' ? (pub.link_value || '') : ''}" placeholder="Lien vers la publication (ex: https://doi.org/...)" oninput="autoSave('publications', '${pub.id}', 'link_value', this.value)">
+                            <div style="margin-top: 5px; padding: 15px; padding-right: 55px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
+                                
+                                <input type="text" class="form-input" value="${pub.link_label || ''}" placeholder="Texte du bouton (optionnel, ex: Lire l'article)" oninput="autoSave('publications', '${pub.id}', 'link_label', this.value)" style="margin-bottom: 12px; font-weight: 600;">
+
+                                <div class="resource-row mode-${mode}">
+                                    <div class="type-selector">
+                                        <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
+                                        <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
                                     </div>
-                                    <div class="upload-btn-wrapper">
-                                        <label class="upload-label" id="lbl-up-pub-${pub.id}">
-                                            <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && pub.link_value ? getCleanFileName(pub.link_value) : 'Parcourir le PDF...'}</span>
-                                            <input type="file" class="hidden-input" onchange="uploadSimpleFile('publications', '${pub.id}', this, 'lbl-up-pub-${pub.id}')">
-                                        </label>
+                                    <div class="action-area">
+                                        <div class="link-input-wrapper">
+                                            <input type="url" class="form-input" value="${mode === 'link' ? (pub.link_value || '') : ''}" placeholder="Lien vers la publication (ex: https://doi.org/...)" oninput="autoSave('publications', '${pub.id}', 'link_value', this.value)">
+                                        </div>
+                                        <div class="upload-btn-wrapper">
+                                            <label class="upload-label" id="lbl-up-pub-${pub.id}">
+                                                <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && pub.link_value ? getCleanFileName(pub.link_value) : 'Parcourir le PDF...'}</span>
+                                                <input type="file" class="hidden-input" onchange="uploadSimpleFile('publications', '${pub.id}', this, 'lbl-up-pub-${pub.id}')">
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 ${pub.link_value ? `<button class="btn-square delete" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="deleteSimpleDoc('publications', '${pub.id}')" title="Supprimer le document"><i data-lucide="trash-2" size="16"></i></button>` : ''}
@@ -764,20 +719,25 @@
                             </div>
 
                             <label>Support (Lien ou PDF)</label>
-                            <div class="resource-row mode-${mode}" style="margin-top: 5px; padding: 15px; padding-right: 55px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
-                                <div class="type-selector">
-                                    <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
-                                    <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
-                                </div>
-                                <div class="action-area">
-                                    <div class="link-input-wrapper">
-                                        <input type="url" class="form-input" value="${mode === 'link' ? (inter.link_value || '') : ''}" placeholder="Lien vers le support (ex: Youtube...)" oninput="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                            <div style="margin-top: 5px; padding: 15px; padding-right: 55px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
+                                
+                                <input type="text" class="form-input" value="${inter.link_label || ''}" placeholder="Texte du bouton (optionnel, ex: Voir la vidéo)" oninput="autoSave('interventions', '${inter.id}', 'link_label', this.value)" style="margin-bottom: 12px; font-weight: 600;">
+
+                                <div class="resource-row mode-${mode}">
+                                    <div class="type-selector">
+                                        <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
+                                        <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
                                     </div>
-                                    <div class="upload-btn-wrapper">
-                                        <label class="upload-label" id="lbl-up-inter-${inter.id}">
-                                            <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && inter.link_value ? getCleanFileName(inter.link_value) : 'Parcourir pour PDF...'}</span>
-                                            <input type="file" class="hidden-input" onchange="uploadSimpleFile('interventions', '${inter.id}', this, 'lbl-up-inter-${inter.id}')">
-                                        </label>
+                                    <div class="action-area">
+                                        <div class="link-input-wrapper">
+                                            <input type="url" class="form-input" value="${mode === 'link' ? (inter.link_value || '') : ''}" placeholder="Lien vers le support (ex: Youtube...)" oninput="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                                        </div>
+                                        <div class="upload-btn-wrapper">
+                                            <label class="upload-label" id="lbl-up-inter-${inter.id}">
+                                                <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && inter.link_value ? getCleanFileName(inter.link_value) : 'Parcourir pour PDF...'}</span>
+                                                <input type="file" class="hidden-input" onchange="uploadSimpleFile('interventions', '${inter.id}', this, 'lbl-up-inter-${inter.id}')">
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 ${inter.link_value ? `<button class="btn-square delete" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="deleteSimpleDoc('interventions', '${inter.id}')" title="Supprimer le document"><i data-lucide="trash-2" size="16"></i></button>` : ''}
@@ -887,9 +847,9 @@
 
     window.deleteSimpleDoc = async (table, id) => {
         if(!confirm("Supprimer ce document ?")) return;
-        await sb.from(table).update({ link_value: '', link_type: 'link' }).eq('id', id);
+        await sb.from(table).update({ link_value: '', link_type: 'link', link_label: '' }).eq('id', id);
         const item = profileData[table].find(x => x.id === id);
-        item.link_value = ''; item.link_type = 'link';
+        item.link_value = ''; item.link_type = 'link'; item.link_label = '';
         if(table === 'publications') renderPublications(); else renderInterventions();
         reloadPreview();
     }
@@ -991,7 +951,7 @@
     // --- COMMON HELPERS ---
     window.createItem = async (t, d, btn) => { 
         d.prof_id = profileData.id;
-        d.position = -1; // Top
+        d.position = -1; 
         
         const originalText = btn.innerHTML;
         btn.disabled = true;
@@ -1059,7 +1019,6 @@
         }
     }
 
-    // --- RESTORATION DE LA LOGIQUE "BARRES" POUR LE HEADER/FOOTER ---
     function renderHeaderConfig() {
         const container = document.getElementById('header-config-container');
         const h = profileData.config.header || DEFAULT_CONFIG.header;
