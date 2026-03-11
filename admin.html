@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin Final V31</title>
+    <title>Corpus Digitalis - Admin Final V33</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -117,6 +117,21 @@
         
         .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed #94a3b8; }
 
+        /* --- BADGES (Files & Links) : ANTI-DÉBORDEMENT ABSOLU --- */
+        .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; min-width: 0; overflow: hidden; }
+        .file-badge, .link-badge { 
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; 
+            border-radius: 6px; font-size: 0.85rem; font-weight: 600; 
+            max-width: 100%; overflow: hidden; box-sizing: border-box; text-decoration: none; 
+            min-width: 0; white-space: nowrap;
+        }
+        .file-badge { background: var(--accent-green-light); border: 1px solid #bbf7d0; color: #15803d; }
+        .link-badge { background: var(--accent-blue-light); border: 1px solid #bfdbfe; color: #2563eb; }
+        .file-badge i, .file-badge svg, .link-badge i, .link-badge svg { flex-shrink: 0; } /* Protège l'icône */
+        .file-badge span, .link-badge span { 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; max-width: 100%; flex-shrink: 1;
+        }
+
         /* --- COURSES & DOCUMENTS --- */
         .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
         .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
@@ -124,6 +139,8 @@
         .section-title-input:hover { border-color: #cbd5e1; background: white; }
         .section-title-input:focus { background: white; border-color: var(--accent); box-shadow: none; }
         .section-content { padding: 12px; }
+        
+        .course-row-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; min-width: 0; }
 
         /* L'ESTHÉTIQUE "LIGNE PRO 30/70" */
         .resource-row { display: flex; align-items: center; gap: 10px; width: 100%; }
@@ -137,12 +154,25 @@
         .link-input-wrapper input { height: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; width: 100%; }
 
         .upload-btn-wrapper { width: 100%; height: 100%; display: none; }
+
+        /* CORRECTION BOUTON UPLOAD : Anti-débordement avec "..." garanti */
         .upload-label { 
             display: flex; align-items: center; justify-content: center; 
             gap: 8px; width: 100%; height: 100%; padding: 0 15px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; 
             border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; 
-            transition: 0.2s; box-sizing: border-box; overflow: hidden; 
+            transition: 0.2s; box-sizing: border-box; overflow: hidden; min-width: 0;
+            white-space: nowrap; /* Interdit le saut de ligne formellement */
+        }
+        .upload-label i, .upload-label svg { flex-shrink: 0; } /* Protège l'icône Lucide */
+        .upload-label .label-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            min-width: 0;
+            max-width: 100%;
+            flex-shrink: 1;
         }
         .upload-label:hover { background: #dcfce7; }
         .upload-label.loading { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
@@ -207,12 +237,13 @@
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
             
-            /* Les blocs "Lien / Fichier" s'empilent sur mobile ! */
+            /* Sur mobile, on empile les blocs "Lien / Fichier" */
             .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
             .type-selector { width: 100%; max-width: 100%; }
             .action-area { width: 100%; }
             
-            .upload-label span.label-text { display: none; } /* Cache le texte trop long sur mobile */
+            /* Note: J'ai retiré le display:none qui cachait le texte sur mobile. 
+               Désormais, grâce au text-overflow: ellipsis, il s'affiche parfaitement avec "..." ! */
         }
     </style>
 </head>
@@ -426,7 +457,6 @@
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         
-        // CV (Nouveau Design Auto-Save Ligne Unique)
         const cvUrl = profileData.cv_url || '';
         const cvMode = isSupabaseUrl(cvUrl) ? 'file' : 'link';
         
@@ -486,7 +516,7 @@
         reloadPreview();
     }
 
-    // --- COURSES RENDER (LE CŒUR DU NOUVEAU SYSTÈME AUTO-SAVE) ---
+    // --- COURSES RENDER (MOTEUR AUTO-SAVE) ---
     function renderCourses() {
         const c = document.getElementById('courses-container');
         if(!profileData.courses?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; return; }
@@ -818,7 +848,6 @@
         }, 1000);
     }
 
-    // Auto-save invisible (sans recharger la zone pour ne pas perdre le focus)
     window.autoSaveCourseItem = (cid, sIdx, iIdx, field, val) => {
         clearTimeout(saveTimer);
         saveTimer = setTimeout(async () => {
@@ -833,10 +862,10 @@
         const c = profileData.courses.find(x => x.id === cid);
         c.sections[sIdx].items[iIdx].type = mode;
         if(mode === 'link' && isSupabaseUrl(c.sections[sIdx].items[iIdx].value)) {
-            c.sections[sIdx].items[iIdx].value = ''; // Clean l'URL du fichier si on repasse en lien
+            c.sections[sIdx].items[iIdx].value = ''; 
         }
         await sb.from('courses').update({ sections: c.sections }).eq('id', cid);
-        renderCourses(); reloadPreview(); // Le rechargement est ok ici car c'est un clic bouton
+        renderCourses(); reloadPreview();
     }
 
     window.uploadCourseItemFile = async (cid, sIdx, iIdx, input, lblWrapperId) => {
@@ -873,7 +902,6 @@
 
     window.addNewItemSlot = async (cid, sIdx, btn) => {
         const c = profileData.courses.find(x => x.id === cid);
-        // Ajoute un bloc vide à la section
         c.sections[sIdx].items.push({ label: '', type: 'link', value: '' });
 
         const originalText = btn.innerHTML;
@@ -883,7 +911,7 @@
 
         await sb.from('courses').update({ sections: c.sections }).eq('id', cid);
         openCourseId = cid;
-        renderCourses(); // Affiche instantanément la nouvelle zone de texte
+        renderCourses(); 
         reloadPreview();
     }
 
