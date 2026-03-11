@@ -12,30 +12,11 @@
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
-        .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 3rem; color: #1a1a1a; }
+        .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; }
         
-        /* --- NIVEAU 1 : CARTE DE COURS --- */
-        .course-card { 
-            background: white; 
-            border-radius: 12px; 
-            border: 1px solid #e0e0e0; 
-            margin-bottom: 20px; 
-            overflow: hidden; 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); 
-        }
-        
-        .course-header { 
-            background: #fefaf5; 
-            padding: 20px 25px; 
-            border-bottom: 1px solid transparent; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            cursor: pointer; 
-            transition: background 0.2s ease, border-color 0.3s ease;
-            user-select: none;
-        }
-        
+        .course-card { background: white; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); }
+        .course-header { background: #fefaf5; padding: 20px 25px; border-bottom: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s ease, border-color 0.3s ease; user-select: none; }
         .course-header:hover { background: #f5f0ea; }
         .course-header.open { border-bottom-color: #e0e0e0; }
 
@@ -43,69 +24,26 @@
         .course-title { font-size: 1.3rem; color: #1a1a1a; margin: 0; }
         .course-badge { background: #1a1a1a; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; letter-spacing: 0.05em; }
 
-        /* --- NIVEAU 2 : CARTE DE SECTION --- */
         .course-body { padding: 10px 25px 25px 25px; background: #fff; }
         
-        .section-card {
-            border: 1px solid #f0f0f0;
-            border-radius: 8px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-        
-        .section-header {
-            padding: 15px 20px;
-            background: #fafafa;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.2s ease;
-            user-select: none;
-        }
-        
+        .section-card { border: 1px solid #f0f0f0; border-radius: 8px; margin-top: 15px; overflow: hidden; }
+        .section-header { padding: 15px 20px; background: #fafafa; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s ease; user-select: none; }
         .section-header:hover { background: #f1f1f1; }
         .section-header.open { border-bottom: 1px solid #f0f0f0; }
         .section-title { font-size: 1.05rem; font-weight: 600; color: #333; margin: 0; }
-        
         .section-body { padding: 15px 20px; background: #fff; }
 
-        /* --- ANIMATIONS MAGIQUES (CSS GRID) --- */
-        .accordion-grid {
-            display: grid;
-            grid-template-rows: 0fr; 
-            transition: grid-template-rows 0.35s ease-out;
-        }
-        .accordion-grid.open {
-            grid-template-rows: 1fr; 
-        }
-        .accordion-inner {
-            overflow: hidden; 
-        }
+        .accordion-grid { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease-out; }
+        .accordion-grid.open { grid-template-rows: 1fr; }
+        .accordion-inner { overflow: hidden; }
 
-        /* CORRECTION ROTATION : Ciblage strict pour éviter les bugs d'héritage */
-        .chevron { 
-            transition: transform 0.35s ease; 
-            color: #888; 
-            transform-origin: center;
-        }
-        .course-header.open .chevron,
-        .section-header.open .chevron { 
-            transform: rotate(180deg); 
-            color: #1a1a1a; 
-        }
+        .chevron { transition: transform 0.35s ease; color: #888; transform-origin: center; }
+        .course-header.open .chevron, .section-header.open .chevron { transform: rotate(180deg); color: #1a1a1a; }
 
-        /* --- DOCUMENTS --- */
         .resource-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
-        .resource-links li a { 
-            display: flex; align-items: center; gap: 12px; 
-            padding: 12px 18px; background: #fff; border: 1px solid #e0e0e0; 
-            border-radius: 8px; text-decoration: none; color: #1a1a1a; 
-            transition: transform 0.2s ease, border-color 0.2s ease; 
-        }
+        .resource-links li a { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; text-decoration: none; color: #1a1a1a; transition: transform 0.2s ease, border-color 0.2s ease; }
         .resource-links li a:hover { border-color: #1a1a1a; transform: translateX(5px); }
         .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
-
     </style>
 </head>
 <body>
@@ -120,8 +58,24 @@
     <div class="container">
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Enseignements</h1>
+            <p class="intro-text" id="page-desc"></p>
+
             <div id="courses-container">
-                <p class="empty-msg">Chargement des enseignements...</p>
+                <div class="skeleton-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div class="skeleton" style="width: 40%; height: 1.5rem;"></div>
+                        <div class="skeleton skeleton-badge"></div>
+                    </div>
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text short"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div class="skeleton" style="width: 30%; height: 1.5rem;"></div>
+                        <div class="skeleton skeleton-badge"></div>
+                    </div>
+                    <div class="skeleton skeleton-text"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -134,18 +88,22 @@
     <script type="module">
         import { initLayout, supabase } from './theme.js';
 
-        // Fonction globale attachée à window pour gérer le clic sur les menus déroulants
         window.toggleAccordion = function(headerEl, bodyId) {
             const bodyEl = document.getElementById(bodyId);
-            // Alterne la classe "open" sur le header (pour tourner la flèche)
             headerEl.classList.toggle('open');
-            // Alterne la classe "open" sur la grille (pour déclencher l'animation fluide)
             bodyEl.classList.toggle('open');
         };
 
         async function loadCourses() {
             const prof = await initLayout();
             if (!prof) return;
+
+            const descEl = document.getElementById('page-desc');
+            if(prof.courses_desc) {
+                descEl.innerText = prof.courses_desc;
+            } else {
+                descEl.style.display = 'none'; 
+            }
 
             const { data: courses, error } = await supabase
                 .from('courses')
@@ -182,7 +140,6 @@
                         itemsHtml = '<li style="color:#888; font-size:0.9rem; padding-left: 10px;">Aucun document dans cette section.</li>';
                     }
 
-                    // Sous-menu déroulant pour chaque section
                     sectionsHtml += `
                         <div class="section-card">
                             <div class="section-header" onclick="toggleAccordion(this, 'sec-body-${course.id}-${secIdx}')">
@@ -200,12 +157,10 @@
                     `;
                 });
 
-                // Le tout premier cours est ouvert par défaut pour que la page ne semble pas vide
                 const isOpenClass = courseIndex === 0 ? 'open' : '';
 
                 container.innerHTML += `
                     <div class="course-card">
-                        
                         <div class="course-header ${isOpenClass}" onclick="toggleAccordion(this, 'course-body-${course.id}')">
                             <div class="course-title-wrap">
                                 <h2 class="course-title">${course.title}</h2>
@@ -213,7 +168,6 @@
                             </div>
                             <i data-lucide="chevron-down" class="chevron"></i>
                         </div>
-
                         <div class="accordion-grid ${isOpenClass}" id="course-body-${course.id}">
                             <div class="accordion-inner">
                                 <div class="course-body">
@@ -221,12 +175,10 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 `;
             });
             
-            // Initialise les icônes Lucide une fois le HTML généré
             lucide.createIcons();
         }
 
