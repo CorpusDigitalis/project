@@ -15,7 +15,6 @@
   <header>
     <nav>
       <a href="#" class="site-name no-animation">...</a>
-      
       <div class="dynamic-nav" id="header-menu"></div>
     </nav>
   </header>
@@ -23,14 +22,20 @@
   <div class="container">
     <div class="hero-section">
       
+      <div id="skeleton-img" class="skeleton skeleton-img"></div>
       <img id="profil-img" src="" alt="Portrait" style="display: none;" />
       
-      <div class="description">
-        <h1 id="main-title">Chargement...</h1>
+      <div class="description" id="skeleton-desc">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text short"></div>
+      </div>
 
-        <p id="profil-desc">
-          Chargement des informations du profil...
-        </p>
+      <div class="description" id="real-desc" style="display: none;">
+        <h1 id="main-title"></h1>
+        <p id="profil-desc"></p>
       </div>
 
     </div>
@@ -38,7 +43,6 @@
 
   <footer>
       <div class="footer-links" id="footer-list"></div>
-      
       <div class="corpus-tm">™ CorpusDigitalis</div>
   </footer>
 
@@ -49,6 +53,11 @@
         const prof = await initLayout();
         if (!prof) return;
 
+        // Disparition des Skeletons, apparition des vraies données
+        document.getElementById('skeleton-img').style.display = 'none';
+        document.getElementById('skeleton-desc').style.display = 'none';
+        document.getElementById('real-desc').style.display = 'flex';
+
         // 1. Image
         const imgEl = document.getElementById('profil-img');
         if (prof.image_url) {
@@ -56,7 +65,7 @@
             imgEl.style.display = 'block';
         }
 
-        // 2. Titre (en gras) personnalisé
+        // 2. Titre
         const titleEl = document.getElementById('main-title');
         if (prof.title) {
             titleEl.innerText = prof.title;
@@ -64,7 +73,7 @@
             titleEl.innerText = prof.name; 
         }
 
-        // 3. Bio : Utilisation de innerText (méthode la plus propre et sécurisée)
+        // 3. Bio
         const bioEl = document.getElementById('profil-desc');
         if (prof.bio) {
             bioEl.innerText = prof.bio;
