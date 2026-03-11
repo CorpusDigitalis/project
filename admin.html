@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin Final V34</title>
+    <title>Corpus Digitalis - Admin Final V35</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -28,12 +28,12 @@
         }
 
         /* --- GLOBAL RESET & FONTS --- */
-        * { box-sizing: border-box; } /* Crucial pour la responsivité absolue */
+        * { box-sizing: border-box; }
         
         body { 
             font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); 
             margin: 0; display: flex; height: 100vh; overflow: hidden; 
-            overflow-x: hidden; /* Verrou anti-scroll horizontal */
+            overflow-x: hidden;
         }
         input, textarea, select, button { font-family: 'Inter', sans-serif; }
         textarea { font-size: 0.9rem; line-height: 1.5; }
@@ -119,11 +119,9 @@
         .item-title { flex: 1; font-weight: 600; color: #334155; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .item-badge { font-size: 0.7rem; background: #f1f5f9; color: #64748b; padding: 4px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
         
-        /* Rotation de la flèche ultra propre */
         .item-card .chevron { transition: transform 0.35s ease; color: #cbd5e1; flex-shrink: 0; transform-origin: center; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
         
-        /* Grille Magique pour le menu déroulant */
         .accordion-grid { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease-out; }
         .item-card.open .accordion-grid { grid-template-rows: 1fr; }
         .accordion-inner { overflow: hidden; }
@@ -132,7 +130,7 @@
         
         .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed #94a3b8; }
 
-        /* --- BADGES (Files & Links) : ANTI-DÉBORDEMENT ABSOLU --- */
+        /* --- BADGES --- */
         .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; min-width: 0; overflow: hidden; }
         .file-badge, .link-badge { 
             display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; 
@@ -157,7 +155,6 @@
         
         .course-row-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; min-width: 0; }
 
-        /* L'ESTHÉTIQUE "LIGNE PRO 30/70" */
         .resource-row { display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; }
         .type-selector { display: flex; background: #f1f5f9; padding: 3px; border-radius: 6px; flex-shrink: 0; height: var(--input-height); width: 30%; min-width: 180px; }
         .type-btn { border: none; background: transparent; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; min-width: 0; }
@@ -169,8 +166,6 @@
         .link-input-wrapper input { height: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; width: 100%; }
 
         .upload-btn-wrapper { width: 100%; height: 100%; display: none; }
-
-        /* UPLOAD BOUTON: Anti-débordement avec "..." */
         .upload-label { 
             display: flex; align-items: center; justify-content: center; 
             gap: 8px; width: 100%; height: 100%; padding: 0 15px; 
@@ -246,7 +241,6 @@
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
             
-            /* Les blocs "Lien / Fichier" s'empilent proprement sans déborder */
             .resource-row { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
             .type-selector { width: 100% !important; min-width: 0 !important; }
             .action-area { width: 100% !important; }
@@ -303,6 +297,14 @@
                     <div><h2>Enseignements</h2><p class="subtitle">Structurez vos cours par chapitres.</p></div>
                     <button class="btn-primary" onclick="createItem('courses', {title:'Nouveau Cours', category:'Licence', sections:[{title:'Chapitre 1', items:[]}]}, this)"><i data-lucide="plus"></i> Créer Cours</button>
                 </div>
+                
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="form-row">
+                        <label>Texte d'introduction de la page Enseignements</label>
+                        <textarea id="field-courses-desc" rows="2" placeholder="Ex: Retrouvez ici tous les supports de mes cours..." oninput="autoSave('profiles', null, 'courses_desc', this.value)"></textarea>
+                    </div>
+                </div>
+
                 <div id="courses-container"></div>
                 <div class="scroll-spacer"></div>
             </section>
@@ -312,6 +314,14 @@
                     <div><h2>Publications</h2><p class="subtitle">Vos articles, thèses et ouvrages.</p></div>
                     <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]}, this)"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
+                
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="form-row">
+                        <label>Texte d'introduction de la page Publications</label>
+                        <textarea id="field-publications-desc" rows="2" placeholder="Ex: Travaux de recherche, articles et ouvrages..." oninput="autoSave('profiles', null, 'publications_desc', this.value)"></textarea>
+                    </div>
+                </div>
+
                 <div id="pubs-container"></div>
                 <div class="scroll-spacer"></div>
             </section>
@@ -321,6 +331,14 @@
                     <div><h2>Interventions</h2><p class="subtitle">Colloques, conférences et séminaires.</p></div>
                     <button class="btn-primary" onclick="createItem('interventions', {title:'Nouvelle Intervention', category:'Conférence', event_date: new Date().toISOString().split('T')[0]}, this)"><i data-lucide="plus"></i> Ajouter</button>
                 </div>
+                
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="form-row">
+                        <label>Texte d'introduction de la page Interventions</label>
+                        <textarea id="field-interventions-desc" rows="2" placeholder="Ex: Liste de mes séminaires et colloques..." oninput="autoSave('profiles', null, 'interventions_desc', this.value)"></textarea>
+                    </div>
+                </div>
+
                 <div id="interventions-container"></div>
                 <div class="scroll-spacer"></div>
             </section>
@@ -401,8 +419,6 @@
     };
 
     let profileData = null, saveTimer = null;
-    
-    // Système de mémoire pour garder les accordéons ouverts même après une sauvegarde !
     let openCards = new Set(); 
 
     // --- UTILS ---
@@ -461,11 +477,16 @@
         document.getElementById('field-name').value = profileData.name || '';
         if(document.getElementById('field-title')) document.getElementById('field-title').value = profileData.title || '';
         document.getElementById('field-bio').value = profileData.bio || '';
+        
+        // Remplissage des nouvelles descriptions
+        if(document.getElementById('field-courses-desc')) document.getElementById('field-courses-desc').value = profileData.courses_desc || '';
+        if(document.getElementById('field-publications-desc')) document.getElementById('field-publications-desc').value = profileData.publications_desc || '';
+        if(document.getElementById('field-interventions-desc')) document.getElementById('field-interventions-desc').value = profileData.interventions_desc || '';
+
         if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         
-        // --- FIX : BOUTON CORBEILLE CV (Responsif sans déborder) ---
         const cvUrl = profileData.cv_url || '';
         const cvMode = isSupabaseUrl(cvUrl) ? 'file' : 'link';
         
@@ -499,7 +520,7 @@
         lucide.createIcons();
     }
 
-    // --- ACCORDION MANAGER (Fluide et Persistant) ---
+    // --- ACCORDION MANAGER ---
     window.toggleCard = (elId) => {
         const card = document.getElementById(elId);
         if(card) {
@@ -535,14 +556,14 @@
         reloadPreview();
     }
 
-    // --- COURSES RENDER (MOTEUR AUTO-SAVE) ---
+    // --- COURSES RENDER ---
     function renderCourses() {
         const c = document.getElementById('courses-container');
         if(!profileData.courses?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; return; }
         
         c.innerHTML = profileData.courses.map(course => {
             const cardId = `card-${course.id}`;
-            const isOpenClass = openCards.has(cardId) ? 'open' : ''; // Restaure l'état
+            const isOpenClass = openCards.has(cardId) ? 'open' : ''; 
 
             return `
             <div class="item-card ${isOpenClass}" id="${cardId}">
@@ -621,7 +642,7 @@
         initSortable('courses-container', 'courses');
     }
 
-    // --- PUBLICATIONS RENDER (Refonte Auto-Save) ---
+    // --- PUBLICATIONS RENDER ---
     function renderPublications() {
         const c = document.getElementById('pubs-container');
         if(!profileData.publications?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication.</div>'; return; }
@@ -695,7 +716,7 @@
         initSortable('pubs-container', 'publications');
     }
 
-    // --- INTERVENTIONS RENDER (Refonte Auto-Save) ---
+    // --- INTERVENTIONS RENDER ---
     function renderInterventions() {
         const c = document.getElementById('interventions-container');
         if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
@@ -772,8 +793,7 @@
         initSortable('interventions-container', 'interventions');
     }
 
-    // --- ACTIONS CV / PUBLICATIONS / INTERVENTIONS (SIMPLE AUTO-SAVE) ---
-
+    // --- ACTIONS CV / PUBLICATIONS / INTERVENTIONS ---
     window.switchCVDirect = async (mode) => {
         const cvUrl = profileData.cv_url || '';
         const cvIsFile = isSupabaseUrl(cvUrl);
@@ -874,8 +894,7 @@
         reloadPreview();
     }
 
-    // --- ACTIONS COURSES (LE NOUVEAU MOTEUR DIRECT) ---
-    
+    // --- ACTIONS COURSES ---
     window.autoSaveSectionTitle = (cid, sIdx, val) => {
         clearTimeout(saveTimer);
         saveTimer = setTimeout(async () => {
@@ -991,7 +1010,6 @@
             const newItem = data[0];
             profileData[t].unshift(newItem); 
             
-            // Ouvre automatiquement la carte fraîchement créée
             if(t==='courses') { openCards.add(`card-${newItem.id}`); renderCourses(); }
             if(t==='publications') { openCards.add(`pub-${newItem.id}`); renderPublications(); }
             if(t==='interventions') { openCards.add(`inter-${newItem.id}`); renderInterventions(); }
