@@ -4,125 +4,223 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Interventions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+
     <style>
+        .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; }
+        
+        /* --- BARRE DE RECHERCHE ET FILTRES --- */
+        .filter-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e0e0e0;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Alata', sans-serif;
+            color: #1a1a1a;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .search-input:focus { border-color: #1a1a1a; }
+
+        .year-select {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Alata', sans-serif;
+            color: #1a1a1a;
+            background-color: white;
+            outline: none;
+            cursor: pointer;
+            min-width: 150px;
+        }
+        .year-select:focus { border-color: #1a1a1a; }
+
+        /* --- TIMELINE (FRISE CHRONOLOGIQUE) --- */
         .timeline-container { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
-        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
+        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e0e0e0; }
         
         .event-item { position: relative; padding-left: 50px; margin-bottom: 40px; }
         .event-dot { 
             position: absolute; left: 11px; top: 0; width: 20px; height: 20px; 
-            background: #0f172a; border-radius: 50%; border: 4px solid #f8fafc; z-index: 10;
+            background: #1a1a1a; border-radius: 50%; border: 4px solid #fefaf5; z-index: 10;
         }
         
-        .event-date { font-weight: 700; color: #64748b; font-size: 0.9rem; margin-bottom: 5px; }
-        .event-title { font-size: 1.3rem; font-weight: 700; color: #0f172a; margin: 0 0 5px 0; line-height: 1.3; }
-        .event-meta { font-size: 0.9rem; color: #3b82f6; font-weight: 600; margin-bottom: 10px; }
-        .event-desc { color: #475569; line-height: 1.6; margin-bottom: 15px; }
+        .event-date { font-weight: bold; color: #555; font-size: 0.95rem; margin-bottom: 5px; }
+        .event-title { font-size: 1.3rem; font-weight: bold; color: #1a1a1a; margin: 0 0 5px 0; line-height: 1.3; }
+        .event-meta { font-size: 0.95rem; color: #555; margin-bottom: 10px; }
+        .event-desc { color: #444; line-height: 1.6; margin-bottom: 15px; }
         
         .event-link {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 0.9rem; font-weight: 600; color: #0f172a; text-decoration: none; border-bottom: 1px solid transparent;
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.95rem; color: #1a1a1a; text-decoration: none; 
+            border-bottom: 1px solid transparent; transition: border-color 0.2s ease;
         }
-        .event-link:hover { border-bottom-color: #0f172a; }
+        .event-link:hover { border-bottom-color: #1a1a1a; }
 
-        .empty-msg { text-align: center; color: #94a3b8; font-style: italic; margin-top: 4rem; }
+        .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" id="header-logo">MON SITE</div>
         <nav>
-            <ul id="header-menu" class="dynamic-nav"></ul>
+            <a href="#" class="site-name no-animation">...</a>
+            <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
 
     <div class="container">
-        <div style="width: 100%;">
-            <h1 style="text-align: center; margin-bottom: 1rem;">Interventions & Colloques</h1>
-            <p style="text-align: center; color: #64748b; margin-bottom: 3rem;">Conférences, séminaires et prises de parole.</p>
+        <div style="width: 100%; max-width: 900px; margin: 0 auto;">
+            <h1 class="page-title">Interventions</h1>
+            
+            <p class="intro-text" id="page-desc"></p>
+
+            <div class="filter-container" id="filter-box" style="display: none;">
+                <input type="text" id="search-input" class="search-input" placeholder="Rechercher un mot-clé, un lieu...">
+                <select id="year-filter" class="year-select">
+                    <option value="all">Toutes les années</option>
+                    </select>
+            </div>
             
             <div id="timeline-box">
-                <p class="empty-msg">Chargement...</p>
+                <p class="empty-msg">Chargement des interventions...</p>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>© <span id="current-year"></span> <span id="footer-name"></span></p>
-        <nav>
-            <ul id="footer-menu" class="dynamic-nav"></ul>
-        </nav>
+        <div class="footer-links" id="footer-list"></div>
+        <div class="corpus-tm">™ CorpusDigitalis</div>
     </footer>
 
-    <script>
-        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script type="module">
+        import { initLayout, supabase } from './theme.js';
 
-        async function init() {
-            const params = new URLSearchParams(window.location.search);
-            const profParam = params.get('prof');
-            if (!profParam) { document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>"; return; }
+        let allInterventions = []; // On stocke toutes les interventions pour le filtrage en temps réel
 
-            let query = sb.from('profiles').select('*, interventions(*)');
-            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
-            query = isUUID ? query.eq('id', profParam) : query.eq('slug', profParam);
+        async function loadInterventions() {
+            const prof = await initLayout();
+            if (!prof) return;
 
-            const { data: profile, error } = await query.single();
+            // 1. Insertion de la description dynamique
+            const descEl = document.getElementById('page-desc');
+            if(prof.interventions_desc) {
+                descEl.innerText = prof.interventions_desc;
+            } else {
+                descEl.style.display = 'none';
+            }
 
-            if (error || !profile) { document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>"; return; }
+            // 2. Récupération des interventions depuis Supabase
+            const { data: items, error } = await supabase
+                .from('interventions')
+                .select('*')
+                .eq('prof_id', prof.id);
 
-            // Identité
-            document.title = `Interventions - ${profile.name}`;
-            document.getElementById('header-logo').textContent = (profile.name).toUpperCase();
-            document.getElementById('footer-name').textContent = profile.name;
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // Menu
-            const pLink = `?prof=${profParam}`;
-            const conf = profile.config || {};
-            const h = conf.header || {};
-            let hHtml = '';
-            if (h.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
-            if (h.publications) hHtml += `<li><a href="publications.html${pLink}">Publications</a></li>`;
-            if (h.courses) hHtml += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
-            if (h.interventions) hHtml += `<li><a href="interventions.html${pLink}" style="color:white;">Interventions</a></li>`;
-            document.getElementById('header-menu').innerHTML = hHtml;
-
-            const f = conf.footer || {};
-            let fHtml = '';
-            if (f.linkedin && profile.linkedin_url) fHtml += `<li><a href="${profile.linkedin_url}" target="_blank"><i data-lucide="linkedin"></i></a></li>`;
-            if (f.scholar && profile.scholar_url) fHtml += `<li><a href="${profile.scholar_url}" target="_blank"><i data-lucide="graduation-cap"></i></a></li>`;
-            if (f.cv && profile.cv_url) fHtml += `<li><a href="${profile.cv_url}" target="_blank"><i data-lucide="file-text"></i></a></li>`;
-            document.getElementById('footer-menu').innerHTML = fHtml;
-
-            // Affichage Timeline
             const container = document.getElementById('timeline-box');
-            const items = profile.interventions || [];
+            const filterBox = document.getElementById('filter-box');
 
-            if (items.length === 0) {
+            if (error || !items || items.length === 0) {
                 container.innerHTML = "<p class='empty-msg'>Aucune intervention pour le moment.</p>";
                 return;
             }
 
-            // Tri date
+            // 3. Tri chronologique (du plus récent au plus ancien)
             items.sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
+            allInterventions = items; // Sauvegarde globale pour la recherche
+
+            // 4. Génération dynamique des années pour le menu déroulant
+            const yearSelect = document.getElementById('year-filter');
+            const uniqueYears = [...new Set(items.map(item => {
+                return item.event_date ? item.event_date.substring(0, 4) : null;
+            }).filter(Boolean))]; // Extrait l'année (ex: "2024") et retire les vides
+
+            uniqueYears.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+
+            // Affichage de la barre de recherche
+            filterBox.style.display = 'flex';
+
+            // 5. Écouteurs d'événements pour le filtrage en temps réel
+            document.getElementById('search-input').addEventListener('input', applyFilters);
+            yearSelect.addEventListener('change', applyFilters);
+
+            // Premier affichage global
+            renderTimeline(allInterventions);
+        }
+
+        // Fonction qui filtre les résultats à chaque frappe au clavier
+        function applyFilters() {
+            const keyword = document.getElementById('search-input').value.toLowerCase();
+            const selectedYear = document.getElementById('year-filter').value;
+
+            const filteredItems = allInterventions.filter(item => {
+                // Vérification de l'année
+                const itemYear = item.event_date ? item.event_date.substring(0, 4) : '';
+                const matchYear = (selectedYear === 'all') || (itemYear === selectedYear);
+
+                // Vérification du mot-clé PARTOUT (Titre + Description + Lieu + Catégorie)
+                const textToSearch = [
+                    item.title || '',
+                    item.description || '',
+                    item.location || '',
+                    item.category || ''
+                ].join(' ').toLowerCase();
+                
+                const matchKeyword = textToSearch.includes(keyword);
+
+                return matchYear && matchKeyword;
+            });
+
+            renderTimeline(filteredItems);
+        }
+
+        // Fonction qui dessine la frise chronologique
+        function renderTimeline(items) {
+            const container = document.getElementById('timeline-box');
+
+            if (items.length === 0) {
+                container.innerHTML = "<p class='empty-msg'>Aucune intervention ne correspond à votre recherche.</p>";
+                return;
+            }
 
             let html = '<div class="timeline-container"><div class="timeline-line"></div>';
             
             items.forEach(item => {
+                // Date formatée proprement
                 const dateStr = item.event_date ? new Date(item.event_date).toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric'}) : 'Date inconnue';
                 const locationStr = item.location ? `• ${item.location}` : '';
                 
+                // Lien éventuel
                 let linkHtml = '';
                 if(item.link_value) {
                     const label = item.link_type === 'file' ? 'Télécharger le support' : 'Voir le lien';
-                    linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="link" size="14"></i> ${label}</a>`;
+                    const icon = item.link_type === 'file' ? 'file-text' : 'external-link';
+                    linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${icon}" size="18"></i> ${label}</a>`;
                 }
 
                 html += `
@@ -139,10 +237,13 @@
 
             html += '</div>';
             container.innerHTML = html;
+            
+            // On réinitialise les icônes après chaque modification de l'HTML
             lucide.createIcons();
         }
 
-        init();
+        // Lancement !
+        loadInterventions();
     </script>
 </body>
 </html>
