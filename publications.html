@@ -4,142 +4,162 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Publications</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+
     <style>
         /* Styles spécifiques aux publications */
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #64748b; font-size: 1.1rem; }
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .intro-text { 
+            text-align: center; 
+            margin-bottom: 3rem; 
+            color: #555; 
+            font-size: 1.1rem; 
+        }
         
         .categorie-title {
             font-size: 1.5rem;
             margin-top: 4rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e2e8f0;
-            color: #0f172a;
-            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            color: #1a1a1a;
         }
 
+        /* Cartes de publication adoucies pour matcher avec le fond #fefaf5 */
         .publication-item {
             background-color: #ffffff;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            margin-bottom: 1.5rem;
-            border: 1px solid #e2e8f0;
-            transition: 0.2s;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .publication-item:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         
-        .pub-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-        .pub-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
-        .pub-date { font-size: 0.85rem; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; }
+        .publication-item:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); 
+        }
         
-        .pub-desc { color: #475569; line-height: 1.6; margin-bottom: 15px; }
+        .pub-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 12px; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+        }
+        
+        .pub-title { 
+            font-size: 1.15rem; 
+            color: #1a1a1a; 
+            font-weight: bold;
+        }
+        
+        .pub-date { 
+            font-size: 0.85rem; 
+            color: #555; 
+            background: #f5f0ea; 
+            padding: 5px 10px; 
+            border-radius: 6px; 
+            letter-spacing: 0.05em;
+        }
+        
+        .pub-desc { 
+            color: #444; 
+            line-height: 1.6; 
+            margin-bottom: 20px; 
+        }
         
         .pub-link { 
-            display: inline-flex; align-items: center; gap: 6px;
-            text-decoration: none; color: white; background: #0f172a; 
-            padding: 8px 16px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; transition: 0.2s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px;
+            text-decoration: none; 
+            color: white; 
+            background: #1a1a1a; 
+            padding: 10px 18px; 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            transition: transform 0.2s ease, background 0.2s ease; 
         }
-        .pub-link:hover { background: #334155; }
+        
+        .pub-link:hover { 
+            background: #333; 
+            transform: scale(0.97);
+        }
 
-        .empty-msg { text-align: center; color: #94a3b8; font-style: italic; margin-top: 4rem; }
+        .empty-msg { 
+            text-align: center; 
+            color: #888; 
+            font-style: italic; 
+            margin-top: 4rem; 
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" id="header-logo">MON SITE</div>
         <nav>
-            <ul id="header-menu" class="dynamic-nav"></ul>
+            <a href="#" class="site-name no-animation">...</a>
+            <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
 
     <div class="container">
-        <div style="width: 100%;">
-            <h1 style="text-align: center; margin-bottom: 1rem;">Publications</h1>
+        <div style="width: 100%; max-width: 900px; margin: 0 auto;">
+            <h1 class="page-title">Publications</h1>
             <p class="intro-text">Travaux de recherche, articles et ouvrages.</p>
             
             <div id="publications-container">
-                <p class="empty-msg">Chargement...</p>
+                <p class="empty-msg">Chargement des publications...</p>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>© <span id="current-year"></span> <span id="footer-name"></span></p>
-        <nav>
-            <ul id="footer-menu" class="dynamic-nav"></ul>
-        </nav>
+        <div class="footer-links" id="footer-list"></div>
+        <div class="corpus-tm">™ CorpusDigitalis</div>
     </footer>
 
-    <script>
-        const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_MS-dVMY2bgi4ljM4tDTIdg_t4YKb80o';
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script type="module">
+        import { initLayout, supabase } from './theme.js';
 
-        async function init() {
-            // 1. Gestion URL ?prof=...
-            const params = new URLSearchParams(window.location.search);
-            const profParam = params.get('prof');
-            if (!profParam) { document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>"; return; }
+        async function loadPublications() {
+            // 1. Initialise le Layout (Header, Footer, Titre, Couleur de fond...)
+            const prof = await initLayout();
+            if (!prof) return;
 
-            // 2. Récupération Profil + Publications
-            let query = sb.from('profiles').select('*, publications(*)');
-            const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profParam);
-            query = isUUID ? query.eq('id', profParam) : query.eq('slug', profParam);
+            // 2. Récupération des publications
+            const { data: pubs, error } = await supabase
+                .from('publications')
+                .select('*')
+                .eq('prof_id', prof.id);
 
-            const { data: profile, error } = await query.single();
-
-            if (error || !profile) {
-                document.body.innerHTML = "<div style='padding:50px;text-align:center;'>Profil introuvable.</div>";
-                return;
-            }
-
-            // 3. Identité
-            document.title = `Publications - ${profile.name}`;
-            document.getElementById('header-logo').textContent = (profile.name || "Site").toUpperCase();
-            document.getElementById('footer-name').textContent = profile.name;
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-
-            // 4. Menus (Logique Admin V22)
-            const pLink = `?prof=${profParam}`;
-            const conf = profile.config || {};
-            
-            // Header
-            const h = conf.header || {};
-            let hHtml = '';
-            if (h.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
-            if (h.publications) hHtml += `<li><a href="publications.html${pLink}" style="color:white;">Publications</a></li>`;
-            if (h.courses) hHtml += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
-            if (h.interventions) hHtml += `<li><a href="interventions.html${pLink}">Interventions</a></li>`;
-            document.getElementById('header-menu').innerHTML = hHtml;
-
-            // Footer
-            const f = conf.footer || {};
-            let fHtml = '';
-            if (f.linkedin && profile.linkedin_url) fHtml += `<li><a href="${profile.linkedin_url}" target="_blank"><i data-lucide="linkedin"></i></a></li>`;
-            if (f.scholar && profile.scholar_url) fHtml += `<li><a href="${profile.scholar_url}" target="_blank"><i data-lucide="graduation-cap"></i></a></li>`;
-            if (f.cv && profile.cv_url) fHtml += `<li><a href="${profile.cv_url}" target="_blank"><i data-lucide="file-text"></i></a></li>`;
-            document.getElementById('footer-menu').innerHTML = fHtml;
-            lucide.createIcons();
-
-            // 5. Affichage des Publications
             const container = document.getElementById('publications-container');
-            const pubs = profile.publications || [];
 
-            if (pubs.length === 0) {
-                container.innerHTML = "<p class='empty-msg'>Aucune publication pour le moment.</p>";
+            if (error || !pubs || pubs.length === 0) {
+                container.innerHTML = "<p class='empty-msg'>Aucune publication disponible pour le moment.</p>";
                 return;
             }
 
-            // Tri par date
+            // 3. Tri par date (de la plus récente à la plus ancienne)
             pubs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            // Groupement
+            // 4. Groupement par catégorie (Article, Ouvrage, etc.)
             const groupes = pubs.reduce((acc, pub) => {
                 const cat = pub.category || "Autres";
                 if (!acc[cat]) acc[cat] = [];
@@ -149,27 +169,34 @@
 
             container.innerHTML = "";
 
+            // 5. Génération dynamique de l'affichage
             for (const [cat, items] of Object.entries(groupes)) {
+                // Titre de la catégorie
                 const h2 = document.createElement('h2');
                 h2.className = 'categorie-title';
                 h2.textContent = cat;
                 container.appendChild(h2);
 
+                // Cartes des publications pour cette catégorie
                 items.forEach(pub => {
                     const div = document.createElement('div');
                     div.className = 'publication-item';
                     
                     let linkHtml = '';
                     if (pub.link_value) {
-                        const icon = pub.link_type === 'file' ? 'file-text' : 'external-link';
-                        const label = pub.link_type === 'file' ? 'Télécharger PDF' : 'Voir le document';
-                        linkHtml = `<a href="${pub.link_value}" target="_blank" class="pub-link"><i data-lucide="${icon}" size="16"></i> ${label}</a>`;
+                        const isFile = pub.link_type === 'file' || pub.link_value.includes('supabase.co');
+                        const icon = isFile ? 'file-text' : 'external-link';
+                        const label = isFile ? 'Télécharger le PDF' : 'Voir le document';
+                        linkHtml = `<a href="${pub.link_value}" target="_blank" class="pub-link"><i data-lucide="${icon}" size="18"></i> ${label}</a>`;
                     }
+
+                    // Formatage de la date à la française
+                    const dateFormatted = pub.date ? new Date(pub.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' }) : '';
 
                     div.innerHTML = `
                         <div class="pub-header">
                             <span class="pub-title">${pub.title || 'Sans titre'}</span>
-                            ${pub.date ? `<span class="pub-date">${new Date(pub.date).toLocaleDateString('fr-FR')}</span>` : ''}
+                            ${dateFormatted ? `<span class="pub-date">${dateFormatted}</span>` : ''}
                         </div>
                         <p class="pub-desc">${pub.description || ''}</p>
                         ${linkHtml}
@@ -177,10 +204,12 @@
                     container.appendChild(div);
                 });
             }
+
+            // 6. Initialisation des icônes Lucide
             lucide.createIcons();
         }
 
-        init();
+        loadPublications();
     </script>
 </body>
 </html>
