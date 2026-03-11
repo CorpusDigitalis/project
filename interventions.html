@@ -15,54 +15,29 @@
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
         .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; }
         
-        /* --- BARRE DE RECHERCHE ET FILTRES --- */
         .filter-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-            border: 1px solid #e0e0e0;
+            display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;
+            background: white; padding: 15px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); border: 1px solid #e0e0e0;
         }
 
         .search-input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: 'Alata', sans-serif;
-            color: #1a1a1a;
-            outline: none;
-            transition: border-color 0.2s ease;
+            flex: 1; min-width: 200px; padding: 12px 15px; border: 1px solid #e0e0e0;
+            border-radius: 8px; font-size: 1rem; font-family: 'Alata', sans-serif;
+            color: #1a1a1a; outline: none; transition: border-color 0.2s ease;
         }
         .search-input:focus { border-color: #1a1a1a; }
 
-        /* Correction du sélecteur de date (Flèche custom rapprochée) */
         .year-select {
-            padding: 10px 35px 10px 15px; /* Espace à droite pour la flèche custom */
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: 'Alata', sans-serif;
-            color: #1a1a1a;
+            padding: 10px 35px 10px 15px; border: 1px solid #e0e0e0; border-radius: 8px;
+            font-size: 1rem; font-family: 'Alata', sans-serif; color: #1a1a1a;
             background-color: white;
-            /* SVG de la flèche dessiné directement en CSS */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            appearance: none; /* Supprime la flèche moche du navigateur */
-            -webkit-appearance: none;
-            outline: none;
-            cursor: pointer;
+            background-repeat: no-repeat; background-position: right 10px center;
+            appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
         }
         .year-select:focus { border-color: #1a1a1a; }
 
-        /* --- TIMELINE (FRISE CHRONOLOGIQUE) --- */
         .timeline-container { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
         .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e0e0e0; }
         
@@ -77,31 +52,18 @@
         .event-meta { font-size: 0.95rem; color: #555; margin-bottom: 10px; }
         .event-desc { color: #444; line-height: 1.6; margin-bottom: 15px; }
         
-        /* Correction du bouton "sisisi" en belle boîte */
         .event-link {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 8px 16px; background: white; border: 1px solid #e0e0e0; 
             border-radius: 8px; font-size: 0.9rem; font-weight: bold; color: #1a1a1a; 
             text-decoration: none; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            margin-top: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-top: 5px;
         }
-        .event-link:hover { 
-            border-color: #1a1a1a; 
-            transform: translateY(-2px); 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        }
+        .event-link:hover { border-color: #1a1a1a; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
         .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
 
-        /* Le style du surlignage des mots-clés de recherche */
-        mark.highlight {
-            background-color: rgba(250, 204, 21, 0.4);
-            color: inherit;
-            padding: 0 3px;
-            border-radius: 3px;
-            font-weight: inherit;
-        }
+        mark.highlight { background-color: rgba(250, 204, 21, 0.4); color: inherit; padding: 0 3px; border-radius: 3px; font-weight: inherit; }
     </style>
 </head>
 <body>
@@ -116,7 +78,6 @@
     <div class="container">
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Interventions</h1>
-            
             <p class="intro-text" id="page-desc"></p>
 
             <div class="filter-container" id="filter-box" style="display: none;">
@@ -127,7 +88,21 @@
             </div>
             
             <div id="timeline-box">
-                <p class="empty-msg">Chargement des interventions...</p>
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    <div class="skeleton-timeline-item">
+                        <div class="skeleton-timeline-dot"></div>
+                        <div class="skeleton" style="width: 100px; height: 1rem; margin-bottom: 10px;"></div>
+                        <div class="skeleton" style="width: 60%; height: 1.5rem; margin-bottom: 10px;"></div>
+                        <div class="skeleton skeleton-text short"></div>
+                    </div>
+                    <div class="skeleton-timeline-item">
+                        <div class="skeleton-timeline-dot"></div>
+                        <div class="skeleton" style="width: 120px; height: 1rem; margin-bottom: 10px;"></div>
+                        <div class="skeleton" style="width: 50%; height: 1.5rem; margin-bottom: 10px;"></div>
+                        <div class="skeleton skeleton-text shorter"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -142,9 +117,7 @@
 
         let allInterventions = []; 
 
-        function escapeRegExp(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
+        function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
         function highlight(text, keyword) {
             if (!text) return '';
@@ -251,7 +224,6 @@
                     const finalLabel = item.link_label ? item.link_label : defaultLabel;
                     const icon = item.link_type === 'file' ? 'file-text' : 'external-link';
                     
-                    // La classe event-link est maintenant une jolie box blanche !
                     linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${icon}" size="16"></i> ${finalLabel}</a>`;
                 }
 
