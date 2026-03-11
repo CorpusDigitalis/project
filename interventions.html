@@ -15,7 +15,6 @@
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
         .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; }
         
-        /* --- BARRE DE RECHERCHE ET FILTRES --- */
         .filter-container {
             display: flex;
             gap: 15px;
@@ -56,7 +55,6 @@
         }
         .year-select:focus { border-color: #1a1a1a; }
 
-        /* --- TIMELINE (FRISE CHRONOLOGIQUE) --- */
         .timeline-container { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
         .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e0e0e0; }
         
@@ -79,6 +77,15 @@
         .event-link:hover { border-bottom-color: #1a1a1a; }
 
         .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
+
+        /* Le style du surlignage des mots-clés de recherche */
+        mark.highlight {
+            background-color: rgba(250, 204, 21, 0.4); /* Jaune léger et pro */
+            color: inherit;
+            padding: 0 3px;
+            border-radius: 3px;
+            font-weight: inherit;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +107,7 @@
                 <input type="text" id="search-input" class="search-input" placeholder="Rechercher un mot-clé, un lieu...">
                 <select id="year-filter" class="year-select">
                     <option value="all">Toutes les années</option>
-                    </select>
+                </select>
             </div>
             
             <div id="timeline-box">
@@ -117,13 +124,25 @@
     <script type="module">
         import { initLayout, supabase } from './theme.js';
 
-        let allInterventions = []; // On stocke toutes les interventions pour le filtrage en temps réel
+        let allInterventions = []; 
+
+        // Fonction pour "échapper" les caractères spéciaux afin d'éviter les bugs de recherche
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Fonction magique qui surligne le texte
+        function highlight(text, keyword) {
+            if (!text) return '';
+            if (!keyword || keyword.trim() === '') return text;
+            const regex = new RegExp(`(${escapeRegExp(keyword)})`, 'gi');
+            return text.replace(regex, '<mark class="highlight">$1</mark>');
+        }
 
         async function loadInterventions() {
             const prof = await initLayout();
             if (!prof) return;
 
-            // 1. Insertion de la description dynamique
             const descEl = document.getElementById('page-desc');
             if(prof.interventions_desc) {
                 descEl.innerText = prof.interventions_desc;
@@ -131,7 +150,6 @@
                 descEl.style.display = 'none';
             }
 
-            // 2. Récupération des interventions depuis Supabase
             const { data: items, error } = await supabase
                 .from('interventions')
                 .select('*')
@@ -145,15 +163,13 @@
                 return;
             }
 
-            // 3. Tri chronologique (du plus récent au plus ancien)
             items.sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
-            allInterventions = items; // Sauvegarde globale pour la recherche
+            allInterventions = items; 
 
-            // 4. Génération dynamique des années pour le menu déroulant
             const yearSelect = document.getElementById('year-filter');
             const uniqueYears = [...new Set(items.map(item => {
                 return item.event_date ? item.event_date.substring(0, 4) : null;
-            }).filter(Boolean))]; // Extrait l'année (ex: "2024") et retire les vides
+            }).filter(Boolean))]; 
 
             uniqueYears.forEach(year => {
                 const option = document.createElement('option');
@@ -162,28 +178,22 @@
                 yearSelect.appendChild(option);
             });
 
-            // Affichage de la barre de recherche
             filterBox.style.display = 'flex';
 
-            // 5. Écouteurs d'événements pour le filtrage en temps réel
             document.getElementById('search-input').addEventListener('input', applyFilters);
             yearSelect.addEventListener('change', applyFilters);
 
-            // Premier affichage global
             renderTimeline(allInterventions);
         }
 
-        // Fonction qui filtre les résultats à chaque frappe au clavier
         function applyFilters() {
             const keyword = document.getElementById('search-input').value.toLowerCase();
             const selectedYear = document.getElementById('year-filter').value;
 
             const filteredItems = allInterventions.filter(item => {
-                // Vérification de l'année
                 const itemYear = item.event_date ? item.event_date.substring(0, 4) : '';
                 const matchYear = (selectedYear === 'all') || (itemYear === selectedYear);
 
-                // Vérification du mot-clé PARTOUT (Titre + Description + Lieu + Catégorie)
                 const textToSearch = [
                     item.title || '',
                     item.description || '',
@@ -199,9 +209,9 @@
             renderTimeline(filteredItems);
         }
 
-        // Fonction qui dessine la frise chronologique
         function renderTimeline(items) {
             const container = document.getElementById('timeline-box');
+            const searchKeyword = document.getElementById('search-input').value.trim();
 
             if (items.length === 0) {
                 container.innerHTML = "<p class='empty-msg'>Aucune intervention ne correspond à votre recherche.</p>";
@@ -211,25 +221,32 @@
             let html = '<div class="timeline-container"><div class="timeline-line"></div>';
             
             items.forEach(item => {
-                // Date formatée proprement
                 const dateStr = item.event_date ? new Date(item.event_date).toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric'}) : 'Date inconnue';
-                const locationStr = item.location ? `• ${item.location}` : '';
                 
-                // Lien éventuel
+                // Application du surlignage
+                const hTitle = highlight(item.title, searchKeyword);
+                const hDesc = highlight(item.description, searchKeyword);
+                const locText = item.location ? `• ${item.location}` : '';
+                const hLoc = highlight(locText, searchKeyword);
+                const hCat = highlight(item.category || 'Conférence', searchKeyword);
+                
                 let linkHtml = '';
                 if(item.link_value) {
-                    const label = item.link_type === 'file' ? 'Télécharger le support' : 'Voir le lien';
+                    // Utilisation du label personnalisé s'il existe !
+                    const defaultLabel = item.link_type === 'file' ? 'Télécharger le support' : 'Voir le lien';
+                    const finalLabel = item.link_label ? item.link_label : defaultLabel;
                     const icon = item.link_type === 'file' ? 'file-text' : 'external-link';
-                    linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${icon}" size="18"></i> ${label}</a>`;
+                    
+                    linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${icon}" size="18"></i> ${finalLabel}</a>`;
                 }
 
                 html += `
                     <div class="event-item">
                         <div class="event-dot"></div>
                         <div class="event-date">${dateStr}</div>
-                        <h3 class="event-title">${item.title}</h3>
-                        <div class="event-meta">${item.category || 'Conférence'} ${locationStr}</div>
-                        <p class="event-desc">${item.description || ''}</p>
+                        <h3 class="event-title">${hTitle}</h3>
+                        <div class="event-meta">${hCat} ${hLoc}</div>
+                        <p class="event-desc">${hDesc}</p>
                         ${linkHtml}
                     </div>
                 `;
@@ -238,11 +255,9 @@
             html += '</div>';
             container.innerHTML = html;
             
-            // On réinitialise les icônes après chaque modification de l'HTML
             lucide.createIcons();
         }
 
-        // Lancement !
         loadInterventions();
     </script>
 </body>
