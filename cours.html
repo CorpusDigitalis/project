@@ -31,7 +31,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            cursor: pointer; /* Indique que c'est cliquable */
+            cursor: pointer; 
             transition: background 0.2s ease, border-color 0.3s ease;
             user-select: none;
         }
@@ -73,18 +73,27 @@
         /* --- ANIMATIONS MAGIQUES (CSS GRID) --- */
         .accordion-grid {
             display: grid;
-            grid-template-rows: 0fr; /* Fermé par défaut */
+            grid-template-rows: 0fr; 
             transition: grid-template-rows 0.35s ease-out;
         }
         .accordion-grid.open {
-            grid-template-rows: 1fr; /* S'ouvre à la hauteur exacte du contenu */
+            grid-template-rows: 1fr; 
         }
         .accordion-inner {
-            overflow: hidden; /* Cache le contenu qui dépasse pendant l'animation */
+            overflow: hidden; 
         }
 
-        .chevron { transition: transform 0.35s ease; color: #888; }
-        .open .chevron { transform: rotate(180deg); color: #1a1a1a; }
+        /* CORRECTION ROTATION : Ciblage strict pour éviter les bugs d'héritage */
+        .chevron { 
+            transition: transform 0.35s ease; 
+            color: #888; 
+            transform-origin: center;
+        }
+        .course-header.open .chevron,
+        .section-header.open .chevron { 
+            transform: rotate(180deg); 
+            color: #1a1a1a; 
+        }
 
         /* --- DOCUMENTS --- */
         .resource-links { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
@@ -191,8 +200,7 @@
                     `;
                 });
 
-                // Menu déroulant principal pour le cours
-                // Optionnel : On peut laisser le tout premier cours ouvert par défaut si on veut
+                // Le tout premier cours est ouvert par défaut pour que la page ne semble pas vide
                 const isOpenClass = courseIndex === 0 ? 'open' : '';
 
                 container.innerHTML += `
