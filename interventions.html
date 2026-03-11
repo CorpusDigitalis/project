@@ -15,6 +15,7 @@
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
         .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; }
         
+        /* --- BARRE DE RECHERCHE ET FILTRES --- */
         .filter-container {
             display: flex;
             gap: 15px;
@@ -41,20 +42,27 @@
         }
         .search-input:focus { border-color: #1a1a1a; }
 
+        /* Correction du sélecteur de date (Flèche custom rapprochée) */
         .year-select {
-            padding: 12px 15px;
+            padding: 10px 35px 10px 15px; /* Espace à droite pour la flèche custom */
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
             font-family: 'Alata', sans-serif;
             color: #1a1a1a;
             background-color: white;
+            /* SVG de la flèche dessiné directement en CSS */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            appearance: none; /* Supprime la flèche moche du navigateur */
+            -webkit-appearance: none;
             outline: none;
             cursor: pointer;
-            min-width: 150px;
         }
         .year-select:focus { border-color: #1a1a1a; }
 
+        /* --- TIMELINE (FRISE CHRONOLOGIQUE) --- */
         .timeline-container { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
         .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e0e0e0; }
         
@@ -69,18 +77,26 @@
         .event-meta { font-size: 0.95rem; color: #555; margin-bottom: 10px; }
         .event-desc { color: #444; line-height: 1.6; margin-bottom: 15px; }
         
+        /* Correction du bouton "sisisi" en belle boîte */
         .event-link {
             display: inline-flex; align-items: center; gap: 8px;
-            font-size: 0.95rem; color: #1a1a1a; text-decoration: none; 
-            border-bottom: 1px solid transparent; transition: border-color 0.2s ease;
+            padding: 8px 16px; background: white; border: 1px solid #e0e0e0; 
+            border-radius: 8px; font-size: 0.9rem; font-weight: bold; color: #1a1a1a; 
+            text-decoration: none; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            margin-top: 5px;
         }
-        .event-link:hover { border-bottom-color: #1a1a1a; }
+        .event-link:hover { 
+            border-color: #1a1a1a; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+        }
 
         .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
 
         /* Le style du surlignage des mots-clés de recherche */
         mark.highlight {
-            background-color: rgba(250, 204, 21, 0.4); /* Jaune léger et pro */
+            background-color: rgba(250, 204, 21, 0.4);
             color: inherit;
             padding: 0 3px;
             border-radius: 3px;
@@ -126,12 +142,10 @@
 
         let allInterventions = []; 
 
-        // Fonction pour "échapper" les caractères spéciaux afin d'éviter les bugs de recherche
         function escapeRegExp(string) {
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
-        // Fonction magique qui surligne le texte
         function highlight(text, keyword) {
             if (!text) return '';
             if (!keyword || keyword.trim() === '') return text;
@@ -153,7 +167,9 @@
             const { data: items, error } = await supabase
                 .from('interventions')
                 .select('*')
-                .eq('prof_id', prof.id);
+                .eq('prof_id', prof.id)
+                .order('position', { ascending: true })
+                .order('created_at', { ascending: false });
 
             const container = document.getElementById('timeline-box');
             const filterBox = document.getElementById('filter-box');
@@ -223,7 +239,6 @@
             items.forEach(item => {
                 const dateStr = item.event_date ? new Date(item.event_date).toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric'}) : 'Date inconnue';
                 
-                // Application du surlignage
                 const hTitle = highlight(item.title, searchKeyword);
                 const hDesc = highlight(item.description, searchKeyword);
                 const locText = item.location ? `• ${item.location}` : '';
@@ -232,12 +247,12 @@
                 
                 let linkHtml = '';
                 if(item.link_value) {
-                    // Utilisation du label personnalisé s'il existe !
                     const defaultLabel = item.link_type === 'file' ? 'Télécharger le support' : 'Voir le lien';
                     const finalLabel = item.link_label ? item.link_label : defaultLabel;
                     const icon = item.link_type === 'file' ? 'file-text' : 'external-link';
                     
-                    linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${icon}" size="18"></i> ${finalLabel}</a>`;
+                    // La classe event-link est maintenant une jolie box blanche !
+                    linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${icon}" size="16"></i> ${finalLabel}</a>`;
                 }
 
                 html += `
