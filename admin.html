@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis - Admin Final V33</title>
+    <title>Corpus Digitalis - Admin Final V34</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -28,7 +28,13 @@
         }
 
         /* --- GLOBAL RESET & FONTS --- */
-        body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; } /* Crucial pour la responsivité absolue */
+        
+        body { 
+            font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); 
+            margin: 0; display: flex; height: 100vh; overflow: hidden; 
+            overflow-x: hidden; /* Verrou anti-scroll horizontal */
+        }
         input, textarea, select, button { font-family: 'Inter', sans-serif; }
         textarea { font-size: 0.9rem; line-height: 1.5; }
 
@@ -38,7 +44,7 @@
         button:disabled { opacity: 0.7; cursor: not-allowed; }
 
         /* --- SIDEBAR & HEADER --- */
-        .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; width: 100%; }
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
         
@@ -65,13 +71,14 @@
             height: calc(100vh - 20px); margin: 10px 0 10px 0; 
             border-radius: 30px 0 0 30px; 
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
+            max-width: 100vw;
         }
         
         .editor-side { 
             height: 100%; overflow-y: auto; flex: 1; 
             padding: 40px 50px 0 50px; 
             max-width: 1000px; margin: 0 auto; scroll-behavior: smooth; 
-            display: flex; flex-direction: column;
+            display: flex; flex-direction: column; overflow-x: hidden;
         }
         .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
         
@@ -81,7 +88,7 @@
 
         /* --- UI ELEMENTS --- */
         .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .form-row { margin-bottom: 20px; }
+        .form-row { margin-bottom: 20px; width: 100%; }
         label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); letter-spacing: 0.05em; }
         
         input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background: #fff; transition: 0.2s; box-sizing: border-box; min-width: 0; }
@@ -101,19 +108,27 @@
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
 
-        /* --- ACCORDIONS --- */
+        /* --- NOUVEAU SYSTÈME ACCORDÉON FLUIDE (CSS GRID) --- */
         .item-card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; transition: 0.2s; }
         .item-header { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; background: white; user-select: none; }
         .item-header:hover { background: #fafafa; }
+        
         .drag-handle { color: #cbd5e1; cursor: grab; padding: 4px; flex-shrink: 0; }
         .drag-handle:active { cursor: grabbing; color: var(--accent); }
         
         .item-title { flex: 1; font-weight: 600; color: #334155; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .item-badge { font-size: 0.7rem; background: #f1f5f9; color: #64748b; padding: 4px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
-        .chevron { color: #cbd5e1; transition: transform 0.2s; flex-shrink: 0; }
-        .item-body { display: none; padding: 25px; background: #fafafa; border-top: 1px solid var(--border); }
-        .item-card.open .item-body { display: block; }
+        
+        /* Rotation de la flèche ultra propre */
+        .item-card .chevron { transition: transform 0.35s ease; color: #cbd5e1; flex-shrink: 0; transform-origin: center; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
+        
+        /* Grille Magique pour le menu déroulant */
+        .accordion-grid { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease-out; }
+        .item-card.open .accordion-grid { grid-template-rows: 1fr; }
+        .accordion-inner { overflow: hidden; }
+        
+        .item-body { padding: 25px; background: #fafafa; border-top: 1px solid var(--border); }
         
         .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed #94a3b8; }
 
@@ -127,7 +142,7 @@
         }
         .file-badge { background: var(--accent-green-light); border: 1px solid #bbf7d0; color: #15803d; }
         .link-badge { background: var(--accent-blue-light); border: 1px solid #bfdbfe; color: #2563eb; }
-        .file-badge i, .file-badge svg, .link-badge i, .link-badge svg { flex-shrink: 0; } /* Protège l'icône */
+        .file-badge i, .file-badge svg, .link-badge i, .link-badge svg { flex-shrink: 0; }
         .file-badge span, .link-badge span { 
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; max-width: 100%; flex-shrink: 1;
         }
@@ -143,9 +158,9 @@
         .course-row-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; min-width: 0; }
 
         /* L'ESTHÉTIQUE "LIGNE PRO 30/70" */
-        .resource-row { display: flex; align-items: center; gap: 10px; width: 100%; }
+        .resource-row { display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; }
         .type-selector { display: flex; background: #f1f5f9; padding: 3px; border-radius: 6px; flex-shrink: 0; height: var(--input-height); width: 30%; min-width: 180px; }
-        .type-btn { border: none; background: transparent; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; }
+        .type-btn { border: none; background: transparent; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; min-width: 0; }
         .type-btn:hover { color: var(--accent-blue); }
         .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
@@ -155,24 +170,18 @@
 
         .upload-btn-wrapper { width: 100%; height: 100%; display: none; }
 
-        /* CORRECTION BOUTON UPLOAD : Anti-débordement avec "..." garanti */
+        /* UPLOAD BOUTON: Anti-débordement avec "..." */
         .upload-label { 
             display: flex; align-items: center; justify-content: center; 
             gap: 8px; width: 100%; height: 100%; padding: 0 15px; 
             background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; 
             border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; 
             transition: 0.2s; box-sizing: border-box; overflow: hidden; min-width: 0;
-            white-space: nowrap; /* Interdit le saut de ligne formellement */
+            white-space: nowrap; 
         }
-        .upload-label i, .upload-label svg { flex-shrink: 0; } /* Protège l'icône Lucide */
+        .upload-label i, .upload-label svg { flex-shrink: 0; }
         .upload-label .label-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: block;
-            min-width: 0;
-            max-width: 100%;
-            flex-shrink: 1;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0; max-width: 100%; flex-shrink: 1;
         }
         .upload-label:hover { background: #dcfce7; }
         .upload-label.loading { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
@@ -224,11 +233,11 @@
 
         @media (max-width: 1200px) { .preview-side { display: none; } }
         
-        /* --- RESPONSIVE MOBILE --- */
+        /* --- RESPONSIVE MOBILE FIX ULTIME --- */
         @media (max-width: 768px) { 
-            body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
-            .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; }
-            .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 0 20px; } 
+            body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); overflow-x: hidden; }
+            .wrapper { height: auto; margin: 0; border-radius: 0; box-shadow: none; overflow: visible; width: 100%; max-width: 100vw; }
+            .editor-side { height: auto; overflow-y: visible; padding: 20px 20px 0 20px; width: 100%; max-width: 100vw; box-sizing: border-box; } 
             .scroll-spacer { height: 50vh; }
             .mobile-header { display: flex; position: sticky; top: 0; z-index: 200; width: 100%; box-sizing: border-box; }
             nav { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); transform: translateX(-100%); padding-top: 10px; }
@@ -237,13 +246,10 @@
             .header-flex { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-flex button { width: 100%; justify-content: center; }
             
-            /* Sur mobile, on empile les blocs "Lien / Fichier" */
-            .resource-row { flex-direction: column; align-items: stretch; gap: 10px; }
-            .type-selector { width: 100%; max-width: 100%; }
-            .action-area { width: 100%; }
-            
-            /* Note: J'ai retiré le display:none qui cachait le texte sur mobile. 
-               Désormais, grâce au text-overflow: ellipsis, il s'affiche parfaitement avec "..." ! */
+            /* Les blocs "Lien / Fichier" s'empilent proprement sans déborder */
+            .resource-row { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+            .type-selector { width: 100% !important; min-width: 0 !important; }
+            .action-area { width: 100% !important; }
         }
     </style>
 </head>
@@ -395,7 +401,9 @@
     };
 
     let profileData = null, saveTimer = null;
-    let openCourseId = null, openPubId = null, openInterId = null;
+    
+    // Système de mémoire pour garder les accordéons ouverts même après une sauvegarde !
+    let openCards = new Set(); 
 
     // --- UTILS ---
     function getCleanFileName(url) {
@@ -457,12 +465,13 @@
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         
+        // --- FIX : BOUTON CORBEILLE CV (Responsif sans déborder) ---
         const cvUrl = profileData.cv_url || '';
         const cvMode = isSupabaseUrl(cvUrl) ? 'file' : 'link';
         
         const cvArea = document.getElementById('cv-display-area');
         cvArea.innerHTML = `
-            <div class="resource-row mode-${cvMode}" style="margin-top: 5px; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; position: relative;">
+            <div class="resource-row mode-${cvMode}" style="margin-top: 5px; padding: 15px; padding-right: 55px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; position: relative;">
                 <div class="type-selector">
                     <button type="button" class="type-btn ${cvMode === 'link' ? 'active' : ''}" onclick="switchCVDirect('link')"><i data-lucide="link" size="14"></i> Lien</button>
                     <button type="button" class="type-btn ${cvMode === 'file' ? 'active' : ''}" onclick="switchCVDirect('file')"><i data-lucide="file" size="14"></i> Fichier</button>
@@ -478,7 +487,7 @@
                         </label>
                     </div>
                 </div>
-                ${cvUrl ? `<button class="btn-square delete" style="position: absolute; right: -40px; top: 50%; transform: translateY(-50%); border: none;" onclick="deleteCV()" title="Supprimer le CV"><i data-lucide="trash-2" size="16"></i></button>` : ''}
+                ${cvUrl ? `<button class="btn-square delete" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="deleteCV()" title="Supprimer le CV"><i data-lucide="trash-2" size="16"></i></button>` : ''}
             </div>
         `;
 
@@ -488,6 +497,16 @@
         renderHeaderConfig();
         renderFooterConfig();
         lucide.createIcons();
+    }
+
+    // --- ACCORDION MANAGER (Fluide et Persistant) ---
+    window.toggleCard = (elId) => {
+        const card = document.getElementById(elId);
+        if(card) {
+            card.classList.toggle('open');
+            if(card.classList.contains('open')) openCards.add(elId);
+            else openCards.delete(elId);
+        }
     }
 
     // --- DRAG & DROP INIT ---
@@ -522,72 +541,79 @@
         if(!profileData.courses?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; return; }
         
         c.innerHTML = profileData.courses.map(course => {
-            const isOpen = (openCourseId === course.id) ? 'open' : '';
+            const cardId = `card-${course.id}`;
+            const isOpenClass = openCards.has(cardId) ? 'open' : ''; // Restaure l'état
+
             return `
-            <div class="item-card ${isOpen}" id="card-${course.id}">
-                <div class="item-header" onclick="toggleCard('${course.id}', 'course')">
-                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+            <div class="item-card ${isOpenClass}" id="${cardId}">
+                <div class="item-header" onclick="toggleCard('${cardId}')">
+                    <i data-lucide="grip-vertical" class="drag-handle" onclick="event.stopPropagation()"></i>
                     <div class="item-title" id="title-course-${course.id}">${course.title}</div>
                     <span class="item-badge">${course.category}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
-                <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value); document.getElementById('title-course-${course.id}').innerText=this.value"></div>
-                    <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
-                    <div style="margin-top:25px;">
-                        <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
-                        ${(course.sections || []).map((sec, secIdx) => `
-                            <div class="section-block">
-                                <div class="section-header">
-                                    <input class="section-title-input" value="${sec.title}" oninput="autoSaveSectionTitle('${course.id}', ${secIdx}, this.value)">
-                                    <button class="btn-ghost" onclick="delSection('${course.id}', ${secIdx})" title="Supprimer cette section entière"><i data-lucide="trash-2" size="14"></i></button>
-                                </div>
-                                <div class="section-content" style="background: #fafafa;">
-                                    ${(sec.items || []).map((item, itemIdx) => {
-                                        return `
-                                        <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 12px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
-                                            
-                                            <button class="btn-square delete" style="position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border: none; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})" title="Supprimer ce document"><i data-lucide="trash-2" size="14"></i></button>
-
-                                            <div style="display: flex; flex-direction: column; gap: 12px; padding-right: 40px;">
-                                                <input type="text" value="${item.label}" class="form-input" style="font-weight: 600;" placeholder="Titre du document (ex: Diapositives Chapitre 1)" oninput="autoSaveCourseItem('${course.id}', ${secIdx}, ${itemIdx}, 'label', this.value)">
-
-                                                <div class="resource-row mode-${item.type}">
-                                                    <div class="type-selector">
-                                                        <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchCourseItemMode('${course.id}', ${secIdx}, ${itemIdx}, 'link')"><i data-lucide="link" size="14"></i> Lien</button>
-                                                        <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchCourseItemMode('${course.id}', ${secIdx}, ${itemIdx}, 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
-                                                    </div>
+                
+                <div class="accordion-grid">
+                    <div class="accordion-inner">
+                        <div class="item-body" onclick="event.stopPropagation()">
+                            <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value); document.getElementById('title-course-${course.id}').innerText=this.value"></div>
+                            <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
+                            <div style="margin-top:25px;">
+                                <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
+                                ${(course.sections || []).map((sec, secIdx) => `
+                                    <div class="section-block">
+                                        <div class="section-header">
+                                            <input class="section-title-input" value="${sec.title}" oninput="autoSaveSectionTitle('${course.id}', ${secIdx}, this.value)">
+                                            <button class="btn-ghost" onclick="delSection('${course.id}', ${secIdx})" title="Supprimer cette section entière"><i data-lucide="trash-2" size="14"></i></button>
+                                        </div>
+                                        <div class="section-content" style="background: #fafafa;">
+                                            ${(sec.items || []).map((item, itemIdx) => {
+                                                return `
+                                                <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 12px; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
                                                     
-                                                    <div class="action-area">
-                                                        <div class="link-input-wrapper">
-                                                            <input type="url" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="Collez votre lien ici (https://...)" oninput="autoSaveCourseItem('${course.id}', ${secIdx}, ${itemIdx}, 'value', this.value)">
-                                                        </div>
-                                                        <div class="upload-btn-wrapper">
-                                                            <label class="upload-label" id="lbl-up-${course.id}-${secIdx}-${itemIdx}">
-                                                                <i data-lucide="file-up"></i> 
-                                                                <span class="label-text" id="file-txt-${course.id}-${secIdx}-${itemIdx}">${isSupabaseUrl(item.value) ? getCleanFileName(item.value) : 'Parcourir pour uploader...'}</span>
-                                                                <input type="file" class="hidden-input" onchange="uploadCourseItemFile('${course.id}', ${secIdx}, ${itemIdx}, this, 'lbl-up-${course.id}-${secIdx}-${itemIdx}', 'file-txt-${course.id}-${secIdx}-${itemIdx}')">
-                                                            </label>
+                                                    <button class="btn-square delete" style="position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; border: none; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="delCourseItem('${course.id}', ${secIdx}, ${itemIdx})" title="Supprimer ce document"><i data-lucide="trash-2" size="14"></i></button>
+
+                                                    <div style="display: flex; flex-direction: column; gap: 12px; padding-right: 40px;">
+                                                        <input type="text" value="${item.label}" class="form-input" style="font-weight: 600;" placeholder="Titre du document (ex: Diapositives)" oninput="autoSaveCourseItem('${course.id}', ${secIdx}, ${itemIdx}, 'label', this.value)">
+
+                                                        <div class="resource-row mode-${item.type}">
+                                                            <div class="type-selector">
+                                                                <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchCourseItemMode('${course.id}', ${secIdx}, ${itemIdx}, 'link')"><i data-lucide="link" size="14"></i> Lien</button>
+                                                                <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchCourseItemMode('${course.id}', ${secIdx}, ${itemIdx}, 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
+                                                            </div>
+                                                            
+                                                            <div class="action-area">
+                                                                <div class="link-input-wrapper">
+                                                                    <input type="url" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="Collez votre lien ici (https://...)" oninput="autoSaveCourseItem('${course.id}', ${secIdx}, ${itemIdx}, 'value', this.value)">
+                                                                </div>
+                                                                <div class="upload-btn-wrapper">
+                                                                    <label class="upload-label" id="lbl-up-${course.id}-${secIdx}-${itemIdx}">
+                                                                        <i data-lucide="file-up"></i> 
+                                                                        <span class="label-text" id="file-txt-${course.id}-${secIdx}-${itemIdx}">${isSupabaseUrl(item.value) ? getCleanFileName(item.value) : 'Parcourir pour uploader...'}</span>
+                                                                        <input type="file" class="hidden-input" onchange="uploadCourseItemFile('${course.id}', ${secIdx}, ${itemIdx}, this, 'lbl-up-${course.id}-${secIdx}-${itemIdx}', 'file-txt-${course.id}-${secIdx}-${itemIdx}')">
+                                                                    </label>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>`;
-                                    }).join('')}
-                                    
-                                    <button class="btn-primary" style="width: 100%; background: #0f172a; color: white;" onclick="addNewItemSlot('${course.id}', ${secIdx}, this)">
-                                        <i data-lucide="plus" size="16"></i> Nouveau document
-                                    </button>
+                                                </div>`;
+                                            }).join('')}
+                                            
+                                            <button class="btn-primary" style="width: 100%; background: #0f172a; color: white;" onclick="addNewItemSlot('${course.id}', ${secIdx}, this)">
+                                                <i data-lucide="plus" size="16"></i> Nouveau document
+                                            </button>
 
-                                </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                                
+                                <button class="btn-ghost" onclick="addSection('${course.id}', this)" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer; margin-top:10px;">
+                                    + Ajouter une Section (ex: TD, Examens)
+                                </button>
                             </div>
-                        `).join('')}
-                        
-                        <button class="btn-ghost" onclick="addSection('${course.id}', this)" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer; margin-top:10px;">
-                            + Ajouter une Section (ex: TD, Examens)
-                        </button>
+                            <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button></div>
+                        </div>
                     </div>
-                    <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button></div>
                 </div>
             </div>`;
         }).join('');
@@ -601,61 +627,67 @@
         if(!profileData.publications?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication.</div>'; return; }
         
         c.innerHTML = profileData.publications.map(pub => {
-            const isOpen = (openPubId === pub.id) ? 'open' : '';
+            const cardId = `pub-${pub.id}`;
+            const isOpenClass = openCards.has(cardId) ? 'open' : ''; 
             const mode = pub.link_type || 'link';
             
             return `
-            <div class="item-card ${isOpen}" id="pub-${pub.id}">
-                <div class="item-header" onclick="toggleCard('${pub.id}', 'pub')">
-                     <i data-lucide="grip-vertical" class="drag-handle"></i>
+            <div class="item-card ${isOpenClass}" id="${cardId}">
+                <div class="item-header" onclick="toggleCard('${cardId}')">
+                     <i data-lucide="grip-vertical" class="drag-handle" onclick="event.stopPropagation()"></i>
                     <div class="item-title" id="title-pub-${pub.id}">${pub.title || 'Sans titre'}</div>
                     <span class="item-badge">${pub.category || 'Article'}</span>
                     <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${pub.date || ''}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
-                <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Titre</label><input value="${pub.title || ''}" oninput="autoSave('publications', '${pub.id}', 'title', this.value); document.getElementById('title-pub-${pub.id}').innerText=this.value"></div>
-                    <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('publications', '${pub.id}', 'description', this.value)">${pub.description || ''}</textarea></div>
-                    
-                    <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
-                        <div style="flex:1; min-width:120px;">
-                             <label>Date</label>
-                             <input type="date" value="${pub.date || ''}" oninput="autoSave('publications', '${pub.id}', 'date', this.value)">
-                        </div>
-                        <div style="flex:1; min-width:150px;">
-                             <label>Catégorie</label>
-                             <select onchange="autoSave('publications', '${pub.id}', 'category', this.value)">
-                                <option value="Article" ${pub.category==='Article'?'selected':''}>Article</option>
-                                <option value="Ouvrage" ${pub.category==='Ouvrage'?'selected':''}>Ouvrage</option>
-                                <option value="Chapitre" ${pub.category==='Chapitre'?'selected':''}>Chapitre d'ouvrage</option>
-                                <option value="Thèse" ${pub.category==='Thèse'?'selected':''}>Thèse</option>
-                                <option value="Mémoire" ${pub.category==='Mémoire'?'selected':''}>Mémoire</option>
-                                <option value="Autre" ${pub.category==='Autre'?'selected':''}>Autre</option>
-                             </select>
+                
+                <div class="accordion-grid">
+                    <div class="accordion-inner">
+                        <div class="item-body" onclick="event.stopPropagation()">
+                            <div class="form-row"><label>Titre</label><input value="${pub.title || ''}" oninput="autoSave('publications', '${pub.id}', 'title', this.value); document.getElementById('title-pub-${pub.id}').innerText=this.value"></div>
+                            <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('publications', '${pub.id}', 'description', this.value)">${pub.description || ''}</textarea></div>
+                            
+                            <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
+                                <div style="flex:1; min-width:120px;">
+                                     <label>Date</label>
+                                     <input type="date" value="${pub.date || ''}" oninput="autoSave('publications', '${pub.id}', 'date', this.value)">
+                                </div>
+                                <div style="flex:1; min-width:150px;">
+                                     <label>Catégorie</label>
+                                     <select onchange="autoSave('publications', '${pub.id}', 'category', this.value)">
+                                        <option value="Article" ${pub.category==='Article'?'selected':''}>Article</option>
+                                        <option value="Ouvrage" ${pub.category==='Ouvrage'?'selected':''}>Ouvrage</option>
+                                        <option value="Chapitre" ${pub.category==='Chapitre'?'selected':''}>Chapitre d'ouvrage</option>
+                                        <option value="Thèse" ${pub.category==='Thèse'?'selected':''}>Thèse</option>
+                                        <option value="Mémoire" ${pub.category==='Mémoire'?'selected':''}>Mémoire</option>
+                                        <option value="Autre" ${pub.category==='Autre'?'selected':''}>Autre</option>
+                                     </select>
+                                </div>
+                            </div>
+                            
+                            <label>Document associé</label>
+                            <div class="resource-row mode-${mode}" style="margin-top: 5px; padding: 15px; padding-right: 55px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
+                                <div class="type-selector">
+                                    <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
+                                    <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
+                                </div>
+                                <div class="action-area">
+                                    <div class="link-input-wrapper">
+                                        <input type="url" class="form-input" value="${mode === 'link' ? (pub.link_value || '') : ''}" placeholder="Lien vers la publication (ex: https://doi.org/...)" oninput="autoSave('publications', '${pub.id}', 'link_value', this.value)">
+                                    </div>
+                                    <div class="upload-btn-wrapper">
+                                        <label class="upload-label" id="lbl-up-pub-${pub.id}">
+                                            <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && pub.link_value ? getCleanFileName(pub.link_value) : 'Parcourir le PDF...'}</span>
+                                            <input type="file" class="hidden-input" onchange="uploadSimpleFile('publications', '${pub.id}', this, 'lbl-up-pub-${pub.id}')">
+                                        </label>
+                                    </div>
+                                </div>
+                                ${pub.link_value ? `<button class="btn-square delete" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="deleteSimpleDoc('publications', '${pub.id}')" title="Supprimer le document"><i data-lucide="trash-2" size="16"></i></button>` : ''}
+                            </div>
+                            
+                            <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('publications', '${pub.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer cette publication</button></div>
                         </div>
                     </div>
-                    
-                    <label>Document associé</label>
-                    <div class="resource-row mode-${mode}" style="margin-top: 5px; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
-                        <div class="type-selector">
-                            <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
-                            <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('publications', '${pub.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
-                        </div>
-                        <div class="action-area">
-                            <div class="link-input-wrapper">
-                                <input type="url" class="form-input" value="${mode === 'link' ? (pub.link_value || '') : ''}" placeholder="Lien vers la publication (ex: https://doi.org/...)" oninput="autoSave('publications', '${pub.id}', 'link_value', this.value)">
-                            </div>
-                            <div class="upload-btn-wrapper">
-                                <label class="upload-label" id="lbl-up-pub-${pub.id}">
-                                    <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && pub.link_value ? getCleanFileName(pub.link_value) : 'Parcourir le PDF...'}</span>
-                                    <input type="file" class="hidden-input" onchange="uploadSimpleFile('publications', '${pub.id}', this, 'lbl-up-pub-${pub.id}')">
-                                </label>
-                            </div>
-                        </div>
-                        ${pub.link_value ? `<button class="btn-square delete" style="position: absolute; right: -40px; top: 50%; transform: translateY(-50%); border: none;" onclick="deleteSimpleDoc('publications', '${pub.id}')" title="Supprimer le document"><i data-lucide="trash-2" size="16"></i></button>` : ''}
-                    </div>
-                    
-                    <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('publications', '${pub.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer cette publication</button></div>
                 </div>
             </div>`;
         }).join('');
@@ -669,64 +701,70 @@
         if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
         
         c.innerHTML = profileData.interventions.map(inter => {
-            const isOpen = (openInterId === inter.id) ? 'open' : '';
+            const cardId = `inter-${inter.id}`;
+            const isOpenClass = openCards.has(cardId) ? 'open' : ''; 
             const mode = inter.link_type || 'link';
 
             return `
-            <div class="item-card ${isOpen}" id="inter-${inter.id}">
-                <div class="item-header" onclick="toggleCard('${inter.id}', 'inter')">
-                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+            <div class="item-card ${isOpenClass}" id="${cardId}">
+                <div class="item-header" onclick="toggleCard('${cardId}')">
+                    <i data-lucide="grip-vertical" class="drag-handle" onclick="event.stopPropagation()"></i>
                     <div class="item-title" id="title-inter-${inter.id}">${inter.title || 'Sans titre'}</div>
                     <span class="item-badge">${inter.category || 'Conférence'}</span>
                     <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${inter.event_date || ''}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
-                <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Titre de l'intervention</label><input value="${inter.title || ''}" oninput="autoSave('interventions', '${inter.id}', 'title', this.value); document.getElementById('title-inter-${inter.id}').innerText=this.value"></div>
-                    <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('interventions', '${inter.id}', 'description', this.value)">${inter.description || ''}</textarea></div>
-                    
-                    <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
-                        <div style="flex:1; min-width:120px;">
-                             <label>Date</label>
-                             <input type="date" value="${inter.event_date || ''}" oninput="autoSave('interventions', '${inter.id}', 'event_date', this.value)">
-                        </div>
-                        <div style="flex:1; min-width:150px;">
-                             <label>Lieu</label>
-                             <input type="text" value="${inter.location || ''}" placeholder="Paris, Zoom..." oninput="autoSave('interventions', '${inter.id}', 'location', this.value)">
-                        </div>
-                        <div style="flex:1; min-width:150px;">
-                             <label>Type</label>
-                             <select onchange="autoSave('interventions', '${inter.id}', 'category', this.value)">
-                                <option value="Conférence" ${inter.category==='Conférence'?'selected':''}>Conférence</option>
-                                <option value="Colloque" ${inter.category==='Colloque'?'selected':''}>Colloque</option>
-                                <option value="Séminaire" ${inter.category==='Séminaire'?'selected':''}>Séminaire</option>
-                                <option value="Présentation" ${inter.category==='Présentation'?'selected':''}>Présentation</option>
-                                <option value="Autre" ${inter.category==='Autre'?'selected':''}>Autre</option>
-                             </select>
-                        </div>
-                    </div>
+                
+                <div class="accordion-grid">
+                    <div class="accordion-inner">
+                        <div class="item-body" onclick="event.stopPropagation()">
+                            <div class="form-row"><label>Titre de l'intervention</label><input value="${inter.title || ''}" oninput="autoSave('interventions', '${inter.id}', 'title', this.value); document.getElementById('title-inter-${inter.id}').innerText=this.value"></div>
+                            <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('interventions', '${inter.id}', 'description', this.value)">${inter.description || ''}</textarea></div>
+                            
+                            <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
+                                <div style="flex:1; min-width:120px;">
+                                     <label>Date</label>
+                                     <input type="date" value="${inter.event_date || ''}" oninput="autoSave('interventions', '${inter.id}', 'event_date', this.value)">
+                                </div>
+                                <div style="flex:1; min-width:150px;">
+                                     <label>Lieu</label>
+                                     <input type="text" value="${inter.location || ''}" placeholder="Paris, Zoom..." oninput="autoSave('interventions', '${inter.id}', 'location', this.value)">
+                                </div>
+                                <div style="flex:1; min-width:150px;">
+                                     <label>Type</label>
+                                     <select onchange="autoSave('interventions', '${inter.id}', 'category', this.value)">
+                                        <option value="Conférence" ${inter.category==='Conférence'?'selected':''}>Conférence</option>
+                                        <option value="Colloque" ${inter.category==='Colloque'?'selected':''}>Colloque</option>
+                                        <option value="Séminaire" ${inter.category==='Séminaire'?'selected':''}>Séminaire</option>
+                                        <option value="Présentation" ${inter.category==='Présentation'?'selected':''}>Présentation</option>
+                                        <option value="Autre" ${inter.category==='Autre'?'selected':''}>Autre</option>
+                                     </select>
+                                </div>
+                            </div>
 
-                    <label>Support (Lien ou PDF)</label>
-                    <div class="resource-row mode-${mode}" style="margin-top: 5px; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
-                        <div class="type-selector">
-                            <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
-                            <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
-                        </div>
-                        <div class="action-area">
-                            <div class="link-input-wrapper">
-                                <input type="url" class="form-input" value="${mode === 'link' ? (inter.link_value || '') : ''}" placeholder="Lien vers le support (ex: Youtube...)" oninput="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                            <label>Support (Lien ou PDF)</label>
+                            <div class="resource-row mode-${mode}" style="margin-top: 5px; padding: 15px; padding-right: 55px; border-radius: 8px; border: 1px dashed #cbd5e1; background: #f8fafc; position: relative;">
+                                <div class="type-selector">
+                                    <button type="button" class="type-btn ${mode === 'link' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'link')"><i data-lucide="link" size="14"></i> Lien</button>
+                                    <button type="button" class="type-btn ${mode === 'file' ? 'active' : ''}" onclick="switchSimpleMode('interventions', '${inter.id}', 'file')"><i data-lucide="file" size="14"></i> Fichier</button>
+                                </div>
+                                <div class="action-area">
+                                    <div class="link-input-wrapper">
+                                        <input type="url" class="form-input" value="${mode === 'link' ? (inter.link_value || '') : ''}" placeholder="Lien vers le support (ex: Youtube...)" oninput="autoSave('interventions', '${inter.id}', 'link_value', this.value)">
+                                    </div>
+                                    <div class="upload-btn-wrapper">
+                                        <label class="upload-label" id="lbl-up-inter-${inter.id}">
+                                            <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && inter.link_value ? getCleanFileName(inter.link_value) : 'Parcourir pour PDF...'}</span>
+                                            <input type="file" class="hidden-input" onchange="uploadSimpleFile('interventions', '${inter.id}', this, 'lbl-up-inter-${inter.id}')">
+                                        </label>
+                                    </div>
+                                </div>
+                                ${inter.link_value ? `<button class="btn-square delete" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="deleteSimpleDoc('interventions', '${inter.id}')" title="Supprimer le document"><i data-lucide="trash-2" size="16"></i></button>` : ''}
                             </div>
-                            <div class="upload-btn-wrapper">
-                                <label class="upload-label" id="lbl-up-inter-${inter.id}">
-                                    <i data-lucide="cloud-upload"></i> <span class="label-text">${mode === 'file' && inter.link_value ? getCleanFileName(inter.link_value) : 'Parcourir pour PDF...'}</span>
-                                    <input type="file" class="hidden-input" onchange="uploadSimpleFile('interventions', '${inter.id}', this, 'lbl-up-inter-${inter.id}')">
-                                </label>
-                            </div>
+                            
+                            <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('interventions', '${inter.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer cette intervention</button></div>
                         </div>
-                        ${inter.link_value ? `<button class="btn-square delete" style="position: absolute; right: -40px; top: 50%; transform: translateY(-50%); border: none;" onclick="deleteSimpleDoc('interventions', '${inter.id}')" title="Supprimer le document"><i data-lucide="trash-2" size="16"></i></button>` : ''}
                     </div>
-                    
-                    <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('interventions', '${inter.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer cette intervention</button></div>
                 </div>
             </div>`;
         }).join('');
@@ -910,7 +948,6 @@
         if(window.lucide) lucide.createIcons();
 
         await sb.from('courses').update({ sections: c.sections }).eq('id', cid);
-        openCourseId = cid;
         renderCourses(); 
         reloadPreview();
     }
@@ -919,7 +956,6 @@
         const c = profileData.courses.find(x => x.id === cid); 
         if(!c.sections) c.sections = []; 
         c.sections.push({ title: 'Nouvelle Section', items: [] }); 
-        openCourseId = cid; 
         
         const originalText = btn.innerHTML;
         btn.disabled = true;
@@ -934,12 +970,6 @@
     window.delCourseItem = async (cid, sIdx, iIdx) => { if(!confirm("Supprimer ce document ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await sb.from('courses').update({ sections: c.sections }).eq('id', cid); renderCourses(); reloadPreview(); }
     
     // --- COMMON HELPERS ---
-    window.toggleCard = (id, type) => {
-        if(type === 'course') { openCourseId = (openCourseId === id) ? null : id; renderCourses(); }
-        else if (type === 'pub') { openPubId = (openPubId === id) ? null : id; renderPublications(); }
-        else { openInterId = (openInterId === id) ? null : id; renderInterventions(); }
-    }
-
     window.createItem = async (t, d, btn) => { 
         d.prof_id = profileData.id;
         d.position = -1; // Top
@@ -961,9 +991,10 @@
             const newItem = data[0];
             profileData[t].unshift(newItem); 
             
-            if(t==='courses') { openCourseId = newItem.id; renderCourses(); }
-            if(t==='publications') { openPubId = newItem.id; renderPublications(); }
-            if(t==='interventions') { openInterId = newItem.id; renderInterventions(); }
+            // Ouvre automatiquement la carte fraîchement créée
+            if(t==='courses') { openCards.add(`card-${newItem.id}`); renderCourses(); }
+            if(t==='publications') { openCards.add(`pub-${newItem.id}`); renderPublications(); }
+            if(t==='interventions') { openCards.add(`inter-${newItem.id}`); renderInterventions(); }
             
             showToast("Élément créé !", "success");
             reloadPreview(); 
