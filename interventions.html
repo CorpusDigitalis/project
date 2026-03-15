@@ -6,7 +6,7 @@
     <title>Interventions</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=5" />
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
@@ -70,7 +70,8 @@
 
     <header>
         <nav>
-            <a href="#" class="site-name no-animation">...</a>
+            <div id="skeleton-name" class="skeleton skeleton-header-name"></div>
+            <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
@@ -78,7 +79,14 @@
     <div class="container">
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Interventions</h1>
-            <p class="intro-text" id="page-desc"></p>
+            
+            <div id="skeleton-desc" class="skeleton skeleton-desc-center"></div>
+            <p class="intro-text" id="page-desc" style="display: none;"></p>
+
+            <div class="filter-container" id="skeleton-filter">
+                <div class="skeleton" style="flex: 1; height: 46px; border-radius: 8px;"></div>
+                <div class="skeleton" style="width: 150px; height: 46px; border-radius: 8px;"></div>
+            </div>
 
             <div class="filter-container" id="filter-box" style="display: none;">
                 <input type="text" id="search-input" class="search-input" placeholder="Rechercher un mot-clé, un lieu...">
@@ -88,19 +96,13 @@
             </div>
             
             <div id="timeline-box">
-                <div class="timeline-container">
+                <div class="timeline-container" id="skeleton-timeline">
                     <div class="timeline-line"></div>
                     <div class="skeleton-timeline-item">
                         <div class="skeleton-timeline-dot"></div>
                         <div class="skeleton" style="width: 100px; height: 1rem; margin-bottom: 10px;"></div>
                         <div class="skeleton" style="width: 60%; height: 1.5rem; margin-bottom: 10px;"></div>
                         <div class="skeleton skeleton-text short"></div>
-                    </div>
-                    <div class="skeleton-timeline-item">
-                        <div class="skeleton-timeline-dot"></div>
-                        <div class="skeleton" style="width: 120px; height: 1rem; margin-bottom: 10px;"></div>
-                        <div class="skeleton" style="width: 50%; height: 1.5rem; margin-bottom: 10px;"></div>
-                        <div class="skeleton skeleton-text shorter"></div>
                     </div>
                 </div>
             </div>
@@ -130,11 +132,14 @@
             const prof = await initLayout();
             if (!prof) return;
 
+            document.getElementById('skeleton-name').style.display = 'none';
+            document.getElementById('real-site-name').style.display = 'block';
+
+            document.getElementById('skeleton-desc').style.display = 'none';
             const descEl = document.getElementById('page-desc');
             if(prof.interventions_desc) {
                 descEl.innerText = prof.interventions_desc;
-            } else {
-                descEl.style.display = 'none';
+                descEl.style.display = 'block';
             }
 
             const { data: items, error } = await supabase
@@ -146,6 +151,8 @@
 
             const container = document.getElementById('timeline-box');
             const filterBox = document.getElementById('filter-box');
+            
+            document.getElementById('skeleton-filter').style.display = 'none';
 
             if (error || !items || items.length === 0) {
                 container.innerHTML = "<p class='empty-msg'>Aucune intervention pour le moment.</p>";
