@@ -6,13 +6,13 @@
     <title>Publications</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=7" />
+    <link rel="stylesheet" href="style.css?v=8" />
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; min-height: 1.6rem; }
         .categorie-title { font-size: 1.5rem; margin-top: 4rem; margin-bottom: 1.5rem; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0; color: #1a1a1a; }
         .publication-item { background-color: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); margin-bottom: 20px; border: 1px solid #e0e0e0; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .publication-item:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); }
@@ -77,27 +77,37 @@
             const prof = await initLayout();
             if (!prof) return;
 
-            document.getElementById('skeleton-name').style.display = 'none';
+            const skelName = document.getElementById('skeleton-name');
+            if (skelName) skelName.style.display = 'none';
+
             const realNameEl = document.getElementById('real-site-name');
-            realNameEl.innerText = prof.name;
-            realNameEl.style.display = 'inline';
+            if (realNameEl) {
+                realNameEl.innerText = prof.name;
+                realNameEl.style.display = 'inline';
+            }
 
             const descSkeleton = document.getElementById('skeleton-desc');
             const descReal = document.getElementById('page-desc');
             const descWrapper = document.getElementById('desc-wrapper');
             
             if(prof.publications_desc) {
-                descSkeleton.style.display = 'none';
-                descReal.innerText = prof.publications_desc;
-                descReal.style.display = 'inline';
+                if(descSkeleton) descSkeleton.style.display = 'none';
+                if(descReal) {
+                    descReal.innerText = prof.publications_desc;
+                    descReal.style.display = 'inline';
+                }
             } else {
-                descWrapper.style.display = 'none';
+                if(descWrapper) descWrapper.style.display = 'none';
             }
 
             const { data: pubs, error } = await supabase.from('publications').select('*').eq('prof_id', prof.id);
             const container = document.getElementById('publications-container');
 
-            if (error || !pubs || pubs.length === 0) { container.innerHTML = "<p class='empty-msg'>Aucune publication disponible pour le moment.</p>"; return; }
+            if (error || !pubs || pubs.length === 0) { 
+                if(container) container.innerHTML = "<p class='empty-msg'>Aucune publication disponible pour le moment.</p>"; 
+                return; 
+            }
+            
             pubs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             const groupes = pubs.reduce((acc, pub) => {
@@ -107,7 +117,7 @@
                 return acc;
             }, {});
 
-            container.innerHTML = "";
+            if(container) container.innerHTML = "";
             for (const [cat, items] of Object.entries(groupes)) {
                 const h2 = document.createElement('h2'); h2.className = 'categorie-title'; h2.textContent = cat; container.appendChild(h2);
                 items.forEach(pub => {
@@ -124,7 +134,7 @@
                     container.appendChild(div);
                 });
             }
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
         loadPublications();
     </script>
