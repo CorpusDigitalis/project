@@ -34,7 +34,6 @@ header nav {
     flex-wrap: wrap;
 }
 
-/* Logo / Nom du site */
 .site-name.no-animation {
     font-weight: 600;
     font-size: 1.25rem;
@@ -43,7 +42,6 @@ header nav {
     letter-spacing: 0.05em;
 }
 
-/* --- MENUS DYNAMIQUES (Header & Footer) --- */
 .dynamic-nav, .footer-links {
     display: flex;
     gap: 25px;
@@ -80,7 +78,6 @@ header nav {
     gap: 60px;
 }
 
-/* --- IMAGE (FORCÉE EN PORTRAIT) --- */
 #profil-img {
     width: 350px;
     height: 500px;
@@ -90,7 +87,6 @@ header nav {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* --- TEXTE --- */
 .description {
     flex: 1;
     display: flex;
@@ -110,7 +106,7 @@ h1 {
     color: #333;
     margin: 0;
     line-height: 1.6;
-    white-space: pre-wrap; /* Magie pour les sauts de lignes */
+    white-space: pre-wrap; 
 }
 
 /* --- FOOTER --- */
@@ -130,33 +126,13 @@ footer {
     user-select: none;
 }
 
-/* --- RESPONSIVE (MOBILES & TABLETTES) --- */
+/* --- RESPONSIVE --- */
 @media (max-width: 850px) {
-    .hero-section {
-        flex-direction: column;
-        align-items: center;
-        text-align: left;
-        gap: 40px;
-    }
-
-    #profil-img {
-        width: 100%;
-        max-width: 400px;
-        height: auto;
-        aspect-ratio: 3 / 4;
-    }
-
+    .hero-section { flex-direction: column; align-items: center; text-align: left; gap: 40px; }
+    #profil-img { width: 100%; max-width: 400px; height: auto; aspect-ratio: 3 / 4; }
     h1 { margin-top: 0; }
-
-    header nav {
-        flex-direction: column;
-        gap: 20px;
-        text-align: center;
-    }
-
-    .dynamic-nav, .footer-links {
-        justify-content: center;
-    }
+    header nav { flex-direction: column; gap: 20px; text-align: center; }
+    .dynamic-nav, .footer-links { justify-content: center; }
 }
 
 /* --- SKELETON LOADING (EFFET PULSATION) --- */
@@ -166,20 +142,28 @@ footer {
     100% { background-color: #e2e8f0; }
 }
 
+/* Base Skeleton */
 .skeleton {
     animation: pulseSkeleton 1.5s infinite ease-in-out;
     border-radius: 8px;
 }
 
+/* Skeletons Spécifiques (Header & Titres) */
+.skeleton-header-name { width: 140px; height: 1.25rem; border-radius: 4px; background-color: #333; /* Gris foncé pour le header noir */ animation: none; opacity: 0.5; }
+.skeleton-desc-center { width: 250px; height: 1rem; border-radius: 4px; margin: 0 auto 3rem auto; }
+
+/* Skeletons Accueil */
 .skeleton-img { width: 350px; height: 500px; border-radius: 12px; flex-shrink: 0; }
 .skeleton-title { height: 2.5rem; width: 60%; margin-bottom: 20px; }
 .skeleton-text { height: 1.1rem; width: 100%; margin-bottom: 12px; }
 .skeleton-text.short { width: 70%; }
 .skeleton-text.shorter { width: 40%; }
 
+/* Skeletons Cartes (Cours, Pubs) */
 .skeleton-card { background: white; border-radius: 12px; padding: 25px; border: 1px solid #e0e0e0; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); }
 .skeleton-badge { width: 80px; height: 25px; border-radius: 6px; }
 
+/* Skeletons Interventions */
 .skeleton-timeline-item { padding-left: 50px; margin-bottom: 40px; position: relative; }
 .skeleton-timeline-dot { position: absolute; left: 11px; top: 0; width: 20px; height: 20px; background: #e2e8f0; border-radius: 50%; border: 4px solid #fefaf5; }
 
