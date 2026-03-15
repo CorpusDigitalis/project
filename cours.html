@@ -6,13 +6,13 @@
     <title>Enseignements</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=7" />
+    <link rel="stylesheet" href="style.css?v=8" />
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; min-height: 1.6rem; }
         
         .course-card { background: white; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); }
         .course-header { background: #fefaf5; padding: 20px 25px; border-bottom: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s ease, border-color 0.3s ease; user-select: none; }
@@ -85,6 +85,15 @@
                             <div class="skeleton-box" style="width: 24px; height: 24px; border-radius: 4px;"></div>
                         </div>
                     </div>
+                    <div class="course-card" style="box-shadow: none;">
+                        <div class="course-header" style="cursor: default;">
+                            <div class="course-title-wrap">
+                                <div class="skeleton-box" style="width: 140px; height: 1.5rem;"></div>
+                                <div class="skeleton-box" style="width: 70px; height: 26px; border-radius: 6px;"></div>
+                            </div>
+                            <div class="skeleton-box" style="width: 24px; height: 24px; border-radius: 4px;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,6 +106,7 @@
 
     <script type="module">
         import { initLayout, supabase } from './theme.js';
+        
         window.toggleAccordion = function(headerEl, bodyId) {
             const bodyEl = document.getElementById(bodyId);
             headerEl.classList.toggle('open'); bodyEl.classList.toggle('open');
@@ -106,30 +116,39 @@
             const prof = await initLayout();
             if (!prof) return;
 
-            document.getElementById('skeleton-name').style.display = 'none';
+            const skelName = document.getElementById('skeleton-name');
+            if (skelName) skelName.style.display = 'none';
+
             const realNameEl = document.getElementById('real-site-name');
-            realNameEl.innerText = prof.name;
-            realNameEl.style.display = 'inline';
+            if (realNameEl) {
+                realNameEl.innerText = prof.name;
+                realNameEl.style.display = 'inline';
+            }
 
             const descSkeleton = document.getElementById('skeleton-desc');
             const descReal = document.getElementById('page-desc');
             const descWrapper = document.getElementById('desc-wrapper');
             
             if(prof.courses_desc) {
-                descSkeleton.style.display = 'none';
-                descReal.innerText = prof.courses_desc;
-                descReal.style.display = 'inline';
+                if(descSkeleton) descSkeleton.style.display = 'none';
+                if(descReal) {
+                    descReal.innerText = prof.courses_desc;
+                    descReal.style.display = 'inline';
+                }
             } else {
-                descWrapper.style.display = 'none';
+                if(descWrapper) descWrapper.style.display = 'none';
             }
 
             const { data: courses, error } = await supabase.from('courses').select('*').eq('prof_id', prof.id).order('position', { ascending: true }).order('created_at', { ascending: false });
             const container = document.getElementById('courses-container');
 
             if (error || !courses || courses.length === 0) {
-                container.innerHTML = "<p class='empty-msg'>Aucun enseignement disponible pour le moment.</p>"; return;
+                if(container) container.innerHTML = "<p class='empty-msg'>Aucun enseignement disponible pour le moment.</p>"; 
+                return;
             }
-            container.innerHTML = "";
+            
+            if(container) container.innerHTML = "";
+            
             courses.forEach((course) => {
                 const sections = course.sections || []; 
                 let sectionsHtml = '';
@@ -144,7 +163,7 @@
                 });
                 container.innerHTML += `<div class="course-card"><div class="course-header" onclick="toggleAccordion(this, 'course-body-${course.id}')"><div class="course-title-wrap"><h2 class="course-title">${course.title}</h2><span class="course-badge">${course.category || 'Cours'}</span></div><i data-lucide="chevron-down" class="chevron"></i></div><div class="accordion-grid" id="course-body-${course.id}"><div class="accordion-inner"><div class="course-body">${sectionsHtml || '<p style="color:#888; margin:0;">Contenu en construction.</p>'}</div></div></div></div>`;
             });
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
         loadCourses();
     </script>
