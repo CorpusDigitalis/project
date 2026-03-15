@@ -6,14 +6,13 @@
     <title>Enseignements</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=6" />
-    
+    <link rel="stylesheet" href="style.css?v=7" />
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; min-height: 1.6rem; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; }
         
         .course-card { background: white; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); }
         .course-header { background: #fefaf5; padding: 20px 25px; border-bottom: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s ease, border-color 0.3s ease; user-select: none; }
@@ -49,8 +48,10 @@
 
     <header>
         <nav>
-            <div id="skeleton-name" class="skeleton-box" style="width: 140px; height: 1.5rem; background-color: #333;"></div>
-            <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
+            <a href="#" class="site-name no-animation" style="cursor: default;">
+                <span id="skeleton-name" class="skeleton-box skeleton-glass" style="width: 140px; height: 24px; border-radius: 4px;"></span>
+                <span id="real-site-name" style="display: none;"></span>
+            </a>
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
@@ -59,10 +60,10 @@
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Enseignements</h1>
             
-            <p class="intro-text" id="skeleton-desc">
-                <span class="skeleton-box" style="width: 250px; height: 1rem; max-width: 80%;"></span>
+            <p class="intro-text" id="desc-wrapper">
+                <span id="skeleton-desc" class="skeleton-box" style="width: 250px; height: 1.1rem; max-width: 80%;"></span>
+                <span id="page-desc" style="display: none;"></span>
             </p>
-            <p class="intro-text" id="page-desc" style="display: none;"></p>
 
             <div id="courses-container">
                 <div id="skeleton-courses-content">
@@ -84,15 +85,6 @@
                             <div class="skeleton-box" style="width: 24px; height: 24px; border-radius: 4px;"></div>
                         </div>
                     </div>
-                    <div class="course-card" style="box-shadow: none;">
-                        <div class="course-header" style="cursor: default;">
-                            <div class="course-title-wrap">
-                                <div class="skeleton-box" style="width: 140px; height: 1.5rem;"></div>
-                                <div class="skeleton-box" style="width: 70px; height: 26px; border-radius: 6px;"></div>
-                            </div>
-                            <div class="skeleton-box" style="width: 24px; height: 24px; border-radius: 4px;"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -105,11 +97,9 @@
 
     <script type="module">
         import { initLayout, supabase } from './theme.js';
-
         window.toggleAccordion = function(headerEl, bodyId) {
             const bodyEl = document.getElementById(bodyId);
-            headerEl.classList.toggle('open');
-            bodyEl.classList.toggle('open');
+            headerEl.classList.toggle('open'); bodyEl.classList.toggle('open');
         };
 
         async function loadCourses() {
@@ -117,90 +107,45 @@
             if (!prof) return;
 
             document.getElementById('skeleton-name').style.display = 'none';
-            document.getElementById('real-site-name').style.display = 'block';
+            const realNameEl = document.getElementById('real-site-name');
+            realNameEl.innerText = prof.name;
+            realNameEl.style.display = 'inline';
 
-            document.getElementById('skeleton-desc').style.display = 'none';
-            const descEl = document.getElementById('page-desc');
+            const descSkeleton = document.getElementById('skeleton-desc');
+            const descReal = document.getElementById('page-desc');
+            const descWrapper = document.getElementById('desc-wrapper');
+            
             if(prof.courses_desc) {
-                descEl.innerText = prof.courses_desc;
-                descEl.style.display = 'block';
+                descSkeleton.style.display = 'none';
+                descReal.innerText = prof.courses_desc;
+                descReal.style.display = 'inline';
+            } else {
+                descWrapper.style.display = 'none';
             }
 
-            const { data: courses, error } = await supabase
-                .from('courses')
-                .select('*')
-                .eq('prof_id', prof.id)
-                .order('position', { ascending: true })
-                .order('created_at', { ascending: false });
-
+            const { data: courses, error } = await supabase.from('courses').select('*').eq('prof_id', prof.id).order('position', { ascending: true }).order('created_at', { ascending: false });
             const container = document.getElementById('courses-container');
 
             if (error || !courses || courses.length === 0) {
-                container.innerHTML = "<p class='empty-msg'>Aucun enseignement disponible pour le moment.</p>";
-                return;
+                container.innerHTML = "<p class='empty-msg'>Aucun enseignement disponible pour le moment.</p>"; return;
             }
-
             container.innerHTML = "";
-
             courses.forEach((course) => {
                 const sections = course.sections || []; 
                 let sectionsHtml = '';
                 sections.forEach((sec, secIdx) => {
                     let itemsHtml = '';
                     if(sec.items && sec.items.length > 0) {
-                        itemsHtml = sec.items.map(item => `
-                            <li>
-                                <a href="${item.value}" target="_blank">
-                                    <i data-lucide="${item.type === 'file' ? 'file-text' : 'link'}" size="18"></i>
-                                    ${item.label}
-                                </a>
-                            </li>
-                        `).join('');
+                        itemsHtml = sec.items.map(item => `<li><a href="${item.value}" target="_blank"><i data-lucide="${item.type === 'file' ? 'file-text' : 'link'}" size="18"></i> ${item.label}</a></li>`).join('');
                     } else {
                         itemsHtml = '<li style="color:#888; font-size:0.9rem; padding-left: 10px;">Aucun document dans cette section.</li>';
                     }
-
-                    sectionsHtml += `
-                        <div class="section-card">
-                            <div class="section-header" onclick="toggleAccordion(this, 'sec-body-${course.id}-${secIdx}')">
-                                <h3 class="section-title">${sec.title}</h3>
-                                <i data-lucide="chevron-down" class="chevron"></i>
-                            </div>
-                            <div class="accordion-grid" id="sec-body-${course.id}-${secIdx}">
-                                <div class="accordion-inner">
-                                    <div class="section-body">
-                                        <ul class="resource-links">${itemsHtml}</ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    sectionsHtml += `<div class="section-card"><div class="section-header" onclick="toggleAccordion(this, 'sec-body-${course.id}-${secIdx}')"><h3 class="section-title">${sec.title}</h3><i data-lucide="chevron-down" class="chevron"></i></div><div class="accordion-grid" id="sec-body-${course.id}-${secIdx}"><div class="accordion-inner"><div class="section-body"><ul class="resource-links">${itemsHtml}</ul></div></div></div></div>`;
                 });
-
-                // AUCUN COURS OUVERT PAR DÉFAUT
-                container.innerHTML += `
-                    <div class="course-card">
-                        <div class="course-header" onclick="toggleAccordion(this, 'course-body-${course.id}')">
-                            <div class="course-title-wrap">
-                                <h2 class="course-title">${course.title}</h2>
-                                <span class="course-badge">${course.category || 'Cours'}</span>
-                            </div>
-                            <i data-lucide="chevron-down" class="chevron"></i>
-                        </div>
-                        <div class="accordion-grid" id="course-body-${course.id}">
-                            <div class="accordion-inner">
-                                <div class="course-body">
-                                    ${sectionsHtml || '<p style="color:#888; margin:0;">Contenu en construction.</p>'}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML += `<div class="course-card"><div class="course-header" onclick="toggleAccordion(this, 'course-body-${course.id}')"><div class="course-title-wrap"><h2 class="course-title">${course.title}</h2><span class="course-badge">${course.category || 'Cours'}</span></div><i data-lucide="chevron-down" class="chevron"></i></div><div class="accordion-grid" id="course-body-${course.id}"><div class="accordion-inner"><div class="course-body">${sectionsHtml || '<p style="color:#888; margin:0;">Contenu en construction.</p>'}</div></div></div></div>`;
             });
-            
             lucide.createIcons();
         }
-
         loadCourses();
     </script>
 </body>
