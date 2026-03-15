@@ -6,7 +6,7 @@
     <title>Publications</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=5" />
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
@@ -35,7 +35,8 @@
 
     <header>
         <nav>
-            <a href="#" class="site-name no-animation">...</a>
+            <div id="skeleton-name" class="skeleton skeleton-header-name"></div>
+            <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
@@ -43,23 +44,21 @@
     <div class="container">
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Publications</h1>
-            <p class="intro-text" id="page-desc"></p>
+            
+            <div id="skeleton-desc" class="skeleton skeleton-desc-center"></div>
+            <p class="intro-text" id="page-desc" style="display: none;"></p>
             
             <div id="publications-container">
-                <div class="skeleton-card">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                        <div class="skeleton" style="width: 60%; height: 1.2rem;"></div>
-                        <div class="skeleton skeleton-badge" style="width: 100px;"></div>
+                <div id="skeleton-pubs-content">
+                    <h2 class="categorie-title"><div class="skeleton" style="width: 120px; height: 1.5rem;"></div></h2>
+                    <div class="skeleton-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <div class="skeleton" style="width: 60%; height: 1.2rem;"></div>
+                            <div class="skeleton skeleton-badge" style="width: 100px;"></div>
+                        </div>
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text short"></div>
                     </div>
-                    <div class="skeleton skeleton-text"></div>
-                    <div class="skeleton skeleton-text short"></div>
-                </div>
-                <div class="skeleton-card">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                        <div class="skeleton" style="width: 50%; height: 1.2rem;"></div>
-                        <div class="skeleton skeleton-badge" style="width: 100px;"></div>
-                    </div>
-                    <div class="skeleton skeleton-text"></div>
                 </div>
             </div>
         </div>
@@ -77,11 +76,14 @@
             const prof = await initLayout();
             if (!prof) return;
 
+            document.getElementById('skeleton-name').style.display = 'none';
+            document.getElementById('real-site-name').style.display = 'block';
+
+            document.getElementById('skeleton-desc').style.display = 'none';
             const descEl = document.getElementById('page-desc');
             if(prof.publications_desc) {
                 descEl.innerText = prof.publications_desc;
-            } else {
-                descEl.style.display = 'none';
+                descEl.style.display = 'block';
             }
 
             const { data: pubs, error } = await supabase
