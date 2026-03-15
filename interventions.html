@@ -6,14 +6,14 @@
     <title>Interventions</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=5" />
+    <link rel="stylesheet" href="style.css?v=6" />
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; min-height: 1.6rem; }
         
         .filter-container {
             display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;
@@ -30,8 +30,7 @@
 
         .year-select {
             padding: 10px 35px 10px 15px; border: 1px solid #e0e0e0; border-radius: 8px;
-            font-size: 1rem; font-family: 'Alata', sans-serif; color: #1a1a1a;
-            background-color: white;
+            font-size: 1rem; font-family: 'Alata', sans-serif; color: #1a1a1a; background-color: white;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: right 10px center;
             appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
@@ -62,7 +61,6 @@
         .event-link:hover { border-color: #1a1a1a; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
         .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
-
         mark.highlight { background-color: rgba(250, 204, 21, 0.4); color: inherit; padding: 0 3px; border-radius: 3px; font-weight: inherit; }
     </style>
 </head>
@@ -70,7 +68,7 @@
 
     <header>
         <nav>
-            <div id="skeleton-name" class="skeleton skeleton-header-name"></div>
+            <div id="skeleton-name" class="skeleton-box" style="width: 140px; height: 1.5rem; background-color: #333;"></div>
             <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
@@ -80,12 +78,12 @@
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Interventions</h1>
             
-            <div id="skeleton-desc" class="skeleton skeleton-desc-center"></div>
+            <p class="intro-text" id="skeleton-desc"><span class="skeleton-box" style="width: 250px; height: 1rem; max-width: 80%;"></span></p>
             <p class="intro-text" id="page-desc" style="display: none;"></p>
 
-            <div class="filter-container" id="skeleton-filter">
-                <div class="skeleton" style="flex: 1; height: 46px; border-radius: 8px;"></div>
-                <div class="skeleton" style="width: 150px; height: 46px; border-radius: 8px;"></div>
+            <div class="filter-container" id="skeleton-filter" style="border-color: transparent; box-shadow: none;">
+                <div class="skeleton-box" style="flex: 1; height: 46px; border-radius: 8px; min-width: 200px;"></div>
+                <div class="skeleton-box" style="width: 150px; height: 46px; border-radius: 8px;"></div>
             </div>
 
             <div class="filter-container" id="filter-box" style="display: none;">
@@ -98,11 +96,16 @@
             <div id="timeline-box">
                 <div class="timeline-container" id="skeleton-timeline">
                     <div class="timeline-line"></div>
-                    <div class="skeleton-timeline-item">
-                        <div class="skeleton-timeline-dot"></div>
-                        <div class="skeleton" style="width: 100px; height: 1rem; margin-bottom: 10px;"></div>
-                        <div class="skeleton" style="width: 60%; height: 1.5rem; margin-bottom: 10px;"></div>
-                        <div class="skeleton skeleton-text short"></div>
+                    <div class="event-item">
+                        <div class="event-dot" style="background: #e2e8f0; border-color: #fefaf5;"></div>
+                        <div class="event-date"><div class="skeleton-box" style="width: 100px; height: 0.95rem;"></div></div>
+                        <h3 class="event-title"><div class="skeleton-box" style="width: 60%; height: 1.5rem; margin-bottom: 5px;"></div></h3>
+                        <div class="event-meta"><div class="skeleton-box" style="width: 150px; height: 0.95rem; margin-bottom: 10px;"></div></div>
+                        <p class="event-desc">
+                            <span class="skeleton-box" style="width: 100%; height: 1rem; margin-bottom: 5px;"></span><br>
+                            <span class="skeleton-box" style="width: 80%; height: 1rem;"></span>
+                        </p>
+                        <div class="skeleton-box" style="width: 120px; height: 35px; border-radius: 8px; margin-top: 5px;"></div>
                     </div>
                 </div>
             </div>
@@ -120,7 +123,6 @@
         let allInterventions = []; 
 
         function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-
         function highlight(text, keyword) {
             if (!text) return '';
             if (!keyword || keyword.trim() === '') return text;
@@ -175,7 +177,6 @@
             });
 
             filterBox.style.display = 'flex';
-
             document.getElementById('search-input').addEventListener('input', applyFilters);
             yearSelect.addEventListener('change', applyFilters);
 
@@ -185,23 +186,13 @@
         function applyFilters() {
             const keyword = document.getElementById('search-input').value.toLowerCase();
             const selectedYear = document.getElementById('year-filter').value;
-
             const filteredItems = allInterventions.filter(item => {
                 const itemYear = item.event_date ? item.event_date.substring(0, 4) : '';
                 const matchYear = (selectedYear === 'all') || (itemYear === selectedYear);
-
-                const textToSearch = [
-                    item.title || '',
-                    item.description || '',
-                    item.location || '',
-                    item.category || ''
-                ].join(' ').toLowerCase();
-                
+                const textToSearch = [item.title || '', item.description || '', item.location || '', item.category || ''].join(' ').toLowerCase();
                 const matchKeyword = textToSearch.includes(keyword);
-
                 return matchYear && matchKeyword;
             });
-
             renderTimeline(filteredItems);
         }
 
@@ -218,7 +209,6 @@
             
             items.forEach(item => {
                 const dateStr = item.event_date ? new Date(item.event_date).toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric'}) : 'Date inconnue';
-                
                 const hTitle = highlight(item.title, searchKeyword);
                 const hDesc = highlight(item.description, searchKeyword);
                 const locText = item.location ? `• ${item.location}` : '';
@@ -230,7 +220,6 @@
                     const defaultLabel = item.link_type === 'file' ? 'Télécharger le support' : 'Voir le lien';
                     const finalLabel = item.link_label ? item.link_label : defaultLabel;
                     const icon = item.link_type === 'file' ? 'file-text' : 'external-link';
-                    
                     linkHtml = `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${icon}" size="16"></i> ${finalLabel}</a>`;
                 }
 
@@ -248,7 +237,6 @@
 
             html += '</div>';
             container.innerHTML = html;
-            
             lucide.createIcons();
         }
 
