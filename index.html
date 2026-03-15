@@ -6,7 +6,7 @@
     <title>Accueil</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=7" />
+    <link rel="stylesheet" href="style.css?v=8" />
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 <body>
@@ -58,30 +58,37 @@
             const prof = await initLayout();
             if (!prof) return;
 
-            document.getElementById('skeleton-name').style.display = 'none';
-            const realNameEl = document.getElementById('real-site-name');
-            realNameEl.innerText = prof.name;
-            realNameEl.style.display = 'inline';
+            const skelName = document.getElementById('skeleton-name');
+            if (skelName) skelName.style.display = 'none';
 
-            document.getElementById('skeleton-img').style.display = 'none';
-            document.getElementById('skeleton-desc').style.display = 'none';
-            document.getElementById('real-desc').style.display = 'flex';
+            const realNameEl = document.getElementById('real-site-name');
+            if (realNameEl) {
+                realNameEl.innerText = prof.name;
+                realNameEl.style.display = 'inline';
+            }
+
+            const skelImg = document.getElementById('skeleton-img');
+            if (skelImg) skelImg.style.display = 'none';
+
+            const skelDesc = document.getElementById('skeleton-desc');
+            if (skelDesc) skelDesc.style.display = 'none';
+
+            const realDesc = document.getElementById('real-desc');
+            if (realDesc) realDesc.style.display = 'flex';
 
             const imgEl = document.getElementById('profil-img');
-            if (prof.image_url) {
+            if (prof.image_url && imgEl) {
                 imgEl.src = prof.image_url;
                 imgEl.style.display = 'block';
             }
 
             const titleEl = document.getElementById('main-title');
-            if (prof.title) {
-                titleEl.innerText = prof.title;
-            } else {
-                titleEl.innerText = prof.name; 
+            if (titleEl) {
+                titleEl.innerText = prof.title ? prof.title : prof.name; 
             }
 
             const bioEl = document.getElementById('profil-desc');
-            if (prof.bio) {
+            if (prof.bio && bioEl) {
                 bioEl.innerText = prof.bio;
             }
         }
