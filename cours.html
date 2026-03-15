@@ -6,14 +6,14 @@
     <title>Enseignements</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=5" />
+    <link rel="stylesheet" href="style.css?v=6" />
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; min-height: 1.6rem; }
         
         .course-card { background: white; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); }
         .course-header { background: #fefaf5; padding: 20px 25px; border-bottom: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s ease, border-color 0.3s ease; user-select: none; }
@@ -21,7 +21,7 @@
         .course-header.open { border-bottom-color: #e0e0e0; }
 
         .course-title-wrap { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .course-title { font-size: 1.3rem; color: #1a1a1a; margin: 0; }
+        .course-title { font-size: 1.3rem; color: #1a1a1a; margin: 0; line-height: 1.3; }
         .course-badge { background: #1a1a1a; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; letter-spacing: 0.05em; }
 
         .course-body { padding: 10px 25px 25px 25px; background: #fff; }
@@ -49,7 +49,7 @@
 
     <header>
         <nav>
-            <div id="skeleton-name" class="skeleton skeleton-header-name"></div>
+            <div id="skeleton-name" class="skeleton-box" style="width: 140px; height: 1.5rem; background-color: #333;"></div>
             <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
@@ -59,17 +59,40 @@
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Enseignements</h1>
             
-            <div id="skeleton-desc" class="skeleton skeleton-desc-center"></div>
+            <p class="intro-text" id="skeleton-desc">
+                <span class="skeleton-box" style="width: 250px; height: 1rem; max-width: 80%;"></span>
+            </p>
             <p class="intro-text" id="page-desc" style="display: none;"></p>
 
             <div id="courses-container">
-                <div class="skeleton-card">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                        <div class="skeleton" style="width: 40%; height: 1.5rem;"></div>
-                        <div class="skeleton skeleton-badge"></div>
+                <div id="skeleton-courses-content">
+                    <div class="course-card" style="box-shadow: none;">
+                        <div class="course-header" style="cursor: default;">
+                            <div class="course-title-wrap">
+                                <div class="skeleton-box" style="width: 180px; height: 1.5rem;"></div>
+                                <div class="skeleton-box" style="width: 70px; height: 26px; border-radius: 6px;"></div>
+                            </div>
+                            <div class="skeleton-box" style="width: 24px; height: 24px; border-radius: 4px;"></div>
+                        </div>
                     </div>
-                    <div class="skeleton skeleton-text"></div>
-                    <div class="skeleton skeleton-text short"></div>
+                    <div class="course-card" style="box-shadow: none;">
+                        <div class="course-header" style="cursor: default;">
+                            <div class="course-title-wrap">
+                                <div class="skeleton-box" style="width: 220px; height: 1.5rem;"></div>
+                                <div class="skeleton-box" style="width: 70px; height: 26px; border-radius: 6px;"></div>
+                            </div>
+                            <div class="skeleton-box" style="width: 24px; height: 24px; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                    <div class="course-card" style="box-shadow: none;">
+                        <div class="course-header" style="cursor: default;">
+                            <div class="course-title-wrap">
+                                <div class="skeleton-box" style="width: 140px; height: 1.5rem;"></div>
+                                <div class="skeleton-box" style="width: 70px; height: 26px; border-radius: 6px;"></div>
+                            </div>
+                            <div class="skeleton-box" style="width: 24px; height: 24px; border-radius: 4px;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,7 +142,7 @@
 
             container.innerHTML = "";
 
-            courses.forEach((course, courseIndex) => {
+            courses.forEach((course) => {
                 const sections = course.sections || []; 
                 let sectionsHtml = '';
                 sections.forEach((sec, secIdx) => {
@@ -154,18 +177,17 @@
                     `;
                 });
 
-                const isOpenClass = courseIndex === 0 ? 'open' : '';
-
+                // AUCUN COURS OUVERT PAR DÉFAUT
                 container.innerHTML += `
                     <div class="course-card">
-                        <div class="course-header ${isOpenClass}" onclick="toggleAccordion(this, 'course-body-${course.id}')">
+                        <div class="course-header" onclick="toggleAccordion(this, 'course-body-${course.id}')">
                             <div class="course-title-wrap">
                                 <h2 class="course-title">${course.title}</h2>
                                 <span class="course-badge">${course.category || 'Cours'}</span>
                             </div>
                             <i data-lucide="chevron-down" class="chevron"></i>
                         </div>
-                        <div class="accordion-grid ${isOpenClass}" id="course-body-${course.id}">
+                        <div class="accordion-grid" id="course-body-${course.id}">
                             <div class="accordion-inner">
                                 <div class="course-body">
                                     ${sectionsHtml || '<p style="color:#888; margin:0;">Contenu en construction.</p>'}
