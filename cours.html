@@ -6,7 +6,7 @@
     <title>Enseignements</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=5" />
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
@@ -25,7 +25,6 @@
         .course-badge { background: #1a1a1a; color: white; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem; letter-spacing: 0.05em; }
 
         .course-body { padding: 10px 25px 25px 25px; background: #fff; }
-        
         .section-card { border: 1px solid #f0f0f0; border-radius: 8px; margin-top: 15px; overflow: hidden; }
         .section-header { padding: 15px 20px; background: #fafafa; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s ease; user-select: none; }
         .section-header:hover { background: #f1f1f1; }
@@ -50,7 +49,8 @@
 
     <header>
         <nav>
-            <a href="#" class="site-name no-animation">...</a>
+            <div id="skeleton-name" class="skeleton skeleton-header-name"></div>
+            <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
@@ -58,7 +58,9 @@
     <div class="container">
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Enseignements</h1>
-            <p class="intro-text" id="page-desc"></p>
+            
+            <div id="skeleton-desc" class="skeleton skeleton-desc-center"></div>
+            <p class="intro-text" id="page-desc" style="display: none;"></p>
 
             <div id="courses-container">
                 <div class="skeleton-card">
@@ -68,13 +70,6 @@
                     </div>
                     <div class="skeleton skeleton-text"></div>
                     <div class="skeleton skeleton-text short"></div>
-                </div>
-                <div class="skeleton-card">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                        <div class="skeleton" style="width: 30%; height: 1.5rem;"></div>
-                        <div class="skeleton skeleton-badge"></div>
-                    </div>
-                    <div class="skeleton skeleton-text"></div>
                 </div>
             </div>
         </div>
@@ -98,11 +93,14 @@
             const prof = await initLayout();
             if (!prof) return;
 
+            document.getElementById('skeleton-name').style.display = 'none';
+            document.getElementById('real-site-name').style.display = 'block';
+
+            document.getElementById('skeleton-desc').style.display = 'none';
             const descEl = document.getElementById('page-desc');
             if(prof.courses_desc) {
                 descEl.innerText = prof.courses_desc;
-            } else {
-                descEl.style.display = 'none'; 
+                descEl.style.display = 'block';
             }
 
             const { data: courses, error } = await supabase
@@ -123,7 +121,6 @@
 
             courses.forEach((course, courseIndex) => {
                 const sections = course.sections || []; 
-
                 let sectionsHtml = '';
                 sections.forEach((sec, secIdx) => {
                     let itemsHtml = '';
