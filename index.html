@@ -6,7 +6,7 @@
     <title>Accueil</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=3" />
+    <link rel="stylesheet" href="style.css?v=5" />
     
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
@@ -14,7 +14,9 @@
 
     <header>
         <nav>
-            <a href="#" class="site-name no-animation">...</a>
+            <div id="skeleton-name" class="skeleton skeleton-header-name"></div>
+            <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
+            
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
@@ -53,19 +55,21 @@
             const prof = await initLayout();
             if (!prof) return;
 
-            // Disparition des Skeletons, apparition des vraies données
+            // Transition Header Name
+            document.getElementById('skeleton-name').style.display = 'none';
+            document.getElementById('real-site-name').style.display = 'block';
+
+            // Transition Accueil
             document.getElementById('skeleton-img').style.display = 'none';
             document.getElementById('skeleton-desc').style.display = 'none';
             document.getElementById('real-desc').style.display = 'flex';
 
-            // 1. Image
             const imgEl = document.getElementById('profil-img');
             if (prof.image_url) {
                 imgEl.src = prof.image_url;
                 imgEl.style.display = 'block';
             }
 
-            // 2. Titre
             const titleEl = document.getElementById('main-title');
             if (prof.title) {
                 titleEl.innerText = prof.title;
@@ -73,7 +77,6 @@
                 titleEl.innerText = prof.name; 
             }
 
-            // 3. Bio
             const bioEl = document.getElementById('profil-desc');
             if (prof.bio) {
                 bioEl.innerText = prof.bio;
