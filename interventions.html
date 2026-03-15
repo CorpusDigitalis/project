@@ -6,13 +6,13 @@
     <title>Interventions</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=7" />
+    <link rel="stylesheet" href="style.css?v=8" />
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; }
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; min-height: 1.6rem; }
         
         .filter-container { display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); border: 1px solid #e0e0e0; }
         .search-input { flex: 1; min-width: 200px; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 1rem; font-family: 'Alata', sans-serif; color: #1a1a1a; outline: none; transition: border-color 0.2s ease; }
@@ -57,7 +57,7 @@
                 <span id="page-desc" style="display: none;"></span>
             </p>
 
-            <div class="filter-container" id="skeleton-filter" style="border-color: #e0e0e0;">
+            <div class="filter-container" id="skeleton-filter" style="border-color: #e0e0e0; box-shadow: none;">
                 <div class="skeleton-box" style="flex: 1; height: 42px; border-radius: 8px; min-width: 200px;"></div>
                 <div class="skeleton-box" style="width: 150px; height: 42px; border-radius: 8px;"></div>
             </div>
@@ -95,6 +95,7 @@
 
     <script type="module">
         import { initLayout, supabase } from './theme.js';
+        
         let allInterventions = []; 
         function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
         function highlight(text, keyword) {
@@ -107,39 +108,57 @@
             const prof = await initLayout();
             if (!prof) return;
 
-            document.getElementById('skeleton-name').style.display = 'none';
+            const skelName = document.getElementById('skeleton-name');
+            if (skelName) skelName.style.display = 'none';
+
             const realNameEl = document.getElementById('real-site-name');
-            realNameEl.innerText = prof.name;
-            realNameEl.style.display = 'inline';
+            if (realNameEl) {
+                realNameEl.innerText = prof.name;
+                realNameEl.style.display = 'inline';
+            }
 
             const descSkeleton = document.getElementById('skeleton-desc');
             const descReal = document.getElementById('page-desc');
             const descWrapper = document.getElementById('desc-wrapper');
             
             if(prof.interventions_desc) {
-                descSkeleton.style.display = 'none';
-                descReal.innerText = prof.interventions_desc;
-                descReal.style.display = 'inline';
+                if(descSkeleton) descSkeleton.style.display = 'none';
+                if(descReal) {
+                    descReal.innerText = prof.interventions_desc;
+                    descReal.style.display = 'inline';
+                }
             } else {
-                descWrapper.style.display = 'none';
+                if(descWrapper) descWrapper.style.display = 'none';
             }
 
             const { data: items, error } = await supabase.from('interventions').select('*').eq('prof_id', prof.id).order('position', { ascending: true }).order('created_at', { ascending: false });
             const container = document.getElementById('timeline-box');
             const filterBox = document.getElementById('filter-box');
-            document.getElementById('skeleton-filter').style.display = 'none';
+            
+            const skelFilter = document.getElementById('skeleton-filter');
+            if (skelFilter) skelFilter.style.display = 'none';
 
-            if (error || !items || items.length === 0) { container.innerHTML = "<p class='empty-msg'>Aucune intervention pour le moment.</p>"; return; }
+            if (error || !items || items.length === 0) { 
+                if(container) container.innerHTML = "<p class='empty-msg'>Aucune intervention pour le moment.</p>"; 
+                return; 
+            }
+            
             items.sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
             allInterventions = items; 
 
             const yearSelect = document.getElementById('year-filter');
             const uniqueYears = [...new Set(items.map(item => item.event_date ? item.event_date.substring(0, 4) : null).filter(Boolean))]; 
-            uniqueYears.forEach(year => { const option = document.createElement('option'); option.value = year; option.textContent = year; yearSelect.appendChild(option); });
-            filterBox.style.display = 'flex';
-
-            document.getElementById('search-input').addEventListener('input', applyFilters);
-            yearSelect.addEventListener('change', applyFilters);
+            if(yearSelect) {
+                uniqueYears.forEach(year => { const option = document.createElement('option'); option.value = year; option.textContent = year; yearSelect.appendChild(option); });
+            }
+            
+            if(filterBox) filterBox.style.display = 'flex';
+            
+            const searchInput = document.getElementById('search-input');
+            if(searchInput) searchInput.addEventListener('input', applyFilters);
+            
+            if(yearSelect) yearSelect.addEventListener('change', applyFilters);
+            
             renderTimeline(allInterventions);
         }
 
@@ -157,8 +176,13 @@
 
         function renderTimeline(items) {
             const container = document.getElementById('timeline-box');
-            const searchKeyword = document.getElementById('search-input').value.trim();
-            if (items.length === 0) { container.innerHTML = "<p class='empty-msg'>Aucune intervention ne correspond à votre recherche.</p>"; return; }
+            const searchInput = document.getElementById('search-input');
+            const searchKeyword = searchInput ? searchInput.value.trim() : '';
+            
+            if (items.length === 0) { 
+                if(container) container.innerHTML = "<p class='empty-msg'>Aucune intervention ne correspond à votre recherche.</p>"; 
+                return; 
+            }
 
             let html = '<div class="timeline-container"><div class="timeline-line"></div>';
             items.forEach(item => {
@@ -166,7 +190,9 @@
                 const linkHtml = item.link_value ? `<a href="${item.link_value}" target="_blank" class="event-link"><i data-lucide="${item.link_type === 'file' ? 'file-text' : 'external-link'}" size="16"></i> ${item.link_label ? item.link_label : (item.link_type === 'file' ? 'Télécharger le support' : 'Voir le lien')}</a>` : '';
                 html += `<div class="event-item"><div class="event-dot"></div><div class="event-date">${dateStr}</div><h3 class="event-title">${highlight(item.title, searchKeyword)}</h3><div class="event-meta">${highlight(item.category || 'Conférence', searchKeyword)} ${item.location ? `• ${highlight(item.location, searchKeyword)}` : ''}</div><p class="event-desc">${highlight(item.description, searchKeyword)}</p>${linkHtml}</div>`;
             });
-            html += '</div>'; container.innerHTML = html; lucide.createIcons();
+            html += '</div>'; 
+            if(container) container.innerHTML = html; 
+            if(window.lucide) lucide.createIcons();
         }
         loadInterventions();
     </script>
