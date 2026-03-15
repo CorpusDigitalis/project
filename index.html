@@ -1,87 +1,86 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chargement...</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2" />
-  
-  <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Accueil</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=3" />
+    
+    <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 <body>
 
-  <header>
-    <nav>
-      <a href="#" class="site-name no-animation">...</a>
-      <div class="dynamic-nav" id="header-menu"></div>
-    </nav>
-  </header>
+    <header>
+        <nav>
+            <a href="#" class="site-name no-animation">...</a>
+            <div class="dynamic-nav" id="header-menu"></div>
+        </nav>
+    </header>
 
-  <div class="container">
-    <div class="hero-section">
-      
-      <div id="skeleton-img" class="skeleton skeleton-img"></div>
-      <img id="profil-img" src="" alt="Portrait" style="display: none;" />
-      
-      <div class="description" id="skeleton-desc">
-        <div class="skeleton skeleton-title"></div>
-        <div class="skeleton skeleton-text"></div>
-        <div class="skeleton skeleton-text"></div>
-        <div class="skeleton skeleton-text"></div>
-        <div class="skeleton skeleton-text short"></div>
-      </div>
+    <div class="container">
+        <div class="hero-section">
+            
+            <div id="skeleton-img" class="skeleton skeleton-img"></div>
+            <img id="profil-img" src="" alt="Portrait" style="display: none;" />
+            
+            <div class="description" id="skeleton-desc">
+                <div class="skeleton skeleton-title"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-text short"></div>
+            </div>
 
-      <div class="description" id="real-desc" style="display: none;">
-        <h1 id="main-title"></h1>
-        <p id="profil-desc"></p>
-      </div>
+            <div class="description" id="real-desc" style="display: none;">
+                <h1 id="main-title"></h1>
+                <p id="profil-desc"></p>
+            </div>
 
+        </div>
     </div>
-  </div>
 
-  <footer>
-      <div class="footer-links" id="footer-list"></div>
-      <div class="corpus-tm">™ CorpusDigitalis</div>
-  </footer>
+    <footer>
+        <div class="footer-links" id="footer-list"></div>
+        <div class="corpus-tm">™ CorpusDigitalis</div>
+    </footer>
 
-  <script type="module">
-    import { initLayout } from './theme.js';
+    <script type="module">
+        import { initLayout } from './theme.js';
 
-    async function loadHome() {
-        const prof = await initLayout();
-        if (!prof) return;
+        async function loadHome() {
+            const prof = await initLayout();
+            if (!prof) return;
 
-        // Disparition des Skeletons, apparition des vraies données
-        document.getElementById('skeleton-img').style.display = 'none';
-        document.getElementById('skeleton-desc').style.display = 'none';
-        document.getElementById('real-desc').style.display = 'flex';
+            // Disparition des Skeletons, apparition des vraies données
+            document.getElementById('skeleton-img').style.display = 'none';
+            document.getElementById('skeleton-desc').style.display = 'none';
+            document.getElementById('real-desc').style.display = 'flex';
 
-        // 1. Image
-        const imgEl = document.getElementById('profil-img');
-        if (prof.image_url) {
-            imgEl.src = prof.image_url;
-            imgEl.style.display = 'block';
+            // 1. Image
+            const imgEl = document.getElementById('profil-img');
+            if (prof.image_url) {
+                imgEl.src = prof.image_url;
+                imgEl.style.display = 'block';
+            }
+
+            // 2. Titre
+            const titleEl = document.getElementById('main-title');
+            if (prof.title) {
+                titleEl.innerText = prof.title;
+            } else {
+                titleEl.innerText = prof.name; 
+            }
+
+            // 3. Bio
+            const bioEl = document.getElementById('profil-desc');
+            if (prof.bio) {
+                bioEl.innerText = prof.bio;
+            }
         }
 
-        // 2. Titre
-        const titleEl = document.getElementById('main-title');
-        if (prof.title) {
-            titleEl.innerText = prof.title;
-        } else {
-            titleEl.innerText = prof.name; 
-        }
-
-        // 3. Bio
-        const bioEl = document.getElementById('profil-desc');
-        if (prof.bio) {
-            bioEl.innerText = prof.bio;
-        }
-    }
-
-    loadHome();
-  </script>
-
+        loadHome();
+    </script>
 </body>
 </html>
