@@ -6,28 +6,22 @@
     <title>Publications</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=6" />
-    
+    <link rel="stylesheet" href="style.css?v=7" />
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
     <style>
         .page-title { text-align: center; font-size: 2.5rem; margin-top: 0; margin-bottom: 0.5rem; color: #1a1a1a; }
-        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; min-height: 1.6rem; }
-        
+        .intro-text { text-align: center; margin-bottom: 3rem; color: #555; font-size: 1.1rem; line-height: 1.6; }
         .categorie-title { font-size: 1.5rem; margin-top: 4rem; margin-bottom: 1.5rem; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0; color: #1a1a1a; }
-
         .publication-item { background-color: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); margin-bottom: 20px; border: 1px solid #e0e0e0; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .publication-item:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); }
-        
         .pub-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
         .pub-title { font-size: 1.15rem; color: #1a1a1a; font-weight: bold; }
         .pub-date { font-size: 0.85rem; color: #555; background: #f5f0ea; padding: 5px 10px; border-radius: 6px; letter-spacing: 0.05em; }
         .pub-desc { color: #444; line-height: 1.6; margin-bottom: 20px; }
-        
         .pub-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: white; background: #1a1a1a; padding: 10px 18px; border-radius: 8px; font-size: 0.95rem; transition: transform 0.2s ease, background 0.2s ease; }
         .pub-link:hover { background: #333; transform: scale(0.97); }
-
         .empty-msg { text-align: center; color: #888; font-style: italic; margin-top: 4rem; }
     </style>
 </head>
@@ -35,8 +29,10 @@
 
     <header>
         <nav>
-            <div id="skeleton-name" class="skeleton-box" style="width: 140px; height: 1.5rem; background-color: #333;"></div>
-            <a href="#" id="real-site-name" class="site-name no-animation" style="display: none;">...</a>
+            <a href="#" class="site-name no-animation" style="cursor: default;">
+                <span id="skeleton-name" class="skeleton-box skeleton-glass" style="width: 140px; height: 24px; border-radius: 4px;"></span>
+                <span id="real-site-name" style="display: none;"></span>
+            </a>
             <div class="dynamic-nav" id="header-menu"></div>
         </nav>
     </header>
@@ -45,13 +41,14 @@
         <div style="width: 100%; max-width: 900px; margin: 0 auto;">
             <h1 class="page-title">Publications</h1>
             
-            <p class="intro-text" id="skeleton-desc"><span class="skeleton-box" style="width: 250px; height: 1rem; max-width: 80%;"></span></p>
-            <p class="intro-text" id="page-desc" style="display: none;"></p>
+            <p class="intro-text" id="desc-wrapper">
+                <span id="skeleton-desc" class="skeleton-box" style="width: 250px; height: 1.1rem; max-width: 80%;"></span>
+                <span id="page-desc" style="display: none;"></span>
+            </p>
             
             <div id="publications-container">
                 <div id="skeleton-pubs-content">
                     <h2 class="categorie-title"><div class="skeleton-box" style="width: 120px; height: 1.5rem;"></div></h2>
-                    
                     <div class="publication-item" style="box-shadow: none;">
                         <div class="pub-header">
                             <div class="skeleton-box" style="width: 60%; height: 1.4rem;"></div>
@@ -81,27 +78,26 @@
             if (!prof) return;
 
             document.getElementById('skeleton-name').style.display = 'none';
-            document.getElementById('real-site-name').style.display = 'block';
+            const realNameEl = document.getElementById('real-site-name');
+            realNameEl.innerText = prof.name;
+            realNameEl.style.display = 'inline';
 
-            document.getElementById('skeleton-desc').style.display = 'none';
-            const descEl = document.getElementById('page-desc');
+            const descSkeleton = document.getElementById('skeleton-desc');
+            const descReal = document.getElementById('page-desc');
+            const descWrapper = document.getElementById('desc-wrapper');
+            
             if(prof.publications_desc) {
-                descEl.innerText = prof.publications_desc;
-                descEl.style.display = 'block';
+                descSkeleton.style.display = 'none';
+                descReal.innerText = prof.publications_desc;
+                descReal.style.display = 'inline';
+            } else {
+                descWrapper.style.display = 'none';
             }
 
-            const { data: pubs, error } = await supabase
-                .from('publications')
-                .select('*')
-                .eq('prof_id', prof.id);
-
+            const { data: pubs, error } = await supabase.from('publications').select('*').eq('prof_id', prof.id);
             const container = document.getElementById('publications-container');
 
-            if (error || !pubs || pubs.length === 0) {
-                container.innerHTML = "<p class='empty-msg'>Aucune publication disponible pour le moment.</p>";
-                return;
-            }
-
+            if (error || !pubs || pubs.length === 0) { container.innerHTML = "<p class='empty-msg'>Aucune publication disponible pour le moment.</p>"; return; }
             pubs.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             const groupes = pubs.reduce((acc, pub) => {
@@ -112,43 +108,24 @@
             }, {});
 
             container.innerHTML = "";
-
             for (const [cat, items] of Object.entries(groupes)) {
-                const h2 = document.createElement('h2');
-                h2.className = 'categorie-title';
-                h2.textContent = cat;
-                container.appendChild(h2);
-
+                const h2 = document.createElement('h2'); h2.className = 'categorie-title'; h2.textContent = cat; container.appendChild(h2);
                 items.forEach(pub => {
-                    const div = document.createElement('div');
-                    div.className = 'publication-item';
-                    
+                    const div = document.createElement('div'); div.className = 'publication-item';
                     let linkHtml = '';
                     if (pub.link_value) {
                         const icon = pub.link_type === 'file' ? 'file-text' : 'external-link';
                         const defaultLabel = pub.link_type === 'file' ? 'Télécharger le PDF' : 'Voir le document';
                         const finalLabel = pub.link_label ? pub.link_label : defaultLabel;
-                        
                         linkHtml = `<a href="${pub.link_value}" target="_blank" class="pub-link"><i data-lucide="${icon}" size="18"></i> ${finalLabel}</a>`;
                     }
-
                     const dateFormatted = pub.date ? new Date(pub.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' }) : '';
-
-                    div.innerHTML = `
-                        <div class="pub-header">
-                            <span class="pub-title">${pub.title || 'Sans titre'}</span>
-                            ${dateFormatted ? `<span class="pub-date">${dateFormatted}</span>` : ''}
-                        </div>
-                        <p class="pub-desc">${pub.description || ''}</p>
-                        ${linkHtml}
-                    `;
+                    div.innerHTML = `<div class="pub-header"><span class="pub-title">${pub.title || 'Sans titre'}</span>${dateFormatted ? `<span class="pub-date">${dateFormatted}</span>` : ''}</div><p class="pub-desc">${pub.description || ''}</p>${linkHtml}`;
                     container.appendChild(div);
                 });
             }
-
             lucide.createIcons();
         }
-
         loadPublications();
     </script>
 </body>
