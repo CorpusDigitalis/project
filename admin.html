@@ -12,73 +12,46 @@
     
     <style>
         :root { 
-            --bg-body: #f8fafc; 
-            --sidebar: #0f172a; 
-            --accent: #0f172a; 
-            --accent-blue: #3b82f6; 
-            --accent-blue-light: #eff6ff; 
-            --accent-green: #10b981;
-            --accent-green-light: #ecfdf5;
-            --accent-light: #1e293b; 
-            --border: #e2e8f0; 
-            --text-main: #334155; 
-            --text-muted: #64748b; 
+            --bg-body: #f8fafc; --sidebar: #0f172a; --accent: #0f172a; 
+            --accent-blue: #3b82f6; --accent-blue-light: #eff6ff; 
+            --accent-green: #10b981; --accent-green-light: #ecfdf5;
+            --border: #e2e8f0; --text-main: #334155; --text-muted: #64748b; 
             --input-height: 42px; 
         }
 
-        /* --- GLOBAL RESET --- */
         body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         input, textarea, select, button { font-family: 'Inter', sans-serif; }
         textarea { font-size: 0.9rem; line-height: 1.5; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .spin { animation: spin 1s linear infinite; }
         button:disabled { opacity: 0.7; cursor: not-allowed; }
-        
         .hidden { display: none !important; }
 
-        /* --- SIDEBAR --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
         .mobile-actions { display: flex; gap: 15px; align-items: center; }
         .btn-view-site-mobile { color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; }
 
-        nav { 
-            width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
-            padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease;
-            height: 100vh; box-sizing: border-box; overflow-y: auto; 
-        }
+        nav { width: 270px; background: var(--sidebar); display: flex; flex-direction: column; padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease; height: 100vh; box-sizing: border-box; overflow-y: auto; }
         .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
         .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
-        
         .nav-item { padding: 10px 14px; margin-bottom: 2px; cursor: pointer; border-radius: 6px; font-size: 0.85rem; font-weight: 500; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
         .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
         .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
         .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; flex-shrink: 0; }
         .logout-btn { margin-top: auto; margin-bottom: 40px; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; flex-shrink: 0; }
 
-        /* --- LAYOUT PRO & RESIZER --- */
-        .wrapper { 
-            display: flex; flex: 1; position: relative; background: var(--bg-body);
-            height: calc(100vh - 20px); margin: 10px 10px 10px 0; 
-            border-radius: 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
-        }
-        
-        .editor-side { 
-            flex: 1; min-width: 400px; height: 100%; overflow-y: auto; 
-            padding: 40px 50px 0 50px; scroll-behavior: smooth; display: flex; flex-direction: column;
-        }
-
+        .wrapper { display: flex; flex: 1; position: relative; background: var(--bg-body); height: calc(100vh - 20px); margin: 10px 10px 10px 0; border-radius: 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; }
+        .editor-side { flex: 1; min-width: 400px; height: 100%; overflow-y: auto; padding: 40px 50px 0 50px; scroll-behavior: smooth; display: flex; flex-direction: column; }
         .resizer { width: 8px; background: transparent; cursor: col-resize; position: relative; z-index: 50; transition: background 0.2s ease; }
         .resizer:hover, .resizer.dragging { background: var(--sidebar); }
         .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
-
-        /* --- ESPACEMENTS --- */
+        
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
         .section-subtitle { color: #64748b; font-size: 0.9rem; margin: 8px 0 0 0; max-width: 600px; line-height: 1.5; }
 
-        /* --- UI ELEMENTS --- */
         .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .form-row { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); letter-spacing: 0.05em; }
@@ -87,32 +60,21 @@
         input::placeholder { color: #cbd5e1; }
 
         .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; flex-shrink: 0; transition: 0.2s; }
-        .btn-primary:hover:not(:disabled) { background: var(--accent-light); }
+        .btn-primary:hover:not(:disabled) { background: #1e293b; }
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
         .btn-ghost:hover:not(:disabled) { background: #f1f5f9; color: #0f172a; }
-        
         .btn-square { width: 32px; height: 32px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
         .btn-square:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: #eff6ff; }
         .btn-square.delete:hover { border-color: #fee2e2; color: #ef4444; background: #fef2f2; }
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
 
-        /* --- CONFIGURATION ITEMS (Réparés) --- */
         .config-list-container { display: flex; flex-direction: column; gap: 8px; }
-        .config-item { 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 10px 15px; background: #fff; border: 1px solid #e2e8f0; 
-            border-radius: 8px; transition: 0.2s; min-height: 40px;
-        }
+        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; transition: 0.2s; min-height: 40px; }
         .config-item:hover { border-color: #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .config-item.hidden-item { opacity: 0.7; background: #f8fafc; border-style: dashed; }
         .config-item span { font-weight: 600; font-size: 0.9rem; color: #334155; display: flex; align-items: center; gap: 10px; }
-        
-        .config-toggle-btn {
-            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; cursor: pointer; border: 1px solid transparent;
-            background: #f1f5f9; color: #64748b; transition: 0.2s; flex-shrink: 0;
-        }
+        .config-toggle-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: #f1f5f9; color: #64748b; transition: 0.2s; flex-shrink: 0; }
         .config-toggle-btn:hover { background: #e2e8f0; color: #334155; }
         .config-toggle-btn.active { background: #eff6ff; color: #3b82f6; border-color: #bfdbfe; }
         .config-toggle-btn.off { color: #cbd5e1; }
@@ -120,7 +82,6 @@
         .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
-        /* --- ACCORDIONS --- */
         .item-card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; transition: 0.2s; }
         .item-header { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; background: white; user-select: none; }
         .item-header:hover { background: #fafafa; }
@@ -134,14 +95,12 @@
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
         .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed #94a3b8; }
 
-        /* --- BADGES (Files & Links) --- */
         .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; overflow: hidden; }
         .file-badge, .link-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; max-width: 100%; overflow: hidden; box-sizing: border-box; text-decoration: none; }
         .file-badge { background: var(--accent-green-light); border: 1px solid #bbf7d0; color: #15803d; }
         .link-badge { background: var(--accent-blue-light); border: 1px solid #bfdbfe; color: #2563eb; }
         .file-badge span, .link-badge span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- COURSES & RESOURCES --- */
         .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
         .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
         .section-title-input { background: transparent; border: 1px solid transparent; font-weight: 700; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; width: auto; transition: 0.2s; border-radius: 4px; }
@@ -183,34 +142,21 @@
         .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
         .input-group-title input { height: 100%; }
 
-        /* --- PREVIEW SIDE MAGIQUE --- */
-        .preview-side { 
-            position: relative;
-            flex: 1; 
-            background: #e2e8f0; 
-            display: flex; flex-direction: column; overflow: hidden;
-        }
-
-        /* Container qui permet de SCROLLER et de GLISSER (PAN) */
-        .preview-container {
-            flex: 1; overflow: auto; display: flex; padding: 40px; position: relative;
-            cursor: grab; /* Curseur main par défaut sur le fond gris */
-        }
+        /* --- PREVIEW SIDE (MAGIE FIXÉE) --- */
+        .preview-side { position: relative; flex: 1; background: #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
+        .preview-container { flex: 1; overflow: auto; display: flex; padding: 40px; position: relative; cursor: grab; }
         .preview-container:active { cursor: grabbing; }
 
-        /* Conteneur pour le zoom : centré par défaut */
-        #scale-container {
-            margin: auto; position: relative; 
-            /* La taille est fixée dynamiquement par le JS */
-        }
+        /* Suppression de la transition sur le conteneur = switch instantané & centré */
+        #scale-container { margin: auto; position: relative; }
 
-        /* Le faux MAC / Ordinateur (BÉTON ARMÉ) */
         .computer-wrapper { 
             width: 1366px; height: 768px; flex-shrink: 0;
             background: white; border-radius: 12px; 
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
             display: flex; flex-direction: column; overflow: hidden;
-            transform-origin: top left; /* Indispensable pour le zoom parfait */
+            transform-origin: top center; 
+            transition: transform 0.15s ease; /* Plus aucune transition width/height */
             border: 1px solid #cbd5e1;
         }
         
@@ -224,28 +170,12 @@
         
         iframe { width: 100%; flex: 1; border: none; background: white; pointer-events: auto; }
 
-        /* Le faux iPhone (BÉTON ARMÉ) */
-        .device-mobile {
-            width: 375px !important; height: 812px !important; flex-shrink: 0 !important;
-            border-radius: 40px !important; border: 14px solid #0f172a !important;
-        }
-
-        /* Bouclier invisible pour le Drag & Drop */
+        .device-mobile { width: 375px !important; height: 812px !important; flex-shrink: 0 !important; border-radius: 40px !important; border: 14px solid #0f172a !important; }
         .iframe-shield { display: none; position: absolute; inset: 0; z-index: 20; }
 
         /* --- PILULE FLOTTANTE --- */
-        .floating-toolbar {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: white; padding: 8px 12px; border-radius: 50px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
-            display: flex; align-items: center; gap: 10px; z-index: 100; border: 1px solid #e2e8f0;
-        }
-
-        .btn-toolbar {
-            background: transparent; border: none; border-radius: 40px; height: 36px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; padding: 0 16px;
-        }
+        .floating-toolbar { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; padding: 8px 12px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; z-index: 100; border: 1px solid #e2e8f0; }
+        .btn-toolbar { background: transparent; border: none; border-radius: 40px; height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; padding: 0 16px; }
         .btn-toolbar:hover { background: #f1f5f9; color: var(--accent-blue); }
         .btn-zoom { width: 36px; padding: 0; }
         .btn-zoom-reset { padding: 0 12px; font-size: 0.8rem; font-weight: 700; color: #64748b; }
@@ -462,9 +392,9 @@
                     <i data-lucide="smartphone" size="16"></i> <span id="text-toggle-device">Changer d'appareil</span>
                 </button>
                 <div class="toolbar-divider"></div>
-                <button class="btn-toolbar btn-zoom" onclick="manualZoom(-0.1)" title="Dézoomer"><i data-lucide="minus" size="16"></i></button>
+                <button class="btn-toolbar btn-zoom" onclick="manualZoom(-0.2)" title="Dézoomer"><i data-lucide="minus" size="16"></i></button>
                 <button class="btn-toolbar btn-zoom-reset" onclick="resetZoom()" title="Ajuster l'écran">100%</button>
-                <button class="btn-toolbar btn-zoom" onclick="manualZoom(0.1)" title="Zoomer"><i data-lucide="plus" size="16"></i></button>
+                <button class="btn-toolbar btn-zoom" onclick="manualZoom(0.2)" title="Zoomer"><i data-lucide="plus" size="16"></i></button>
             </div>
 
             <div class="preview-container" id="preview-container">
@@ -476,7 +406,8 @@
                                 <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
                             </div>
                             <div class="url-bar">monsite.com</div>
-                            <div style="width: 42px;"></div> </div>
+                            <div style="width: 42px;"></div>
+                        </div>
                         
                         <iframe id="site-preview" src="about:blank"></iframe>
                         <div class="iframe-shield" id="iframe-shield"></div>
@@ -494,7 +425,6 @@
     const DEFAULT_CONFIG = { header: { home: true, publications: true, courses: true, interventions: true, contact: true }, footer: { linkedin: true, scholar: true, cv: true, custom: [] } };
     let profileData = null, saveTimer = null, openCourseId = null, openPubId = null, openInterId = null;
 
-    // --- SYSTEME DE REDIMENSIONNEMENT ---
     const resizer = document.getElementById('resizer');
     const editorSide = document.getElementById('editor-side');
     const shield = document.getElementById('iframe-shield');
@@ -510,8 +440,8 @@
     document.addEventListener('mousemove', (e) => {
         if (!isResizing) return;
         let newWidth = e.clientX - 270; 
-        if (newWidth < 400) newWidth = 400; // Limite mini
-        const maxEditorWidth = document.body.clientWidth - 350 - 270; // Limite absolue pour préserver le téléphone
+        if (newWidth < 400) newWidth = 400; 
+        const maxEditorWidth = document.body.clientWidth - 350 - 270; 
         if (newWidth > maxEditorWidth) newWidth = maxEditorWidth;
         editorSide.style.width = newWidth + 'px'; editorSide.style.flex = 'none';
         autoScalePreview(); 
@@ -521,7 +451,6 @@
         if (isResizing) { isResizing = false; shield.style.display = 'none'; document.body.style.cursor = ''; resizer.classList.remove('dragging'); localStorage.setItem('editorWidth', editorSide.style.width); }
     });
 
-    // --- SYSTEME PAN & ZOOM LIBRE ---
     let isMobileMode = false;
     let customZoom = null; 
     let currentZoomLevel = 1;
@@ -543,7 +472,7 @@
     function updateZoomDisplay(newZoom) {
         currentZoomLevel = newZoom;
         if(currentZoomLevel < 0.15) currentZoomLevel = 0.15;
-        if(currentZoomLevel > 5.0) currentZoomLevel = 5.0; // Zoom libre jusqu'à 500%
+        if(currentZoomLevel > 5.0) currentZoomLevel = 5.0; 
         
         const wrapper = document.getElementById('device-wrapper');
         const scaleContainer = document.getElementById('scale-container');
@@ -570,13 +499,11 @@
     window.manualZoom = (delta) => { customZoom = true; updateZoomDisplay(currentZoomLevel + delta); };
     window.resetZoom = () => { customZoom = null; autoScalePreview(); };
 
-    // ZOOM AU TRACKPAD SUR LA ZONE GRISE
     const previewContainer = document.getElementById('preview-container');
     previewContainer.addEventListener('wheel', (e) => {
         if (e.ctrlKey || e.metaKey) { e.preventDefault(); customZoom = true; manualZoom(e.deltaY * -0.005); }
     }, { passive: false });
 
-    // PANNING LIBRE (CLICK & DRAG SUR LE GRIS)
     let isPanning = false, startX, startY, scrollLeft, scrollTop;
     previewContainer.addEventListener('mousedown', (e) => {
         if (e.target === previewContainer || e.target.id === 'scale-container') {
@@ -593,19 +520,16 @@
         previewContainer.scrollLeft = scrollLeft - (x - startX); previewContainer.scrollTop = scrollTop - (y - startY);
     });
 
-    // INJECTION DU ZOOM À L'INTÉRIEUR DE L'IFRAME
     const iframe = document.getElementById('site-preview');
     iframe.onload = function() {
         try {
             iframe.contentWindow.addEventListener('wheel', function(e) {
-                if (e.ctrlKey || e.metaKey) { e.preventDefault(); window.manualZoom(e.deltaY * -0.005); }
+                if (e.ctrlKey || e.metaKey) { e.preventDefault(); customZoom = true; window.manualZoom(e.deltaY * -0.005); }
             }, { passive: false });
         } catch (error) { console.log("CORS block - normal en local."); }
     };
 
     window.addEventListener('resize', autoScalePreview);
-
-    // --- LOGIQUE ADMIN CORRIGÉE (Sans Code Golf) ---
 
     function getCleanFileName(url) { if (!url) return ''; const parts = url.split('/'); return decodeURIComponent(parts[parts.length - 1].replace(/^\d+_/, '')); }
     function isSupabaseUrl(url) { return url && url.includes('supabase.co'); }
@@ -760,9 +684,7 @@
 
             return `
                 <div class="item-card ${isOpen}" id="card-${course.id}">
-                    <div class="item-header" onclick="toggleCard('${course.id}', 'course')">
-                        <i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title" id="title-course-${course.id}">${course.title}</div><span class="item-badge">${course.category}</span><i data-lucide="chevron-down" class="chevron"></i>
-                    </div>
+                    <div class="item-header" onclick="toggleCard('${course.id}', 'course')"><i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title" id="title-course-${course.id}">${course.title}</div><span class="item-badge">${course.category}</span><i data-lucide="chevron-down" class="chevron"></i></div>
                     <div class="item-body" onclick="event.stopPropagation()">
                         <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value); document.getElementById('title-course-${course.id}').innerText=this.value"></div>
                         <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
@@ -788,9 +710,7 @@
             
             return `
             <div class="item-card ${isOpen}" id="pub-${pub.id}">
-                <div class="item-header" onclick="toggleCard('${pub.id}', 'pub')">
-                    <i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title" id="title-pub-${pub.id}">${pub.title || 'Sans titre'}</div><span class="item-badge">${pub.category || 'Article'}</span><span class="item-badge" style="background:#eef2ff; color:#6366f1;">${pub.date || ''}</span><i data-lucide="chevron-down" class="chevron"></i>
-                </div>
+                <div class="item-header" onclick="toggleCard('${pub.id}', 'pub')"><i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title" id="title-pub-${pub.id}">${pub.title || 'Sans titre'}</div><span class="item-badge">${pub.category || 'Article'}</span><span class="item-badge" style="background:#eef2ff; color:#6366f1;">${pub.date || ''}</span><i data-lucide="chevron-down" class="chevron"></i></div>
                 <div class="item-body" onclick="event.stopPropagation()">
                     <div class="form-row"><label>Titre</label><input value="${pub.title || ''}" oninput="autoSave('publications', '${pub.id}', 'title', this.value); document.getElementById('title-pub-${pub.id}').innerText=this.value"></div>
                     <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('publications', '${pub.id}', 'description', this.value)">${pub.description || ''}</textarea></div>
@@ -928,71 +848,18 @@
     function renderHeaderConfig() {
         const container = document.getElementById('header-config-container'); 
         const h = profileData.config.header || DEFAULT_CONFIG.header; 
-        const items = [ 
-            { key: 'home', label: 'Accueil', icon: 'home' }, 
-            { key: 'publications', label: 'Publications', icon: 'book-open' }, 
-            { key: 'courses', label: 'Enseignements', icon: 'graduation-cap' }, 
-            { key: 'interventions', label: 'Interventions', icon: 'mic' } 
-        ];
-        
-        container.innerHTML = items.map(item => { 
-            const isActive = h[item.key]; 
-            return `
-                <div class="config-item ${isActive ? '' : 'hidden-item'}">
-                    <span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span>
-                    <button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('header', '${item.key}')">
-                        <i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i>
-                    </button>
-                </div>`; 
-        }).join(''); 
-        lucide.createIcons();
+        const items = [ { key: 'home', label: 'Accueil', icon: 'home' }, { key: 'publications', label: 'Publications', icon: 'book-open' }, { key: 'courses', label: 'Enseignements', icon: 'graduation-cap' }, { key: 'interventions', label: 'Interventions', icon: 'mic' } ];
+        container.innerHTML = items.map(item => { const isActive = h[item.key]; return `<div class="config-item ${isActive ? '' : 'hidden-item'}"><span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span><button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('header', '${item.key}')"><i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i></button></div>`; }).join(''); lucide.createIcons();
     }
 
     function renderFooterConfig() {
         const container = document.getElementById('footer-config-container'); 
         const f = profileData.config.footer || DEFAULT_CONFIG.footer; 
         let html = ''; 
-        const staticItems = [ 
-            { key: 'linkedin', label: 'LinkedIn', icon: 'linkedin' }, 
-            { key: 'scholar', label: 'Scholar', icon: 'graduation-cap' }, 
-            { key: 'cv', label: 'CV', icon: 'file-text' } 
-        ];
-        
-        html += staticItems.map(item => { 
-            const isActive = f[item.key]; 
-            return `
-                <div class="config-item ${isActive ? '' : 'hidden-item'}">
-                    <span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span>
-                    <button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('footer', '${item.key}')">
-                        <i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i>
-                    </button>
-                </div>`; 
-        }).join('');
-        
-        if (f.custom && f.custom.length > 0) { 
-            html += f.custom.map((l, idx) => `
-                <div class="config-item" id="footer-item-${idx}">
-                    <div class="footer-view-row" id="footer-view-${idx}">
-                        <span>
-                            <i data-lucide="link" size="16"></i> ${l.label} 
-                            <small style="color:#94a3b8; font-weight:normal; margin-left:5px;">(${l.url})</small>
-                        </span>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn-square" onclick="toggleFooterEdit(${idx})"><i data-lucide="pencil" size="14"></i></button>
-                            <button class="btn-square delete" onclick="removeFooterLink(${idx})"><i data-lucide="trash-2" size="14"></i></button>
-                        </div>
-                    </div>
-                    <div class="footer-edit-row hidden" id="footer-edit-${idx}">
-                        <input value="${l.label}" id="f-lbl-${idx}" style="width:120px; font-size:0.85rem; padding:4px;">
-                        <input value="${l.url}" id="f-url-${idx}" style="flex:1; font-size:0.85rem; padding:4px;">
-                        <button class="btn-validate" style="width:32px; height:32px;" onclick="saveFooterEdit(${idx})">
-                            <i data-lucide="check" size="16"></i>
-                        </button>
-                    </div>
-                </div>`).join(''); 
-        }
-        container.innerHTML = html; 
-        lucide.createIcons();
+        const staticItems = [ { key: 'linkedin', label: 'LinkedIn', icon: 'linkedin' }, { key: 'scholar', label: 'Scholar', icon: 'graduation-cap' }, { key: 'cv', label: 'CV', icon: 'file-text' } ];
+        html += staticItems.map(item => { const isActive = f[item.key]; return `<div class="config-item ${isActive ? '' : 'hidden-item'}"><span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span><button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('footer', '${item.key}')"><i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i></button></div>`; }).join('');
+        if (f.custom && f.custom.length > 0) { html += f.custom.map((l, idx) => `<div class="config-item" id="footer-item-${idx}"><div class="footer-view-row" id="footer-view-${idx}"><span><i data-lucide="link" size="16"></i> ${l.label} <small style="color:#94a3b8; font-weight:normal; margin-left:5px;">(${l.url})</small></span><div style="display:flex; gap:5px;"><button class="btn-square" onclick="toggleFooterEdit(${idx})"><i data-lucide="pencil" size="14"></i></button><button class="btn-square delete" onclick="removeFooterLink(${idx})"><i data-lucide="trash-2" size="14"></i></button></div></div><div class="footer-edit-row hidden" id="footer-edit-${idx}"><input value="${l.label}" id="f-lbl-${idx}" style="width:120px; font-size:0.85rem; padding:4px;"><input value="${l.url}" id="f-url-${idx}" style="flex:1; font-size:0.85rem; padding:4px;"><button class="btn-validate" style="width:32px; height:32px;" onclick="saveFooterEdit(${idx})"><i data-lucide="check" size="16"></i></button></div></div>`).join(''); }
+        container.innerHTML = html; lucide.createIcons();
     }
     
     window.toggleFooterEdit = (idx) => { document.getElementById(`footer-view-${idx}`).classList.toggle('hidden'); document.getElementById(`footer-edit-${idx}`).classList.toggle('hidden'); }
