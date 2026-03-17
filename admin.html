@@ -12,14 +12,30 @@
     
     <style>
         :root { 
-            --bg-body: #f8fafc; --sidebar: #0f172a; --accent: #0f172a; 
-            --accent-blue: #3b82f6; --accent-blue-light: #eff6ff; 
-            --accent-green: #10b981; --accent-green-light: #ecfdf5;
-            --border: #e2e8f0; --text-main: #334155; --text-muted: #64748b; 
+            --bg-body: #f8fafc; 
+            --sidebar: #0f172a; 
+            --accent: #0f172a; 
+            --accent-blue: #3b82f6; 
+            --accent-blue-light: #eff6ff; 
+            --accent-green: #10b981;
+            --accent-green-light: #ecfdf5;
+            --accent-light: #1e293b; 
+            --border: #e2e8f0; 
+            --text-main: #334155; 
+            --text-muted: #64748b; 
             --input-height: 42px; 
         }
 
-        body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        /* --- GLOBAL RESET --- */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--sidebar); 
+            color: var(--text-main); 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
         input, textarea, select, button { font-family: 'Inter', sans-serif; }
         textarea { font-size: 0.9rem; line-height: 1.5; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -27,31 +43,49 @@
         button:disabled { opacity: 0.7; cursor: not-allowed; }
         .hidden { display: none !important; }
 
+        /* --- SIDEBAR --- */
         .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
         .mobile-actions { display: flex; gap: 15px; align-items: center; }
         .btn-view-site-mobile { color: white; text-decoration: none; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; }
 
-        nav { width: 270px; background: var(--sidebar); display: flex; flex-direction: column; padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease; height: 100vh; box-sizing: border-box; overflow-y: auto; }
+        nav { 
+            width: 270px; background: var(--sidebar); display: flex; flex-direction: column; 
+            padding: 35px 20px; flex-shrink: 0; z-index: 100; transition: transform 0.3s ease;
+            height: 100vh; box-sizing: border-box; overflow-y: auto; 
+        }
         .logo { font-weight: 700; font-size: 0.9rem; margin-bottom: 50px; color: white; display: flex; align-items: center; gap: 10px; padding-left: 10px; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
         .logo span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
+        
         .nav-item { padding: 10px 14px; margin-bottom: 2px; cursor: pointer; border-radius: 6px; font-size: 0.85rem; font-weight: 500; color: #94a3b8; transition: 0.2s; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
         .nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
         .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
         .nav-title { font-size: 0.65rem; font-weight: 600; color: #475569; text-transform: uppercase; margin: 25px 0 10px 12px; letter-spacing: 0.08em; flex-shrink: 0; }
         .logout-btn { margin-top: auto; margin-bottom: 40px; color: #f87171; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px; font-size: 0.85rem; font-weight: 500; opacity: 0.7; flex-shrink: 0; }
 
-        .wrapper { display: flex; flex: 1; position: relative; background: var(--bg-body); height: calc(100vh - 20px); margin: 10px 10px 10px 0; border-radius: 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; }
-        .editor-side { flex: 1; min-width: 400px; height: 100%; overflow-y: auto; padding: 40px 50px 0 50px; scroll-behavior: smooth; display: flex; flex-direction: column; }
+        /* --- LAYOUT PRO & RESIZER --- */
+        .wrapper { 
+            display: flex; flex: 1; position: relative; background: var(--bg-body);
+            height: calc(100vh - 20px); margin: 10px 10px 10px 0; 
+            border-radius: 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
+        }
+        
+        .editor-side { 
+            flex: 1; min-width: 400px; height: 100%; overflow-y: auto; 
+            padding: 40px 50px 0 50px; scroll-behavior: smooth; display: flex; flex-direction: column;
+        }
+
         .resizer { width: 8px; background: transparent; cursor: col-resize; position: relative; z-index: 50; transition: background 0.2s ease; }
         .resizer:hover, .resizer.dragging { background: var(--sidebar); }
         .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
-        
+
+        /* --- ESPACEMENTS --- */
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
         h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
         .section-subtitle { color: #64748b; font-size: 0.9rem; margin: 8px 0 0 0; max-width: 600px; line-height: 1.5; }
 
+        /* --- UI ELEMENTS --- */
         .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .form-row { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); letter-spacing: 0.05em; }
@@ -69,6 +103,7 @@
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
 
+        /* --- CONFIGURATION ITEMS --- */
         .config-list-container { display: flex; flex-direction: column; gap: 8px; }
         .config-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; transition: 0.2s; min-height: 40px; }
         .config-item:hover { border-color: #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
@@ -78,10 +113,10 @@
         .config-toggle-btn:hover { background: #e2e8f0; color: #334155; }
         .config-toggle-btn.active { background: #eff6ff; color: #3b82f6; border-color: #bfdbfe; }
         .config-toggle-btn.off { color: #cbd5e1; }
-
         .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
+        /* --- ACCORDIONS & LISTS --- */
         .item-card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; transition: 0.2s; }
         .item-header { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; background: white; user-select: none; }
         .item-header:hover { background: #fafafa; }
@@ -136,30 +171,66 @@
         .resource-row.mode-link .upload-btn-wrapper { display: none; }
         .resource-row.mode-file .link-input-wrapper { display: none; }
         .resource-row.mode-file .upload-btn-wrapper { display: block; }
-
         .btn-validate { width: var(--input-height); height: var(--input-height); background: var(--accent); color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; flex-shrink: 0; transition: 0.2s; }
         .btn-validate:hover:not(:disabled) { opacity: 0.9; transform: scale(1.02); }
         .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
         .input-group-title input { height: 100%; }
 
-        /* --- PREVIEW SIDE (MAGIE FIXÉE) --- */
-        .preview-side { position: relative; flex: 1; background: #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
-        .preview-container { flex: 1; overflow: auto; display: flex; padding: 40px; position: relative; cursor: grab; }
-        .preview-container:active { cursor: grabbing; }
+        /* ========================================================
+           MOTEUR DE RENDU CANVAS (FIGMA-LIKE)
+           ======================================================== */
+        .preview-side { 
+            position: relative;
+            flex: 1; 
+            background: #e2e8f0; 
+            display: flex; 
+            overflow: hidden; /* Cache tout ce qui dépasse du viewport */
+        }
 
-        /* Suppression de la transition sur le conteneur = switch instantané & centré */
-        #scale-container { margin: auto; position: relative; }
+        /* Écran de chargement stylé */
+        .loading-overlay {
+            position: absolute; inset: 0;
+            background: #e2e8f0; z-index: 200;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.4s ease;
+        }
+        .loading-text {
+            font-weight: 800; font-size: 1.5rem; color: var(--accent);
+            letter-spacing: 0.1em; text-transform: uppercase;
+            animation: pulseSkeleton 1.5s infinite ease-in-out;
+            display: flex; align-items: center; gap: 10px;
+        }
+        @keyframes pulseSkeleton { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        .computer-wrapper { 
+        /* Le Viewport (La fenêtre par laquelle on regarde le canvas) */
+        .viewport {
+            flex: 1; position: relative; overflow: hidden;
+            cursor: grab; /* Curseur main */
+        }
+        .viewport:active { cursor: grabbing; }
+
+        /* Le Canvas (Le plan de travail infini qui bouge) */
+        .canvas-plane {
+            position: absolute;
+            left: 50%; top: 50%;
+            /* Transform appliqué en JS : translate(-50% + panX, -50% + panY) scale(zoom) */
+            display: flex; justify-content: center; align-items: center;
+            will-change: transform;
+        }
+
+        /* L'Appareil Virtuel (Le Faux Mac / iPhone) */
+        .device-wrapper { 
             width: 1366px; height: 768px; flex-shrink: 0;
             background: white; border-radius: 12px; 
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
             display: flex; flex-direction: column; overflow: hidden;
-            transform-origin: top center; 
-            transition: transform 0.15s ease; /* Plus aucune transition width/height */
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        border-radius 0.3s ease, border 0.3s ease;
             border: 1px solid #cbd5e1;
         }
         
+        /* Barres de design du Mac */
         .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
         .mac-dots { display: flex; gap: 8px; }
         .mac-dots span { width: 12px; height: 12px; border-radius: 50%; }
@@ -170,12 +241,30 @@
         
         iframe { width: 100%; flex: 1; border: none; background: white; pointer-events: auto; }
 
-        .device-mobile { width: 375px !important; height: 812px !important; flex-shrink: 0 !important; border-radius: 40px !important; border: 14px solid #0f172a !important; }
+        /* Le Mode iPhone (Modifie le device-wrapper) */
+        .device-mobile {
+            width: 375px !important; 
+            height: 812px !important; 
+            border-radius: 40px !important; 
+            border: 14px solid #0f172a !important;
+        }
+
+        /* Bouclier invisible (Protège du curseur avalé par l'iframe pendant le drag) */
         .iframe-shield { display: none; position: absolute; inset: 0; z-index: 20; }
 
         /* --- PILULE FLOTTANTE --- */
-        .floating-toolbar { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; padding: 8px 12px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; z-index: 100; border: 1px solid #e2e8f0; }
-        .btn-toolbar { background: transparent; border: none; border-radius: 40px; height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; padding: 0 16px; }
+        .floating-toolbar {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: white; padding: 8px 12px; border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 10px; z-index: 100; border: 1px solid #e2e8f0;
+        }
+
+        .btn-toolbar {
+            background: transparent; border: none; border-radius: 40px; height: 36px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; padding: 0 16px;
+        }
         .btn-toolbar:hover { background: #f1f5f9; color: var(--accent-blue); }
         .btn-zoom { width: 36px; padding: 0; }
         .btn-zoom-reset { padding: 0 12px; font-size: 0.8rem; font-weight: 700; color: #64748b; }
@@ -387,31 +476,36 @@
         <div class="resizer" id="resizer"></div>
 
         <aside class="preview-side" id="preview-side">
+            
+            <div id="preview-loader" class="loading-overlay">
+                <div class="loading-text"><i data-lucide="loader" class="spin"></i> CORPUS DIGITALIS</div>
+            </div>
+
             <div class="floating-toolbar">
                 <button class="btn-toolbar" id="btn-toggle-device" onclick="toggleDeviceMode()">
                     <i data-lucide="smartphone" size="16"></i> <span id="text-toggle-device">Changer d'appareil</span>
                 </button>
                 <div class="toolbar-divider"></div>
-                <button class="btn-toolbar btn-zoom" onclick="manualZoom(-0.2)" title="Dézoomer"><i data-lucide="minus" size="16"></i></button>
-                <button class="btn-toolbar btn-zoom-reset" onclick="resetZoom()" title="Ajuster l'écran">100%</button>
-                <button class="btn-toolbar btn-zoom" onclick="manualZoom(0.2)" title="Zoomer"><i data-lucide="plus" size="16"></i></button>
+                <button class="btn-toolbar btn-zoom" onclick="manualZoom(-0.1)" title="Dézoomer"><i data-lucide="minus" size="16"></i></button>
+                <button class="btn-toolbar btn-zoom-reset" onclick="autoScalePreview()" title="Recadrer au centre">100%</button>
+                <button class="btn-toolbar btn-zoom" onclick="manualZoom(0.1)" title="Zoomer"><i data-lucide="plus" size="16"></i></button>
             </div>
 
-            <div class="preview-container" id="preview-container">
-                <div id="scale-container">
-                    <div class="computer-wrapper" id="device-wrapper">
-                        
+            <div class="viewport" id="viewport">
+                <div class="canvas-plane" id="canvas-plane">
+                    
+                    <div class="device-wrapper" id="device-wrapper">
                         <div class="browser-chrome" id="browser-chrome">
                             <div class="mac-dots">
                                 <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
                             </div>
                             <div class="url-bar">monsite.com</div>
-                            <div style="width: 42px;"></div>
-                        </div>
+                            <div style="width: 42px;"></div> </div>
                         
                         <iframe id="site-preview" src="about:blank"></iframe>
                         <div class="iframe-shield" id="iframe-shield"></div>
                     </div>
+
                 </div>
             </div>
         </aside>
@@ -425,36 +519,65 @@
     const DEFAULT_CONFIG = { header: { home: true, publications: true, courses: true, interventions: true, contact: true }, footer: { linkedin: true, scholar: true, cv: true, custom: [] } };
     let profileData = null, saveTimer = null, openCourseId = null, openPubId = null, openInterId = null;
 
+    // --- SYSTEME DE REDIMENSIONNEMENT GAUCHE/DROITE ---
     const resizer = document.getElementById('resizer');
     const editorSide = document.getElementById('editor-side');
     const shield = document.getElementById('iframe-shield');
     let isResizing = false;
 
     const savedWidth = localStorage.getItem('editorWidth');
-    if (savedWidth) { editorSide.style.width = savedWidth; editorSide.style.flex = 'none'; }
+    if (savedWidth) { 
+        editorSide.style.width = savedWidth; 
+        editorSide.style.flex = 'none'; 
+    }
 
     resizer.addEventListener('mousedown', (e) => {
-        isResizing = true; shield.style.display = 'block'; document.body.style.cursor = 'col-resize'; resizer.classList.add('dragging');
+        isResizing = true; 
+        shield.style.display = 'block'; 
+        document.body.style.cursor = 'col-resize'; 
+        resizer.classList.add('dragging');
     });
 
     document.addEventListener('mousemove', (e) => {
         if (!isResizing) return;
         let newWidth = e.clientX - 270; 
-        if (newWidth < 400) newWidth = 400; 
-        const maxEditorWidth = document.body.clientWidth - 350 - 270; 
+        if (newWidth < 400) newWidth = 400; // Limite Editor
+        const maxEditorWidth = document.body.clientWidth - 350 - 270; // Limite absolue Preview (350px min pour mobile)
         if (newWidth > maxEditorWidth) newWidth = maxEditorWidth;
-        editorSide.style.width = newWidth + 'px'; editorSide.style.flex = 'none';
-        autoScalePreview(); 
+        editorSide.style.width = newWidth + 'px'; 
+        editorSide.style.flex = 'none';
+        // Pas besoin d'autoScale ici, le canvas est infini
     });
 
     document.addEventListener('mouseup', () => {
-        if (isResizing) { isResizing = false; shield.style.display = 'none'; document.body.style.cursor = ''; resizer.classList.remove('dragging'); localStorage.setItem('editorWidth', editorSide.style.width); }
+        if (isResizing) { 
+            isResizing = false; 
+            shield.style.display = 'none'; 
+            document.body.style.cursor = ''; 
+            resizer.classList.remove('dragging'); 
+            localStorage.setItem('editorWidth', editorSide.style.width); 
+        }
     });
 
+    // =========================================================================
+    // MOTEUR CANVAS FIGMA-LIKE (PAN & ZOOM)
+    // =========================================================================
+    const viewport = document.getElementById('viewport');
+    const canvasPlane = document.getElementById('canvas-plane');
+    
     let isMobileMode = false;
-    let customZoom = null; 
-    let currentZoomLevel = 1;
+    let panX = 0;
+    let panY = 0;
+    let zoomLevel = 1;
+    let isPanning = false;
 
+    // Met à jour la transformation CSS du plan de travail
+    function updateCanvasTransform() {
+        // Le translate -50% -50% centre l'origine, ensuite on ajoute les déplacements panX et panY
+        canvasPlane.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomLevel})`;
+    }
+
+    // Toggle Ordinateur / Mobile
     window.toggleDeviceMode = () => {
         isMobileMode = !isMobileMode;
         const wrap = document.getElementById('device-wrapper');
@@ -462,74 +585,122 @@
         const icon = document.getElementById('btn-toggle-device').querySelector('i');
 
         if (isMobileMode) {
-            wrap.classList.add('device-mobile'); chrome.style.display = 'none'; icon.setAttribute('data-lucide', 'monitor');
+            wrap.classList.add('device-mobile'); 
+            chrome.style.display = 'none'; 
+            icon.setAttribute('data-lucide', 'monitor');
         } else {
-            wrap.classList.remove('device-mobile'); chrome.style.display = 'flex'; icon.setAttribute('data-lucide', 'smartphone');
+            wrap.classList.remove('device-mobile'); 
+            chrome.style.display = 'flex'; 
+            icon.setAttribute('data-lucide', 'smartphone');
         }
-        lucide.createIcons(); customZoom = null; autoScalePreview();
+        lucide.createIcons(); 
+        
+        // Quand on change d'appareil, on recadre proprement au centre
+        autoScalePreview();
     };
 
-    function updateZoomDisplay(newZoom) {
-        currentZoomLevel = newZoom;
-        if(currentZoomLevel < 0.15) currentZoomLevel = 0.15;
-        if(currentZoomLevel > 5.0) currentZoomLevel = 5.0; 
+    // Zoom manuel (+ / -)
+    window.manualZoom = (delta) => {
+        zoomLevel += delta;
+        if(zoomLevel < 0.15) zoomLevel = 0.15;
+        if(zoomLevel > 5.0) zoomLevel = 5.0; // Liberté totale
+        updateCanvasTransform();
+    };
+
+    // Auto-Scale (Bouton 100% ou Chargement Initial)
+    window.autoScalePreview = () => {
+        panX = 0; // Recentre parfaitement
+        panY = 0;
         
-        const wrapper = document.getElementById('device-wrapper');
-        const scaleContainer = document.getElementById('scale-container');
-        const targetWidth = isMobileMode ? 375 : 1366;
+        const padX = 100; const padY = 100; // Marge confortable autour
+        const availWidth = viewport.clientWidth - padX; 
+        const availHeight = viewport.clientHeight - padY;
+        
+        const targetWidth = isMobileMode ? 375 : 1366; 
         const targetHeight = isMobileMode ? 812 : 768;
         
-        wrapper.style.transform = `scale(${currentZoomLevel})`;
-        scaleContainer.style.width = (targetWidth * currentZoomLevel) + 'px';
-        scaleContainer.style.height = (targetHeight * currentZoomLevel) + 'px';
+        zoomLevel = Math.min(availWidth / targetWidth, availHeight / targetHeight);
+        if (zoomLevel > 1) zoomLevel = 1; 
+        
+        updateCanvasTransform();
     }
 
-    function autoScalePreview() {
-        if(customZoom !== null) return;
-        const container = document.getElementById('preview-container');
-        if(!container) return;
-        const padX = 80; const padY = 80; 
-        const availWidth = container.clientWidth - padX; const availHeight = container.clientHeight - padY;
-        const targetWidth = isMobileMode ? 375 : 1366; const targetHeight = isMobileMode ? 812 : 768;
-        let scale = Math.min(availWidth / targetWidth, availHeight / targetHeight);
-        if (scale > 1) scale = 1; 
-        updateZoomDisplay(scale);
-    }
-
-    window.manualZoom = (delta) => { customZoom = true; updateZoomDisplay(currentZoomLevel + delta); };
-    window.resetZoom = () => { customZoom = null; autoScalePreview(); };
-
-    const previewContainer = document.getElementById('preview-container');
-    previewContainer.addEventListener('wheel', (e) => {
-        if (e.ctrlKey || e.metaKey) { e.preventDefault(); customZoom = true; manualZoom(e.deltaY * -0.005); }
+    // GESTION DU SCROLL MOLETTE & TRACKPAD (Zoom & Pan)
+    viewport.addEventListener('wheel', (e) => {
+        e.preventDefault(); // Empêche le scroll natif de la page
+        
+        if (e.ctrlKey || e.metaKey) {
+            // ZOOM (Pincer sur Trackpad ou Ctrl+Molette)
+            const zoomFactor = 0.01;
+            manualZoom(e.deltaY * -zoomFactor);
+        } else {
+            // PANORAMIQUE (Glisser 2 doigts sur Trackpad ou Molette simple)
+            panX -= e.deltaX;
+            panY -= e.deltaY;
+            updateCanvasTransform();
+        }
     }, { passive: false });
 
-    let isPanning = false, startX, startY, scrollLeft, scrollTop;
-    previewContainer.addEventListener('mousedown', (e) => {
-        if (e.target === previewContainer || e.target.id === 'scale-container') {
-            isPanning = true; previewContainer.style.cursor = 'grabbing'; shield.style.display = 'block';
-            startX = e.pageX - previewContainer.offsetLeft; startY = e.pageY - previewContainer.offsetTop;
-            scrollLeft = previewContainer.scrollLeft; scrollTop = previewContainer.scrollTop;
+    // GESTION DU CLICK & DRAG (Pour la souris)
+    let startMouseX, startMouseY;
+    viewport.addEventListener('mousedown', (e) => {
+        // Autorise le clic seulement sur le fond gris ou le bouclier
+        if (e.target === viewport || e.target === canvasPlane || e.target.id === 'iframe-shield') {
+            isPanning = true;
+            viewport.style.cursor = 'grabbing';
+            shield.style.display = 'block';
+            startMouseX = e.clientX - panX;
+            startMouseY = e.clientY - panY;
         }
     });
-    previewContainer.addEventListener('mouseleave', () => { isPanning = false; previewContainer.style.cursor = 'grab'; shield.style.display = 'none'; });
-    previewContainer.addEventListener('mouseup', () => { isPanning = false; previewContainer.style.cursor = 'grab'; shield.style.display = 'none'; });
-    previewContainer.addEventListener('mousemove', (e) => {
-        if (!isPanning) return; e.preventDefault();
-        const x = e.pageX - previewContainer.offsetLeft; const y = e.pageY - previewContainer.offsetTop;
-        previewContainer.scrollLeft = scrollLeft - (x - startX); previewContainer.scrollTop = scrollTop - (y - startY);
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isPanning) return;
+        panX = e.clientX - startMouseX;
+        panY = e.clientY - startMouseY;
+        updateCanvasTransform();
     });
 
+    window.addEventListener('mouseup', () => {
+        if (isPanning) {
+            isPanning = false;
+            viewport.style.cursor = 'grab';
+            shield.style.display = 'none';
+        }
+    });
+
+    // INJECTION DU MOTEUR DANS L'IFRAME (Pour pouvoir zoomer MÊME si la souris est sur le site !)
     const iframe = document.getElementById('site-preview');
     iframe.onload = function() {
         try {
+            // Disparition de l'écran de chargement quand l'iframe est prête
+            const loader = document.getElementById('preview-loader');
+            if(loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 400);
+            }
+
             iframe.contentWindow.addEventListener('wheel', function(e) {
-                if (e.ctrlKey || e.metaKey) { e.preventDefault(); customZoom = true; window.manualZoom(e.deltaY * -0.005); }
+                if (e.ctrlKey || e.metaKey) { 
+                    e.preventDefault(); 
+                    manualZoom(e.deltaY * -0.01); 
+                } else {
+                    // Optionnel: On laisse l'utilisateur scroller DANS le site, on ne bloque pas le pan naturel ici.
+                }
             }, { passive: false });
-        } catch (error) { console.log("CORS block - normal en local."); }
+        } catch (error) { 
+            console.log("CORS block - normal en local."); 
+        }
     };
 
-    window.addEventListener('resize', autoScalePreview);
+    window.addEventListener('resize', () => {
+        // Recadre si on redimensionne toute la fenêtre du navigateur
+        if(panX === 0 && panY === 0) autoScalePreview();
+    });
+
+    // =========================================================================
+    // LOGIQUE ADMIN GLOBALE
+    // =========================================================================
 
     function getCleanFileName(url) { if (!url) return ''; const parts = url.split('/'); return decodeURIComponent(parts[parts.length - 1].replace(/^\d+_/, '')); }
     function isSupabaseUrl(url) { return url && url.includes('supabase.co'); }
@@ -539,14 +710,18 @@
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
+        
         await loadData(session.user.id);
         switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
+        
+        // Initialisation de la caméra virtuelle
         setTimeout(autoScalePreview, 100); 
     }
 
     async function loadData(uid) {
         const { data: profile, error: errProf } = await sb.from('profiles').select('*').eq('id', uid).single();
         if (errProf || !profile) return;
+        
         profileData = profile; 
         profileData.courses = []; profileData.publications = []; profileData.interventions = [];
         if (!profileData.config) profileData.config = DEFAULT_CONFIG;
@@ -841,8 +1016,14 @@
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
         if(el) el.classList.add('active'); 
         document.getElementById('sidebar').classList.remove('mobile-open'); 
+        
+        // Recharge l'iframe en forçant le cache et remet le loader
         const iframe = document.getElementById('site-preview'); 
-        if(iframe && profileData) { iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; } 
+        const loader = document.getElementById('preview-loader');
+        if(iframe && profileData) { 
+            if(loader) { loader.style.display = 'flex'; loader.style.opacity = '1'; }
+            iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
+        } 
     }
 
     function renderHeaderConfig() {
