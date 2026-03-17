@@ -44,7 +44,10 @@
         .hidden { display: none !important; }
 
         /* --- SIDEBAR --- */
-        .mobile-header { display: none; background: var(--sidebar); color: white; padding: 15px; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .mobile-header { 
+            display: none; background: var(--sidebar); color: white; padding: 15px; 
+            align-items: center; justify-content: space-between; flex-shrink: 0; 
+        }
         .mobile-header .logo-text { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         .mobile-header .logo-text span { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 2px; font-size: 0.7rem; font-weight: 800; }
         .mobile-actions { display: flex; gap: 15px; align-items: center; }
@@ -188,20 +191,6 @@
             overflow: hidden; 
         }
 
-        .loading-overlay {
-            position: absolute; inset: 0;
-            background: #e2e8f0; z-index: 200;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.4s ease;
-        }
-        .loading-text {
-            font-weight: 800; font-size: 1.5rem; color: var(--accent);
-            letter-spacing: 0.1em; text-transform: uppercase;
-            animation: pulseSkeleton 1.5s infinite ease-in-out;
-            display: flex; align-items: center; gap: 10px;
-        }
-        @keyframes pulseSkeleton { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
         .viewport {
             flex: 1; position: relative; overflow: hidden;
             cursor: grab; 
@@ -209,7 +198,8 @@
         .viewport:active { cursor: grabbing; }
 
         .canvas-plane {
-            position: absolute; left: 50%; top: 50%;
+            position: absolute;
+            left: 50%; top: 50%;
             display: flex; justify-content: center; align-items: center;
             will-change: transform;
         }
@@ -235,9 +225,16 @@
         
         iframe { width: 100%; flex: 1; border: none; background: white; pointer-events: auto; }
 
-        .device-mobile { width: 375px !important; height: 812px !important; border-radius: 40px !important; border: 14px solid #0f172a !important; }
+        .device-mobile {
+            width: 375px !important; 
+            height: 812px !important; 
+            border-radius: 40px !important; 
+            border: 14px solid #0f172a !important;
+        }
+
         .iframe-shield { display: none; position: absolute; inset: 0; z-index: 20; }
 
+        /* --- PILULE FLOTTANTE --- */
         .floating-toolbar {
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: white; padding: 8px 12px; border-radius: 50px;
@@ -245,7 +242,11 @@
             display: flex; align-items: center; gap: 10px; z-index: 100; border: 1px solid #e2e8f0;
         }
 
-        .btn-toolbar { background: transparent; border: none; border-radius: 40px; height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; padding: 0 16px; }
+        .btn-toolbar {
+            background: transparent; border: none; border-radius: 40px; height: 36px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; padding: 0 16px;
+        }
         .btn-toolbar:hover { background: #f1f5f9; color: var(--accent-blue); }
         .btn-zoom { width: 36px; padding: 0; }
         .btn-zoom-reset { padding: 0 12px; font-size: 0.8rem; font-weight: 700; color: #64748b; }
@@ -257,16 +258,14 @@
         #toast.visible { transform: translateX(-50%) translateY(0); }
 
         /* ========================================================
-           MEDIA QUERIES - RESPONSIVENESS ABSOLU (NOUVEAU)
+           MEDIA QUERIES - RESPONSIVENESS ABSOLU
            ======================================================== */
            
-        /* TABLETTES ET PETITS ECRANS (Le slider et l'aperçu disparaissent) */
         @media (max-width: 1200px) { 
             .preview-side, .resizer { display: none !important; } 
             .editor-side { min-width: 0; padding: 40px 30px 0 30px; }
         }
 
-        /* MOBILES (L'éditeur devient 100% full-width, les formulaires s'empilent) */
         @media (max-width: 768px) { 
             body { flex-direction: column; height: auto; overflow: auto; background: var(--bg-body); }
             
@@ -287,7 +286,6 @@
             nav.mobile-open { transform: translateX(0); }
             nav .logo { display: none; }
             
-            /* Empilement des éléments de formulaires complexes (Mobile First) */
             .resource-row { flex-direction: column; height: auto; gap: 10px; align-items: stretch; background: transparent; padding: 0; border: none; }
             .input-group-title { height: var(--input-height); min-width: 0; width: 100%; }
             .type-selector { height: var(--input-height); width: 100%; justify-content: space-between; }
@@ -305,7 +303,6 @@
             .course-row-top { flex-direction: column; align-items: flex-start; gap: 10px; }
             .course-row-bottom { flex-direction: column; align-items: flex-start; }
             
-            /* Les dates et les catégories s'empilent au lieu d'être côte à côte */
             div[style*="display:flex; gap:15px; flex-wrap:wrap"] { flex-direction: column; gap: 10px; }
             div[style*="display:flex; gap:10px;"] { flex-wrap: wrap; }
         }
@@ -500,10 +497,6 @@
 
         <aside class="preview-side" id="preview-side">
             
-            <div id="preview-loader" class="loading-overlay">
-                <div class="loading-text"><i data-lucide="loader" class="spin"></i> CORPUS DIGITALIS</div>
-            </div>
-
             <div class="floating-toolbar">
                 <button class="btn-toolbar" id="btn-toggle-device" onclick="toggleDeviceMode()">
                     <i data-lucide="smartphone" size="16"></i> <span id="text-toggle-device">Changer d'appareil</span>
@@ -523,8 +516,7 @@
                                 <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
                             </div>
                             <div class="url-bar">monsite.com</div>
-                            <div style="width: 42px;"></div>
-                        </div>
+                            <div style="width: 42px;"></div> </div>
                         
                         <iframe id="site-preview" src="about:blank"></iframe>
                         <div class="iframe-shield" id="iframe-shield"></div>
@@ -541,7 +533,15 @@
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
     const DEFAULT_CONFIG = { header: { home: true, publications: true, courses: true, interventions: true, contact: true }, footer: { linkedin: true, scholar: true, cv: true, custom: [] } };
-    let profileData = null, saveTimer = null, openCourseId = null, openPubId = null, openInterId = null;
+    
+    let profileData = null;
+    let saveTimer = null;
+    let openCourseId = null;
+    let openPubId = null;
+    let openInterId = null;
+    
+    // Variable pour suivre la page actuellement ouverte dans l'iframe
+    let currentPagePath = 'index.html'; 
 
     // --- SYSTEME DE REDIMENSIONNEMENT ---
     const resizer = document.getElementById('resizer');
@@ -679,12 +679,6 @@
     const iframe = document.getElementById('site-preview');
     iframe.onload = function() {
         try {
-            const loader = document.getElementById('preview-loader');
-            if(loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 400);
-            }
-
             iframe.contentWindow.addEventListener('wheel', function(e) {
                 if (e.ctrlKey || e.metaKey) { 
                     e.preventDefault(); 
@@ -700,16 +694,30 @@
         if(panX === 0 && panY === 0) autoScalePreview();
     });
 
-    // --- LOGIQUE ADMIN ---
+    // --- LOGIQUE ADMIN PRINCIPALE ---
 
-    function getCleanFileName(url) { if (!url) return ''; const parts = url.split('/'); return decodeURIComponent(parts[parts.length - 1].replace(/^\d+_/, '')); }
-    function isSupabaseUrl(url) { return url && url.includes('supabase.co'); }
-    function toggleEditBlock(id) { const el = document.getElementById(id); if (el) el.classList.toggle('visible'); }
+    function getCleanFileName(url) { 
+        if (!url) return ''; 
+        const parts = url.split('/'); 
+        return decodeURIComponent(parts[parts.length - 1].replace(/^\d+_/, '')); 
+    }
+    
+    function isSupabaseUrl(url) { 
+        return url && url.includes('supabase.co'); 
+    }
+    
+    function toggleEditBlock(id) { 
+        const el = document.getElementById(id); 
+        if (el) el.classList.toggle('visible'); 
+    }
 
     async function init() {
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
-        if (!session) { window.location.href = 'login.html'; return; }
+        if (!session) { 
+            window.location.href = 'login.html'; 
+            return; 
+        }
         
         await loadData(session.user.id);
         switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
@@ -722,11 +730,15 @@
         if (errProf || !profile) return;
         
         profileData = profile; 
-        profileData.courses = []; profileData.publications = []; profileData.interventions = [];
+        profileData.courses = []; 
+        profileData.publications = []; 
+        profileData.interventions = [];
         if (!profileData.config) profileData.config = DEFAULT_CONFIG;
         
         const viewSiteLink = document.getElementById('mobile-view-site');
-        if(viewSiteLink) viewSiteLink.href = `index.html?prof=${profileData.slug||profileData.id}`;
+        if(viewSiteLink) {
+            viewSiteLink.href = `index.html?prof=${profileData.slug||profileData.id}`;
+        }
         
         fillProfileUI();
         
@@ -740,15 +752,21 @@
         if (resPubs.status === 'fulfilled' && resPubs.value.data) profileData.publications = resPubs.value.data;
         if (resInter.status === 'fulfilled' && resInter.value.data) profileData.interventions = resInter.value.data;
         
-        renderCourses(); renderPublications(); renderInterventions();
+        renderCourses(); 
+        renderPublications(); 
+        renderInterventions();
     }
 
     function fillProfileUI() {
         if(!profileData) return;
+        
         document.getElementById('field-name').value = profileData.name || '';
         document.getElementById('field-title').value = profileData.title || '';
         document.getElementById('field-bio').value = profileData.bio || '';
-        if(profileData.image_url) document.getElementById('preview-avatar').src = profileData.image_url;
+        if(profileData.image_url) {
+            document.getElementById('preview-avatar').src = profileData.image_url;
+        }
+        
         document.getElementById('field-linkedin').value = profileData.linkedin_url || '';
         document.getElementById('field-scholar').value = profileData.scholar_url || '';
         
@@ -768,44 +786,76 @@
                 <button class="btn-square" onclick="toggleEditBlock('cv-edit-container')" title="Modifier"><i data-lucide="pencil" size="16"></i></button>
                 <button class="btn-square delete" onclick="deleteCV()" title="Supprimer"><i data-lucide="trash-2" size="16"></i></button>
             </div>`;
-        } else { document.getElementById('cv-edit-container').classList.add('visible'); }
+        } else { 
+            document.getElementById('cv-edit-container').classList.add('visible'); 
+        }
         cvArea.innerHTML = html;
         
-        if (isFile) { document.getElementById('field-cv-url').value = ""; } 
-        else { document.getElementById('field-cv-url').value = cvUrl || ''; }
+        if (isFile) { 
+            document.getElementById('field-cv-url').value = ""; 
+        } else { 
+            document.getElementById('field-cv-url').value = cvUrl || ''; 
+        }
         
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; 
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
         
-        renderHeaderConfig(); renderFooterConfig(); lucide.createIcons();
+        renderHeaderConfig(); 
+        renderFooterConfig(); 
+        lucide.createIcons();
     }
 
     function initSortable(containerId, dataKey) {
-        const el = document.getElementById(containerId); if(!el) return;
-        new Sortable(el, { handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost', onEnd: function (evt) { const itemIds = Array.from(el.children).map(child => child.id.replace(/^(card-|pub-|inter-)/, '')); updateOrder(dataKey, itemIds); } });
+        const el = document.getElementById(containerId); 
+        if(!el) return;
+        
+        new Sortable(el, { 
+            handle: '.drag-handle', 
+            animation: 150, 
+            ghostClass: 'sortable-ghost', 
+            onEnd: function (evt) { 
+                const itemIds = Array.from(el.children).map(child => child.id.replace(/^(card-|pub-|inter-)/, '')); 
+                updateOrder(dataKey, itemIds); 
+            } 
+        });
     }
 
     async function updateOrder(table, ids) {
         const updates = ids.map((id, index) => ({ id, position: index }));
-        if(table === 'courses') { profileData.courses.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id)); } 
-        else if (table === 'publications') { profileData.publications.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id)); } 
-        else if (table === 'interventions') { profileData.interventions.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id)); }
-        for (const up of updates) { await sb.from(table).update({ position: up.position }).eq('id', up.id); }
-        showToast("Ordre sauvegardé", "success"); reloadPreview();
+        
+        if(table === 'courses') { 
+            profileData.courses.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id)); 
+        } else if (table === 'publications') { 
+            profileData.publications.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id)); 
+        } else if (table === 'interventions') { 
+            profileData.interventions.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id)); 
+        }
+        
+        for (const up of updates) { 
+            await sb.from(table).update({ position: up.position }).eq('id', up.id); 
+        }
+        
+        showToast("Ordre sauvegardé", "success"); 
+        reloadPreview();
     }
 
     function renderCourses() {
         const c = document.getElementById('courses-container');
-        if(!profileData.courses?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; return; }
+        if(!profileData.courses?.length) { 
+            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; 
+            return; 
+        }
         
         c.innerHTML = profileData.courses.map(course => {
             const isOpen = (openCourseId === course.id) ? 'open' : '';
             let sectionsHtml = '';
+            
             (course.sections || []).forEach((sec, secIdx) => {
                 let itemsHtml = '';
                 if(sec.items && sec.items.length > 0) {
                     itemsHtml = sec.items.map((item, itemIdx) => {
-                        const isFile = item.type === 'file'; const editId = `edit-c-${course.id}-${secIdx}-${itemIdx}`;
+                        const isFile = item.type === 'file'; 
+                        const editId = `edit-c-${course.id}-${secIdx}-${itemIdx}`;
                         return `
                             <div class="course-item-row">
                                 <div class="course-row-top">
@@ -822,11 +872,23 @@
                                     <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
                                         <h5 style="margin: 0 0 10px 0; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Modifier le document</h5>
                                         <div class="resource-row mode-${item.type}">
-                                            <div class="input-group-title"><input type="text" id="edit-lbl-${course.id}-${secIdx}-${itemIdx}" value="${item.label}" class="form-input" placeholder="Titre du document"></div>
-                                            <div class="type-selector"><button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien</button><button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier</button></div>
+                                            <div class="input-group-title">
+                                                <input type="text" id="edit-lbl-${course.id}-${secIdx}-${itemIdx}" value="${item.label}" class="form-input" placeholder="Titre du document">
+                                            </div>
+                                            <div class="type-selector">
+                                                <button type="button" class="type-btn ${item.type==='link'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'link', this)">Lien</button>
+                                                <button type="button" class="type-btn ${item.type==='file'?'active':''}" onclick="switchExistingMode('${course.id}', ${secIdx}, ${itemIdx}, 'file', this)">Fichier</button>
+                                            </div>
                                             <div class="action-area">
-                                                <div class="link-input-wrapper"><input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://..."></div>
-                                                <div class="upload-btn-wrapper"><label class="upload-label" id="lbl-up-${course.id}-${secIdx}-${itemIdx}"><i data-lucide="cloud-upload"></i> <span class="label-text" id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span><input type="file" id="edit-file-${course.id}-${secIdx}-${itemIdx}" class="hidden-input" onchange="document.getElementById('file-txt-edit-${course.id}-${secIdx}-${itemIdx}').innerText = this.files[0] ? this.files[0].name : 'Remplacer fichier'"></label></div>
+                                                <div class="link-input-wrapper">
+                                                    <input type="url" id="edit-val-${course.id}-${secIdx}-${itemIdx}" value="${isSupabaseUrl(item.value) ? '' : item.value}" class="form-input" placeholder="https://...">
+                                                </div>
+                                                <div class="upload-btn-wrapper">
+                                                    <label class="upload-label" id="lbl-up-${course.id}-${secIdx}-${itemIdx}">
+                                                        <i data-lucide="cloud-upload"></i> <span class="label-text" id="file-txt-edit-${course.id}-${secIdx}-${itemIdx}">Remplacer fichier</span>
+                                                        <input type="file" id="edit-file-${course.id}-${secIdx}-${itemIdx}" class="hidden-input" onchange="document.getElementById('file-txt-edit-${course.id}-${secIdx}-${itemIdx}').innerText = this.files[0] ? this.files[0].name : 'Remplacer fichier'">
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                         <button class="btn-primary" style="width: 100%; margin-top: 15px;" onclick="confirmCourseItemUpdate('${course.id}', ${secIdx}, ${itemIdx}, this)"><i data-lucide="check" size="16"></i> Enregistrer les modifications</button>
@@ -835,19 +897,36 @@
                             </div>`;
                     }).join('');
                 }
+                
                 sectionsHtml += `
                     <div class="section-block">
-                        <div class="section-header"><input class="section-title-input" value="${sec.title}" onchange="updateSectionTitle('${course.id}', ${secIdx}, this.value)"><button class="btn-ghost" onclick="delSection('${course.id}', ${secIdx})" title="Supprimer section"><i data-lucide="trash-2" size="14"></i></button></div>
+                        <div class="section-header">
+                            <input class="section-title-input" value="${sec.title}" onchange="updateSectionTitle('${course.id}', ${secIdx}, this.value)">
+                            <button class="btn-ghost" onclick="delSection('${course.id}', ${secIdx})" title="Supprimer section"><i data-lucide="trash-2" size="14"></i></button>
+                        </div>
                         <div class="section-content">
                             ${itemsHtml}
                             <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-top: 15px;">
                                 <h5 style="margin: 0 0 10px 0; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Ajouter un document</h5>
                                 <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}">
-                                    <div class="input-group-title"><input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document"></div>
-                                    <div class="type-selector"><input type="hidden" id="type-val-${course.id}-${secIdx}" value="link"><button type="button" class="type-btn active" onclick="switchMode('${course.id}', ${secIdx}, 'link', this)">Lien</button><button type="button" class="type-btn" onclick="switchMode('${course.id}', ${secIdx}, 'file', this)">Fichier</button></div>
+                                    <div class="input-group-title">
+                                        <input type="text" id="lbl-${course.id}-${secIdx}" class="form-input" placeholder="Titre du document">
+                                    </div>
+                                    <div class="type-selector">
+                                        <input type="hidden" id="type-val-${course.id}-${secIdx}" value="link">
+                                        <button type="button" class="type-btn active" onclick="switchMode('${course.id}', ${secIdx}, 'link', this)">Lien</button>
+                                        <button type="button" class="type-btn" onclick="switchMode('${course.id}', ${secIdx}, 'file', this)">Fichier</button>
+                                    </div>
                                     <div class="action-area">
-                                        <div class="link-input-wrapper"><input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="Lien (ex: https://...)"></div>
-                                        <div class="upload-btn-wrapper"><label class="upload-label" id="lbl-up-new-${course.id}-${secIdx}"><i data-lucide="file-up"></i> <span class="label-text" id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span><input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="document.getElementById('file-txt-${course.id}-${secIdx}').innerText = this.files[0] ? this.files[0].name : 'Choisir un fichier'"></label></div>
+                                        <div class="link-input-wrapper">
+                                            <input type="url" id="url-${course.id}-${secIdx}" class="form-input" placeholder="Lien (ex: https://...)">
+                                        </div>
+                                        <div class="upload-btn-wrapper">
+                                            <label class="upload-label" id="lbl-up-new-${course.id}-${secIdx}">
+                                                <i data-lucide="file-up"></i> <span class="label-text" id="file-txt-${course.id}-${secIdx}">Choisir un fichier</span>
+                                                <input type="file" id="file-${course.id}-${secIdx}" class="hidden-input" onchange="document.getElementById('file-txt-${course.id}-${secIdx}').innerText = this.files[0] ? this.files[0].name : 'Choisir un fichier'">
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <button class="btn-primary" style="width: 100%; margin-top: 15px; background: #0f172a; color: white;" onclick="addItem('${course.id}', ${secIdx}, this)"><i data-lucide="plus" size="16"></i> Nouveau document</button>
@@ -859,42 +938,82 @@
             return `
                 <div class="item-card ${isOpen}" id="card-${course.id}">
                     <div class="item-header" onclick="toggleCard('${course.id}', 'course')">
-                        <i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title" id="title-course-${course.id}">${course.title}</div><span class="item-badge">${course.category}</span><i data-lucide="chevron-down" class="chevron"></i>
+                        <i data-lucide="grip-vertical" class="drag-handle"></i>
+                        <div class="item-title" id="title-course-${course.id}">${course.title}</div>
+                        <span class="item-badge">${course.category}</span>
+                        <i data-lucide="chevron-down" class="chevron"></i>
                     </div>
                     <div class="item-body" onclick="event.stopPropagation()">
-                        <div class="form-row"><label>Nom du Cours</label><input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value); document.getElementById('title-course-${course.id}').innerText=this.value"></div>
-                        <div class="form-row"><label>Niveau</label><input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)"></div>
+                        <div class="form-row">
+                            <label>Nom du Cours</label>
+                            <input value="${course.title}" oninput="autoSave('courses', '${course.id}', 'title', this.value); document.getElementById('title-course-${course.id}').innerText=this.value">
+                        </div>
+                        <div class="form-row">
+                            <label>Niveau</label>
+                            <input value="${course.category}" oninput="autoSave('courses', '${course.id}', 'category', this.value)">
+                        </div>
                         <div style="margin-top:25px;">
                             <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
                             ${sectionsHtml}
                             <button class="btn-ghost" onclick="addSection('${course.id}', this)" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">+ Ajouter une Section (ex: TD, Examens)</button>
                         </div>
-                        <div style="text-align:right; margin-top:30px;"><button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button></div>
+                        <div style="text-align:right; margin-top:30px;">
+                            <button class="btn-delete-course" onclick="delItem('courses', '${course.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer ce cours</button>
+                        </div>
                     </div>
                 </div>`;
         }).join(''); 
-        lucide.createIcons(); initSortable('courses-container', 'courses');
+        
+        lucide.createIcons(); 
+        initSortable('courses-container', 'courses');
     }
 
     function renderPublications() {
         const c = document.getElementById('pubs-container');
-        if(!profileData.publications?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication.</div>'; return; }
+        if(!profileData.publications?.length) { 
+            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication.</div>'; 
+            return; 
+        }
         
         c.innerHTML = profileData.publications.map(pub => {
             const isOpen = (openPubId === pub.id) ? 'open' : ''; 
-            const isFile = isSupabaseUrl(pub.link_value); const hasContent = pub.link_value && pub.link_value !== "";
+            const isFile = isSupabaseUrl(pub.link_value); 
+            const hasContent = pub.link_value && pub.link_value !== "";
             
             return `
             <div class="item-card ${isOpen}" id="pub-${pub.id}">
                 <div class="item-header" onclick="toggleCard('${pub.id}', 'pub')">
-                    <i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title" id="title-pub-${pub.id}">${pub.title || 'Sans titre'}</div><span class="item-badge">${pub.category || 'Article'}</span><span class="item-badge" style="background:#eef2ff; color:#6366f1;">${pub.date || ''}</span><i data-lucide="chevron-down" class="chevron"></i>
+                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title" id="title-pub-${pub.id}">${pub.title || 'Sans titre'}</div>
+                    <span class="item-badge">${pub.category || 'Article'}</span>
+                    <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${pub.date || ''}</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Titre</label><input value="${pub.title || ''}" oninput="autoSave('publications', '${pub.id}', 'title', this.value); document.getElementById('title-pub-${pub.id}').innerText=this.value"></div>
-                    <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('publications', '${pub.id}', 'description', this.value)">${pub.description || ''}</textarea></div>
+                    <div class="form-row">
+                        <label>Titre</label>
+                        <input value="${pub.title || ''}" oninput="autoSave('publications', '${pub.id}', 'title', this.value); document.getElementById('title-pub-${pub.id}').innerText=this.value">
+                    </div>
+                    <div class="form-row">
+                        <label>Description</label>
+                        <textarea rows="3" oninput="autoSave('publications', '${pub.id}', 'description', this.value)">${pub.description || ''}</textarea>
+                    </div>
                     <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
-                        <div style="flex:1; min-width:120px;"><label>Date</label><input type="date" value="${pub.date || ''}" oninput="autoSave('publications', '${pub.id}', 'date', this.value)"></div>
-                        <div style="flex:1; min-width:150px;"><label>Catégorie</label><select onchange="autoSave('publications', '${pub.id}', 'category', this.value)"><option value="Article" ${pub.category==='Article'?'selected':''}>Article</option><option value="Ouvrage" ${pub.category==='Ouvrage'?'selected':''}>Ouvrage</option><option value="Chapitre" ${pub.category==='Chapitre'?'selected':''}>Chapitre d'ouvrage</option><option value="Thèse" ${pub.category==='Thèse'?'selected':''}>Thèse</option><option value="Mémoire" ${pub.category==='Mémoire'?'selected':''}>Mémoire</option><option value="Autre" ${pub.category==='Autre'?'selected':''}>Autre</option></select></div>
+                        <div style="flex:1; min-width:120px;">
+                            <label>Date</label>
+                            <input type="date" value="${pub.date || ''}" oninput="autoSave('publications', '${pub.id}', 'date', this.value)">
+                        </div>
+                        <div style="flex:1; min-width:150px;">
+                            <label>Catégorie</label>
+                            <select onchange="autoSave('publications', '${pub.id}', 'category', this.value)">
+                                <option value="Article" ${pub.category==='Article'?'selected':''}>Article</option>
+                                <option value="Ouvrage" ${pub.category==='Ouvrage'?'selected':''}>Ouvrage</option>
+                                <option value="Chapitre" ${pub.category==='Chapitre'?'selected':''}>Chapitre d'ouvrage</option>
+                                <option value="Thèse" ${pub.category==='Thèse'?'selected':''}>Thèse</option>
+                                <option value="Mémoire" ${pub.category==='Mémoire'?'selected':''}>Mémoire</option>
+                                <option value="Autre" ${pub.category==='Autre'?'selected':''}>Autre</option>
+                            </select>
+                        </div>
                     </div>
                     <label>Document associé</label>
                     <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
@@ -903,35 +1022,84 @@
                     </div>
                     <div class="hidden-edit-container ${!hasContent ? 'visible' : ''}" id="pub-res-${pub.id}">
                         <div class="resource-row mode-link">
-                            <div class="type-selector"><button type="button" class="type-btn active" onclick="switchPubMode('${pub.id}', 'link', this)">Lien</button><button type="button" class="type-btn" onclick="switchPubMode('${pub.id}', 'file', this)">Fichier</button></div>
-                            <div class="action-area"><div class="link-input-wrapper"><input type="url" id="pub-url-${pub.id}" value="${isFile ? '' : (pub.link_value || '')}" placeholder="https://doi.org/..."></div><div class="upload-btn-wrapper"><label class="upload-label" id="lbl-up-pub-${pub.id}"><i data-lucide="cloud-upload"></i> <span class="label-text" id="pub-file-txt-${pub.id}">Remplacer PDF</span><input type="file" class="hidden-input" onchange="uploadFileForEdit('publications', this, 'pub-url-${pub.id}', 'pub-file-txt-${pub.id}', 'lbl-up-pub-${pub.id}')"></label></div></div>
+                            <div class="type-selector">
+                                <button type="button" class="type-btn active" onclick="switchPubMode('${pub.id}', 'link', this)">Lien</button>
+                                <button type="button" class="type-btn" onclick="switchPubMode('${pub.id}', 'file', this)">Fichier</button>
+                            </div>
+                            <div class="action-area">
+                                <div class="link-input-wrapper">
+                                    <input type="url" id="pub-url-${pub.id}" value="${isFile ? '' : (pub.link_value || '')}" placeholder="https://doi.org/...">
+                                </div>
+                                <div class="upload-btn-wrapper">
+                                    <label class="upload-label" id="lbl-up-pub-${pub.id}">
+                                        <i data-lucide="cloud-upload"></i> <span class="label-text" id="pub-file-txt-${pub.id}">Remplacer PDF</span>
+                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('publications', this, 'pub-url-${pub.id}', 'pub-file-txt-${pub.id}', 'lbl-up-pub-${pub.id}')">
+                                    </label>
+                                </div>
+                            </div>
                             <button class="btn-validate" onclick="confirmPubUpdate('${pub.id}')"><i data-lucide="check" size="20"></i></button>
                         </div>
                     </div>
-                    <div style="text-align:right; margin-top:20px;"><button class="btn-delete-course" onclick="delItem('publications', '${pub.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button></div>
+                    <div style="text-align:right; margin-top:20px;">
+                        <button class="btn-delete-course" onclick="delItem('publications', '${pub.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button>
+                    </div>
                 </div>
             </div>`;
         }).join(''); 
-        lucide.createIcons(); initSortable('pubs-container', 'publications');
+        
+        lucide.createIcons(); 
+        initSortable('pubs-container', 'publications');
     }
 
     function renderInterventions() {
         const c = document.getElementById('interventions-container');
-        if(!profileData.interventions?.length) { c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; return; }
+        if(!profileData.interventions?.length) { 
+            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; 
+            return; 
+        }
         
         c.innerHTML = profileData.interventions.map(inter => {
             const isOpen = (openInterId === inter.id) ? 'open' : ''; 
-            const isFile = isSupabaseUrl(inter.link_value); const hasContent = inter.link_value && inter.link_value !== "";
+            const isFile = isSupabaseUrl(inter.link_value); 
+            const hasContent = inter.link_value && inter.link_value !== "";
+            
             return `
             <div class="item-card ${isOpen}" id="inter-${inter.id}">
-                <div class="item-header" onclick="toggleCard('${inter.id}', 'inter')"><i data-lucide="grip-vertical" class="drag-handle"></i><div class="item-title" id="title-inter-${inter.id}">${inter.title || 'Sans titre'}</div><span class="item-badge">${inter.category || 'Conférence'}</span><span class="item-badge" style="background:#eef2ff; color:#6366f1;">${inter.event_date || ''}</span><i data-lucide="chevron-down" class="chevron"></i></div>
+                <div class="item-header" onclick="toggleCard('${inter.id}', 'inter')">
+                    <i data-lucide="grip-vertical" class="drag-handle"></i>
+                    <div class="item-title" id="title-inter-${inter.id}">${inter.title || 'Sans titre'}</div>
+                    <span class="item-badge">${inter.category || 'Conférence'}</span>
+                    <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${inter.event_date || ''}</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                </div>
                 <div class="item-body" onclick="event.stopPropagation()">
-                    <div class="form-row"><label>Titre de l'intervention</label><input value="${inter.title || ''}" oninput="autoSave('interventions', '${inter.id}', 'title', this.value); document.getElementById('title-inter-${inter.id}').innerText=this.value"></div>
-                    <div class="form-row"><label>Description</label><textarea rows="3" oninput="autoSave('interventions', '${inter.id}', 'description', this.value)">${inter.description || ''}</textarea></div>
+                    <div class="form-row">
+                        <label>Titre de l'intervention</label>
+                        <input value="${inter.title || ''}" oninput="autoSave('interventions', '${inter.id}', 'title', this.value); document.getElementById('title-inter-${inter.id}').innerText=this.value">
+                    </div>
+                    <div class="form-row">
+                        <label>Description</label>
+                        <textarea rows="3" oninput="autoSave('interventions', '${inter.id}', 'description', this.value)">${inter.description || ''}</textarea>
+                    </div>
                     <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:20px;">
-                        <div style="flex:1; min-width:120px;"><label>Date</label><input type="date" value="${inter.event_date || ''}" oninput="autoSave('interventions', '${inter.id}', 'event_date', this.value)"></div>
-                        <div style="flex:1; min-width:150px;"><label>Lieu</label><input type="text" value="${inter.location || ''}" placeholder="Paris, Zoom..." oninput="autoSave('interventions', '${inter.id}', 'location', this.value)"></div>
-                        <div style="flex:1; min-width:150px;"><label>Type</label><select onchange="autoSave('interventions', '${inter.id}', 'category', this.value)"><option value="Conférence" ${inter.category==='Conférence'?'selected':''}>Conférence</option><option value="Colloque" ${inter.category==='Colloque'?'selected':''}>Colloque</option><option value="Séminaire" ${inter.category==='Séminaire'?'selected':''}>Séminaire</option><option value="Présentation" ${inter.category==='Présentation'?'selected':''}>Présentation</option><option value="Autre" ${inter.category==='Autre'?'selected':''}>Autre</option></select></div>
+                        <div style="flex:1; min-width:120px;">
+                            <label>Date</label>
+                            <input type="date" value="${inter.event_date || ''}" oninput="autoSave('interventions', '${inter.id}', 'event_date', this.value)">
+                        </div>
+                        <div style="flex:1; min-width:150px;">
+                            <label>Lieu</label>
+                            <input type="text" value="${inter.location || ''}" placeholder="Paris, Zoom..." oninput="autoSave('interventions', '${inter.id}', 'location', this.value)">
+                        </div>
+                        <div style="flex:1; min-width:150px;">
+                            <label>Type</label>
+                            <select onchange="autoSave('interventions', '${inter.id}', 'category', this.value)">
+                                <option value="Conférence" ${inter.category==='Conférence'?'selected':''}>Conférence</option>
+                                <option value="Colloque" ${inter.category==='Colloque'?'selected':''}>Colloque</option>
+                                <option value="Séminaire" ${inter.category==='Séminaire'?'selected':''}>Séminaire</option>
+                                <option value="Présentation" ${inter.category==='Présentation'?'selected':''}>Présentation</option>
+                                <option value="Autre" ${inter.category==='Autre'?'selected':''}>Autre</option>
+                            </select>
+                        </div>
                     </div>
                     <label>Support (Lien ou PDF)</label>
                     <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
@@ -940,99 +1108,399 @@
                     </div>
                     <div class="hidden-edit-container ${!hasContent ? 'visible' : ''}" id="inter-res-${inter.id}">
                         <div class="resource-row mode-link">
-                            <div class="type-selector"><button type="button" class="type-btn active" onclick="switchInterMode('${inter.id}', 'link', this)">Lien</button><button type="button" class="type-btn" onclick="switchInterMode('${inter.id}', 'file', this)">Fichier</button></div>
-                            <div class="action-area"><div class="link-input-wrapper"><input type="url" id="inter-url-${inter.id}" value="${isFile ? '' : (inter.link_value || '')}" placeholder="https://..."></div><div class="upload-btn-wrapper"><label class="upload-label" id="lbl-up-inter-${inter.id}"><i data-lucide="cloud-upload"></i> <span class="label-text" id="inter-file-txt-${inter.id}">Remplacer support</span><input type="file" class="hidden-input" onchange="uploadFileForEdit('interventions', this, 'inter-url-${inter.id}', 'inter-file-txt-${inter.id}', 'lbl-up-inter-${inter.id}')"></label></div></div>
+                            <div class="type-selector">
+                                <button type="button" class="type-btn active" onclick="switchInterMode('${inter.id}', 'link', this)">Lien</button>
+                                <button type="button" class="type-btn" onclick="switchInterMode('${inter.id}', 'file', this)">Fichier</button>
+                            </div>
+                            <div class="action-area">
+                                <div class="link-input-wrapper">
+                                    <input type="url" id="inter-url-${inter.id}" value="${isFile ? '' : (inter.link_value || '')}" placeholder="https://...">
+                                </div>
+                                <div class="upload-btn-wrapper">
+                                    <label class="upload-label" id="lbl-up-inter-${inter.id}">
+                                        <i data-lucide="cloud-upload"></i> <span class="label-text" id="inter-file-txt-${inter.id}">Remplacer support</span>
+                                        <input type="file" class="hidden-input" onchange="uploadFileForEdit('interventions', this, 'inter-url-${inter.id}', 'inter-file-txt-${inter.id}', 'lbl-up-inter-${inter.id}')">
+                                    </label>
+                                </div>
+                            </div>
                             <button class="btn-validate" onclick="confirmInterUpdate('${inter.id}')"><i data-lucide="check" size="20"></i></button>
                         </div>
                     </div>
-                    <div style="text-align:right; margin-top:20px;"><button class="btn-delete-course" onclick="delItem('interventions', '${inter.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button></div>
+                    <div style="text-align:right; margin-top:20px;">
+                        <button class="btn-delete-course" onclick="delItem('interventions', '${inter.id}')"><i data-lucide="trash-2" size="14"></i> Supprimer</button>
+                    </div>
                 </div>
             </div>`;
         }).join(''); 
-        lucide.createIcons(); initSortable('interventions-container', 'interventions');
+        
+        lucide.createIcons(); 
+        initSortable('interventions-container', 'interventions');
     }
 
     // --- ACTIONS GENERIC ---
+    
     window.uploadFileForEdit = async (folder, input, urlFieldId, labelId, labelWrapperId) => {
         if(input.files.length === 0) return;
-        const file = input.files[0]; const lblWrapper = document.getElementById(labelWrapperId); const originalContent = lblWrapper.innerHTML;
-        lblWrapper.classList.add('loading'); lblWrapper.innerHTML = `<i data-lucide="loader" class="spin"></i> Envoi...`; lucide.createIcons(); showToast("Upload en cours...", "success");
-        try { const path = `${profileData.id}/${folder}/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) throw error; const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; document.getElementById(urlFieldId).value = url; document.getElementById(labelId).textContent = file.name; showToast("Fichier prêt. Validez pour enregistrer.", "success"); } 
-        catch(e) { showToast("Erreur upload: " + e.message, "error"); } finally { lblWrapper.classList.remove('loading'); lblWrapper.innerHTML = originalContent; document.getElementById(labelId).textContent = file.name; lucide.createIcons(); }
+        const file = input.files[0]; 
+        const lblWrapper = document.getElementById(labelWrapperId); 
+        const originalContent = lblWrapper.innerHTML;
+        
+        lblWrapper.classList.add('loading'); 
+        lblWrapper.innerHTML = `<i data-lucide="loader" class="spin"></i> Envoi...`; 
+        lucide.createIcons(); 
+        showToast("Upload en cours...", "success");
+        
+        try { 
+            const path = `${profileData.id}/${folder}/${Date.now()}_${file.name}`; 
+            const { error } = await sb.storage.from('documents').upload(path, file); 
+            if(error) throw error; 
+            
+            const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; 
+            document.getElementById(urlFieldId).value = url; 
+            document.getElementById(labelId).textContent = file.name; 
+            showToast("Fichier prêt. Validez pour enregistrer.", "success"); 
+        } catch(e) { 
+            showToast("Erreur upload: " + e.message, "error"); 
+        } finally { 
+            lblWrapper.classList.remove('loading'); 
+            lblWrapper.innerHTML = originalContent; 
+            document.getElementById(labelId).textContent = file.name; 
+            lucide.createIcons(); 
+        }
     }
 
-    window.confirmCVUpdate = async () => { const url = document.getElementById('field-cv-url').value; await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id); profileData.cv_url = url; fillProfileUI(); showToast("CV mis à jour !", "success"); reloadPreview(); }
-    window.deleteCV = async () => { if(!confirm("Supprimer le CV ?")) return; await sb.from('profiles').update({ cv_url: null }).eq('id', profileData.id); profileData.cv_url = null; fillProfileUI(); showToast("CV supprimé.", "success"); reloadPreview(); }
-    window.confirmPubUpdate = async (id) => { const url = document.getElementById(`pub-url-${id}`).value; const mode = document.querySelector(`#pub-res-${id} .resource-row`).classList.contains('mode-file') ? 'file' : 'link'; await sb.from('publications').update({ link_value: url, link_type: mode }).eq('id', id); const p = profileData.publications.find(x => x.id === id); p.link_value = url; p.link_type = mode; renderPublications(); showToast("Publication mise à jour !", "success"); reloadPreview(); }
-    window.confirmInterUpdate = async (id) => { const url = document.getElementById(`inter-url-${id}`).value; const mode = document.querySelector(`#inter-res-${id} .resource-row`).classList.contains('mode-file') ? 'file' : 'link'; await sb.from('interventions').update({ link_value: url, link_type: mode }).eq('id', id); const p = profileData.interventions.find(x => x.id === id); p.link_value = url; p.link_type = mode; renderInterventions(); showToast("Intervention mise à jour !", "success"); reloadPreview(); }
+    window.confirmCVUpdate = async () => { 
+        const url = document.getElementById('field-cv-url').value; 
+        await sb.from('profiles').update({ cv_url: url }).eq('id', profileData.id); 
+        profileData.cv_url = url; 
+        fillProfileUI(); 
+        showToast("CV mis à jour !", "success"); 
+        reloadPreview(); 
+    }
+    
+    window.deleteCV = async () => { 
+        if(!confirm("Supprimer le CV ?")) return; 
+        await sb.from('profiles').update({ cv_url: null }).eq('id', profileData.id); 
+        profileData.cv_url = null; 
+        fillProfileUI(); 
+        showToast("CV supprimé.", "success"); 
+        reloadPreview(); 
+    }
+    
+    window.confirmPubUpdate = async (id) => { 
+        const url = document.getElementById(`pub-url-${id}`).value; 
+        const mode = document.querySelector(`#pub-res-${id} .resource-row`).classList.contains('mode-file') ? 'file' : 'link'; 
+        await sb.from('publications').update({ link_value: url, link_type: mode }).eq('id', id); 
+        const p = profileData.publications.find(x => x.id === id); 
+        p.link_value = url; 
+        p.link_type = mode; 
+        renderPublications(); 
+        showToast("Publication mise à jour !", "success"); 
+        reloadPreview(); 
+    }
+    
+    window.confirmInterUpdate = async (id) => { 
+        const url = document.getElementById(`inter-url-${id}`).value; 
+        const mode = document.querySelector(`#inter-res-${id} .resource-row`).classList.contains('mode-file') ? 'file' : 'link'; 
+        await sb.from('interventions').update({ link_value: url, link_type: mode }).eq('id', id); 
+        const p = profileData.interventions.find(x => x.id === id); 
+        p.link_value = url; 
+        p.link_type = mode; 
+        renderInterventions(); 
+        showToast("Intervention mise à jour !", "success"); 
+        reloadPreview(); 
+    }
 
     window.confirmCourseItemUpdate = async (cid, sIdx, iIdx, btn) => {
-        const label = document.getElementById(`edit-lbl-${cid}-${sIdx}-${iIdx}`).value; const urlInput = document.getElementById(`edit-val-${cid}-${sIdx}-${iIdx}`).value; const editId = `edit-c-${cid}-${sIdx}-${iIdx}`; const mode = document.querySelector(`#${editId} .resource-row`).classList.contains('mode-file') ? 'file' : 'link';
-        if(!label) return showToast("Veuillez donner un titre au document", "error"); let finalValue = urlInput; const originalText = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Sauvegarde...`; if(window.lucide) lucide.createIcons();
+        const label = document.getElementById(`edit-lbl-${cid}-${sIdx}-${iIdx}`).value; 
+        const urlInput = document.getElementById(`edit-val-${cid}-${sIdx}-${iIdx}`).value; 
+        const editId = `edit-c-${cid}-${sIdx}-${iIdx}`; 
+        const mode = document.querySelector(`#${editId} .resource-row`).classList.contains('mode-file') ? 'file' : 'link';
+        
+        if(!label) return showToast("Veuillez donner un titre au document", "error"); 
+        
+        let finalValue = urlInput; 
+        const originalText = btn.innerHTML; 
+        btn.disabled = true; 
+        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Sauvegarde...`; 
+        if(window.lucide) lucide.createIcons();
+        
         if (mode === 'file') {
             const fileInput = document.getElementById(`edit-file-${cid}-${sIdx}-${iIdx}`);
-            if (fileInput && fileInput.files.length > 0) { const file = fileInput.files[0]; try { const path = `${profileData.id}/courses/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) throw error; finalValue = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; } catch(e) { btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); return showToast("Erreur lors de l'upload", "error"); } } else { const c = profileData.courses.find(x => x.id === cid); finalValue = c.sections[sIdx].items[iIdx].value; }
-        } else { if(!finalValue) { btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); return showToast("Veuillez fournir un lien valide", "error"); } }
-        try { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items[iIdx].label = label; c.sections[sIdx].items[iIdx].value = finalValue; c.sections[sIdx].items[iIdx].type = mode; await updateCourseDB(c); showToast("Document modifié !", "success"); } 
-        catch (e) { showToast("Erreur de modification", "error"); btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); }
+            if (fileInput && fileInput.files.length > 0) { 
+                const file = fileInput.files[0]; 
+                try { 
+                    const path = `${profileData.id}/courses/${Date.now()}_${file.name}`; 
+                    const { error } = await sb.storage.from('documents').upload(path, file); 
+                    if(error) throw error; 
+                    finalValue = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; 
+                } catch(e) { 
+                    btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); 
+                    return showToast("Erreur lors de l'upload", "error"); 
+                } 
+            } else { 
+                const c = profileData.courses.find(x => x.id === cid); 
+                finalValue = c.sections[sIdx].items[iIdx].value; 
+            }
+        } else { 
+            if(!finalValue) { 
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); 
+                return showToast("Veuillez fournir un lien valide", "error"); 
+            } 
+        }
+        
+        try { 
+            const c = profileData.courses.find(x => x.id === cid); 
+            c.sections[sIdx].items[iIdx].label = label; 
+            c.sections[sIdx].items[iIdx].value = finalValue; 
+            c.sections[sIdx].items[iIdx].type = mode; 
+            await updateCourseDB(c); 
+            showToast("Document modifié !", "success"); 
+        } catch (e) { 
+            showToast("Erreur de modification", "error"); 
+            btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); 
+        }
     }
 
-    window.switchMode = (cid, sIdx, mode, btn) => { const row = document.getElementById(`add-row-${cid}-${sIdx}`); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); document.getElementById(`type-val-${cid}-${sIdx}`).value = mode; row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-    window.switchExistingMode = (cid, sIdx, iIdx, mode, btn) => { const editId = `edit-c-${cid}-${sIdx}-${iIdx}`; const row = document.querySelector(`#${editId} .resource-row`); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+    window.switchMode = (cid, sIdx, mode, btn) => { 
+        const row = document.getElementById(`add-row-${cid}-${sIdx}`); 
+        row.classList.remove('mode-link', 'mode-file'); 
+        row.classList.add('mode-' + mode); 
+        document.getElementById(`type-val-${cid}-${sIdx}`).value = mode; 
+        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); 
+        btn.classList.add('active'); 
+    }
+    
+    window.switchExistingMode = (cid, sIdx, iIdx, mode, btn) => { 
+        const editId = `edit-c-${cid}-${sIdx}-${iIdx}`; 
+        const row = document.querySelector(`#${editId} .resource-row`); 
+        row.classList.remove('mode-link', 'mode-file'); 
+        row.classList.add('mode-' + mode); 
+        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); 
+        btn.classList.add('active'); 
+    }
 
     window.addItem = async (cid, sIdx, btn) => {
-        const type = document.getElementById(`type-val-${cid}-${sIdx}`).value; const label = document.getElementById(`lbl-${cid}-${sIdx}`).value;
-        if(!label) return showToast("Veuillez donner un titre au document", "error"); let value = "";
-        if (type === 'link') { value = document.getElementById(`url-${cid}-${sIdx}`).value; if(!value) return showToast("Veuillez entrer une URL", "error"); } 
-        const originalText = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Enregistrement en cours...`; if(window.lucide) lucide.createIcons();
+        const type = document.getElementById(`type-val-${cid}-${sIdx}`).value; 
+        const label = document.getElementById(`lbl-${cid}-${sIdx}`).value;
+        
+        if(!label) return showToast("Veuillez donner un titre au document", "error"); 
+        
+        let value = "";
+        if (type === 'link') { 
+            value = document.getElementById(`url-${cid}-${sIdx}`).value; 
+            if(!value) return showToast("Veuillez entrer une URL", "error"); 
+        } 
+        
+        const originalText = btn.innerHTML; 
+        btn.disabled = true; 
+        btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Enregistrement en cours...`; 
+        if(window.lucide) lucide.createIcons();
+        
         if (type === 'file') {
             const fileInput = document.getElementById(`file-${cid}-${sIdx}`);
-            if(!fileInput.files || fileInput.files.length === 0) { btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); return showToast("Veuillez choisir un fichier sur votre ordinateur", "error"); }
-            const file = fileInput.files[0]; try { const path = `${profileData.id}/courses/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) throw error; value = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; } catch(e) { btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); return showToast("Erreur lors de l'upload du fichier", "error"); }
+            if(!fileInput.files || fileInput.files.length === 0) { 
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); 
+                return showToast("Veuillez choisir un fichier sur votre ordinateur", "error"); 
+            }
+            const file = fileInput.files[0]; 
+            try { 
+                const path = `${profileData.id}/courses/${Date.now()}_${file.name}`; 
+                const { error } = await sb.storage.from('documents').upload(path, file); 
+                if(error) throw error; 
+                value = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; 
+            } catch(e) { 
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); 
+                return showToast("Erreur lors de l'upload du fichier", "error"); 
+            }
         }
-        try { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.push({ label, type, value }); openCourseId = cid; await updateCourseDB(c); showToast("Document ajouté avec succès !", "success"); } 
-        catch(e) { showToast("Erreur lors de la sauvegarde", "error"); btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); }
+        
+        try { 
+            const c = profileData.courses.find(x => x.id === cid); 
+            c.sections[sIdx].items.push({ label, type, value }); 
+            openCourseId = cid; 
+            await updateCourseDB(c); 
+            showToast("Document ajouté avec succès !", "success"); 
+        } catch(e) { 
+            showToast("Erreur lors de la sauvegarde", "error"); 
+            btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); 
+        }
     }
 
-    window.switchPubMode = (pid, mode, btn) => { const row = document.querySelector(`#pub-res-${pid} .resource-row`); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-    window.switchInterMode = (iid, mode, btn) => { const row = document.querySelector(`#inter-res-${iid} .resource-row`); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+    window.switchPubMode = (pid, mode, btn) => { 
+        const row = document.querySelector(`#pub-res-${pid} .resource-row`); 
+        row.classList.remove('mode-link', 'mode-file'); 
+        row.classList.add('mode-' + mode); 
+        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); 
+        btn.classList.add('active'); 
+    }
+    
+    window.switchInterMode = (iid, mode, btn) => { 
+        const row = document.querySelector(`#inter-res-${iid} .resource-row`); 
+        row.classList.remove('mode-link', 'mode-file'); 
+        row.classList.add('mode-' + mode); 
+        row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); 
+        btn.classList.add('active'); 
+    }
 
-    window.toggleCard = (id, type) => { if(type === 'course') { openCourseId = (openCourseId === id) ? null : id; renderCourses(); } else if (type === 'pub') { openPubId = (openPubId === id) ? null : id; renderPublications(); } else { openInterId = (openInterId === id) ? null : id; renderInterventions(); } }
-    window.updateSectionTitle = async (cid, sIdx, val) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].title = val; await updateCourseDB(c); }
-    window.addSection = async (cid, btn) => { const c = profileData.courses.find(x => x.id === cid); if(!c.sections) c.sections = []; c.sections.push({ title: 'Nouvelle Section', items: [] }); openCourseId = cid; const originalText = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Ajout en cours...`; if(window.lucide) lucide.createIcons(); await updateCourseDB(c); }
-    window.delSection = async (cid, sIdx) => { if(!confirm("Supprimer la section entière ?")) return; const c = profileData.courses.find(x => x.id === cid); c.sections.splice(sIdx, 1); await updateCourseDB(c); }
-    window.delCourseItem = async (cid, sIdx, iIdx) => { const c = profileData.courses.find(x => x.id === cid); c.sections[sIdx].items.splice(iIdx, 1); await updateCourseDB(c); }
-    async function updateCourseDB(c) { await sb.from('courses').update({sections: c.sections}).eq('id', c.id); renderCourses(); reloadPreview(); }
+    window.toggleCard = (id, type) => { 
+        if(type === 'course') { openCourseId = (openCourseId === id) ? null : id; renderCourses(); } 
+        else if (type === 'pub') { openPubId = (openPubId === id) ? null : id; renderPublications(); } 
+        else { openInterId = (openInterId === id) ? null : id; renderInterventions(); } 
+    }
+    
+    window.updateSectionTitle = async (cid, sIdx, val) => { 
+        const c = profileData.courses.find(x => x.id === cid); 
+        c.sections[sIdx].title = val; 
+        await updateCourseDB(c); 
+    }
+    
+    window.addSection = async (cid, btn) => { 
+        const c = profileData.courses.find(x => x.id === cid); 
+        if(!c.sections) c.sections = []; 
+        c.sections.push({ title: 'Nouvelle Section', items: [] }); 
+        openCourseId = cid; 
+        const originalText = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Ajout en cours...`; if(window.lucide) lucide.createIcons(); 
+        await updateCourseDB(c); 
+    }
+    
+    window.delSection = async (cid, sIdx) => { 
+        if(!confirm("Supprimer la section entière ?")) return; 
+        const c = profileData.courses.find(x => x.id === cid); 
+        c.sections.splice(sIdx, 1); 
+        await updateCourseDB(c); 
+    }
+    
+    window.delCourseItem = async (cid, sIdx, iIdx) => { 
+        const c = profileData.courses.find(x => x.id === cid); 
+        c.sections[sIdx].items.splice(iIdx, 1); 
+        await updateCourseDB(c); 
+    }
+    
+    async function updateCourseDB(c) { 
+        await sb.from('courses').update({sections: c.sections}).eq('id', c.id); 
+        renderCourses(); 
+        reloadPreview(); 
+    }
     
     window.createItem = async (t, d, btn) => { 
-        d.prof_id = profileData.id; d.position = -1; const originalText = btn.innerHTML; btn.disabled = true; btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Création...`; if(window.lucide) lucide.createIcons();
-        try { const {data, error} = await sb.from(t).insert([d]).select(); if(error) { showToast("Erreur : " + error.message, "error"); btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); return; } if(!profileData[t]) profileData[t]=[]; const newItem = data[0]; profileData[t].unshift(newItem); if(t==='courses') { openCourseId = newItem.id; renderCourses(); } if(t==='publications') { openPubId = newItem.id; renderPublications(); } if(t==='interventions') { openInterId = newItem.id; renderInterventions(); } showToast("Élément créé !", "success"); reloadPreview(); } catch(e) { console.log(e); } finally { if(btn && document.body.contains(btn)) { btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); } }
+        d.prof_id = profileData.id; d.position = -1; 
+        const originalText = btn.innerHTML; 
+        btn.disabled = true; btn.innerHTML = `<i data-lucide="loader" class="spin"></i> Création...`; 
+        if(window.lucide) lucide.createIcons();
+        
+        try { 
+            const {data, error} = await sb.from(t).insert([d]).select(); 
+            if(error) { 
+                showToast("Erreur : " + error.message, "error"); 
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); return; 
+            } 
+            if(!profileData[t]) profileData[t]=[]; 
+            const newItem = data[0]; 
+            profileData[t].unshift(newItem); 
+            
+            if(t==='courses') { openCourseId = newItem.id; renderCourses(); } 
+            if(t==='publications') { openPubId = newItem.id; renderPublications(); } 
+            if(t==='interventions') { openInterId = newItem.id; renderInterventions(); } 
+            
+            showToast("Élément créé !", "success"); 
+            reloadPreview(); 
+        } catch(e) { 
+            console.log(e); 
+        } finally { 
+            if(btn && document.body.contains(btn)) { 
+                btn.disabled = false; btn.innerHTML = originalText; if(window.lucide) lucide.createIcons(); 
+            } 
+        }
     }
     
-    window.delItem = async (t,id) => { if(!confirm("Supprimer cet élément ?")) return; const { error } = await sb.from(t).delete().eq('id',id); if(error) { showToast("Erreur de suppression", "error"); return; } profileData[t] = profileData[t].filter(x => x.id !== id); if(t === 'courses') renderCourses(); if(t === 'publications') renderPublications(); if(t === 'interventions') renderInterventions(); reloadPreview(); showToast("Élément supprimé", "success"); }
-    window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé", "success"); reloadPreview(); },1000); }
-    window.saveRDV = () => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }; await sb.from('profiles').update({appointment_settings: settings}).eq('id',profileData.id); profileData.appointment_settings = settings; showToast("RDV sauvegardé", "success"); reloadPreview(); }, 1000); }
+    window.delItem = async (t,id) => { 
+        if(!confirm("Supprimer cet élément ?")) return; 
+        const { error } = await sb.from(t).delete().eq('id',id); 
+        if(error) { showToast("Erreur de suppression", "error"); return; } 
+        profileData[t] = profileData[t].filter(x => x.id !== id); 
+        
+        if(t === 'courses') renderCourses(); 
+        if(t === 'publications') renderPublications(); 
+        if(t === 'interventions') renderInterventions(); 
+        
+        reloadPreview(); 
+        showToast("Élément supprimé", "success"); 
+    }
+
+    // --- LE CŒUR DE LA MAGIE DU RAFRAÎCHISSEMENT ---
     
-    window.switchTab = (id,p,el) => { 
+    // Gère le changement d'onglet et Mémorise l'URL
+    window.switchTab = (id, p, el) => { 
         document.querySelectorAll('.module').forEach(m => m.classList.add('hidden')); 
         document.getElementById('mod-'+id).classList.remove('hidden'); 
+        
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
         if(el) el.classList.add('active'); 
+        
         document.getElementById('sidebar').classList.remove('mobile-open'); 
         
+        // Enregistre l'URL de base de l'onglet actif
+        currentPagePath = p; 
+        
+        // Lance le rafraîchissement propre
+        reloadPreview();
+    }
+
+    // Fonction de rafraîchissement instantané (Cache Buster)
+    window.reloadPreview = () => { 
         const iframe = document.getElementById('site-preview'); 
-        const loader = document.getElementById('preview-loader');
         if(iframe && profileData) { 
-            if(loader) { loader.style.display = 'flex'; loader.style.opacity = '1'; }
-            iframe.src = `${p}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
+            // On ajoute un Date.now() pour que le navigateur ignore le cache local
+            iframe.src = `${currentPagePath}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
         } 
     }
+
+    // L'AutoSave déclenche le rafraîchissement au lieu de recharger le parent
+    window.autoSave = (t,id,f,v) => { 
+        clearTimeout(saveTimer); 
+        saveTimer=setTimeout(async() => { 
+            if(t==='profiles'){ 
+                await sb.from(t).update({[f]:v}).eq('id',profileData.id); 
+                profileData[f]=v; 
+            } else { 
+                await sb.from(t).update({[f]:v}).eq('id',id); 
+                profileData[t].find(x=>x.id===id)[f]=v; 
+            } 
+            showToast("Sauvegardé", "success"); 
+            reloadPreview(); // Rafraîchit l'Iframe proprement
+        }, 1000); 
+    }
+    
+    window.saveRDV = () => { 
+        clearTimeout(saveTimer); 
+        saveTimer=setTimeout(async() => { 
+            const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }; 
+            await sb.from('profiles').update({appointment_settings: settings}).eq('id',profileData.id); 
+            profileData.appointment_settings = settings; 
+            showToast("RDV sauvegardé", "success"); 
+            reloadPreview(); 
+        }, 1000); 
+    }
+
+    // --- FIN LOGIQUE SAUVEGARDE / REFRESH ---
 
     function renderHeaderConfig() {
         const container = document.getElementById('header-config-container'); 
         const h = profileData.config.header || DEFAULT_CONFIG.header; 
         const items = [ { key: 'home', label: 'Accueil', icon: 'home' }, { key: 'publications', label: 'Publications', icon: 'book-open' }, { key: 'courses', label: 'Enseignements', icon: 'graduation-cap' }, { key: 'interventions', label: 'Interventions', icon: 'mic' } ];
-        container.innerHTML = items.map(item => { const isActive = h[item.key]; return `<div class="config-item ${isActive ? '' : 'hidden-item'}"><span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span><button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('header', '${item.key}')"><i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i></button></div>`; }).join(''); lucide.createIcons();
+        
+        container.innerHTML = items.map(item => { 
+            const isActive = h[item.key]; 
+            return `
+                <div class="config-item ${isActive ? '' : 'hidden-item'}">
+                    <span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span>
+                    <button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('header', '${item.key}')">
+                        <i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i>
+                    </button>
+                </div>`; 
+        }).join(''); 
+        lucide.createIcons();
     }
 
     function renderFooterConfig() {
@@ -1040,9 +1508,42 @@
         const f = profileData.config.footer || DEFAULT_CONFIG.footer; 
         let html = ''; 
         const staticItems = [ { key: 'linkedin', label: 'LinkedIn', icon: 'linkedin' }, { key: 'scholar', label: 'Scholar', icon: 'graduation-cap' }, { key: 'cv', label: 'CV', icon: 'file-text' } ];
-        html += staticItems.map(item => { const isActive = f[item.key]; return `<div class="config-item ${isActive ? '' : 'hidden-item'}"><span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span><button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('footer', '${item.key}')"><i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i></button></div>`; }).join('');
-        if (f.custom && f.custom.length > 0) { html += f.custom.map((l, idx) => `<div class="config-item" id="footer-item-${idx}"><div class="footer-view-row" id="footer-view-${idx}"><span><i data-lucide="link" size="16"></i> ${l.label} <small style="color:#94a3b8; font-weight:normal; margin-left:5px;">(${l.url})</small></span><div style="display:flex; gap:5px;"><button class="btn-square" onclick="toggleFooterEdit(${idx})"><i data-lucide="pencil" size="14"></i></button><button class="btn-square delete" onclick="removeFooterLink(${idx})"><i data-lucide="trash-2" size="14"></i></button></div></div><div class="footer-edit-row hidden" id="footer-edit-${idx}"><input value="${l.label}" id="f-lbl-${idx}" style="width:120px; font-size:0.85rem; padding:4px;"><input value="${l.url}" id="f-url-${idx}" style="flex:1; font-size:0.85rem; padding:4px;"><button class="btn-validate" style="width:32px; height:32px;" onclick="saveFooterEdit(${idx})"><i data-lucide="check" size="16"></i></button></div></div>`).join(''); }
-        container.innerHTML = html; lucide.createIcons();
+        
+        html += staticItems.map(item => { 
+            const isActive = f[item.key]; 
+            return `
+                <div class="config-item ${isActive ? '' : 'hidden-item'}">
+                    <span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span>
+                    <button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('footer', '${item.key}')">
+                        <i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i>
+                    </button>
+                </div>`; 
+        }).join('');
+        
+        if (f.custom && f.custom.length > 0) { 
+            html += f.custom.map((l, idx) => `
+                <div class="config-item" id="footer-item-${idx}">
+                    <div class="footer-view-row" id="footer-view-${idx}">
+                        <span>
+                            <i data-lucide="link" size="16"></i> ${l.label} 
+                            <small style="color:#94a3b8; font-weight:normal; margin-left:5px;">(${l.url})</small>
+                        </span>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn-square" onclick="toggleFooterEdit(${idx})"><i data-lucide="pencil" size="14"></i></button>
+                            <button class="btn-square delete" onclick="removeFooterLink(${idx})"><i data-lucide="trash-2" size="14"></i></button>
+                        </div>
+                    </div>
+                    <div class="footer-edit-row hidden" id="footer-edit-${idx}">
+                        <input value="${l.label}" id="f-lbl-${idx}" style="width:120px; font-size:0.85rem; padding:4px;">
+                        <input value="${l.url}" id="f-url-${idx}" style="flex:1; font-size:0.85rem; padding:4px;">
+                        <button class="btn-validate" style="width:32px; height:32px;" onclick="saveFooterEdit(${idx})">
+                            <i data-lucide="check" size="16"></i>
+                        </button>
+                    </div>
+                </div>`).join(''); 
+        }
+        container.innerHTML = html; 
+        lucide.createIcons();
     }
     
     window.toggleFooterEdit = (idx) => { document.getElementById(`footer-view-${idx}`).classList.toggle('hidden'); document.getElementById(`footer-edit-${idx}`).classList.toggle('hidden'); }
@@ -1071,9 +1572,30 @@
     }
     
     window.removeFooterLink = (idx) => { profileData.config.footer.custom.splice(idx, 1); saveConfig(); renderFooterConfig(); }
-    async function saveConfig() { await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); showToast("Configuration sauvegardée", "success"); reloadPreview(); }
+    
+    async function saveConfig() { 
+        await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); 
+        showToast("Configuration sauvegardée", "success"); 
+        reloadPreview(); 
+    }
+
     window.switchCVMode = (mode, btn) => { const row = document.getElementById('cv-row'); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-    window.uploadFile = async (type, input) => { if (!input.files.length) return; const file = input.files[0]; showToast("Upload en cours...", "success"); const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) return showToast("Erreur: " + error.message, "error"); const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; if (type === 'avatar') { await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id); document.getElementById('preview-avatar').src = url; } showToast("Sauvegardé !", "success"); }
+    
+    window.uploadFile = async (type, input) => { 
+        if (!input.files.length) return; 
+        const file = input.files[0]; 
+        showToast("Upload en cours...", "success"); 
+        const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`; 
+        const { error } = await sb.storage.from('documents').upload(path, file); 
+        if(error) return showToast("Erreur: " + error.message, "error"); 
+        const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; 
+        if (type === 'avatar') { 
+            await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id); 
+            document.getElementById('preview-avatar').src = url; 
+        } 
+        showToast("Sauvegardé !", "success"); 
+    }
+    
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
     
