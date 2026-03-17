@@ -72,7 +72,6 @@
         .resizer:hover, .resizer.dragging { background: var(--sidebar); }
         .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
         
-        /* RESTAURATION CLASSE CACHÉE VITALE */
         .hidden { display: none !important; }
 
         /* --- ESPACEMENTS --- */
@@ -162,7 +161,7 @@
         .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
         .input-group-title input { height: 100%; }
 
-        /* --- RESTAURATION DES CLASSES DE CONFIGURATION --- */
+        /* --- CONFIG CLASSES --- */
         .config-list-container { display: flex; flex-direction: column; gap: 8px; }
         .config-item { 
             display: flex; align-items: center; justify-content: space-between; 
@@ -185,36 +184,35 @@
         .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
-        /* --- PREVIEW SIDE (DESIGN ÉPURÉ) --- */
+        /* --- PREVIEW SIDE --- */
         .preview-side { 
             position: relative;
-            flex: 1; /* S'adapte avec l'éditeur */
-            background: #e2e8f0; /* Fond gris uni */
+            flex: 1; 
+            background: #e2e8f0; 
             display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* Container qui permet le scroll lors du zoom */
         .preview-container {
             flex: 1; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 40px; position: relative;
         }
 
-        /* Conteneur dynamique pour la magie du zoom avec scroll */
         #scale-container {
-            margin: auto; position: relative; transition: width 0.15s ease, height 0.15s ease;
+            margin: 0 auto; /* Pour centrer horizontalement */
+            position: relative; 
+            display: flex; justify-content: center;
+            /* Pas de transition sur la largeur ici pour éviter les "sauts" */
         }
 
-        /* Le faux MAC / Ordinateur */
         .computer-wrapper { 
             width: 1366px; height: 768px; background: white; border-radius: 12px; 
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
             display: flex; flex-direction: column; overflow: hidden;
-            transform-origin: top left; transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+            transform-origin: top center; /* Ancrage en haut au centre */
+            transition: transform 0.15s ease, border-radius 0.3s ease; /* Plus de transition sur la largeur */
             border: 1px solid #cbd5e1;
         }
         
         .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
-        
-        /* Les vrais points MAC Safari */
         .mac-dots { display: flex; gap: 8px; }
         .mac-dots span { width: 12px; height: 12px; border-radius: 50%; }
         .dot-red { background: #ff5f56; }
@@ -224,16 +222,14 @@
         .url-bar { height: 28px; width: 400px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; border: 1px solid #e2e8f0; font-weight: 500; }
         iframe { width: 100%; flex: 1; border: none; background: white; }
 
-        /* Le faux iPhone (sans notch) */
         .device-mobile {
             width: 375px !important; height: 812px !important;
             border-radius: 40px !important; border: 14px solid #0f172a !important;
         }
 
-        /* Bouclier invisible */
         .iframe-shield { display: none; position: absolute; inset: 0; z-index: 20; cursor: col-resize; }
 
-        /* --- PILULE FLOTTANTE MAGIQUE --- */
+        /* --- PILULE FLOTTANTE --- */
         .floating-toolbar {
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: white; padding: 8px 12px; border-radius: 50px;
@@ -425,7 +421,7 @@
                         <label style="margin-bottom:10px;">Ajouter un lien personnalisé</label>
                         <div style="display:flex; gap:10px;">
                             <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1">
-                            <input id="new-footer-url" placeholder="https://..." style="flex:1">
+                            <input id="new-footer-url" placeholder="nike.com" style="flex:1">
                             <button class="btn-primary" onclick="addCustomFooterLink()">Ajouter</button>
                         </div>
                     </div>
@@ -516,9 +512,9 @@
 
     document.addEventListener('mousemove', (e) => {
         if (!isResizing) return;
-        let newWidth = e.clientX - 270; // 270 = taille sidebar
+        let newWidth = e.clientX - 270; 
         if (newWidth < 400) newWidth = 400; // Limite Editor
-        const maxEditorWidth = document.body.clientWidth - 350 - 270; // Limite absolue Preview (350px min)
+        const maxEditorWidth = document.body.clientWidth - 350 - 270; // Limite absolue Preview (350px min pour mobile)
         if (newWidth > maxEditorWidth) newWidth = maxEditorWidth;
         editorSide.style.width = newWidth + 'px'; 
         editorSide.style.flex = 'none';
@@ -563,7 +559,7 @@
     function updateZoomDisplay(newZoom) {
         currentZoomLevel = newZoom;
         if(currentZoomLevel < 0.15) currentZoomLevel = 0.15;
-        if(currentZoomLevel > 5.0) currentZoomLevel = 5.0; // Zoom ultra libre jusqu'à 500% !
+        if(currentZoomLevel > 5.0) currentZoomLevel = 5.0; // Liberté de zoomer x5
         
         const wrapper = document.getElementById('device-wrapper');
         const scaleContainer = document.getElementById('scale-container');
@@ -616,7 +612,7 @@
                 }
             }, { passive: false });
         } catch (error) {
-            console.log("Restriction CORS (Normal si vous testez en local ou sur des domaines différents)");
+            console.log("Iframe Cross-Origin exception - Normal if testing locally");
         }
     };
 
@@ -1072,7 +1068,6 @@
     window.autoSave = (t,id,f,v) => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ if(t==='profiles'){ await sb.from(t).update({[f]:v}).eq('id',profileData.id); profileData[f]=v; }else{ await sb.from(t).update({[f]:v}).eq('id',id); profileData[t].find(x=>x.id===id)[f]=v; } showToast("Sauvegardé", "success"); reloadPreview(); },1000); }
     window.saveRDV = () => { clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{ const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }; await sb.from('profiles').update({appointment_settings: settings}).eq('id',profileData.id); profileData.appointment_settings = settings; showToast("RDV sauvegardé", "success"); reloadPreview(); }, 1000); }
     
-    // CORRECTION DU BUG DE NAVIGATION (Ajout propre de la classe .hidden)
     window.switchTab = (id,p,el) => { 
         document.querySelectorAll('.module').forEach(m => m.classList.add('hidden')); 
         document.getElementById('mod-'+id).classList.remove('hidden'); 
@@ -1154,9 +1149,30 @@
     }
     
     window.toggleFooterEdit = (idx) => { document.getElementById(`footer-view-${idx}`).classList.toggle('hidden'); document.getElementById(`footer-edit-${idx}`).classList.toggle('hidden'); }
-    window.saveFooterEdit = (idx) => { const lbl = document.getElementById(`f-lbl-${idx}`).value; const url = document.getElementById(`f-url-${idx}`).value; if(!lbl || !url) return showToast('Champs requis', "error"); profileData.config.footer.custom[idx] = { label: lbl, url: url }; saveConfig(); renderFooterConfig(); }
+    
+    window.saveFooterEdit = (idx) => { 
+        const lbl = document.getElementById(`f-lbl-${idx}`).value; 
+        let url = document.getElementById(`f-url-${idx}`).value.trim(); 
+        if(!lbl || !url) return showToast('Champs requis', "error"); 
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url; // Ajoute HTTPS automatiquement
+        profileData.config.footer.custom[idx] = { label: lbl, url: url }; 
+        saveConfig(); renderFooterConfig(); 
+    }
+    
     window.toggleConfig = (section, key) => { if (!profileData.config[section]) profileData.config[section] = {}; profileData.config[section][key] = !profileData.config[section][key]; saveConfig(); if(section === 'header') renderHeaderConfig(); if(section === 'footer') renderFooterConfig(); }
-    window.addCustomFooterLink = () => { const label = document.getElementById('new-footer-label').value; const url = document.getElementById('new-footer-url').value; if (!label || !url) return showToast("Remplissez le nom et l'URL", "error"); if (!profileData.config.footer.custom) profileData.config.footer.custom = []; profileData.config.footer.custom.push({ label, url }); document.getElementById('new-footer-label').value = ''; document.getElementById('new-footer-url').value = ''; saveConfig(); renderFooterConfig(); }
+    
+    window.addCustomFooterLink = () => { 
+        const label = document.getElementById('new-footer-label').value; 
+        let url = document.getElementById('new-footer-url').value.trim(); 
+        if (!label || !url) return showToast("Remplissez le nom et l'URL", "error"); 
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url; // Ajoute HTTPS automatiquement
+        if (!profileData.config.footer.custom) profileData.config.footer.custom = []; 
+        profileData.config.footer.custom.push({ label, url }); 
+        document.getElementById('new-footer-label').value = ''; 
+        document.getElementById('new-footer-url').value = ''; 
+        saveConfig(); renderFooterConfig(); 
+    }
+    
     window.removeFooterLink = (idx) => { profileData.config.footer.custom.splice(idx, 1); saveConfig(); renderFooterConfig(); }
     async function saveConfig() { await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); showToast("Configuration sauvegardée", "success"); reloadPreview(); }
     window.switchCVMode = (mode, btn) => { const row = document.getElementById('cv-row'); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
