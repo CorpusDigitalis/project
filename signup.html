@@ -9,115 +9,215 @@
     <style>
         :root { --accent: #111; --bg: #f3f4f6; --border: #d1d5db; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; color: #1f2937; }
-        
+
         .onboarding-card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); width: 100%; max-width: 450px; }
-        
+
         .step { display: none; }
         .step.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         h1 { font-weight: 800; font-size: 1.5rem; margin-bottom: 10px; color: #111; margin-top: 0; }
         p { color: #6b7280; font-size: 0.9rem; margin-bottom: 25px; line-height: 1.5; }
-        
+
         label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: #4b5563; margin-top: 18px; }
         input, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; transition: 0.2s; }
         input:focus, textarea:focus { outline: none; border-color: var(--accent); ring: 2px solid #e5e7eb; }
-        
+
         .btn-primary { background: var(--accent); color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 30px; font-size: 1rem; }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
-        
+
+        .btn-secondary { background: white; color: #111; border: 1px solid #d1d5db; width: 100%; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 12px; font-size: 1rem; }
+        .btn-secondary:hover { background: #f9fafb; }
+
         #loading-msg { margin-top: 15px; font-size: 0.85rem; color: #6b7280; text-align: center; display: none; font-style: italic; }
         .error-msg { color: #ef4444; font-size: 0.85rem; margin-bottom: 15px; display: none; background: #fef2f2; padding: 10px; border-radius: 6px; border: 1px solid #fee2e2; }
+
+        /* Étape indicateur */
+        .step-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; }
+        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #e5e7eb; transition: background 0.3s ease; }
+        .step-dot.active { background: #111; }
+        .step-dot.done { background: #6b7280; }
+
+        /* Carte de prix (Étape 3) */
+        .price-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin: 20px 0; text-align: center; }
+        .price-amount { font-size: 2.5rem; font-weight: 800; color: #111; line-height: 1; margin-bottom: 4px; }
+        .price-period { font-size: 0.9rem; color: #6b7280; margin-bottom: 16px; }
+        .price-features { list-style: none; padding: 0; margin: 0; text-align: left; }
+        .price-features li { font-size: 0.85rem; color: #374151; padding: 6px 0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f3f4f6; }
+        .price-features li:last-child { border-bottom: none; }
+        .price-features li::before { content: "✓"; color: #111; font-weight: 700; flex-shrink: 0; }
+        .stripe-badge { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 14px; font-size: 0.75rem; color: #9ca3af; }
+        .stripe-badge svg { opacity: 0.5; }
+
+        /* Annulation de paiement */
+        .cancel-notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 12px; font-size: 0.85rem; color: #92400e; margin-bottom: 20px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="onboarding-card">
-    
+
+    <!-- Indicateur d'étapes -->
+    <div class="step-indicator">
+        <div class="step-dot active" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+        <div class="step-dot" id="dot-4"></div>
+    </div>
+
+    <!-- ÉTAPE 1 : Identifiants -->
     <div id="step-1" class="step active">
         <h1>Bienvenue.</h1>
         <p>Commencez par créer vos identifiants sécurisés pour accéder à la plateforme.</p>
-        
+
         <div id="err-1" class="error-msg"></div>
 
         <label>Email professionnel</label>
         <input type="email" id="reg-email" placeholder="email@exemple.com">
-        
+
         <label>Mot de passe</label>
         <input type="password" id="reg-password" placeholder="8 caractères minimum">
-        
+
         <button class="btn-primary" id="btn-step1" onclick="handleSignup()">Continuer →</button>
     </div>
 
+    <!-- ÉTAPE 2 : Identité académique -->
     <div id="step-2" class="step">
         <h1>Votre identité.</h1>
         <p>Ces informations structureront votre page publique.</p>
-        
+
         <div id="err-2" class="error-msg"></div>
-        
+
         <label>Nom complet</label>
         <input type="text" id="conf-name" placeholder="Ex: Pr. Tristan Arbona">
-        
+
         <label>Biographie courte</label>
         <textarea id="conf-bio" rows="3" placeholder="Votre statut, université ou spécialité..."></textarea>
-        
+
         <label>URL personnalisée</label>
         <input type="text" id="conf-slug" placeholder="ex: tristan-arbona">
-        
+
         <label>Photo de profil (Optionnel)</label>
         <input type="file" id="up-avatar" accept="image/*">
 
         <label>Curriculum Vitae</label>
         <input type="file" id="up-cv" accept=".pdf">
 
-        <button class="btn-primary" id="btn-final" onclick="submitOnboarding()">Finaliser mon site</button>
+        <button class="btn-primary" id="btn-final" onclick="submitOnboarding()">Continuer →</button>
         <div id="loading-msg">Création de votre espace en cours...<br>Cela peut prendre quelques secondes.</div>
     </div>
 
+    <!-- ÉTAPE 3 : Paiement -->
     <div id="step-3" class="step">
+        <h1>Dernière étape.</h1>
+        <p>Activez votre espace académique pour commencer à publier.</p>
+
+        <div id="cancel-notice" class="cancel-notice">
+            Le paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez — votre profil est bien enregistré.
+        </div>
+
+        <div class="price-card">
+            <div class="price-amount">144 €</div>
+            <div class="price-period">par an · remboursable sur crédits de labo</div>
+            <ul class="price-features">
+                <li>Votre espace académique sur mesure</li>
+                <li>Sous-domaine personnel corpusdigitalis.com</li>
+                <li>Publications, cours & interventions illimités</li>
+                <li>CV téléchargeable intégré</li>
+                <li>Service de mise en ligne inclus</li>
+            </ul>
+            <div class="stripe-badge">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 0C3.134 0 0 3.134 0 7s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7z" fill="#635BFF"/></svg>
+                Paiement sécurisé par Stripe
+            </div>
+        </div>
+
+        <div id="err-3" class="error-msg"></div>
+
+        <button class="btn-primary" id="btn-pay" onclick="redirectToPayment()">
+            Procéder au paiement sécurisé →
+        </button>
+        <p style="text-align: center; font-size: 0.78rem; color: #9ca3af; margin-top: 12px; margin-bottom: 0;">Annulable à tout moment · Résiliation en un clic</p>
+    </div>
+
+    <!-- ÉTAPE 4 : Confirmation finale -->
+    <div id="step-4" class="step">
         <div style="text-align: center; margin-bottom: 20px;">
             <div style="width: 60px; height: 60px; background: #dcfce7; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
         </div>
-        <h1 style="text-align: center;">C'est envoyé !</h1>
-        <p style="text-align: center;">Votre profil a été enregistré avec succès.</p>
-        
-        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 0.9rem; color: #374151;">
+        <h1 style="text-align: center;">Bienvenue dans Corpus Digitalis.</h1>
+        <p style="text-align: center;">Votre paiement a été confirmé. Votre espace est en cours d'activation.</p>
+
+        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; font-size: 0.9rem; color: #374151; margin-bottom: 20px;">
             <strong>Prochaine étape :</strong><br>
-            Votre compte est en attente de validation. Un administrateur activera votre accès sous 24h.
+            Notre équipe finalise votre espace sous 24h. Vous recevrez un email de confirmation avec le lien vers votre site.
         </div>
-        <button class="btn-primary" onclick="window.location.href='index.html'" style="background: white; color: #111; border: 1px solid #d1d5db;">Retour à l'accueil</button>
+        <button class="btn-secondary" onclick="window.location.href='login.html'">Accéder à mon espace →</button>
     </div>
+
 </div>
 
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-    // CONFIGURATION (Vérifie que ce sont les bonnes clés !)
+    // ==========================================================
+    // CONFIGURATION
+    // ⚠️ Remplacer STRIPE_PAYMENT_LINK par l'URL réelle après
+    // création du Payment Link dans le dashboard Stripe.
+    // ==========================================================
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
+    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_28E9AT5Xxbhi5AO5cX8ww00';
+
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let userId = null;
     let userEmail = null;
 
-    // --- ÉTAPE 1 : CRÉATION COMPTE ---
+    // ==========================================================
+    // VÉRIFICATION AU CHARGEMENT : retour depuis Stripe ?
+    // ==========================================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+
+    if (paymentStatus === 'success') {
+        // Nettoyer l'URL et afficher l'étape de confirmation
+        window.history.replaceState({}, '', window.location.pathname);
+        switchToStep(4);
+        updateDots(4);
+    } else if (paymentStatus === 'cancel') {
+        // L'utilisateur est revenu en arrière depuis Stripe — récupérer son état
+        window.history.replaceState({}, '', window.location.pathname);
+        const savedUserId = localStorage.getItem('cd_pending_user_id');
+        const savedEmail = localStorage.getItem('cd_pending_email');
+        if (savedUserId && savedEmail) {
+            userId = savedUserId;
+            userEmail = savedEmail;
+            document.getElementById('cancel-notice').style.display = 'block';
+            switchToStep(3);
+            updateDots(3);
+        }
+    }
+
+    // ==========================================================
+    // ÉTAPE 1 : CRÉATION COMPTE
+    // ==========================================================
     window.handleSignup = async () => {
         const btn = document.getElementById('btn-step1');
         const errDiv = document.getElementById('err-1');
-        const email = document.getElementById('reg-email').value;
+        const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-password').value;
 
         errDiv.style.display = 'none';
         if(!email || !password) { showErr(errDiv, "Veuillez remplir tous les champs."); return; }
-        if(password.length < 6) { showErr(errDiv, "Le mot de passe est trop court."); return; }
+        if(password.length < 6) { showErr(errDiv, "Le mot de passe doit contenir au moins 6 caractères."); return; }
 
         btn.disabled = true;
         btn.innerText = "Traitement...";
 
-        // Inscription Supabase
         const { data, error } = await supabase.auth.signUp({ email, password });
 
         if (error) {
@@ -127,29 +227,31 @@
             return;
         }
 
-        // Succès étape 1
         userId = data.user.id;
         userEmail = email;
-        
-        // Pré-remplissage du slug basé sur l'email si besoin
+
+        // Pré-remplissage du slug basé sur l'email
         document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
-        
-        document.getElementById('step-1').classList.remove('active');
-        document.getElementById('step-2').classList.add('active');
+
+        switchToStep(2);
+        updateDots(2);
     }
 
-    // --- ÉTAPE 2 : DETAILS & UPLOADS ---
+    // ==========================================================
+    // ÉTAPE 2 : DÉTAILS & UPLOADS
+    // ==========================================================
     window.submitOnboarding = async () => {
         const btn = document.getElementById('btn-final');
         const loader = document.getElementById('loading-msg');
         const errDiv = document.getElementById('err-2');
-        
-        const name = document.getElementById('conf-name').value;
-        const bio = document.getElementById('conf-bio').value;
-        const slug = document.getElementById('conf-slug').value;
-        
+
+        const name = document.getElementById('conf-name').value.trim();
+        const bio = document.getElementById('conf-bio').value.trim();
+        const slug = document.getElementById('conf-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
         errDiv.style.display = 'none';
-        if(!name || !slug) { showErr(errDiv, "Le nom et l'URL sont obligatoires."); return; }
+        if(!name || !slug) { showErr(errDiv, "Le nom et l'URL personnalisée sont obligatoires."); return; }
+        if(slug.length < 3) { showErr(errDiv, "L'URL personnalisée doit contenir au moins 3 caractères."); return; }
 
         btn.disabled = true;
         btn.style.opacity = "0.5";
@@ -169,6 +271,8 @@
                 const { error: upErr } = await supabase.storage.from('avatars').upload(path, avatarFile);
                 if (!upErr) {
                     imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+                } else {
+                    console.warn('Upload avatar échoué (bucket existe ?) :', upErr.message);
                 }
             }
 
@@ -178,6 +282,8 @@
                 const { error: upErr } = await supabase.storage.from('documents').upload(path, cvFile);
                 if (!upErr) {
                     cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                } else {
+                    console.warn('Upload CV échoué (bucket existe ?) :', upErr.message);
                 }
             }
 
@@ -187,16 +293,19 @@
                 name: name,
                 bio: bio,
                 slug: slug,
-                image_url: imageUrl, // Peut être null, c'est ok
-                cv_url: cvUrl,       // Peut être null, c'est ok
-                is_active: false     // Sécurité : toujours false à la création
+                image_url: imageUrl,
+                cv_url: cvUrl,
+                is_active: false // Toujours false jusqu'au paiement confirmé
             });
 
             if (profErr) throw profErr;
-            
-            // Succès final !
-            document.getElementById('step-2').classList.remove('active');
-            document.getElementById('step-3').classList.add('active');
+
+            // Sauvegarder l'ID en local pour le cas où l'utilisateur annule Stripe et revient
+            localStorage.setItem('cd_pending_user_id', userId);
+            localStorage.setItem('cd_pending_email', userEmail);
+
+            switchToStep(3);
+            updateDots(3);
 
         } catch (err) {
             console.error(err);
@@ -204,6 +313,50 @@
             btn.disabled = false;
             btn.style.opacity = "1";
             loader.style.display = "none";
+        }
+    }
+
+    // ==========================================================
+    // ÉTAPE 3 : REDIRECTION VERS STRIPE
+    // ==========================================================
+    window.redirectToPayment = () => {
+        const btn = document.getElementById('btn-pay');
+        const errDiv = document.getElementById('err-3');
+
+        if (!STRIPE_PAYMENT_LINK || STRIPE_PAYMENT_LINK === 'REMPLACER_PAR_VOTRE_LIEN_STRIPE') {
+            showErr(errDiv, "Le lien de paiement n'est pas encore configuré. Contactez l'équipe Corpus Digitalis.");
+            return;
+        }
+
+        const email = userEmail || localStorage.getItem('cd_pending_email') || '';
+        const uid = userId || localStorage.getItem('cd_pending_user_id') || '';
+
+        btn.disabled = true;
+        btn.innerText = "Redirection vers le paiement...";
+
+        // Construction de l'URL Stripe Payment Link avec pré-remplissage de l'email
+        // et client_reference_id = prof_id (pour l'activation automatique via webhook)
+        const stripeUrl = new URL(STRIPE_PAYMENT_LINK);
+        if (email) stripeUrl.searchParams.set('prefilled_email', email);
+        if (uid) stripeUrl.searchParams.set('client_reference_id', uid);
+
+        window.location.href = stripeUrl.toString();
+    }
+
+    // ==========================================================
+    // UTILITAIRES
+    // ==========================================================
+    function switchToStep(n) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById(`step-${n}`).classList.add('active');
+    }
+
+    function updateDots(currentStep) {
+        for (let i = 1; i <= 4; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            dot.classList.remove('active', 'done');
+            if (i < currentStep) dot.classList.add('done');
+            else if (i === currentStep) dot.classList.add('active');
         }
     }
 
