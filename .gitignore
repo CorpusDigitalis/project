@@ -1,0 +1,15 @@
+# Secrets — NE JAMAIS COMMITTER
+.env
+.env.local
+.env.production
+
+# Supabase secrets
+supabase/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
