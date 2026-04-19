@@ -61,7 +61,7 @@ export async function initLayout() {
         let hLinks = '';
         const conf = prof.config?.header || { home: true, courses: true, publications: true, interventions: true };
         
-        if (conf.home) hLinks += `<a href="index.html?prof=${slug}">Accueil</a>`;
+        if (conf.home) hLinks += `<a href="profil.html?prof=${slug}">Accueil</a>`;
         if (conf.courses) hLinks += `<a href="cours.html?prof=${slug}">Cours</a>`;
         if (conf.publications) hLinks += `<a href="publications.html?prof=${slug}">Publications</a>`;
         if (conf.interventions) hLinks += `<a href="interventions.html?prof=${slug}">Interventions</a>`;
