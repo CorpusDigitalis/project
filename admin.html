@@ -8,22 +8,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
-            --bg-body: #f8fafc; 
-            --sidebar: #0f172a; 
-            --accent: #0f172a; 
-            --accent-blue: #3b82f6; 
-            --accent-blue-light: #eff6ff; 
+        :root {
+            --bg-body: #fafaf8;
+            --sidebar: #0f172a;
+            --accent: #0f172a;
+            --accent-blue: #0f172a;
+            --accent-blue-light: #f5f2ee;
             --accent-green: #10b981;
             --accent-green-light: #ecfdf5;
-            --accent-light: #1e293b; 
-            --border: #e2e8f0; 
-            --text-main: #334155; 
-            --text-muted: #64748b; 
-            --input-height: 42px; 
+            --accent-light: #1e293b;
+            --border: #e8e4de;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --input-height: 42px;
         }
 
         /* --- GLOBAL RESET --- */
@@ -89,38 +89,38 @@
         .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
 
         /* --- ESPACEMENTS --- */
-        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 15px; }
-        h2 { font-size: 1.5rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.02em; }
+        .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e8e4de; flex-wrap: wrap; gap: 15px; }
+        h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.01em; }
         .section-subtitle { color: #64748b; font-size: 0.9rem; margin: 8px 0 0 0; max-width: 600px; line-height: 1.5; }
 
         /* --- UI ELEMENTS (AVEC MIN-WIDTH: 0 POUR LE RESPONSIVENESS ABSOLU) --- */
         .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); min-width: 0; }
         .form-row { margin-bottom: 20px; min-width: 0; }
         label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted); letter-spacing: 0.05em; }
-        input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background: #fff; transition: 0.2s; box-sizing: border-box; min-width: 0; }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-        input::placeholder { color: #cbd5e1; }
+        input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; color: var(--text-main); background: #fdfcfb; transition: 0.2s; box-sizing: border-box; min-width: 0; }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px rgba(15,23,42,0.1); background: #fff; }
+        input::placeholder { color: #b8b4ac; }
 
         .btn-primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; flex-shrink: 0; transition: 0.2s; }
         .btn-primary:hover:not(:disabled) { background: #1e293b; }
         .btn-ghost { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-        .btn-ghost:hover:not(:disabled) { background: #f1f5f9; color: #0f172a; }
-        .btn-square { width: 32px; height: 32px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
-        .btn-square:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: #eff6ff; }
+        .btn-ghost:hover:not(:disabled) { background: #f5f2ee; color: #0f172a; }
+        .btn-square { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0; }
+        .btn-square:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-blue-light); }
         .btn-square.delete:hover { border-color: #fee2e2; color: #ef4444; background: #fef2f2; }
         .btn-delete-course { background: transparent; border: 1px solid transparent; color: #94a3b8; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .btn-delete-course:hover { color: #ef4444; background: #fef2f2; border-color: #fee2e2; }
 
         /* --- CONFIGURATION ITEMS --- */
         .config-list-container { display: flex; flex-direction: column; gap: 8px; }
-        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; transition: 0.2s; min-height: 40px; min-width: 0; }
-        .config-item:hover { border-color: #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .config-item.hidden-item { opacity: 0.7; background: #f8fafc; border-style: dashed; }
+        .config-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #fff; border: 1px solid var(--border); border-radius: 8px; transition: 0.2s; min-height: 40px; min-width: 0; }
+        .config-item:hover { border-color: #cdc8c0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .config-item.hidden-item { opacity: 0.7; background: var(--bg-body); border-style: dashed; }
         .config-item span { font-weight: 600; font-size: 0.9rem; color: #334155; display: flex; align-items: center; gap: 10px; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .config-toggle-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: #f1f5f9; color: #64748b; transition: 0.2s; flex-shrink: 0; }
-        .config-toggle-btn:hover { background: #e2e8f0; color: #334155; }
-        .config-toggle-btn.active { background: #eff6ff; color: #3b82f6; border-color: #bfdbfe; }
-        .config-toggle-btn.off { color: #cbd5e1; }
+        .config-toggle-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; border: 1px solid transparent; background: var(--bg-body); color: #64748b; transition: 0.2s; flex-shrink: 0; }
+        .config-toggle-btn:hover { background: var(--border); color: var(--text-main); }
+        .config-toggle-btn.active { background: var(--accent-blue-light); color: var(--accent); border-color: var(--border); }
+        .config-toggle-btn.off { color: #b8b4ac; }
         .footer-edit-row { display: flex; gap: 8px; flex: 1; align-items: center; min-width: 0; }
         .footer-view-row { display: flex; align-items: center; justify-content: space-between; width: 100%; min-width: 0; }
 
@@ -128,15 +128,15 @@
         .item-card { background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; transition: 0.2s; min-width: 0; }
         .item-header { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; background: white; user-select: none; }
         .item-header:hover { background: #fafafa; }
-        .drag-handle { color: #cbd5e1; cursor: grab; padding: 4px; flex-shrink: 0; }
+        .drag-handle { color: #e0dbd4; cursor: grab; padding: 4px; flex-shrink: 0; }
         .drag-handle:active { cursor: grabbing; color: var(--accent); }
         .item-title { flex: 1; font-weight: 600; color: #334155; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-        .item-badge { font-size: 0.7rem; background: #f1f5f9; color: #64748b; padding: 4px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
-        .chevron { color: #cbd5e1; transition: transform 0.2s; flex-shrink: 0; }
-        .item-body { display: none; padding: 25px; background: #fafafa; border-top: 1px solid var(--border); min-width: 0; }
+        .item-badge { font-size: 0.7rem; background: #f5f2ee; color: #64748b; padding: 4px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
+        .chevron { color: #e0dbd4; transition: transform 0.2s; flex-shrink: 0; }
+        .item-body { display: none; padding: 25px; background: var(--bg-body); border-top: 1px solid var(--border); min-width: 0; }
         .item-card.open .item-body { display: block; }
         .item-card.open .chevron { transform: rotate(180deg); color: var(--accent); }
-        .sortable-ghost { opacity: 0.4; background: #f1f5f9; border: 1px dashed #94a3b8; }
+        .sortable-ghost { opacity: 0.4; background: #f5f2ee; border: 1px dashed #b8b4ac; }
 
         /* --- BADGES & ATTACHMENTS (Design Amélioré et Ligne Unique) --- */
         .badge-container { display: flex; align-items: center; gap: 8px; max-width: 100%; min-width: 0; overflow: hidden; }
@@ -147,7 +147,7 @@
             max-width: 100%; min-width: 0; /* Crucial pour autoriser le texte à se couper */
         }
         .file-badge { background: var(--accent-green-light); border: 1px solid #bbf7d0; color: #15803d; }
-        .link-badge { background: var(--accent-blue-light); border: 1px solid #bfdbfe; color: #2563eb; }
+        .link-badge { background: var(--accent-blue-light); border: 1px solid var(--border); color: var(--text-main); }
         
         .file-badge span, .link-badge span { 
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; min-width: 0;
@@ -157,43 +157,43 @@
 
         /* La Boîte de Pièce jointe élégante */
         .attachment-box {
-            background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 12px 15px; 
+            background: var(--bg-body); border: 1px dashed var(--border); border-radius: 8px; padding: 12px 15px;
             display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; min-width: 0;
         }
 
         /* --- COURSES (Refonte de la ligne) --- */
-        .section-block { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; overflow: hidden; min-width: 0; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+        .section-block { background: #fff; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px; overflow: hidden; min-width: 0; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: var(--bg-body); border-bottom: 1px solid var(--border); }
         .section-title-input { background: transparent; border: 1px solid transparent; font-weight: 700; font-size: 0.85rem; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 8px; width: auto; transition: 0.2s; border-radius: 4px; min-width: 0; flex: 1; }
-        .section-title-input:hover { border-color: #cbd5e1; background: white; }
+        .section-title-input:hover { border-color: #e0dbd4; background: white; }
         .section-title-input:focus { background: white; border-color: var(--accent); box-shadow: none; }
         .section-content { padding: 12px; }
         
         /* La ligne de document sur une seule ligne esthétique */
-        .course-item-row { background: white; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; min-width: 0; }
+        .course-item-row { background: white; padding: 12px; border: 1px solid #e8e4de; border-radius: 8px; margin-bottom: 8px; min-width: 0; }
         .course-row-flex { display: flex; align-items: center; justify-content: space-between; gap: 15px; min-width: 0; }
         
         .course-label-read { font-weight: 600; font-size: 0.9rem; color: #334155; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
         
-        .course-edit-block { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
+        .course-edit-block { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #e0dbd4; }
         .course-edit-block.visible { display: block; }
 
         .hidden-edit-container { display: none; margin-top: 15px; }
         .hidden-edit-container.visible { display: block; }
         
         .resource-row { display: flex; align-items: center; gap: 10px; background: #fff; padding: 0; border: none; width: 100%; min-width: 0; }
-        .type-selector { display: flex; background: #f1f5f9; padding: 2px; border-radius: 6px; flex-shrink: 0; height: var(--input-height); box-sizing: border-box; }
+        .type-selector { display: flex; background: #f0ede8; padding: 2px; border-radius: 6px; flex-shrink: 0; height: var(--input-height); box-sizing: border-box; }
         .type-btn { border: none; background: transparent; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.8rem; color: #64748b; transition: 0.2s; height: 100%; display: flex; align-items: center; }
-        .type-btn:hover { color: var(--accent-blue); }
-        .type-btn.active { background: white; color: var(--accent-blue); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .type-btn:hover { color: var(--accent); }
+        .type-btn.active { background: white; color: var(--accent); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
         .action-area { flex: 1; position: relative; height: var(--input-height); min-width: 0; }
         .link-input-wrapper, .upload-btn-wrapper { width: 100%; height: 100%; }
-        .link-input-wrapper input { height: 100%; border-radius: 6px; border: 1px solid #cbd5e1; padding: 0 12px; width: 100%; min-width: 0; }
+        .link-input-wrapper input { height: 100%; border-radius: 6px; border: 1px solid #e0dbd4; padding: 0 12px; width: 100%; min-width: 0; }
         .upload-btn-wrapper { display: none; }
         .upload-label { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 100%; padding: 0 15px; background: #f0fdf4; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; box-sizing: border-box; overflow: hidden; white-space: nowrap; }
         .upload-label:hover { background: #dcfce7; }
-        .upload-label.loading { background: #f1f5f9; border-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
+        .upload-label.loading { background: #f5f2ee; border-color: #e0dbd4; color: #64748b; cursor: not-allowed; }
         .hidden-input { display: none; }
 
         .resource-row.mode-link .link-input-wrapper { display: block; }
@@ -209,17 +209,17 @@
         /* ========================================================
            MOTEUR DE RENDU CANVAS (FIGMA-LIKE)
            ======================================================== */
-        .preview-side { 
+        .preview-side {
             position: relative;
-            flex: 1; 
-            background: #e2e8f0; 
-            display: flex; 
-            overflow: hidden; 
+            flex: 1;
+            background: #dcd8d0;
+            display: flex;
+            overflow: hidden;
         }
 
         .loading-overlay {
             position: absolute; inset: 0;
-            background: #e2e8f0; z-index: 200;
+            background: #e8e4de; z-index: 200;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: opacity 0.4s ease;
         }
@@ -251,16 +251,16 @@
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
                         height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
                         border-radius 0.3s ease, border 0.3s ease;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #e0dbd4;
         }
         
-        .browser-chrome { height: 44px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
+        .browser-chrome { height: 44px; background: #fafaf8; border-bottom: 1px solid #e8e4de; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
         .mac-dots { display: flex; gap: 8px; }
         .mac-dots span { width: 12px; height: 12px; border-radius: 50%; }
         .dot-red { background: #ff5f56; }
         .dot-yellow { background: #ffbd2e; }
         .dot-green { background: #27c93f; }
-        .url-bar { height: 28px; width: 400px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; border: 1px solid #e2e8f0; font-weight: 500; }
+        .url-bar { height: 28px; width: 400px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; border: 1px solid #e8e4de; font-weight: 500; }
         
         iframe { width: 100%; flex: 1; border: none; background: white; pointer-events: auto; }
 
@@ -272,15 +272,15 @@
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             background: white; padding: 8px 12px; border-radius: 50px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
-            display: flex; align-items: center; gap: 10px; z-index: 100; border: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 10px; z-index: 100; border: 1px solid #e8e4de;
         }
 
         .btn-toolbar { background: transparent; border: none; border-radius: 40px; height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; transition: 0.2s; padding: 0 16px; }
-        .btn-toolbar:hover { background: #f1f5f9; color: var(--accent-blue); }
+        .btn-toolbar:hover { background: #f5f2ee; color: var(--accent); }
         .btn-zoom { width: 36px; padding: 0; }
         .btn-zoom-reset { padding: 0 12px; font-size: 0.8rem; font-weight: 700; color: #64748b; }
-        .btn-zoom-reset:hover { background: #f1f5f9; color: #0f172a; }
-        .toolbar-divider { width: 1px; height: 20px; background: #e2e8f0; margin: 0 5px; }
+        .btn-zoom-reset:hover { background: #f5f2ee; color: #0f172a; }
+        .toolbar-divider { width: 1px; height: 20px; background: #e8e4de; margin: 0 5px; }
 
         /* --- TOAST --- */
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 500; font-size: 0.9rem; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 999; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -345,13 +345,13 @@
     <nav id="sidebar">
         <div class="logo">CORPUS DIGITALIS <span>PRO</span></div>
         <div class="nav-title">Site Web</div>
-        <div class="nav-item active" onclick="switchTab('profil', 'profil.html', this)"><i data-lucide="user"></i> Accueil & Profil</div>
+        <div class="nav-item active" onclick="switchTab('profil', 'index.html', this)"><i data-lucide="user"></i> Accueil & Profil</div>
         <div class="nav-item" onclick="switchTab('biblio', 'publications.html', this)"><i data-lucide="book-open"></i> Publications</div>
         <div class="nav-item" onclick="switchTab('cours', 'cours.html', this)"><i data-lucide="graduation-cap"></i> Enseignements</div>
         <div class="nav-item" onclick="switchTab('interventions', 'interventions.html', this)"><i data-lucide="mic"></i> Interventions</div>
         <div class="nav-title">Configuration</div>
-        <div class="nav-item" onclick="switchTab('perso', 'profil.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
-        <div class="nav-item" onclick="switchTab('rdv', 'profil.html', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
+        <div class="nav-item" onclick="switchTab('perso', 'index.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
+        <div class="nav-item" onclick="switchTab('rdv', 'index.html', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
         <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Déconnexion</button>
     </nav>
 
@@ -366,9 +366,9 @@
                     </div>
                 </div>
                 <div class="card">
-                    <div style="display:flex; align-items:center; gap:20px; padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid #f1f5f9; flex-wrap:wrap; min-width:0;">
-                        <img id="preview-avatar" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover; background:#f8fafc; border:1px solid #e2e8f0;">
-                        <label style="cursor:pointer; background:white; border:1px solid #cbd5e1; padding:8px 16px; border-radius:6px; font-weight:600; font-size:0.85rem; display:inline-flex; align-items:center; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:20px; padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid #f5f2ee; flex-wrap:wrap; min-width:0;">
+                        <img id="preview-avatar" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover; background:#fafaf8; border:1px solid #e8e4de;">
+                        <label style="cursor:pointer; background:white; border:1px solid #e0dbd4; padding:8px 16px; border-radius:6px; font-weight:600; font-size:0.85rem; display:inline-flex; align-items:center; gap:8px;">
                             <i data-lucide="upload" size="16"></i> Modifier photo
                             <input type="file" id="up-avatar" hidden accept="image/*" onchange="uploadFile('avatar', this)">
                         </label>
@@ -483,7 +483,7 @@
                 <div class="card">
                     <h4 style="margin-bottom:15px; color:#334155;">Pied de page (Footer)</h4>
                     <div id="footer-config-container" class="config-list-container"></div>
-                    <div style="margin-top:20px; border-top:1px dashed #e2e8f0; padding-top:15px;">
+                    <div style="margin-top:20px; border-top:1px dashed #e8e4de; padding-top:15px;">
                         <label style="margin-bottom:10px;">Ajouter un lien personnalisé</label>
                         <div style="display:flex; gap:10px;">
                             <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1; min-width:0;">
@@ -505,7 +505,7 @@
                 <div class="card">
                     <label>Lien de prise de rendez-vous</label>
                     <input id="rdv-url" oninput="saveRDV()" placeholder="https://cal.com/votre-lien">
-                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; line-height: 1.5; background: #fafaf8; padding: 10px; border-radius: 6px; border: 1px solid #e8e4de;">
                         <strong>Note :</strong> La gestion des disponibilités s'effectue sur <strong>Cal.com</strong>.
                     </p>
                     <label style="margin-top:20px">Texte du bouton</label>
@@ -566,7 +566,7 @@
     let openCourseId = null;
     let openPubId = null;
     let openInterId = null;
-    let currentPagePath = 'profil.html';
+    let currentPagePath = 'index.html'; 
 
     // --- SYSTEME DE REDIMENSIONNEMENT SANS MEMOIRE ---
     const resizer = document.getElementById('resizer');
@@ -755,7 +755,7 @@
         }
         
         await loadData(session.user.id);
-        switchTab('profil', 'profil.html', document.querySelector('.nav-item.active'));
+        switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
         
         setTimeout(autoScalePreview, 100); 
     }
@@ -772,7 +772,7 @@
         
         const viewSiteLink = document.getElementById('mobile-view-site');
         if(viewSiteLink) {
-            viewSiteLink.href = `profil.html?prof=${profileData.slug||profileData.id}`;
+            viewSiteLink.href = `index.html?prof=${profileData.slug||profileData.id}`;
         }
         
         fillProfileUI();
@@ -878,7 +878,7 @@
     function renderCourses() {
         const c = document.getElementById('courses-container');
         if(!profileData.courses?.length) { 
-            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucun cours créé.</div>'; 
+            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e8e4de; border-radius:8px;">Aucun cours créé.</div>'; 
             return; 
         }
         
@@ -907,7 +907,7 @@
                                     </div>
                                 </div>
                                 <div id="${editId}" class="course-edit-block">
-                                    <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div style="background: #f5f2ee; padding: 15px; border-radius: 8px; border: 1px solid #e8e4de;">
                                         <h5 style="margin: 0 0 10px 0; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Modifier le document</h5>
                                         <div class="resource-row mode-${item.type}">
                                             <div class="input-group-title">
@@ -946,7 +946,7 @@
                         </div>
                         <div class="section-content">
                             ${itemsHtml}
-                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-top: 15px;">
+                            <div style="background: #fafaf8; padding: 15px; border-radius: 8px; border: 1px dashed #e8e4de; margin-top: 15px;">
                                 <h5 style="margin: 0 0 10px 0; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Ajouter un document</h5>
                                 <div class="resource-row mode-link" id="add-row-${course.id}-${secIdx}">
                                     <div class="input-group-title">
@@ -997,7 +997,7 @@
                         <div style="margin-top:25px;">
                             <label style="margin-bottom:15px; color:#334155;">Contenu du cours</label>
                             ${sectionsHtml}
-                            <button class="btn-ghost" onclick="addSection('${course.id}', this)" style="width:100%; border:1px dashed #cbd5e1; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">
+                            <button class="btn-ghost" onclick="addSection('${course.id}', this)" style="width:100%; border:1px dashed #e0dbd4; padding:10px; border-radius:6px; background:white; color:#64748b; font-size:0.85rem; cursor:pointer;">
                                 + Ajouter une Section (ex: TD, Examens)
                             </button>
                         </div>
@@ -1016,7 +1016,7 @@
     function renderPublications() {
         const c = document.getElementById('pubs-container');
         if(!profileData.publications?.length) { 
-            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune publication.</div>'; 
+            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e8e4de; border-radius:8px;">Aucune publication.</div>'; 
             return; 
         }
         
@@ -1031,7 +1031,7 @@
                     <i data-lucide="grip-vertical" class="drag-handle"></i>
                     <div class="item-title" id="title-pub-${pub.id}">${pub.title || 'Sans titre'}</div>
                     <span class="item-badge">${pub.category || 'Article'}</span>
-                    <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${pub.date || ''}</span>
+                    <span class="item-badge" style="background:#f5f2ee; color:#64748b;">${pub.date || ''}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="item-body" onclick="event.stopPropagation()">
@@ -1104,7 +1104,7 @@
     function renderInterventions() {
         const c = document.getElementById('interventions-container');
         if(!profileData.interventions?.length) { 
-            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e2e8f0; border-radius:8px;">Aucune intervention.</div>'; 
+            c.innerHTML='<div class="empty-state" style="padding:40px; text-align:center; color:#94a3b8; border:1px dashed #e8e4de; border-radius:8px;">Aucune intervention.</div>'; 
             return; 
         }
         
@@ -1119,7 +1119,7 @@
                     <i data-lucide="grip-vertical" class="drag-handle"></i>
                     <div class="item-title" id="title-inter-${inter.id}">${inter.title || 'Sans titre'}</div>
                     <span class="item-badge">${inter.category || 'Conférence'}</span>
-                    <span class="item-badge" style="background:#eef2ff; color:#6366f1;">${inter.event_date || ''}</span>
+                    <span class="item-badge" style="background:#f5f2ee; color:#64748b;">${inter.event_date || ''}</span>
                     <i data-lucide="chevron-down" class="chevron"></i>
                 </div>
                 <div class="item-body" onclick="event.stopPropagation()">
