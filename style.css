@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 /* --- RESET GLOBAL --- */
 * {
     box-sizing: border-box;
@@ -11,7 +13,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Alata', sans-serif;
-    background-color: #fefaf5;
+    background-color: #fafaf8;
     color: #1a1a1a;
     display: flex;
     flex-direction: column;
@@ -110,7 +112,7 @@ header nav {
     max-width: 1100px;
     margin: 0 auto;
     padding: 80px 20px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e8e4de;
 }
 
 .hero-section {
@@ -135,11 +137,14 @@ header nav {
 }
 
 h1 {
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 2.3rem;
     color: #1a1a1a;
     margin-top: -8px;
     margin-bottom: 20px;
-    line-height: 1.1;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-weight: 700;
 }
 
 #profil-desc {
@@ -217,7 +222,7 @@ footer {
 
 .skeleton-box {
     display: inline-block;
-    background-color: #e2e8f0;
+    background-color: #e8e4de;
     border-radius: 4px;
     animation: pulseSkeleton 1.5s infinite ease-in-out;
     vertical-align: middle;
