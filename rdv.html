@@ -11,10 +11,10 @@
     <style>
         .rdv-card {
             background: white; max-width: 500px; margin: 4rem auto; padding: 3rem;
-            border-radius: 12px; border: 1px solid #e2e8f0; text-align: center;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 12px; border: 1px solid #e8e4de; text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
         }
-        .rdv-title { font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; }
+        .rdv-title { font-size: 2rem; margin-bottom: 1rem; }
         .rdv-text { color: #64748b; margin-bottom: 2rem; line-height: 1.6; }
         
         .rdv-btn-large {
@@ -80,7 +80,7 @@
             const conf = profile.config || {};
             const h = conf.header || {};
             let hHtml = '';
-            if (h.home) hHtml += `<li><a href="profil.html${pLink}">Accueil</a></li>`;
+            if (h.home) hHtml += `<li><a href="index.html${pLink}">Accueil</a></li>`;
             if (h.publications) hHtml += `<li><a href="publications.html${pLink}">Publications</a></li>`;
             if (h.courses) hHtml += `<li><a href="cours.html${pLink}">Enseignements</a></li>`;
             if (h.interventions) hHtml += `<li><a href="interventions.html${pLink}">Interventions</a></li>`;
