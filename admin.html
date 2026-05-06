@@ -328,9 +328,108 @@
             
             div[style*="display:flex; gap:15px; flex-wrap:wrap"] { flex-direction: column; gap: 10px; }
         }
+
+        /* --- ONBOARDING MODAL --- */
+        #onboarding-overlay {
+            position: fixed; inset: 0; background: rgba(15,23,42,0.7);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+            padding: 20px; backdrop-filter: blur(4px);
+        }
+        #onboarding-overlay.hidden { display: none !important; }
+        .onboarding-card {
+            background: white; border-radius: 20px; max-width: 560px; width: 100%;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            overflow: hidden; animation: slideUp 0.35s cubic-bezier(.22,1,.36,1);
+        }
+        @keyframes slideUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+        .onboarding-header {
+            background: var(--accent); color: white; padding: 32px 36px 28px;
+        }
+        .onboarding-logo {
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em;
+            text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .onboarding-logo span {
+            background: rgba(255,255,255,0.15); color: white;
+            padding: 2px 7px; border-radius: 3px; font-size: 0.6rem;
+        }
+        .onboarding-header h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.7rem; font-weight: 700; margin: 0 0 8px 0; color: white; line-height: 1.2;
+        }
+        .onboarding-header p {
+            font-size: 0.88rem; color: rgba(255,255,255,0.65); margin: 0; line-height: 1.6;
+        }
+        .onboarding-steps { padding: 28px 36px; }
+        .onboarding-step {
+            display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px;
+        }
+        .step-num {
+            width: 32px; height: 32px; background: var(--accent); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.8rem; flex-shrink: 0; margin-top: 1px;
+        }
+        .step-content {}
+        .step-title { font-weight: 700; font-size: 0.9rem; color: var(--accent); margin-bottom: 2px; }
+        .step-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+        .onboarding-footer {
+            padding: 0 36px 28px; display: flex; gap: 12px; align-items: center;
+        }
+        .btn-onboarding-start {
+            background: var(--accent); color: white; border: none;
+            padding: 13px 28px; border-radius: 8px; font-weight: 700;
+            font-size: 0.88rem; cursor: pointer; transition: background 0.2s, transform 0.15s;
+            letter-spacing: 0.02em; font-family: 'Inter', sans-serif;
+        }
+        .btn-onboarding-start:hover { background: var(--accent-light); transform: translateY(-1px); }
+        .btn-onboarding-skip {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 0.82rem; cursor: pointer; font-family: 'Inter', sans-serif;
+            padding: 8px; transition: color 0.2s;
+        }
+        .btn-onboarding-skip:hover { color: var(--accent); }
     </style>
 </head>
 <body>
+
+    <!-- ONBOARDING MODAL — shown only for new/empty profiles -->
+    <div id="onboarding-overlay" class="hidden">
+        <div class="onboarding-card">
+            <div class="onboarding-header">
+                <div class="onboarding-logo">Corpus Digitalis <span>PRO</span></div>
+                <h2>Bienvenue sur votre espace.</h2>
+                <p>Votre profil est prêt — il suffit maintenant de le remplir. Voici vos 3 premières étapes pour être en ligne en moins de 10 minutes.</p>
+            </div>
+            <div class="onboarding-steps">
+                <div class="onboarding-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Remplissez votre identité</div>
+                        <div class="step-desc">Nom, titre, biographie courte, photo de profil. C'est la première chose que les visiteurs verront.</div>
+                    </div>
+                </div>
+                <div class="onboarding-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Ajoutez 2–3 publications</div>
+                        <div class="step-desc">Même une seule publication récente suffit pour crédibiliser instantanément votre profil.</div>
+                    </div>
+                </div>
+                <div class="onboarding-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Partagez votre lien</div>
+                        <div class="step-desc">Copiez <strong id="onboarding-url" style="color:var(--accent);"></strong> et ajoutez-le à votre signature email ou votre profil LinkedIn.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="onboarding-footer">
+                <button class="btn-onboarding-start" onclick="closeOnboarding()">Commencer — Étape 1</button>
+                <button class="btn-onboarding-skip" onclick="closeOnboarding()">Passer</button>
+            </div>
+        </div>
+    </div>
 
     <div id="toast"><i data-lucide="check" size="16"></i> <span id="toast-msg">Sauvegardé</span></div>
 
@@ -409,9 +508,14 @@
                         <h2>Publications</h2>
                         <p class="section-subtitle">Vos articles, thèses et ouvrages.</p>
                     </div>
-                    <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]}, this)">
-                        <i data-lucide="plus"></i> Ajouter
-                    </button>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn-primary" style="background:white; color:#0f172a; border:1px solid #e8e4de;" onclick="document.getElementById('import-modal').classList.remove('hidden')">
+                            <i data-lucide="download"></i> Importer BibTeX / ORCID / HAL
+                        </button>
+                        <button class="btn-primary" onclick="createItem('publications', {title:'Nouvelle Publication', category:'Article', date: new Date().toISOString().split('T')[0]}, this)">
+                            <i data-lucide="plus"></i> Ajouter
+                        </button>
+                    </div>
                 </div>
                 <div id="pubs-container"></div>
                 <div class="scroll-spacer"></div>
@@ -756,8 +860,9 @@
         
         await loadData(session.user.id);
         switchTab('profil', 'index.html', document.querySelector('.nav-item.active'));
-        
-        setTimeout(autoScalePreview, 100); 
+
+        setTimeout(autoScalePreview, 100);
+        checkOnboarding();
     }
 
     async function loadData(uid) {
@@ -1619,6 +1724,21 @@
     async function saveConfig() { await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); showToast("Configuration sauvegardée", "success"); reloadPreview(); }
     window.switchCVMode = (mode, btn) => { const row = document.getElementById('cv-row'); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     window.uploadFile = async (type, input) => { if (!input.files.length) return; const file = input.files[0]; showToast("Upload en cours...", "success"); const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) return showToast("Erreur: " + error.message, "error"); const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; if (type === 'avatar') { await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id); document.getElementById('preview-avatar').src = url; } showToast("Sauvegardé !", "success"); }
+    function checkOnboarding() {
+        if (!profileData) return;
+        const isNew = !profileData.bio && !profileData.name && profileData.publications.length === 0;
+        const dismissed = localStorage.getItem('onboarding_dismissed_' + profileData.id);
+        if (isNew && !dismissed) {
+            const slug = profileData.slug || profileData.id;
+            const urlEl = document.getElementById('onboarding-url');
+            if (urlEl) urlEl.textContent = slug + '.corpusdigitalis.com';
+            document.getElementById('onboarding-overlay').classList.remove('hidden');
+        }
+    }
+    window.closeOnboarding = () => {
+        document.getElementById('onboarding-overlay').classList.add('hidden');
+        if (profileData) localStorage.setItem('onboarding_dismissed_' + profileData.id, '1');
+    }
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
     
@@ -1632,6 +1752,357 @@
     }
 
     init();
+</script>
+
+<!-- ══════════════════════════════════════
+     MODAL IMPORT BIBTEX / ORCID / HAL
+══════════════════════════════════════ -->
+<style>
+#import-modal { position:fixed; inset:0; background:rgba(15,23,42,0.7); z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px; }
+#import-modal.hidden { display:none; }
+.import-box { background:#fff; border-radius:16px; width:100%; max-width:680px; max-height:90vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.3); }
+.import-header { padding:24px 28px 0; }
+.import-header h3 { font-family:'Playfair Display',Georgia,serif; font-size:1.3rem; font-weight:700; color:#0f172a; margin:0 0 4px; }
+.import-header p { font-size:0.82rem; color:#64748b; margin:0 0 20px; }
+.import-tabs { display:flex; gap:0; border-bottom:1px solid #e8e4de; }
+.import-tab { padding:10px 20px; font-size:0.82rem; font-weight:600; color:#94a3b8; cursor:pointer; border-bottom:2px solid transparent; transition:0.2s; white-space:nowrap; }
+.import-tab.active { color:#0f172a; border-bottom-color:#0f172a; }
+.import-body { padding:24px 28px; overflow-y:auto; flex:1; }
+.import-panel { display:none; }
+.import-panel.active { display:block; }
+.import-label { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:8px; display:block; }
+.import-textarea { width:100%; height:160px; border:1px solid #e8e4de; border-radius:8px; padding:12px; font-family:'Courier New',monospace; font-size:0.78rem; color:#1e293b; resize:vertical; background:#fafaf8; box-sizing:border-box; }
+.import-textarea:focus { outline:none; border-color:#0f172a; }
+.import-input { width:100%; padding:10px 14px; border:1px solid #e8e4de; border-radius:8px; font-size:0.88rem; color:#1e293b; background:#fafaf8; box-sizing:border-box; }
+.import-input:focus { outline:none; border-color:#0f172a; }
+.import-hint { font-size:0.76rem; color:#94a3b8; margin-top:6px; line-height:1.5; }
+.import-source-btn { margin-top:14px; background:#0f172a; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:600; font-size:0.84rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+.import-source-btn:hover { background:#1e293b; }
+.import-source-btn:disabled { opacity:0.6; cursor:not-allowed; }
+.import-preview { margin-top:20px; }
+.import-preview-title { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:10px; }
+.import-pub-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:1px solid #e8e4de; border-radius:8px; margin-bottom:8px; background:#fafaf8; cursor:pointer; transition:background 0.15s; }
+.import-pub-item:hover { background:#f0ede8; }
+.import-pub-item input[type=checkbox] { margin-top:2px; flex-shrink:0; width:16px; height:16px; cursor:pointer; }
+.import-pub-info { flex:1; min-width:0; }
+.import-pub-title { font-weight:600; font-size:0.88rem; color:#0f172a; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.import-pub-meta { font-size:0.76rem; color:#94a3b8; }
+.import-pub-badge { display:inline-block; background:#f5f2ee; color:#64748b; font-size:0.65rem; font-weight:700; text-transform:uppercase; padding:2px 7px; border-radius:4px; margin-right:6px; }
+.import-footer { padding:16px 28px 24px; border-top:1px solid #e8e4de; display:flex; gap:10px; justify-content:flex-end; }
+.import-cancel { background:transparent; border:1px solid #e8e4de; color:#64748b; padding:10px 18px; border-radius:8px; font-weight:600; font-size:0.84rem; cursor:pointer; }
+.import-confirm { background:#0f172a; color:white; border:none; padding:10px 22px; border-radius:8px; font-weight:600; font-size:0.84rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+.import-confirm:disabled { opacity:0.5; cursor:not-allowed; }
+.import-spinner { width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite; }
+.import-empty { text-align:center; padding:30px; color:#94a3b8; font-size:0.86rem; }
+.import-error { background:#fef2f2; border:1px solid #fee2e2; color:#991b1b; padding:12px 14px; border-radius:8px; font-size:0.84rem; margin-top:12px; }
+.import-select-all { font-size:0.78rem; color:#0f172a; font-weight:600; cursor:pointer; text-decoration:underline; margin-bottom:8px; display:inline-block; }
+</style>
+
+<div id="import-modal" class="hidden">
+  <div class="import-box">
+    <div class="import-header">
+      <h3>Importer des publications</h3>
+      <p>Importez automatiquement vos publications depuis BibTeX, ORCID ou HAL.</p>
+      <div class="import-tabs">
+        <div class="import-tab active" onclick="switchImportTab('bibtex',this)">BibTeX</div>
+        <div class="import-tab" onclick="switchImportTab('orcid',this)">ORCID</div>
+        <div class="import-tab" onclick="switchImportTab('hal',this)">HAL</div>
+      </div>
+    </div>
+    <div class="import-body">
+
+      <!-- BIBTEX -->
+      <div class="import-panel active" id="imp-bibtex">
+        <label class="import-label">Collez votre BibTeX</label>
+        <textarea class="import-textarea" id="bibtex-input" placeholder="@article{Smith2024,
+  title = {Votre titre de publication},
+  author = {Smith, John},
+  journal = {Revue Française de ...},
+  year = {2024},
+  abstract = {Résumé de l'article...},
+  doi = {10.xxxx/yyyy}
+}
+
+@book{Dupont2023,
+  title = {Titre de l'ouvrage},
+  year = {2023},
+  ...
+}"></textarea>
+        <div class="import-hint">Exportez votre BibTeX depuis Zotero, Mendeley, ou Google Scholar puis collez-le ici.</div>
+        <button class="import-source-btn" onclick="parseBibtexInput()"><span>Analyser</span></button>
+        <div id="bibtex-preview"></div>
+      </div>
+
+      <!-- ORCID -->
+      <div class="import-panel" id="imp-orcid">
+        <label class="import-label">Votre identifiant ORCID</label>
+        <input class="import-input" id="orcid-input" placeholder="0000-0001-2345-6789" maxlength="19">
+        <div class="import-hint">Votre ORCID iD se trouve sur <strong>orcid.org</strong> — format : 0000-0001-2345-6789. Votre profil doit être public.</div>
+        <button class="import-source-btn" id="orcid-fetch-btn" onclick="fetchORCID()"><span>Récupérer mes publications</span></button>
+        <div id="orcid-preview"></div>
+      </div>
+
+      <!-- HAL -->
+      <div class="import-panel" id="imp-hal">
+        <label class="import-label">Votre nom sur HAL</label>
+        <input class="import-input" id="hal-input" placeholder="Jean Dupont">
+        <div class="import-hint">Entrez votre nom complet tel qu'il apparaît dans <strong>archives-ouvertes.fr</strong>. Les résultats les plus récents (50 max) seront importés.</div>
+        <button class="import-source-btn" id="hal-fetch-btn" onclick="fetchHAL()"><span>Rechercher dans HAL</span></button>
+        <div id="hal-preview"></div>
+      </div>
+
+    </div>
+    <div class="import-footer">
+      <button class="import-cancel" onclick="closeImportModal()">Annuler</button>
+      <button class="import-confirm" id="import-confirm-btn" disabled onclick="confirmImport()">
+        <span id="import-btn-txt">Importer les sélectionnées</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let importSource = 'bibtex';
+let importCandidates = []; // [{title, date, category, description, link_value}]
+
+// ── TABS ──
+window.switchImportTab = (tab, el) => {
+  importSource = tab;
+  document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.import-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('imp-' + tab).classList.add('active');
+  importCandidates = [];
+  updateImportBtn();
+};
+
+window.closeImportModal = () => {
+  document.getElementById('import-modal').classList.add('hidden');
+  importCandidates = [];
+  ['bibtex-preview','orcid-preview','hal-preview'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ''; });
+  document.getElementById('bibtex-input').value = '';
+  document.getElementById('orcid-input').value = '';
+  document.getElementById('hal-input').value = '';
+  updateImportBtn();
+};
+
+// ── BIBTEX PARSER ──
+function bibtexTypeToCategory(type) {
+  const t = type.toLowerCase();
+  if (t === 'article') return 'Article';
+  if (t === 'book' || t === 'proceedings') return 'Ouvrage';
+  if (t === 'incollection' || t === 'inbook' || t === 'inproceedings') return 'Chapitre';
+  if (t === 'phdthesis') return 'Thèse';
+  if (t === 'mastersthesis') return 'Mémoire';
+  return 'Autre';
+}
+
+function extractBibtexField(entry, field) {
+  const re = new RegExp(field + '\\s*=\\s*[{"]([\\s\\S]*?)[}"](?=\\s*[,}])', 'i');
+  const m = entry.match(re);
+  if (!m) return '';
+  return m[1].replace(/\s+/g, ' ').trim();
+}
+
+function parseBibtex(text) {
+  const results = [];
+  const entryRe = /@(\w+)\s*\{[^,]+,([^@]+?)(?=\n@|\n*$)/gs;
+  let match;
+  while ((match = entryRe.exec(text)) !== null) {
+    const type = match[1];
+    const body = match[2];
+    const title = extractBibtexField(body, 'title') || extractBibtexField(body, 'booktitle');
+    if (!title) continue;
+    const year = extractBibtexField(body, 'year');
+    const abstract = extractBibtexField(body, 'abstract');
+    const doi = extractBibtexField(body, 'doi');
+    results.push({
+      title: title.replace(/[{}]/g, ''),
+      date: year ? year + '-01-01' : '',
+      category: bibtexTypeToCategory(type),
+      description: abstract.replace(/[{}]/g, '').substring(0, 400),
+      link_value: doi ? 'https://doi.org/' + doi.replace(/^https?:\/\/doi\.org\//,'') : ''
+    });
+  }
+  return results;
+}
+
+window.parseBibtexInput = () => {
+  const text = document.getElementById('bibtex-input').value.trim();
+  if (!text) return;
+  importCandidates = parseBibtex(text);
+  renderImportPreview('bibtex-preview');
+};
+
+// ── ORCID ──
+function orcidTypeToCategory(type) {
+  if (!type) return 'Article';
+  const t = type.toLowerCase();
+  if (t.includes('journal') || t.includes('article')) return 'Article';
+  if (t.includes('book') && !t.includes('chapter')) return 'Ouvrage';
+  if (t.includes('chapter') || t.includes('section')) return 'Chapitre';
+  if (t.includes('dissertation') || t.includes('thesis')) return 'Thèse';
+  return 'Article';
+}
+
+window.fetchORCID = async () => {
+  const id = document.getElementById('orcid-input').value.trim().replace(/\s/g,'');
+  if (!id.match(/^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/)) {
+    document.getElementById('orcid-preview').innerHTML = '<div class="import-error">Format invalide. Exemple : 0000-0001-2345-6789</div>';
+    return;
+  }
+  const btn = document.getElementById('orcid-fetch-btn');
+  btn.innerHTML = '<span class="import-spinner"></span><span>Chargement...</span>';
+  btn.disabled = true;
+  try {
+    const res = await fetch(`https://pub.orcid.org/v3.0/${id}/works`, { headers: { Accept: 'application/json' } });
+    if (!res.ok) throw new Error('Profil ORCID introuvable ou privé.');
+    const data = await res.json();
+    const groups = data.group || [];
+    importCandidates = groups.map(g => {
+      const ws = g['work-summary']?.[0] || {};
+      const title = ws.title?.title?.value || '';
+      const year = ws['publication-date']?.year?.value;
+      const doi = (g['external-ids']?.['external-id'] || []).find(e => e['external-id-type'] === 'doi');
+      return {
+        title,
+        date: year ? year + '-01-01' : '',
+        category: orcidTypeToCategory(ws.type),
+        description: '',
+        link_value: doi ? 'https://doi.org/' + doi['external-id-value'] : ''
+      };
+    }).filter(p => p.title);
+    renderImportPreview('orcid-preview');
+  } catch(e) {
+    document.getElementById('orcid-preview').innerHTML = '<div class="import-error">' + e.message + '</div>';
+  } finally {
+    btn.innerHTML = '<span>Récupérer mes publications</span>';
+    btn.disabled = false;
+  }
+};
+
+// ── HAL ──
+function halTypeToCategory(t) {
+  if (!t) return 'Article';
+  t = t.toLowerCase();
+  if (t === 'art') return 'Article';
+  if (t === 'ouv' || t === 'book') return 'Ouvrage';
+  if (t === 'couv') return 'Chapitre';
+  if (t === 'these') return 'Thèse';
+  if (t === 'mem') return 'Mémoire';
+  return 'Article';
+}
+
+window.fetchHAL = async () => {
+  const name = document.getElementById('hal-input').value.trim();
+  if (!name || name.length < 3) {
+    document.getElementById('hal-preview').innerHTML = '<div class="import-error">Entrez votre nom complet.</div>';
+    return;
+  }
+  const btn = document.getElementById('hal-fetch-btn');
+  btn.innerHTML = '<span class="import-spinner"></span><span>Recherche...</span>';
+  btn.disabled = true;
+  try {
+    const encoded = encodeURIComponent('"' + name + '"');
+    const url = `https://api.archives-ouvertes.fr/search/?q=authFullName_s:${encoded}&fl=title_s,abstract_s,producedDate_tdate,docType_s,doiId_s,halUri_s&rows=50&wt=json`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Erreur lors de la recherche HAL.');
+    const data = await res.json();
+    const docs = data.response?.docs || [];
+    importCandidates = docs.map(d => ({
+      title: Array.isArray(d.title_s) ? d.title_s[0] : (d.title_s || ''),
+      date: d.producedDate_tdate ? d.producedDate_tdate.substring(0,10) : '',
+      category: halTypeToCategory(d.docType_s),
+      description: Array.isArray(d.abstract_s) ? d.abstract_s[0]?.substring(0,400) : (d.abstract_s || '').substring(0,400),
+      link_value: d.doiId_s ? 'https://doi.org/' + d.doiId_s : (d.halUri_s || '')
+    })).filter(p => p.title);
+    renderImportPreview('hal-preview');
+  } catch(e) {
+    document.getElementById('hal-preview').innerHTML = '<div class="import-error">' + e.message + '</div>';
+  } finally {
+    btn.innerHTML = '<span>Rechercher dans HAL</span>';
+    btn.disabled = false;
+  }
+};
+
+// ── PREVIEW RENDERER ──
+function renderImportPreview(containerId) {
+  const c = document.getElementById(containerId);
+  if (!importCandidates.length) {
+    c.innerHTML = '<div class="import-empty">Aucune publication trouvée.</div>';
+    updateImportBtn();
+    return;
+  }
+  c.innerHTML = `
+    <div class="import-preview">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span class="import-preview-title">${importCandidates.length} publication(s) trouvée(s)</span>
+        <span class="import-select-all" onclick="toggleAllImport(true)">Tout sélectionner</span>
+      </div>
+      ${importCandidates.map((p,i) => `
+        <label class="import-pub-item">
+          <input type="checkbox" class="import-cb" data-idx="${i}" checked onchange="updateImportBtn()">
+          <div class="import-pub-info">
+            <div class="import-pub-title" title="${p.title}">${p.title}</div>
+            <div class="import-pub-meta">
+              <span class="import-pub-badge">${p.category}</span>
+              ${p.date ? p.date.substring(0,4) : ''}
+              ${p.link_value ? ' · <a href="'+p.link_value+'" target="_blank" onclick="event.stopPropagation()" style="color:#0f172a; font-size:0.74rem;">DOI ↗</a>' : ''}
+            </div>
+          </div>
+        </label>
+      `).join('')}
+    </div>`;
+  updateImportBtn();
+}
+
+window.toggleAllImport = (state) => {
+  document.querySelectorAll('.import-cb').forEach(cb => { cb.checked = state; });
+  updateImportBtn();
+};
+
+function updateImportBtn() {
+  const selected = document.querySelectorAll('.import-cb:checked').length;
+  const btn = document.getElementById('import-confirm-btn');
+  const txt = document.getElementById('import-btn-txt');
+  btn.disabled = selected === 0;
+  txt.textContent = selected > 0 ? `Importer ${selected} publication(s)` : 'Importer les sélectionnées';
+}
+
+// ── CONFIRM IMPORT ──
+window.confirmImport = async () => {
+  const btn = document.getElementById('import-confirm-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="import-spinner"></span><span>Import en cours...</span>';
+  const selected = [...document.querySelectorAll('.import-cb:checked')].map(cb => importCandidates[parseInt(cb.dataset.idx)]);
+  let count = 0;
+  for (const pub of selected) {
+    try {
+      await createItemSilent('publications', {
+        title: pub.title,
+        date: pub.date || null,
+        category: pub.category,
+        description: pub.description || null,
+        link_value: pub.link_value || null,
+        link_type: 'link'
+      });
+      count++;
+    } catch(e) { console.warn('Import error for', pub.title, e); }
+  }
+  showToast(`${count} publication(s) importée(s) !`, 'success');
+  closeImportModal();
+  reloadPreview();
+  btn.innerHTML = '<span id="import-btn-txt">Importer les sélectionnées</span>';
+};
+
+async function createItemSilent(table, data) {
+  if (!profileData?.id) return;
+  const payload = { ...data, prof_id: profileData.id };
+  const { data: newItem, error } = await sb.from(table).insert(payload).select().single();
+  if (error) throw error;
+  if (table === 'publications') { profileData.publications.push(newItem); renderPublications(); }
+}
 </script>
 </body>
 </html>

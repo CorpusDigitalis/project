@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corpus Digitalis — Hub académique professionnel</title>
+<meta name="description" content="Votre présence académique professionnelle, clé en main en 48h. Publications, cours, interventions — sous votre propre adresse web.">
+<meta property="og:title" content="Corpus Digitalis — Hub académique professionnel">
+<meta property="og:description" content="Publications, cours, interventions sous votre propre adresse web. Clé en main en 48h.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://corpusdigitalis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f172a;--ink-mid:#1e293b;--muted:#64748b;--pale:#94a3b8;
+  --bg:#fafaf8;--white:#ffffff;--border:#e8e4de;
+  --gold:#b45309;--gold-pale:#fef3c7;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden}
+
+/* ── SCROLL PROGRESS ── */
+#progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--ink);z-index:200;width:0%;transition:width .1s linear}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5%;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .3s,box-shadow .3s;
+}
+.nav.scrolled{background:rgba(15,23,42,.96);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-text{font-weight:800;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:white}
+.nav-logo-badge{background:white;color:var(--ink);padding:2px 6px;border-radius:3px;font-size:.55rem;font-weight:800}
+.nav-links{display:flex;gap:0;align-items:center}
+.nav-link{color:rgba(255,255,255,.55);text-decoration:none;font-size:.78rem;font-weight:500;padding:8px 16px;border-radius:6px;transition:color .2s,background .2s}
+.nav-link:hover,.nav-link.active{color:white;background:rgba(255,255,255,.08)}
+.nav-cta{margin-left:8px;background:white;color:var(--ink);font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:9px 20px;border-radius:6px;text-decoration:none;transition:opacity .2s,transform .2s}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+.nav-burger{display:none;background:none;border:none;cursor:pointer;color:white;padding:8px}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-36px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(36px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal-right.visible{opacity:1;transform:none}
+.reveal-scale{opacity:0;transform:scale(.95);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.reveal-scale.visible{opacity:1;transform:none}
+.stagger-1{transition-delay:.08s}.stagger-2{transition-delay:.16s}.stagger-3{transition-delay:.24s}.stagger-4{transition-delay:.32s}.stagger-5{transition-delay:.4s}.stagger-6{transition-delay:.48s}
+
+/* ══════════════════════════════════
+   HERO
+══════════════════════════════════ */
+#hero{
+  min-height:100vh;background:var(--ink);
+  display:flex;align-items:center;
+  padding:100px 5% 80px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 100%,rgba(29,78,216,.14) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 5%,rgba(180,83,9,.08) 0%,transparent 50%),
+    radial-gradient(ellipse 40% 30% at 50% 50%,rgba(255,255,255,.02) 0%,transparent 60%);
+}
+.hero-grain{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");background-size:200px}
+.hero-inner{position:relative;max-width:1240px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 420px;gap:80px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:28px;opacity:0;animation:fadeUp .8s var(--ease) .2s forwards}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:#60a5fa;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(2.8rem,5.5vw,4.4rem);font-weight:900;line-height:1.05;color:white;letter-spacing:-.025em;margin-bottom:28px;opacity:0;animation:fadeUp .9s var(--ease) .35s forwards}
+.hero-title em{font-style:italic;color:rgba(255,255,255,.38)}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);line-height:1.8;max-width:520px;margin-bottom:44px;opacity:0;animation:fadeUp .9s var(--ease) .5s forwards}
+.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap;opacity:0;animation:fadeUp .9s var(--ease) .65s forwards}
+.btn-hero-primary{display:inline-flex;align-items:center;gap:8px;background:white;color:var(--ink);font-weight:700;font-size:.9rem;padding:15px 30px;border-radius:8px;text-decoration:none;transition:all .25s;letter-spacing:.01em}
+.btn-hero-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.btn-hero-ghost{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.5);font-weight:600;font-size:.88rem;text-decoration:none;padding:15px 6px;transition:color .2s}
+.btn-hero-ghost:hover{color:white}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* HERO CARD */
+.hero-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:28px;backdrop-filter:blur(8px);opacity:0;animation:fadeRight .9s var(--ease) .5s forwards}
+@keyframes fadeRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+.hero-card-top{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.07)}
+.hc-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.hc-name{font-weight:700;font-size:.95rem;color:white}
+.hc-role{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:2px;letter-spacing:.03em}
+.hc-label{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin:0 0 10px}
+.hc-pub{background:rgba(255,255,255,.04);border-radius:8px;padding:11px 13px;margin-bottom:8px;font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.45;display:flex;gap:8px;align-items:flex-start}
+.hc-pub-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);margin-top:5px;flex-shrink:0}
+.hc-tag{display:inline-block;background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);font-size:.62rem;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+.hc-url{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);font-size:.72rem;color:rgba(255,255,255,.3);font-family:monospace}
+.hc-url span{color:rgba(255,255,255,.7);font-weight:600}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.04);border-radius:12px;overflow:hidden;margin-top:16px}
+.hero-stat{padding:14px 12px;text-align:center;background:rgba(255,255,255,.03)}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:white;line-height:1}
+.hero-stat-lbl{font-size:.62rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:4px}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp .8s var(--ease) 1.2s forwards}
+.scroll-arrow{width:20px;height:20px;border-right:2px solid rgba(255,255,255,.25);border-bottom:2px solid rgba(255,255,255,.25);transform:rotate(45deg);animation:bounce 1.8s infinite}
+@keyframes bounce{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(4px,4px)}}
+
+/* ══════════════════════════════════
+   SECTION BASE
+══════════════════════════════════ */
+.section{padding:110px 5%}
+.section-inner{max-width:1240px;margin:0 auto}
+.section-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.eyebrow-bar{width:28px;height:1px;background:var(--border)}
+.section-h{font-family:'Playfair Display',serif;font-size:clamp(2rem,3.8vw,3rem);font-weight:700;color:var(--ink);line-height:1.12;letter-spacing:-.015em;margin-bottom:18px}
+.section-lead{font-size:1rem;color:var(--muted);line-height:1.82;max-width:580px;margin-bottom:64px}
+.section-dark{background:var(--ink)}
+.section-dark .section-eyebrow{color:rgba(255,255,255,.28)}
+.section-dark .eyebrow-bar{background:rgba(255,255,255,.12)}
+.section-dark .section-h{color:white}
+.section-dark .section-lead{color:rgba(255,255,255,.48)}
+
+/* ══════════════════════════════════
+   PROBLÈME
+══════════════════════════════════ */
+#probleme{background:white;border-top:1px solid var(--border)}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border-radius:16px;overflow:hidden}
+.problem-card{background:white;padding:40px 32px;transition:background .2s}
+.problem-card:hover{background:var(--bg)}
+.problem-num{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--border);line-height:1;margin-bottom:20px;transition:color .3s}
+.problem-card:hover .problem-num{color:#e8e4de}
+.problem-title{font-weight:700;font-size:.98rem;color:var(--ink);margin-bottom:12px;line-height:1.4}
+.problem-desc{font-size:.86rem;color:var(--muted);line-height:1.75}
+
+/* ══════════════════════════════════
+   FEATURES
+══════════════════════════════════ */
+#features{background:var(--bg)}
+.features-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.feature-list{display:flex;flex-direction:column;gap:0}
+.feature-item{display:flex;gap:20px;padding:28px 0;border-bottom:1px solid var(--border);align-items:flex-start;cursor:default;transition:padding .2s}
+.feature-item:last-child{border-bottom:none}
+.feature-item:hover{padding-left:6px}
+.feature-icon{width:46px;height:46px;border-radius:12px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;transition:transform .2s}
+.feature-item:hover .feature-icon{transform:scale(1.08)}
+.feature-title{font-weight:700;font-size:.96rem;color:var(--ink);margin-bottom:6px}
+.feature-desc{font-size:.85rem;color:var(--muted);line-height:1.7}
+
+/* BROWSER MOCKUP */
+.browser-wrap{position:sticky;top:100px}
+.browser{border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:0 24px 60px rgba(0,0,0,.1)}
+.browser-bar{background:#f1f5f9;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.browser-dots{display:flex;gap:6px}
+.brd{width:10px;height:10px;border-radius:50%}
+.brd-r{background:#fc5f5a}.brd-y{background:#fdbc40}.brd-g{background:#34c84a}
+.browser-url-bar{flex:1;background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:.72rem;color:var(--muted);font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mock-content{padding:24px 20px;background:white}
+.mock-top{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.mock-ava{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.mock-name-txt{font-weight:700;font-size:.95rem;color:var(--ink)}
+.mock-role-txt{font-size:.75rem;color:var(--muted);margin-top:3px}
+.mock-bio{font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:16px}
+.mock-sec{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pale);margin-bottom:8px}
+.mock-row{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:7px;font-size:.76rem;color:var(--ink-mid);display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.mock-row-dot{width:5px;height:5px;border-radius:50%;background:var(--pale);margin-top:4px;flex-shrink:0}
+.mock-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.mock-chip{display:inline-block;background:var(--ink);color:white;font-size:.62rem;font-weight:600;padding:3px 9px;border-radius:4px;letter-spacing:.04em}
+.mock-chip.chip-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+
+/* ══════════════════════════════════
+   AUDIENCE
+══════════════════════════════════ */
+#audience{background:white;border-top:1px solid var(--border)}
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.audience-card{border:1px solid var(--border);border-radius:16px;padding:32px 26px;background:white;transition:box-shadow .25s,transform .25s;cursor:default;position:relative;overflow:hidden}
+.audience-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ink);transform:scaleX(0);transition:transform .3s var(--ease);transform-origin:left}
+.audience-card:hover::before{transform:scaleX(1)}
+.audience-card:hover{box-shadow:0 12px 48px rgba(0,0,0,.09);transform:translateY(-4px)}
+.audience-emoji{font-size:2rem;margin-bottom:16px;display:block}
+.audience-role{font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;color:var(--ink);margin-bottom:6px}
+.audience-inst{font-size:.78rem;color:var(--muted);font-weight:500;margin-bottom:18px}
+.pain-box{background:#fff7ed;border-left:3px solid #f59e0b;padding:11px 14px;border-radius:0 8px 8px 0;font-size:.82rem;color:#92400e;margin-bottom:10px;line-height:1.6}
+.win-box{background:#f0fdf4;border-left:3px solid #22c55e;padding:11px 14px;border-radius:0 8px 8px 0;font-size:.82rem;color:#15803d;line-height:1.6}
+
+/* ══════════════════════════════════
+   PROCESS
+══════════════════════════════════ */
+#process{padding:110px 5%}
+.process-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.process-steps{display:flex;flex-direction:column;gap:0}
+.process-step{display:flex;gap:24px;position:relative}
+.process-step::before{content:'';position:absolute;left:19px;top:50px;bottom:0;width:2px;background:rgba(255,255,255,.07)}
+.process-step:last-child::before{display:none}
+.ps-num{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.2);color:white;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;background:rgba(255,255,255,.06)}
+.ps-content{padding:8px 0 44px}
+.ps-title{font-weight:700;font-size:1rem;color:white;margin-bottom:7px}
+.ps-desc{font-size:.86rem;color:rgba(255,255,255,.48);line-height:1.7}
+.ps-pill{display:inline-block;margin-top:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:.67rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px}
+
+.process-aside{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:32px}
+.pa-label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:18px}
+.pa-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.pa-row:last-child{border-bottom:none;padding-bottom:0}
+.pa-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.pa-text{font-size:.86rem;color:rgba(255,255,255,.55);line-height:1.55}
+.pa-time{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.28);white-space:nowrap;margin-top:2px}
+
+/* ══════════════════════════════════
+   PROFILS DÉMO
+══════════════════════════════════ */
+#demos{background:var(--bg);border-top:1px solid var(--border);padding:110px 5%}
+.demos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.demo-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:box-shadow .25s,transform .25s}
+.demo-card:hover{box-shadow:0 16px 48px rgba(0,0,0,.1);transform:translateY(-6px)}
+.demo-card-header{height:80px;background:var(--ink);position:relative;display:flex;align-items:flex-end;padding:0 24px 16px}
+.demo-card-avatar{width:56px;height:56px;border-radius:50%;border:3px solid white;position:absolute;bottom:-28px;left:24px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:white;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.demo-card-body{padding:40px 24px 24px}
+.demo-name{font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;color:var(--ink);margin-bottom:4px}
+.demo-role{font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.demo-desc{font-size:.84rem;color:var(--muted);line-height:1.65;margin-bottom:18px}
+.demo-link{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:700;color:var(--ink);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:2px;transition:border-color .2s}
+.demo-link:hover{border-color:var(--ink)}
+
+/* ══════════════════════════════════
+   TARIFS
+══════════════════════════════════ */
+#tarifs{background:white;border-top:1px solid var(--border)}
+.tarifs-inner{max-width:900px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.price-card{border:2px solid var(--border);border-radius:20px;padding:36px;position:relative;transition:box-shadow .2s,transform .2s}
+.price-card:hover{box-shadow:0 8px 40px rgba(0,0,0,.07);transform:translateY(-2px)}
+.price-card.featured{border-color:var(--ink);background:var(--ink)}
+.price-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:white;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 14px;border-radius:20px;white-space:nowrap}
+.price-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.price-label-light{color:rgba(255,255,255,.35)}
+.price-num{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:700;color:var(--ink);line-height:1;margin-bottom:8px}
+.price-num-light{color:white}
+.price-strike{font-size:1.1rem;color:rgba(255,255,255,.25);text-decoration:line-through;margin-left:8px;font-weight:400;vertical-align:middle}
+.price-period{font-size:.84rem;color:var(--muted);margin-bottom:24px}
+.price-period-light{color:rgba(255,255,255,.4)}
+.price-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.price-list li{font-size:.86rem;color:var(--muted);display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.price-list-light li{color:rgba(255,255,255,.55)}
+.pl-check{color:#22c55e;font-weight:700;flex-shrink:0}
+.pl-check-light{color:#4ade80}
+.price-btn{display:block;text-align:center;text-decoration:none;font-weight:700;font-size:.88rem;padding:14px;border-radius:10px;transition:all .2s}
+.price-btn-light{background:white;color:var(--ink)}
+.price-btn-light:hover{background:#f1f5f9}
+.price-btn-dark{background:var(--ink);color:white;border:2px solid var(--border)}
+.price-btn-dark:hover{background:var(--ink-mid)}
+.price-note{font-size:.74rem;color:rgba(255,255,255,.25);margin-top:14px;font-style:italic}
+.price-note-dark{color:var(--pale)}
+.labo-note{margin-top:28px;background:var(--gold-pale);border-radius:12px;border-left:4px solid var(--gold);padding:18px 22px}
+.labo-note-title{font-weight:700;font-size:.88rem;color:#92400e;margin-bottom:6px}
+.labo-note-body{font-size:.82rem;color:#a16207;line-height:1.6}
+
+/* ══════════════════════════════════
+   CHIFFRES ANIMÉS
+══════════════════════════════════ */
+#stats{background:var(--ink);padding:80px 5%}
+.stats-grid{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(255,255,255,.06);border-radius:16px;overflow:hidden}
+.stat-block{padding:44px 28px;background:rgba(255,255,255,.03);text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:white;line-height:1;margin-bottom:8px}
+.stat-label{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+
+/* ══════════════════════════════════
+   À PROPOS
+══════════════════════════════════ */
+#apropos{background:var(--bg);border-top:1px solid var(--border);padding:110px 5%}
+.apropos-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 460px;gap:80px;align-items:center}
+.apropos-quote{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,1.9rem);font-weight:400;font-style:italic;color:var(--ink);line-height:1.5;margin-bottom:28px;letter-spacing:-.005em}
+.apropos-quote strong{font-weight:700;font-style:normal}
+.apropos-body{font-size:.92rem;color:var(--muted);line-height:1.85;margin-bottom:28px}
+.apropos-sig{display:flex;align-items:center;gap:16px}
+.apropos-ava{width:48px;height:48px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.9rem;flex-shrink:0}
+.apropos-sig-name{font-weight:700;font-size:.92rem;color:var(--ink)}
+.apropos-sig-role{font-size:.76rem;color:var(--muted);margin-top:2px}
+.apropos-aside{background:var(--ink);border-radius:20px;padding:36px;color:white}
+.vision-label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px}
+.vision-item{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);display:flex;gap:14px;align-items:flex-start}
+.vision-item:last-child{border-bottom:none;padding-bottom:0}
+.vision-ico{font-size:.9rem;margin-top:2px;flex-shrink:0}
+.vision-title{font-weight:700;font-size:.88rem;color:white;margin-bottom:3px}
+.vision-desc{font-size:.8rem;color:rgba(255,255,255,.45);line-height:1.55}
+
+/* ══════════════════════════════════
+   FAQ
+══════════════════════════════════ */
+#faq{background:white;border-top:1px solid var(--border);padding:100px 5%}
+.faq-inner{max-width:720px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border);overflow:hidden}
+.faq-item:first-of-type{border-top:1px solid var(--border)}
+.faq-q{padding:22px 0;font-weight:600;font-size:.94rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;user-select:none;transition:color .2s}
+.faq-q:hover{color:var(--muted)}
+.faq-arrow{width:18px;height:18px;border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .25s,border-color .2s;font-size:.7rem;color:var(--muted)}
+.faq-item.open .faq-arrow{transform:rotate(180deg);border-color:var(--ink);color:var(--ink)}
+.faq-a{display:none;padding:0 0 22px;font-size:.88rem;color:var(--muted);line-height:1.8}
+.faq-item.open .faq-a{display:block}
+
+/* ══════════════════════════════════
+   CTA FINAL
+══════════════════════════════════ */
+#cta{background:var(--ink);padding:120px 5%;text-align:center;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(29,78,216,.15) 0%,transparent 60%)}
+.cta-inner{position:relative;max-width:700px;margin:0 auto}
+.cta-eye{font-size:.67rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:20px}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:700;color:white;line-height:1.1;letter-spacing:-.02em;margin-bottom:22px}
+.cta-sub{font-size:1rem;color:rgba(255,255,255,.5);line-height:1.75;margin-bottom:48px;max-width:480px;margin-left:auto;margin-right:auto}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.btn-cta-main{display:inline-flex;align-items:center;gap:8px;background:white;color:var(--ink);font-weight:700;font-size:.9rem;padding:16px 34px;border-radius:8px;text-decoration:none;transition:all .2s}
+.btn-cta-main:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.btn-cta-sec{display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.7);font-weight:600;font-size:.9rem;padding:14px 24px;border-radius:8px;text-decoration:none;transition:all .2s}
+.btn-cta-sec:hover{border-color:rgba(255,255,255,.5);color:white}
+.cta-trust{display:flex;justify-content:center;gap:28px;margin-top:36px;flex-wrap:wrap}
+.cta-trust-item{display:flex;align-items:center;gap:6px;font-size:.76rem;color:rgba(255,255,255,.3)}
+
+/* ══════════════════════════════════
+   FOOTER
+══════════════════════════════════ */
+.footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:40px 5%}
+.footer-inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo-txt{font-weight:800;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-link{color:rgba(255,255,255,.3);text-decoration:none;font-size:.76rem;transition:color .2s}
+.footer-link:hover{color:rgba(255,255,255,.7)}
+.footer-copy{font-size:.72rem;color:rgba(255,255,255,.2)}
+
+/* ── MOBILE MENU ── */
+#mobile-menu{display:none;position:fixed;inset:0;background:rgba(15,23,42,.98);z-index:99;padding:80px 5%;flex-direction:column;gap:8px}
+#mobile-menu.open{display:flex}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════ */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .hero-card{display:none}
+  .features-layout{grid-template-columns:1fr}
+  .browser-wrap{display:none}
+  .process-inner{grid-template-columns:1fr}
+  .apropos-inner{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .audience-grid{grid-template-columns:1fr 1fr}
+  .demos-grid{grid-template-columns:1fr 1fr}
+  .pricing-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+  .problem-grid{grid-template-columns:1fr}
+  .audience-grid{grid-template-columns:1fr}
+  .demos-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ── NAV ── -->
+<nav class="nav" id="main-nav">
+  <a href="#hero" class="nav-logo">
+    <span class="nav-logo-text">Corpus Digitalis</span>
+    <span class="nav-logo-badge">PRO</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link" data-section="features">Le produit</a>
+    <a href="#audience" class="nav-link" data-section="audience">Pour qui</a>
+    <a href="#tarifs" class="nav-link" data-section="tarifs">Tarifs</a>
+    <a href="#apropos" class="nav-link" data-section="apropos">À propos</a>
+    <a href="early-bird.html" class="nav-cta">Réserver ma place →</a>
+  </div>
+  <button class="nav-burger" onclick="toggleMenu()" aria-label="Menu">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><path d="M1 1h20M1 8h20M1 15h20" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">
+        <div class="hero-dot"></div>
+        Offre Early Bird — 20 places — Jusqu'au 31 mai 2026
+      </div>
+      <h1 class="hero-title">
+        Votre carrière mérite<br><em>mieux qu'une page<br>de laboratoire.</em>
+      </h1>
+      <p class="hero-sub">Corpus Digitalis construit votre hub académique professionnel — publications, cours, interventions, bio — sous votre propre adresse web. En 48h. Sans que vous touchiez à une ligne de code.</p>
+      <div class="hero-actions">
+        <a href="early-bird.html" class="btn-hero-primary">Réserver ma place — 97€/an →</a>
+        <a href="#features" class="btn-hero-ghost">Voir comment ça marche ↓</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Profil actif</div>
+      <div class="hero-card-top">
+        <div class="hc-avatar">👩‍🎓</div>
+        <div>
+          <div class="hc-name">Claire Martins</div>
+          <div class="hc-role">MCF · Sociologie · Paris 1</div>
+        </div>
+      </div>
+      <div class="hc-label">Publications récentes</div>
+      <div class="hc-pub"><div class="hc-pub-dot"></div>Le travail invisible dans les plateformes numériques — <em>RFS</em>, 2025</div>
+      <div class="hc-pub"><div class="hc-pub-dot"></div>Organisations apprenantes et hybridation — <em>Soc. du Travail</em>, 2024</div>
+      <div style="margin-top:12px">
+        <span class="hc-tag">Sociologie</span>
+        <span class="hc-tag" style="margin-left:6px">CNRS</span>
+        <span class="hc-tag" style="margin-left:6px">Paris 1</span>
+      </div>
+      <div class="hc-url">claire-martins.<span>corpusdigitalis.com</span></div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num counter" data-target="4">0</div><div class="hero-stat-lbl">Publis</div></div>
+        <div class="hero-stat"><div class="hero-stat-num counter" data-target="3">0</div><div class="hero-stat-lbl">Cours</div></div>
+        <div class="hero-stat"><div class="hero-stat-num counter" data-target="3">0</div><div class="hero-stat-lbl">Events</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-arrow"></div></div>
+</section>
+
+<!-- ══════════════════════════════════
+     PROBLÈME
+══════════════════════════════════ -->
+<section class="section" id="probleme">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow"><div class="eyebrow-bar"></div>Le problème</div>
+      <h2 class="section-h">Les chercheurs publient parmi<br>les meilleurs. Leur présence en ligne<br>est catastrophique.</h2>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal stagger-1">
+        <div class="problem-num">01</div>
+        <div class="problem-title">La page labo disparaît avec le poste</div>
+        <div class="problem-desc">Elle est gérée par votre service informatique universitaire. Elle disparaît quand vous changez d'institution. Votre page ne vous appartient pas — votre carrière, si.</div>
+      </div>
+      <div class="problem-card reveal stagger-2">
+        <div class="problem-num">02</div>
+        <div class="problem-title">ResearchGate n'est pas une vitrine</div>
+        <div class="problem-desc">C'est un réseau de partage. Pas un hub de présentation professionnelle. Vous ne contrôlez ni le design, ni l'ordre, ni le contenu. C'est leur plateforme — pas votre espace.</div>
+      </div>
+      <div class="problem-card reveal stagger-3">
+        <div class="problem-num">03</div>
+        <div class="problem-title">Créer un site seul prend des semaines</div>
+        <div class="problem-desc">WordPress, Wix, Squarespace — n'importe quelle solution "simple" demande des heures de configuration et une maintenance continue. Ce temps est mieux passé à faire de la recherche.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FEATURES
+══════════════════════════════════ -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="features-layout">
+      <div>
+        <div class="reveal">
+          <div class="section-eyebrow"><div class="eyebrow-bar"></div>Ce que vous obtenez</div>
+          <h2 class="section-h">Tout ce dont un chercheur a besoin, au même endroit.</h2>
+          <p class="section-lead">Votre hub académique complet, construit par notre équipe en 48h à partir de votre CV.</p>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item reveal stagger-1">
+            <div class="feature-icon">🔗</div>
+            <div><div class="feature-title">Votre propre adresse</div><div class="feature-desc">prenom-nom.corpusdigitalis.com — une URL professionnelle que vous envoyez à un éditeur, un journaliste, une commission de recrutement.</div></div>
+          </div>
+          <div class="feature-item reveal stagger-2">
+            <div class="feature-icon">📚</div>
+            <div><div class="feature-title">Publications complètes</div><div class="feature-desc">Articles, ouvrages, chapitres — avec DOI, résumé, lien HAL ou Scholar. Mis à jour sur demande tout au long de l'année.</div></div>
+          </div>
+          <div class="feature-item reveal stagger-3">
+            <div class="feature-icon">🎓</div>
+            <div><div class="feature-title">Enseignements structurés</div><div class="feature-desc">Vos cours par niveau, supports téléchargeables. Vos étudiants y accèdent — vos collègues aussi.</div></div>
+          </div>
+          <div class="feature-item reveal stagger-4">
+            <div class="feature-icon">📅</div>
+            <div><div class="feature-title">Interventions & agenda</div><div class="feature-desc">Colloques, conférences, séminaires. Visibles publiquement — les organisateurs vous trouvent avant même de chercher.</div></div>
+          </div>
+          <div class="feature-item reveal stagger-5">
+            <div class="feature-icon">🤝</div>
+            <div><div class="feature-title">Service Conciergerie</div><div class="feature-desc">Vous envoyez votre CV PDF. Notre équipe construit votre profil complet en 48h. Vous validez avant la mise en ligne.</div></div>
+          </div>
+          <div class="feature-item reveal stagger-6">
+            <div class="feature-icon">🔍</div>
+            <div><div class="feature-title">Indexé sur corpusdigitalis.com</div><div class="feature-desc">Searchable par nom, discipline ou publication. Visible sans compte, sans abonnement.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="browser-wrap reveal-right">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="browser-dots"><div class="brd brd-r"></div><div class="brd brd-y"></div><div class="brd brd-g"></div></div>
+            <div class="browser-url-bar">marc-lebrun.corpusdigitalis.com</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-top">
+              <div class="mock-ava">👨‍🔬</div>
+              <div><div class="mock-name-txt">Marc Lebrun</div><div class="mock-role-txt">PR · Physique Théorique · Polytechnique</div></div>
+            </div>
+            <div class="mock-bio">Professeur des universités en physique théorique à l'École Polytechnique. Membre de l'Institut Universitaire de France. Spécialiste de la théorie des champs quantiques.</div>
+            <div class="mock-sec">Publications récentes</div>
+            <div class="mock-row"><div class="mock-row-dot"></div>Quantum field perturbation methods — <em>Phys. Rev. D</em>, 2025</div>
+            <div class="mock-row"><div class="mock-row-dot"></div>Non-perturbative effects in gauge theories — <em>JHEP</em>, 2024</div>
+            <div class="mock-row"><div class="mock-row-dot"></div>Renormalization group flow — <em>Nuclear Phys. B</em>, 2023</div>
+            <div class="mock-sec" style="margin-top:14px">Prochaines interventions</div>
+            <div class="mock-row"><div class="mock-row-dot"></div>Strings 2026 — Buenos Aires — Juil. 2026</div>
+            <div class="mock-chips">
+              <span class="mock-chip">Physique</span>
+              <span class="mock-chip">IUF</span>
+              <span class="mock-chip">Polytechnique</span>
+              <span class="mock-chip chip-outline">EN · FR</span>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:.74rem;color:var(--pale);margin-top:12px">Profil actif · construit en 47h à partir d'un CV</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     AUDIENCE
+══════════════════════════════════ -->
+<section class="section" id="audience">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow"><div class="eyebrow-bar"></div>Pour qui</div>
+      <h2 class="section-h">Conçu pour trois profils<br>d'académiques exigeants.</h2>
+      <p class="section-lead">Une solution taillée pour le monde académique français — pas un outil généraliste adapté à la va-vite.</p>
+    </div>
+    <div class="audience-grid">
+      <div class="audience-card reveal stagger-1">
+        <span class="audience-emoji">👩‍🏫</span>
+        <div class="audience-role">Maître·sse de conférences</div>
+        <div class="audience-inst">MCF titulaire ou stagiaire</div>
+        <div class="pain-box">Sa page labo est gérée par l'informatique universitaire. Elle ne peut pas la mettre à jour, ni l'emmener en changeant de poste.</div>
+        <div class="win-box">Un hub personnel qu'elle contrôle, qui la suit toute sa carrière, et qui pèse dans les commissions de recrutement.</div>
+      </div>
+      <div class="audience-card reveal stagger-2">
+        <span class="audience-emoji">🔬</span>
+        <div class="audience-role">Professeur des universités</div>
+        <div class="audience-inst">PR ou Directeur de recherche</div>
+        <div class="pain-box">Ses publications sont dispersées entre HAL, ResearchGate, et un ancien site perso abandonné depuis 2019.</div>
+        <div class="win-box">Une vitrine consolidée, à jour, professionnelle — pour un éditeur, un journaliste ou une délégation internationale.</div>
+      </div>
+      <div class="audience-card reveal stagger-3">
+        <span class="audience-emoji">🎓</span>
+        <div class="audience-role">Post-doc en recherche de poste</div>
+        <div class="audience-inst">Post-doc, ATER, Chargé·e de recherche</div>
+        <div class="pain-box">En compétition pour un poste MCF ou CR, il doit se démarquer. Son dossier est solide, sa présence en ligne est inexistante.</div>
+        <div class="win-box">L'URL dans sa signature email, c'est sa carte de visite permanente. Elle parle pour lui avant que la commission lise son dossier.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     STATS ANIMÉES
+══════════════════════════════════ -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-block reveal">
+      <div class="stat-num"><span class="counter" data-target="48">0</span>h</div>
+      <div class="stat-label">De votre CV à votre site live</div>
+    </div>
+    <div class="stat-block reveal stagger-1">
+      <div class="stat-num"><span class="counter" data-target="97">0</span>€</div>
+      <div class="stat-label">Offre de lancement par an</div>
+    </div>
+    <div class="stat-block reveal stagger-2">
+      <div class="stat-num"><span class="counter" data-target="20">0</span></div>
+      <div class="stat-label">Places disponibles au total</div>
+    </div>
+    <div class="stat-block reveal stagger-3">
+      <div class="stat-num"><span class="counter" data-target="0">0</span></div>
+      <div class="stat-label">Ligne de code à écrire</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     PROCESS
+══════════════════════════════════ -->
+<section id="process" class="section-dark">
+  <div class="process-inner">
+    <div>
+      <div class="reveal">
+        <div class="section-eyebrow"><div class="eyebrow-bar"></div>Comment ça marche</div>
+        <h2 class="section-h">De l'inscription à votre site live en 48h ouvrées.</h2>
+        <p class="section-lead">Quatre étapes. Vous intervenez deux fois.</p>
+      </div>
+      <div class="process-steps">
+        <div class="process-step reveal stagger-1">
+          <div class="ps-num">1</div>
+          <div class="ps-content">
+            <div class="ps-title">Vous réservez votre place</div>
+            <div class="ps-desc">Paiement sécurisé par Stripe. Facture disponible immédiatement. Votre place est confirmée en 60 secondes.</div>
+            <span class="ps-pill">⏱ 2 minutes</span>
+          </div>
+        </div>
+        <div class="process-step reveal stagger-2">
+          <div class="ps-num">2</div>
+          <div class="ps-content">
+            <div class="ps-title">Vous envoyez votre CV PDF</div>
+            <div class="ps-desc">Par email à contact@corpusdigitalis.com. Pas de formulaire, pas d'interface à remplir. Un email avec votre CV suffit.</div>
+            <span class="ps-pill">⏱ 5 minutes</span>
+          </div>
+        </div>
+        <div class="process-step reveal stagger-3">
+          <div class="ps-num">3</div>
+          <div class="ps-content">
+            <div class="ps-title">Notre équipe construit votre profil</div>
+            <div class="ps-desc">Publications, cours, bio, photo — tout est extrait et mis en forme. Délai garanti : 48 heures ouvrées.</div>
+            <span class="ps-pill">⏱ 48h — on s'occupe de tout</span>
+          </div>
+        </div>
+        <div class="process-step reveal stagger-4">
+          <div class="ps-num">4</div>
+          <div class="ps-content">
+            <div class="ps-title">Vous validez — votre site est en ligne</div>
+            <div class="ps-desc">Prévisualisation avant mise en ligne. Si quelque chose ne vous convient pas, on ajuste sans surcoût.</div>
+            <span class="ps-pill">⏱ Validation en 24h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="process-aside reveal-right">
+      <div class="pa-label">Ce que vous faites</div>
+      <div class="pa-row"><div class="pa-icon">💳</div><div><div class="pa-text">Payer 97€ une fois par an</div><div class="pa-time">2 min</div></div></div>
+      <div class="pa-row"><div class="pa-icon">📎</div><div><div class="pa-text">Envoyer votre CV par email</div><div class="pa-time">5 min</div></div></div>
+      <div class="pa-row"><div class="pa-icon">✅</div><div><div class="pa-text">Valider le profil avant mise en ligne</div><div class="pa-time">10 min</div></div></div>
+      <div style="height:1px;background:rgba(255,255,255,.06);margin:20px 0"></div>
+      <div class="pa-label">Ce qu'on fait</div>
+      <div class="pa-row"><div class="pa-icon">📋</div><div class="pa-text">Extraire et structurer vos publications, cours et interventions depuis le CV</div></div>
+      <div class="pa-row"><div class="pa-icon">🎨</div><div class="pa-text">Configurer et personnaliser votre espace sur la plateforme</div></div>
+      <div class="pa-row"><div class="pa-icon">🌐</div><div class="pa-text">Mettre en ligne sur votre sous-domaine personnel sécurisé</div></div>
+      <div class="pa-row"><div class="pa-icon">🔄</div><div class="pa-text">Gérer les mises à jour et ajustements tout au long de l'année</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     DÉMOS
+══════════════════════════════════ -->
+<section id="demos">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow"><div class="eyebrow-bar"></div>Profils actifs</div>
+      <h2 class="section-h">Trois profils déjà en ligne.</h2>
+      <p class="section-lead">Construits à partir de CV réels en moins de 48h. Accessibles sans compte.</p>
+    </div>
+    <div class="demos-grid">
+      <div class="demo-card reveal stagger-1">
+        <div class="demo-card-header"><div class="demo-card-avatar">👩‍🎓</div></div>
+        <div class="demo-card-body">
+          <div class="demo-name">Claire Martins</div>
+          <div class="demo-role">MCF Sociologie · Paris 1 · LISE-CNRS</div>
+          <div class="demo-desc">4 publications, 3 cours actifs, 3 interventions à venir. Profil complet construit en 47h à partir de son CV et de ses syllabi.</div>
+          <a href="https://claire-martins.corpusdigitalis.com" class="demo-link" target="_blank">Voir le profil →</a>
+        </div>
+      </div>
+      <div class="demo-card reveal stagger-2">
+        <div class="demo-card-header" style="background:#1e3a5f"><div class="demo-card-avatar">👨‍🔬</div></div>
+        <div class="demo-card-body">
+          <div class="demo-name">Marc Lebrun</div>
+          <div class="demo-role">PR Physique · Polytechnique · IUF</div>
+          <div class="demo-desc">4 publications avec DOI, 2 cours avec supports téléchargeables, 3 conférences internationales. Profil bilingue FR/EN.</div>
+          <a href="https://marc-lebrun.corpusdigitalis.com" class="demo-link" target="_blank">Voir le profil →</a>
+        </div>
+      </div>
+      <div class="demo-card reveal stagger-3">
+        <div class="demo-card-header" style="background:#2d1b4e"><div class="demo-card-avatar">👩‍💻</div></div>
+        <div class="demo-card-body">
+          <div class="demo-name">Sofia Andrieu</div>
+          <div class="demo-role">Post-doc Linguistique · EHESS</div>
+          <div class="demo-desc">En recherche de poste MCF — son profil est sa carte de visite numérique pour les commissions de recrutement.</div>
+          <a href="https://sofia-andrieu.corpusdigitalis.com" class="demo-link" target="_blank">Voir le profil →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     TARIFS
+══════════════════════════════════ -->
+<section class="section" id="tarifs" style="background:white;border-top:1px solid var(--border)">
+  <div class="tarifs-inner">
+    <div class="reveal">
+      <div class="section-eyebrow"><div class="eyebrow-bar"></div>Tarifs</div>
+      <h2 class="section-h">Simple. Transparent.<br>Moins qu'une nuit d'hôtel en conférence.</h2>
+      <p class="section-lead">Un seul tarif annuel. Tout inclus. Aucun surcoût caché. Facture immédiate pour vos frais de labo.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card featured reveal-left">
+        <div class="price-badge">Offre Early Bird</div>
+        <div class="price-label price-label-light">Lancement — jusqu'au 31 mai</div>
+        <div class="price-num price-num-light">97€ <span class="price-strike">144€</span></div>
+        <div class="price-period price-period-light">par an TTC — facture incluse</div>
+        <ul class="price-list price-list-light">
+          <li><span class="pl-check pl-check-light">✓</span>Votre sous-domaine prenom-nom.corpusdigitalis.com</li>
+          <li><span class="pl-check pl-check-light">✓</span>Publications, cours, interventions, bio</li>
+          <li><span class="pl-check pl-check-light">✓</span>Service Conciergerie — profil construit en 48h</li>
+          <li><span class="pl-check pl-check-light">✓</span>Mises à jour illimitées sur l'année</li>
+          <li><span class="pl-check pl-check-light">✓</span>HTTPS · données hébergées en Europe (UE)</li>
+          <li><span class="pl-check pl-check-light">✓</span>Facture immédiate — intégrable frais de labo</li>
+        </ul>
+        <a href="early-bird.html" class="price-btn price-btn-light">Réserver ma place →</a>
+        <div class="price-note">Limité aux 20 premiers inscrits ou jusqu'au 31 mai 2026.</div>
+      </div>
+      <div class="price-card reveal-right" style="align-self:center">
+        <div class="price-label">Tarif standard — après Early Bird</div>
+        <div class="price-num">144€</div>
+        <div class="price-period">par an TTC</div>
+        <ul class="price-list">
+          <li><span class="pl-check">✓</span>Toutes les fonctionnalités incluses</li>
+          <li><span class="pl-check">✓</span>Renouvellement annuel simple</li>
+          <li><span class="pl-check">✓</span>Données restituées sur demande si résiliation</li>
+        </ul>
+        <a href="mailto:contact@corpusdigitalis.com" class="price-btn price-btn-dark">Me contacter</a>
+        <div class="price-note-dark" style="font-size:.74rem;color:var(--pale);margin-top:14px;font-style:italic">Le tarif Early Bird reste figé à 97€ pour les premiers inscrits — même lors des renouvellements.</div>
+      </div>
+    </div>
+    <div class="labo-note reveal" style="margin-top:32px">
+      <div class="labo-note-title">Remboursable sur les crédits de fonctionnement de labo</div>
+      <div class="labo-note-body">Dans la plupart des universités françaises, les dépenses inférieures à 150€ passent en frais de fonctionnement sans validation hiérarchique. 97€, c'est moins qu'une nuit d'hôtel en conférence — et contrairement à l'hôtel, ça reste.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     À PROPOS
+══════════════════════════════════ -->
+<section id="apropos">
+  <div class="apropos-inner">
+    <div class="reveal-left">
+      <div class="section-eyebrow"><div class="eyebrow-bar"></div>À propos</div>
+      <p class="apropos-quote">"J'ai construit Corpus Digitalis parce que j'ai vu des chercheurs brillants être <strong>invisibles en ligne</strong> — non par manque d'ambition, mais par manque d'outils adaptés à leur réalité."</p>
+      <p class="apropos-body">Le monde académique produit les meilleurs esprits. Il mérite une infrastructure de présentation à la hauteur. Corpus Digitalis est conçu pour ça — pas pour les startups, pas pour les freelances, mais spécifiquement pour les chercheurs et enseignants-chercheurs qui ont besoin d'une présence professionnelle sérieuse.</p>
+      <p class="apropos-body">Chaque profil est construit manuellement, avec soin, par une équipe qui comprend les codes de l'académie.</p>
+      <div class="apropos-sig">
+        <div class="apropos-ava">TA</div>
+        <div>
+          <div class="apropos-sig-name">Tristan ARBONA</div>
+          <div class="apropos-sig-role">Fondateur · Corpus Digitalis · Bordeaux</div>
+        </div>
+      </div>
+    </div>
+    <div class="apropos-aside reveal-right">
+      <div class="vision-label">La vision</div>
+      <div class="vision-item">
+        <div class="vision-ico">🎯</div>
+        <div><div class="vision-title">Un profil pour toute une carrière</div><div class="vision-desc">Votre adresse vous suit de votre premier post-doc jusqu'à votre chaire. Aucune dépendance à une institution.</div></div>
+      </div>
+      <div class="vision-item">
+        <div class="vision-ico">🇪🇺</div>
+        <div><div class="vision-title">Souveraineté des données</div><div class="vision-desc">Données hébergées en Europe. Vous êtes propriétaire de votre contenu. Résiliation = restitution complète.</div></div>
+      </div>
+      <div class="vision-item">
+        <div class="vision-ico">🔬</div>
+        <div><div class="vision-title">Construit pour l'académie</div><div class="vision-desc">DOI, HAL, Scholar, BibTeX, ORCID — chaque fonctionnalité est pensée pour les pratiques réelles des chercheurs.</div></div>
+      </div>
+      <div class="vision-item">
+        <div class="vision-ico">📈</div>
+        <div><div class="vision-title">Un réseau qui grandit</div><div class="vision-desc">Chaque profil enrichit le répertoire corpusdigitalis.com. Plus il y a de profils, plus la plateforme devient un lieu de référence.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FAQ
+══════════════════════════════════ -->
+<section id="faq">
+  <div class="faq-inner">
+    <div class="reveal">
+      <div class="section-eyebrow"><div class="eyebrow-bar"></div>Questions fréquentes</div>
+      <h2 class="section-h" style="margin-bottom:40px">Tout ce que vous voulez savoir.</h2>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">Est-ce que 97€ rentre dans mes frais de fonctionnement de labo ?<span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Dans la plupart des universités françaises, les dépenses inférieures à 150€ passent en frais de fonctionnement sans validation hiérarchique. 97€, c'est moins qu'une nuit d'hôtel en conférence — et contrairement à l'hôtel, ça reste. Demandez à votre gestionnaire de labo : la réponse est presque toujours oui.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">J'ai déjà une page sur le site de mon labo. Pourquoi en avoir une autre ?<span class="faq-arrow">▾</span></div>
+      <div class="faq-a">La page de votre labo est gérée par le service informatique de votre université. Elle ne vous appartient pas, disparaît quand vous changez de poste, et ne met pas en valeur votre travail. Corpus Digitalis, c'est votre espace, sous votre contrôle, qui vous suit partout dans votre carrière.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">Que se passe-t-il si je veux résilier ?<span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Si vous ne renouvelez pas, votre profil est mis hors ligne. Vos données vous sont restituées sur simple demande, dans un format standard. Aucune suppression automatique sans votre accord explicite.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">Est-ce que je peux mettre à jour mon profil moi-même ?<span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Oui. Vous disposez d'un accès administrateur pour modifier votre bio, ajouter des publications, des cours et des interventions directement depuis votre navigateur. Pour les modifications plus lourdes, notre équipe s'en charge sur demande.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">Quand est-ce que mon site sera en ligne après le paiement ?<span class="faq-arrow">▾</span></div>
+      <div class="faq-a">48 heures ouvrées après réception de votre CV PDF. Vous recevrez d'abord un lien de prévisualisation pour valider le contenu. La mise en ligne se fait ensuite immédiatement après votre validation.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">Que se passe-t-il après la période Early Bird ?<span class="faq-arrow">▾</span></div>
+      <div class="faq-a">Le renouvellement se fait au tarif standard de 144€/an. Votre adresse et votre contenu restent identiques. Bonne nouvelle : les premiers inscrits bénéficient du tarif Early Bird (97€) lors de leurs renouvellements également.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     CTA FINAL
+══════════════════════════════════ -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="cta-eye reveal">Offre Early Bird · 20 places · Fermeture le 31 mai 2026</div>
+    <h2 class="cta-title reveal">Il reste 20 places.<br>Votre profil peut être<br>live dans 48h.</h2>
+    <p class="cta-sub reveal">97€/an. Facture immédiate. Vous nous envoyez votre CV — on s'occupe du reste.</p>
+    <div class="cta-actions reveal">
+      <a href="early-bird.html" class="btn-cta-main">Réserver ma place — 97€/an →</a>
+      <a href="mailto:contact@corpusdigitalis.com" class="btn-cta-sec">Une question ?</a>
+    </div>
+    <div class="cta-trust reveal">
+      <div class="cta-trust-item">🔒 Paiement sécurisé Stripe</div>
+      <div class="cta-trust-item">🇪🇺 Données hébergées en UE</div>
+      <div class="cta-trust-item">📄 Facture immédiate</div>
+      <div class="cta-trust-item">↩ Ajustements gratuits</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo-txt">Corpus Digitalis PRO</div>
+    <div class="footer-links">
+      <a href="mentions-legales.html" class="footer-link">Mentions légales</a>
+      <a href="cgu.html" class="footer-link">CGU</a>
+      <a href="confidentialite.html" class="footer-link">Confidentialité</a>
+      <a href="mailto:contact@corpusdigitalis.com" class="footer-link">Contact</a>
+      <a href="early-bird.html" class="footer-link">Early Bird</a>
+    </div>
+    <div class="footer-copy">© 2026 Corpus Digitalis · SIREN 104 423 710 · Bordeaux</div>
+  </div>
+</footer>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu">
+  <button onclick="toggleMenu()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:white;cursor:pointer;font-size:1.5rem;">✕</button>
+  <a href="#features" class="nav-link" style="font-size:1.1rem;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)" onclick="toggleMenu()">Le produit</a>
+  <a href="#audience" class="nav-link" style="font-size:1.1rem;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)" onclick="toggleMenu()">Pour qui</a>
+  <a href="#tarifs" class="nav-link" style="font-size:1.1rem;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)" onclick="toggleMenu()">Tarifs</a>
+  <a href="#apropos" class="nav-link" style="font-size:1.1rem;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07)" onclick="toggleMenu()">À propos</a>
+  <a href="early-bird.html" style="margin-top:24px;background:white;color:#0f172a;font-weight:700;padding:16px;border-radius:8px;text-align:center;text-decoration:none;font-size:.9rem">Réserver ma place — 97€/an →</a>
+</div>
+
+<script>
+// ── NAV SCROLL & SCROLL SPY ──
+const nav = document.getElementById('main-nav');
+const links = document.querySelectorAll('.nav-link[data-section]');
+const sections = ['features','audience','tarifs','apropos','process','demos'];
+window.addEventListener('scroll',()=>{
+  const y = window.scrollY;
+  if(y>60) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+  // progress bar
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('progress-bar').style.width = (y/h*100) + '%';
+  // scroll spy
+  let cur='';
+  sections.forEach(id=>{ const el=document.getElementById(id); if(el&&y>=el.offsetTop-120) cur=id; });
+  links.forEach(l=>{ l.classList.toggle('active', l.dataset.section===cur); });
+},{passive:true});
+
+// ── INTERSECTION OBSERVER (ANIMATIONS) ──
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>io.observe(el));
+
+// ── COUNTER ANIMATION ──
+const counterIO = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting && !e.target.dataset.done){
+      e.target.dataset.done='1';
+      const target=parseInt(e.target.dataset.target);
+      const dur=1200; const step=16; const steps=Math.ceil(dur/step);
+      let i=0;
+      const t=setInterval(()=>{
+        i++;
+        const v=Math.round(target*Math.min(i/steps,1));
+        e.target.textContent=v;
+        if(i>=steps) clearInterval(t);
+      },step);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('.counter').forEach(el=>counterIO.observe(el));
+
+// ── FAQ ──
+window.toggleFaq = (el) => { el.parentElement.classList.toggle('open'); };
+
+// ── MOBILE MENU ──
+window.toggleMenu = () => {
+  document.getElementById('mobile-menu').classList.toggle('open');
+};
+
+// ── SMOOTH SCROLL FOR NAV LINKS ──
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href').slice(1);
+    const el=document.getElementById(id);
+    if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
+});
+</script>
+</body>
+</html>

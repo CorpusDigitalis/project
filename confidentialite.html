@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politique de Confidentialité — Corpus Digitalis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --accent: #0f172a;
+            --accent-light: #1e293b;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e8e4de;
+            --card: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar {
+            background: var(--accent);
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-logo {
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: white;
+            text-decoration: none;
+        }
+        .topbar-logo span {
+            background: white;
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            margin-left: 8px;
+        }
+        .topbar-back {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topbar-back:hover { color: white; }
+        .page-hero {
+            background: var(--accent);
+            color: white;
+            padding: 50px 5% 40px;
+        }
+        .page-hero .tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+        }
+        .page-hero h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+        .page-hero .meta { font-size: 0.82rem; color: rgba(255,255,255,0.55); }
+        .legal-tabs {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0 5%;
+            display: flex;
+            overflow-x: auto;
+        }
+        .legal-tab {
+            padding: 16px 24px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            color: var(--muted);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .legal-tab:hover { color: var(--accent); }
+        .legal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 5% 80px;
+            width: 100%;
+            flex: 1;
+        }
+        .sidebar { padding-right: 40px; }
+        .sidebar-nav { position: sticky; top: 30px; }
+        .sidebar-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+        .sidebar-nav a {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 7px 0 7px 12px;
+            border-left: 2px solid var(--border);
+            transition: color 0.2s, border-color 0.2s, padding 0.2s;
+            line-height: 1.4;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            padding-left: 16px;
+        }
+        .content { min-width: 0; }
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .section-header {
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            transition: background 0.15s;
+        }
+        .section-header:hover { background: #fdfcfb; }
+        .section-header-left { display: flex; align-items: center; gap: 14px; }
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .chevron {
+            width: 18px;
+            height: 18px;
+            color: var(--muted);
+            transition: transform 0.25s;
+            flex-shrink: 0;
+        }
+        .section.open .chevron { transform: rotate(180deg); }
+        .section-body { display: none; padding: 0 24px 24px; border-top: 1px solid var(--border); }
+        .section.open .section-body { display: block; }
+        .section-body p, .section-body li {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.75;
+        }
+        .section-body ul { padding-left: 20px; margin: 12px 0; }
+        .section-body li { margin-bottom: 6px; }
+        .section-body strong { color: var(--accent); }
+        .section-body p + p { margin-top: 10px; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.82rem;
+        }
+        .data-table th {
+            background: var(--accent);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+        }
+        .data-table th:first-child { border-radius: 8px 0 0 0; }
+        .data-table th:last-child { border-radius: 0 8px 0 0; }
+        .data-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            color: var(--text);
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:nth-child(even) td { background: #fdfcfb; }
+
+        .rights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .right-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .right-name {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .right-desc {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .partner-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .partner-row:last-child { border-bottom: none; }
+        .partner-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        .partner-name { font-weight: 700; font-size: 0.88rem; color: var(--accent); }
+        .partner-detail { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+        .partner-badge {
+            margin-top: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            display: inline-block;
+            letter-spacing: 0.04em;
+        }
+        .badge-eu { background: #dcfce7; color: #166534; }
+        .badge-us { background: #fef9c3; color: #854d0e; }
+
+        .highlight-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 16px;
+            margin: 14px 0;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+        .page-footer {
+            background: var(--accent);
+            color: rgba(255,255,255,0.5);
+            padding: 30px 5%;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .page-footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: color 0.2s;
+        }
+        .page-footer a:hover { color: white; }
+        .page-footer .footer-links { margin-bottom: 12px; }
+        @media (max-width: 768px) {
+            .layout { grid-template-columns: 1fr; padding: 20px 4% 60px; }
+            .sidebar { display: none; }
+            .page-hero h1 { font-size: 1.8rem; }
+            .rights-grid { grid-template-columns: 1fr; }
+            .data-table { font-size: 0.75rem; }
+            .data-table th, .data-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topbar">
+    <a href="/" class="topbar-logo">Corpus Digitalis <span>PRO</span></a>
+    <a href="/" class="topbar-back">← Retour à l'accueil</a>
+</nav>
+
+<div class="page-hero">
+    <div class="tag">Protection des données</div>
+    <h1>Politique de Confidentialité</h1>
+    <div class="meta">Dernière mise à jour : 6 mai 2026 &nbsp;·&nbsp; Conforme au RGPD (Règlement UE 2016/679)</div>
+</div>
+
+<div class="legal-tabs">
+    <a href="mentions-legales.html" class="legal-tab">Mentions légales</a>
+    <a href="cgu.html" class="legal-tab">Conditions d'utilisation</a>
+    <a href="confidentialite.html" class="legal-tab active">Confidentialité &amp; RGPD</a>
+</div>
+
+<div class="layout">
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <div class="sidebar-title">Sur cette page</div>
+            <a href="#qui">Qui traite vos données</a>
+            <a href="#quelles-donnees">Données collectées</a>
+            <a href="#bases">Bases légales</a>
+            <a href="#partenaires">Sous-traitants</a>
+            <a href="#droits">Vos droits</a>
+            <a href="#securite">Sécurité</a>
+            <a href="#contact-rgpd">Contact DPO</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <div class="section open" id="qui">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🏢</div>
+                    <div class="section-title">Qui traite vos données ?</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p><strong>Responsable du traitement</strong> au sens du RGPD :</p>
+                <p style="margin-top: 10px;"><strong>Corpus Digitalis</strong>, micro-entreprise individuelle, numéro SIREN <strong>104 423 710</strong>, exploitant : <strong>Tristan ARBONA</strong>, 3 rue des Anciens Combattants d'Afrique, 33800 Bordeaux, France.</p>
+                <p style="margin-top: 10px;">Contact : <a href="mailto:contact@corpusdigitalis.com" style="color: var(--accent); font-weight: 600;">contact@corpusdigitalis.com</a></p>
+                <div class="highlight-box" style="margin-top: 14px;">
+                    <strong>Notre engagement</strong>
+                    Nous ne vendons jamais vos données à des tiers. Nous ne pratiquons pas de publicité ciblée. Vos données servent uniquement à faire fonctionner votre profil Corpus Digitalis.
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="quelles-donnees">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">📂</div>
+                    <div class="section-title">Quelles données collectons-nous ?</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px; overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Donnée</th>
+                            <th>Finalité</th>
+                            <th>Conservation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Nom, prénom</strong></td><td>Création et affichage du profil</td><td>Abonnement + 1 an</td></tr>
+                        <tr><td><strong>Email</strong></td><td>Authentification, communications</td><td>Abonnement + 1 an</td></tr>
+                        <tr><td><strong>Institution, discipline</strong></td><td>Contenu du profil public</td><td>Abonnement + 1 an</td></tr>
+                        <tr><td><strong>Photo de profil</strong></td><td>Affichage sur le site</td><td>Jusqu'à suppression</td></tr>
+                        <tr><td><strong>CV PDF</strong></td><td>Service Conciergerie uniquement</td><td>Supprimé après traitement</td></tr>
+                        <tr><td><strong>Publications, cours, interventions</strong></td><td>Contenu du profil</td><td>Abonnement + 1 an</td></tr>
+                        <tr><td><strong>Données de paiement</strong></td><td>Facturation — traitées par Stripe</td><td>10 ans (obligations légales)</td></tr>
+                        <tr><td><strong>Logs de connexion</strong></td><td>Sécurité du service</td><td>1 an</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 0.8rem; color: var(--muted); margin-top: 8px;">Corpus Digitalis ne traite jamais vos numéros de carte bancaire — ils sont gérés exclusivement par Stripe (certifié PCI-DSS Niveau 1).</p>
+            </div>
+        </div>
+
+        <div class="section" id="bases">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">📜</div>
+                    <div class="section-title">Sur quelle base légale traitons-nous vos données ?</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Le RGPD impose que chaque traitement de données repose sur une base légale identifiée (article 6 du RGPD). Voici les nôtres :</p>
+                <ul style="margin-top: 12px;">
+                    <li><strong>Exécution du contrat (art. 6.1.b)</strong> — traitement des données nécessaires à la fourniture du service : nom, email, contenu du profil, hébergement.</li>
+                    <li><strong>Consentement (art. 6.1.a)</strong> — photo de profil, CV pour la conciergerie. Vous pouvez retirer ce consentement à tout moment.</li>
+                    <li><strong>Obligation légale (art. 6.1.c)</strong> — conservation des données de facturation pendant 10 ans (Code de commerce).</li>
+                    <li><strong>Intérêt légitime (art. 6.1.f)</strong> — logs de connexion pour la sécurité du service.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="partenaires">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🤝</div>
+                    <div class="section-title">Qui a accès à vos données ? (Sous-traitants)</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Corpus Digitalis ne partage vos données qu'avec les sous-traitants techniques strictement nécessaires au fonctionnement du service :</p>
+                <div style="margin-top: 14px;">
+                    <div class="partner-row">
+                        <div class="partner-dot"></div>
+                        <div>
+                            <div class="partner-name">Supabase Inc.</div>
+                            <div class="partner-detail">Base de données, authentification, stockage de fichiers</div>
+                            <span class="partner-badge badge-eu">Données hébergées EU-West (Irlande)</span>
+                        </div>
+                    </div>
+                    <div class="partner-row">
+                        <div class="partner-dot"></div>
+                        <div>
+                            <div class="partner-name">Stripe Inc.</div>
+                            <div class="partner-detail">Traitement des paiements — ne voit jamais vos autres données personnelles</div>
+                            <span class="partner-badge badge-us">USA — PCI-DSS Level 1 · DPA signé</span>
+                        </div>
+                    </div>
+                    <div class="partner-row">
+                        <div class="partner-dot"></div>
+                        <div>
+                            <div class="partner-name">GitHub / Microsoft</div>
+                            <div class="partner-detail">Hébergement des pages publiques (frontend statique uniquement)</div>
+                            <span class="partner-badge badge-us">USA — Standard Contractual Clauses</span>
+                        </div>
+                    </div>
+                    <div class="partner-row">
+                        <div class="partner-dot"></div>
+                        <div>
+                            <div class="partner-name">Cloudflare Inc.</div>
+                            <div class="partner-detail">CDN et DNS — peut traiter temporairement les adresses IP des visiteurs</div>
+                            <span class="partner-badge badge-eu">Réseau européen disponible · DPA disponible</span>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top: 14px; font-size: 0.85rem; color: var(--muted);">Tous ces sous-traitants disposent de garanties contractuelles conformes au RGPD (clauses contractuelles types ou décision d'adéquation).</p>
+            </div>
+        </div>
+
+        <div class="section" id="droits">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🔑</div>
+                    <div class="section-title">Vos droits sur vos données</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Le RGPD vous confère les droits suivants, que vous pouvez exercer à tout moment :</p>
+                <div class="rights-grid" style="margin-top: 14px;">
+                    <div class="right-card">
+                        <div class="right-name">Droit d'accès</div>
+                        <div class="right-desc">Obtenir une copie de toutes vos données que nous détenons, dans les 30 jours.</div>
+                    </div>
+                    <div class="right-card">
+                        <div class="right-name">Droit de rectification</div>
+                        <div class="right-desc">Corriger des données inexactes ou incomplètes vous concernant.</div>
+                    </div>
+                    <div class="right-card">
+                        <div class="right-name">Droit à l'effacement</div>
+                        <div class="right-desc">Demander la suppression de votre compte et de vos données ("droit à l'oubli").</div>
+                    </div>
+                    <div class="right-card">
+                        <div class="right-name">Droit à la portabilité</div>
+                        <div class="right-desc">Exporter vos données dans un format lisible (JSON ou CSV) pour les transférer.</div>
+                    </div>
+                    <div class="right-card">
+                        <div class="right-name">Droit d'opposition</div>
+                        <div class="right-desc">Vous opposer à certains traitements fondés sur notre intérêt légitime.</div>
+                    </div>
+                    <div class="right-card">
+                        <div class="right-name">Droit de réclamation</div>
+                        <div class="right-desc">Saisir la CNIL si vous estimez que vos droits n'ont pas été respectés.</div>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top: 14px;">
+                    <strong>Comment exercer vos droits</strong>
+                    Envoyez un email à <a href="mailto:contact@corpusdigitalis.com" style="color: var(--accent); font-weight: 600;">contact@corpusdigitalis.com</a> en précisant votre demande. Délai de réponse : <strong>30 jours maximum</strong> (délai légal RGPD).
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="securite">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🔒</div>
+                    <div class="section-title">Sécurité de vos données</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <ul>
+                    <li><strong>Chiffrement en transit :</strong> toutes les communications entre votre navigateur et nos serveurs sont chiffrées via HTTPS (TLS 1.2+).</li>
+                    <li><strong>Chiffrement au repos :</strong> les données stockées dans Supabase (AWS) sont chiffrées au repos (AES-256).</li>
+                    <li><strong>Contrôle d'accès :</strong> chaque utilisateur accède uniquement à ses propres données grâce aux politiques Row-Level Security (RLS) de Supabase.</li>
+                    <li><strong>Aucun stockage de mots de passe en clair :</strong> les mots de passe sont hashés par Supabase Auth (bcrypt).</li>
+                    <li><strong>Isolation des données de paiement :</strong> Corpus Digitalis ne stocke jamais de données bancaires — elles restent chez Stripe.</li>
+                </ul>
+                <p style="margin-top: 12px; font-size: 0.85rem; color: var(--muted);">En cas de violation de données pouvant affecter vos droits et libertés, nous vous notifierons et notifierons la CNIL dans les 72 heures, conformément à l'article 33 du RGPD.</p>
+            </div>
+        </div>
+
+        <div class="section" id="contact-rgpd">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">✉️</div>
+                    <div class="section-title">Contact &amp; DPO</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p><strong>Délégué à la Protection des Données (DPO) :</strong></p>
+                <p style="margin-top: 8px;">Tristan ARBONA — <a href="mailto:contact@corpusdigitalis.com" style="color: var(--accent); font-weight: 600;">contact@corpusdigitalis.com</a></p>
+                <p style="margin-top: 12px;">Si vous estimez que votre demande n'a pas été traitée correctement, vous avez le droit de déposer une plainte auprès de la :</p>
+                <p style="margin-top: 8px;"><strong>CNIL — Commission Nationale de l'Informatique et des Libertés</strong><br>
+                3 Place de Fontenoy, 75007 Paris — <a href="https://www.cnil.fr" target="_blank" rel="noopener" style="color:var(--accent);">www.cnil.fr</a></p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<footer class="page-footer">
+    <div class="footer-links">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgu.html">CGU</a>
+        <a href="confidentialite.html">Confidentialité</a>
+        <a href="mailto:contact@corpusdigitalis.com">Contact</a>
+    </div>
+    <div>© 2026 Corpus Digitalis — Tous droits réservés</div>
+</footer>
+
+<script>
+    function toggle(header) {
+        const section = header.parentElement;
+        section.classList.toggle('open');
+    }
+    const sections = document.querySelectorAll('.section[id]');
+    const links = document.querySelectorAll('.sidebar-nav a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+        links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
+    });
+</script>
+</body>
+</html>

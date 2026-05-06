@@ -1,692 +1,136 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corpus Digitalis — La plateforme des chercheurs universitaires</title>
-    <meta name="description" content="Découvrez les profils complets de chercheurs, leurs publications, cours et interventions. Recherchez par nom ou par sujet.">
-    <meta property="og:title" content="Corpus Digitalis — La plateforme des chercheurs universitaires">
-    <meta property="og:description" content="Trouvez n'importe quel chercheur. En 3 secondes.">
-    <meta property="og:type" content="website">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Corpus Digitalis</title>
+
+    <!-- Open Graph — mis à jour dynamiquement après chargement du profil -->
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="Corpus Digitalis">
+    <meta property="og:title" content="Profil académique — Corpus Digitalis">
+    <meta property="og:description" content="Hub académique professionnel sur Corpus Digitalis.">
+    <meta property="og:image" content="https://corpusdigitalis.com/og-cover.jpg">
     <meta property="og:url" content="https://corpusdigitalis.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@CorpusDigitalis">
+    <meta name="twitter:title" content="Profil académique — Corpus Digitalis">
+    <meta name="twitter:description" content="Hub académique professionnel sur Corpus Digitalis.">
+    <meta name="twitter:image" content="https://corpusdigitalis.com/og-cover.jpg">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --bg:        #0f0f0f;
-            --bg-card:   #161616;
-            --bg-card2:  #1a1a1a;
-            --text:      #f0f0f0;
-            --muted:     #888;
-            --muted2:    #555;
-            --border:    #242424;
-            --border2:   #2e2e2e;
-            --accent:    #ffffff;
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* ─── HEADER ─────────────────────────────── */
-        header {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 6%;
-            background: rgba(15,15,15,0.85);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .logo {
-            font-weight: 600; font-size: 0.9rem;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--text); text-decoration: none;
-        }
-
-        .header-nav { display: flex; gap: 24px; align-items: center; }
-
-        .nav-link {
-            color: var(--muted); text-decoration: none;
-            font-size: 0.875rem; font-weight: 500;
-            transition: color .2s;
-        }
-        .nav-link:hover { color: var(--text); }
-
-        .nav-cta {
-            background: var(--accent); color: #0f0f0f;
-            text-decoration: none; font-size: 0.82rem; font-weight: 700;
-            padding: 9px 20px; border-radius: 6px;
-            letter-spacing: 0.02em; transition: opacity .2s;
-        }
-        .nav-cta:hover { opacity: 0.88; }
-
-        /* ─── HERO ───────────────────────────────── */
-        .hero {
-            min-height: 100vh;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            text-align: center;
-            padding: 130px 6% 90px;
-            position: relative;
-        }
-
-        .hero-eyebrow {
-            font-size: 0.7rem; font-weight: 600;
-            letter-spacing: 0.18em; text-transform: uppercase;
-            color: var(--muted); margin-bottom: 26px;
-        }
-
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.6rem, 5.5vw, 4.8rem);
-            font-weight: 700; line-height: 1.08;
-            letter-spacing: -0.025em;
-            max-width: 760px; margin-bottom: 22px;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(0.95rem, 1.8vw, 1.1rem);
-            color: var(--muted); max-width: 480px;
-            font-weight: 300; line-height: 1.75;
-            margin-bottom: 48px;
-        }
-
-        /* Search */
-        .search-wrap {
-            width: 100%; max-width: 580px;
-            position: relative; margin-bottom: 22px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: var(--bg-card);
-            border: 1px solid var(--border2);
-            border-radius: 14px;
-            padding: 17px 62px 17px 22px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem; color: var(--text);
-            outline: none;
-            transition: border-color .2s, box-shadow .2s;
-        }
-        .search-input::placeholder { color: var(--muted2); }
-        .search-input:focus {
-            border-color: rgba(255,255,255,0.18);
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
-        }
-
-        .search-btn {
-            position: absolute; right: 10px; top: 50%;
-            transform: translateY(-50%);
-            background: var(--accent); color: var(--bg);
-            border: none; border-radius: 9px;
-            width: 42px; height: 42px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: opacity .2s; flex-shrink: 0;
-        }
-        .search-btn:hover { opacity: 0.85; }
-
-        /* Dropdown */
-        .search-dropdown {
-            position: absolute; top: calc(100% + 10px);
-            left: 0; right: 0;
-            background: var(--bg-card2);
-            border: 1px solid var(--border2);
-            border-radius: 14px;
-            overflow: hidden; display: none; z-index: 100;
-            box-shadow: 0 24px 50px rgba(0,0,0,0.6);
-        }
-        .search-dropdown.open { display: block; }
-
-        .result-row {
-            display: flex; align-items: center; gap: 14px;
-            padding: 13px 18px; text-decoration: none; color: var(--text);
-            border-bottom: 1px solid var(--border);
-            transition: background .15s;
-        }
-        .result-row:last-of-type { border-bottom: none; }
-        .result-row:hover { background: rgba(255,255,255,0.03); }
-
-        .result-av {
-            width: 38px; height: 38px; border-radius: 50%;
-            object-fit: cover; background: var(--border); flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 600; color: var(--muted);
-        }
-        .result-av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-
-        .result-info { flex: 1; text-align: left; min-width: 0; }
-        .result-name { font-weight: 600; font-size: 0.9rem; }
-        .result-sub  { font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .result-empty { padding: 22px 18px; text-align: center; color: var(--muted); font-size: 0.875rem; }
-        .result-invite {
-            padding: 11px 18px; text-align: center;
-            border-top: 1px solid var(--border);
-            font-size: 0.78rem; color: var(--muted);
-        }
-        .result-invite a { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
-
-        .hero-cta-link {
-            font-size: 0.84rem; color: var(--muted);
-        }
-        .hero-cta-link a {
-            color: var(--text); text-decoration: underline;
-            text-underline-offset: 3px; transition: opacity .2s;
-        }
-        .hero-cta-link a:hover { opacity: 0.7; }
-
-        /* Scroll indicator */
-        .scroll-hint {
-            position: absolute; bottom: 36px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center;
-            gap: 6px; color: var(--muted2); font-size: 0.7rem;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            animation: bob 2s ease-in-out infinite;
-        }
-        @keyframes bob { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(5px); } }
-
-        /* ─── CARROUSEL ──────────────────────────── */
-        .section-carousel {
-            padding: 72px 0;
-            border-top: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .section-label {
-            text-align: center; font-size: 0.68rem; font-weight: 600;
-            letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--muted); margin-bottom: 36px;
-        }
-
-        .carousel-outer { overflow: hidden; position: relative; }
-
-        /* Dégradé sur les bords */
-        .carousel-outer::before,
-        .carousel-outer::after {
-            content: ''; position: absolute; top: 0; bottom: 0; width: 120px; z-index: 10;
-            pointer-events: none;
-        }
-        .carousel-outer::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
-        .carousel-outer::after  { right: 0; background: linear-gradient(to left,  var(--bg), transparent); }
-
-        .carousel-track {
-            display: flex; gap: 16px;
-            width: max-content;
-            animation: slide 38s linear infinite;
-        }
-        .carousel-track:hover { animation-play-state: paused; }
-
-        @keyframes slide {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
-        }
-
-        .prof-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px 18px;
-            width: 190px; flex-shrink: 0;
-            text-decoration: none; color: var(--text);
-            transition: transform .25s, border-color .25s;
-        }
-        .prof-card:hover { transform: translateY(-4px); border-color: var(--border2); }
-
-        .pc-avatar {
-            width: 50px; height: 50px; border-radius: 50%;
-            object-fit: cover; background: var(--border);
-            margin-bottom: 12px; display: flex;
-            align-items: center; justify-content: center;
-            font-size: 1rem; font-weight: 700; color: var(--muted);
-            overflow: hidden;
-        }
-        .pc-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
-        .pc-name {
-            font-weight: 600; font-size: 0.85rem;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            margin-bottom: 4px;
-        }
-        .pc-title {
-            font-size: 0.72rem; color: var(--muted); line-height: 1.45;
-            display: -webkit-box; -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical; overflow: hidden;
-        }
-
-        /* ─── STATS ──────────────────────────────── */
-        .section-stats { padding: 80px 6%; border-top: 1px solid var(--border); }
-
-        .stats-row {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            max-width: 660px; margin: 0 auto;
-            border: 1px solid var(--border); border-radius: 14px;
-            overflow: hidden; background: var(--border);
-            gap: 1px;
-        }
-
-        .stat-box {
-            background: var(--bg); padding: 38px 24px; text-align: center;
-        }
-
-        .stat-n {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.6rem; font-weight: 700;
-            line-height: 1; margin-bottom: 8px;
-        }
-
-        .stat-l {
-            font-size: 0.75rem; color: var(--muted);
-            letter-spacing: 0.04em; line-height: 1.4;
-        }
-
-        /* ─── COMMENT ÇA MARCHE ──────────────────── */
-        .section-how {
-            padding: 100px 6%; border-top: 1px solid var(--border);
-        }
-
-        .s-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8rem, 3vw, 2.6rem);
-            font-weight: 700; text-align: center;
-            margin-bottom: 56px; letter-spacing: -0.02em;
-        }
-
-        .how-grid {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 20px; max-width: 900px; margin: 0 auto;
-        }
-
-        .how-col {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px; padding: 34px;
-        }
-
-        .how-tag {
-            font-size: 0.66rem; font-weight: 700;
-            letter-spacing: 0.15em; text-transform: uppercase;
-            color: var(--muted); margin-bottom: 24px;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .how-tag::after {
-            content: ''; flex: 1; height: 1px; background: var(--border);
-        }
-
-        .how-step {
-            display: flex; gap: 14px; margin-bottom: 20px; align-items: flex-start;
-        }
-        .how-step:last-child { margin-bottom: 0; }
-
-        .step-num {
-            width: 26px; height: 26px; border-radius: 50%;
-            border: 1px solid var(--border2);
-            font-size: 0.72rem; font-weight: 700; color: var(--muted);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; margin-top: 1px;
-        }
-
-        .step-body { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
-        .step-body strong { color: var(--text); font-weight: 600; }
-
-        /* ─── CTA FINAL ──────────────────────────── */
-        .section-cta {
-            padding: 120px 6%; text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        .cta-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 3.6rem);
-            font-weight: 700; letter-spacing: -0.025em;
-            margin-bottom: 14px; line-height: 1.1;
-        }
-
-        .cta-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 40px; }
-
-        .btn-main {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: var(--accent); color: var(--bg);
-            text-decoration: none; font-weight: 700; font-size: 0.95rem;
-            padding: 17px 38px; border-radius: 9px;
-            letter-spacing: 0.01em;
-            transition: opacity .2s, transform .2s;
-        }
-        .btn-main:hover { opacity: 0.88; transform: translateY(-2px); }
-
-        .cta-fine {
-            margin-top: 16px; font-size: 0.76rem; color: var(--muted2);
-        }
-
-        /* ─── FOOTER ─────────────────────────────── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 36px 6%;
-            display: flex; align-items: center; justify-content: space-between;
-            flex-wrap: wrap; gap: 18px;
-        }
-
-        .ft-logo {
-            font-weight: 600; font-size: 0.82rem;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        .ft-links { display: flex; gap: 22px; flex-wrap: wrap; }
-        .ft-links a {
-            color: var(--muted2); text-decoration: none;
-            font-size: 0.78rem; transition: color .2s;
-        }
-        .ft-links a:hover { color: var(--muted); }
-
-        .ft-copy { font-size: 0.76rem; color: #333; }
-
-        /* ─── RESPONSIVE ─────────────────────────── */
-        @media (max-width: 768px) {
-            header { padding: 15px 5%; }
-            .nav-link { display: none; }
-
-            .how-grid { grid-template-columns: 1fr; }
-
-            .stats-row { grid-template-columns: 1fr; }
-            .stat-box { padding: 26px 20px; }
-
-            footer { flex-direction: column; text-align: center; }
-            .ft-links { justify-content: center; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=8" />
+    <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════
-     HEADER
-════════════════════════════════════════ -->
-<header>
-    <a href="/" class="logo">Corpus Digitalis</a>
-    <nav class="header-nav">
-        <a href="login.html" class="nav-link">Connexion</a>
-        <a href="signup.html" class="nav-cta">Créer mon espace</a>
-    </nav>
-</header>
+    <header>
+        <nav>
+            <a href="#" class="site-name no-animation" style="cursor: default;">
+                <span id="skeleton-name" class="skeleton-box skeleton-glass" style="width: 140px; height: 24px; border-radius: 4px;"></span>
+                <span id="real-site-name" style="display: none;"></span>
+            </a>
+            <div class="dynamic-nav" id="header-menu"></div>
+        </nav>
+    </header>
 
-<!-- ════════════════════════════════════════
-     HERO
-════════════════════════════════════════ -->
-<section class="hero">
-    <p class="hero-eyebrow">La plateforme des chercheurs universitaires</p>
-    <h1 class="hero-title">Trouvez n'importe quel chercheur.<br>En 3 secondes.</h1>
-    <p class="hero-subtitle">Recherchez par nom, par publication ou par domaine — accédez au profil complet d'un chercheur en un instant.</p>
+    <div class="container">
+        <div class="hero-section">
+            
+            <div id="skeleton-img" class="skeleton-box skeleton-img"></div>
+            <img id="profil-img" src="" alt="Portrait" style="display: none;" />
+            
+            <div class="description" id="skeleton-desc">
+                <h1 style="margin-top: -8px; margin-bottom: 20px;">
+                    <span class="skeleton-box" style="width: 60%; height: 2.3rem; border-radius: 6px;"></span>
+                </h1>
+                <p id="profil-desc-skeleton" style="font-size: 1.05rem; margin: 0; line-height: 1.6;">
+                    <span class="skeleton-box" style="width: 100%; height: 1.05rem; margin-bottom: 8px;"></span><br>
+                    <span class="skeleton-box" style="width: 100%; height: 1.05rem; margin-bottom: 8px;"></span><br>
+                    <span class="skeleton-box" style="width: 70%; height: 1.05rem;"></span>
+                </p>
+            </div>
 
-    <div class="search-wrap">
-        <input
-            type="text"
-            class="search-input"
-            id="search-input"
-            placeholder="Pr. Marie Curie, mécanique quantique..."
-            autocomplete="off"
-            spellcheck="false"
-        >
-        <button class="search-btn" id="search-btn" aria-label="Rechercher">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-        <div class="search-dropdown" id="search-dropdown"></div>
-    </div>
+            <div class="description" id="real-desc" style="display: none;">
+                <h1 id="main-title"></h1>
+                <p id="profil-desc"></p>
+            </div>
 
-    <p class="hero-cta-link">Vous êtes chercheur ? <a href="signup.html">Créez votre espace en 5 minutes →</a></p>
-
-    <div class="scroll-hint">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-    </div>
-</section>
-
-<!-- ════════════════════════════════════════
-     CARROUSEL PROFS  (masqué si < 3 actifs)
-════════════════════════════════════════ -->
-<section class="section-carousel" id="section-carousel" style="display:none;">
-    <p class="section-label">Ils sont déjà sur Corpus Digitalis</p>
-    <div class="carousel-outer">
-        <div class="carousel-track" id="carousel-track"></div>
-    </div>
-</section>
-
-<!-- ════════════════════════════════════════
-     STATS  (masqué si < 5 actifs)
-════════════════════════════════════════ -->
-<section class="section-stats" id="section-stats" style="display:none;">
-    <div class="stats-row">
-        <div class="stat-box">
-            <div class="stat-n" id="stat-profs">—</div>
-            <div class="stat-l">Chercheurs<br>référencés</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-n" id="stat-pubs">—</div>
-            <div class="stat-l">Publications<br>indexées</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-n" id="stat-events">—</div>
-            <div class="stat-l">Interventions<br>recensées</div>
         </div>
     </div>
-</section>
 
-<!-- ════════════════════════════════════════
-     COMMENT ÇA MARCHE
-════════════════════════════════════════ -->
-<section class="section-how">
-    <h2 class="s-title">Comment ça marche ?</h2>
-    <div class="how-grid">
-        <div class="how-col">
-            <div class="how-tag">Pour les visiteurs</div>
-            <div class="how-step">
-                <span class="step-num">1</span>
-                <span class="step-body"><strong>Cherchez</strong> un nom, une publication ou un domaine de recherche.</span>
-            </div>
-            <div class="how-step">
-                <span class="step-num">2</span>
-                <span class="step-body"><strong>Accédez</strong> au profil complet — CV, cours, publications, interventions.</span>
-            </div>
-            <div class="how-step">
-                <span class="step-num">3</span>
-                <span class="step-body"><strong>Contactez, téléchargez</strong> ses supports et explorez ses travaux directement.</span>
-            </div>
-        </div>
-        <div class="how-col">
-            <div class="how-tag">Pour les chercheurs</div>
-            <div class="how-step">
-                <span class="step-num">1</span>
-                <span class="step-body"><strong>Créez votre compte</strong> et renseignez votre profil en 5 minutes.</span>
-            </div>
-            <div class="how-step">
-                <span class="step-num">2</span>
-                <span class="step-body"><strong>Publiez</strong> vos travaux, vos cours et vos interventions depuis votre tableau de bord.</span>
-            </div>
-            <div class="how-step">
-                <span class="step-num">3</span>
-                <span class="step-body"><strong>Votre sous-domaine</strong> est en ligne — trouvable par le monde entier.</span>
-            </div>
-        </div>
-    </div>
-</section>
+    <footer>
+        <div class="footer-links" id="footer-list"></div>
+        <div class="corpus-tm">™ CorpusDigitalis</div>
+    </footer>
 
-<!-- ════════════════════════════════════════
-     CTA FINAL
-════════════════════════════════════════ -->
-<section class="section-cta">
-    <h2 class="cta-title">Votre carrière mérite<br>une adresse.</h2>
-    <p class="cta-sub">Rejoignez les premiers chercheurs sur la plateforme.</p>
-    <a href="signup.html" class="btn-main">
-        Créer mon espace — 144€/an
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-    <p class="cta-fine">Remboursable sur crédits de laboratoire · Résiliation à tout moment</p>
-</section>
+    <script type="module">
+        import { initLayout } from './theme.js';
 
-<!-- ════════════════════════════════════════
-     FOOTER
-════════════════════════════════════════ -->
-<footer>
-    <span class="ft-logo">Corpus Digitalis</span>
-    <div class="ft-links">
-        <a href="#">Mentions légales</a>
-        <a href="#">Confidentialité</a>
-        <a href="mailto:contact@corpusdigitalis.com">Contact</a>
-    </div>
-    <span class="ft-copy">© 2026 Corpus Digitalis</span>
-</footer>
+        function setOGTags(prof) {
+            const slug = window.location.hostname.split('.')[0];
+            const url = `https://${slug}.corpusdigitalis.com`;
+            const title = (prof.title || prof.name || 'Profil académique') + ' — Corpus Digitalis';
+            const desc = (prof.bio || 'Découvrez le profil académique sur Corpus Digitalis.').substring(0, 200);
+            const set = (sel, attr, val) => {
+                let el = document.querySelector(sel);
+                if (!el) { el = document.createElement('meta'); document.head.appendChild(el); }
+                el.setAttribute(attr, val);
+            };
+            document.title = title;
+            set('meta[property="og:title"]',       'content', title);
+            set('meta[property="og:description"]', 'content', desc);
+            set('meta[property="og:url"]',         'content', url);
+            set('meta[name="twitter:title"]',      'content', title);
+            set('meta[name="twitter:description"]','content', desc);
+            if (prof.image_url) {
+                set('meta[property="og:image"]',   'content', prof.image_url);
+                set('meta[name="twitter:image"]',  'content', prof.image_url);
+                set('meta[name="twitter:card"]',   'content', 'summary_large_image');
+            }
+        }
 
-<!-- ════════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════ -->
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+        async function loadHome() {
+            const prof = await initLayout();
+            if (!prof) return;
+            setOGTags(prof);
 
-const sb = createClient(
-    'https://recgvfcuxsonkhlyctrw.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSb1SFb5Q2X7zsjE'
-);
+            const skelName = document.getElementById('skeleton-name');
+            if (skelName) skelName.style.display = 'none';
 
-/* ── RECHERCHE ─────────────────────────── */
-const input    = document.getElementById('search-input');
-const dropdown = document.getElementById('search-dropdown');
-const btnSearch = document.getElementById('search-btn');
-let timer = null;
+            const realNameEl = document.getElementById('real-site-name');
+            if (realNameEl) {
+                realNameEl.innerText = prof.name;
+                realNameEl.style.display = 'inline';
+            }
 
-input.addEventListener('input', () => {
-    clearTimeout(timer);
-    const q = input.value.trim();
-    if (q.length < 2) { dropdown.classList.remove('open'); return; }
-    timer = setTimeout(() => search(q), 300);
-});
+            const skelImg = document.getElementById('skeleton-img');
+            if (skelImg) skelImg.style.display = 'none';
 
-input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { clearTimeout(timer); search(input.value.trim()); }
-    if (e.key === 'Escape') dropdown.classList.remove('open');
-});
+            const skelDesc = document.getElementById('skeleton-desc');
+            if (skelDesc) skelDesc.style.display = 'none';
 
-btnSearch.addEventListener('click', () => search(input.value.trim()));
+            const realDesc = document.getElementById('real-desc');
+            if (realDesc) realDesc.style.display = 'flex';
 
-document.addEventListener('click', e => {
-    if (!e.target.closest('.search-wrap')) dropdown.classList.remove('open');
-});
+            const imgEl = document.getElementById('profil-img');
+            if (prof.image_url && imgEl) {
+                imgEl.src = prof.image_url;
+                imgEl.style.display = 'block';
+            }
 
-async function search(q) {
-    if (!q) return;
-    dropdown.innerHTML = '<div class="result-empty">Recherche en cours…</div>';
-    dropdown.classList.add('open');
+            const titleEl = document.getElementById('main-title');
+            if (titleEl) {
+                titleEl.innerText = prof.title ? prof.title : prof.name; 
+            }
 
-    const { data, error } = await sb
-        .from('profiles')
-        .select('name, slug, title, image_url')
-        .ilike('name', `%${q}%`)
-        .eq('is_active', true)
-        .limit(6);
-
-    if (error || !data || data.length === 0) {
-        dropdown.innerHTML = `
-            <div class="result-empty">Aucun profil trouvé pour « ${escHtml(q)} ».</div>
-            <div class="result-invite">Ce chercheur n'est pas encore inscrit. <a href="signup.html">L'inviter →</a></div>`;
-        return;
-    }
-
-    dropdown.innerHTML = data.map(p => {
-        const init = p.name.split(' ').map(n => n[0] || '').join('').slice(0,2).toUpperCase();
-        const av = p.image_url
-            ? `<div class="result-av"><img src="${p.image_url}" alt="${escHtml(p.name)}" loading="lazy"></div>`
-            : `<div class="result-av">${init}</div>`;
-        return `<a href="profil.html?prof=${p.slug}" class="result-row">
-            ${av}
-            <div class="result-info">
-                <div class="result-name">${escHtml(p.name)}</div>
-                <div class="result-sub">${escHtml(p.title || 'Chercheur')}</div>
-            </div>
-            <span style="color:var(--muted);font-size:.9rem;">→</span>
-        </a>`;
-    }).join('');
-}
-
-/* ── CARROUSEL ─────────────────────────── */
-async function loadCarousel() {
-    const { data } = await sb
-        .from('profiles')
-        .select('name, slug, title, image_url')
-        .eq('is_active', true)
-        .limit(20);
-
-    if (!data || data.length < 3) return;
-
-    const makeCard = p => {
-        const init = p.name.split(' ').map(n => n[0] || '').join('').slice(0,2).toUpperCase();
-        const av = p.image_url
-            ? `<div class="pc-avatar"><img src="${p.image_url}" alt="${escHtml(p.name)}" loading="lazy"></div>`
-            : `<div class="pc-avatar">${init}</div>`;
-        return `<a href="profil.html?prof=${p.slug}" class="prof-card">${av}
-            <div class="pc-name">${escHtml(p.name)}</div>
-            <div class="pc-title">${escHtml(p.title || 'Chercheur')}</div>
-        </a>`;
-    };
-
-    const track = document.getElementById('carousel-track');
-    track.innerHTML = [...data, ...data].map(makeCard).join('');
-    document.getElementById('section-carousel').style.display = 'block';
-}
-
-/* ── STATS ─────────────────────────────── */
-async function loadStats() {
-    const { count: nProfs } = await sb
-        .from('profiles')
-        .select('id', { count: 'exact', head: true })
-        .eq('is_active', true);
-
-    if (!nProfs || nProfs < 5) return;
-
-    const [{ count: nPubs }, { count: nEvents }] = await Promise.all([
-        sb.from('publications').select('id', { count: 'exact', head: true }),
-        sb.from('interventions').select('id', { count: 'exact', head: true })
-    ]);
-
-    document.getElementById('stat-profs').textContent  = nProfs  || 0;
-    document.getElementById('stat-pubs').textContent   = nPubs   || 0;
-    document.getElementById('stat-events').textContent = nEvents || 0;
-    document.getElementById('section-stats').style.display = 'block';
-}
-
-/* ── PLACEHOLDER ANIMÉ ─────────────────── */
-const ph = [
-    'Pr. Marie Curie…',
-    'Mécanique quantique…',
-    'Université Paris-Sorbonne…',
-    'Économie comportementale…',
-    'Dr. Jean Dupont…',
-    'Intelligence artificielle…'
-];
-let pi = 0;
-setInterval(() => {
-    if (document.activeElement !== input) {
-        pi = (pi + 1) % ph.length;
-        input.placeholder = ph[pi];
-    }
-}, 2800);
-
-/* ── UTILITAIRE ────────────────────────── */
-function escHtml(s) {
-    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-/* ── INIT ──────────────────────────────── */
-loadCarousel();
-loadStats();
-</script>
+            const bioEl = document.getElementById('profil-desc');
+            if (prof.bio && bioEl) {
+                bioEl.innerText = prof.bio;
+            }
+        }
+        loadHome();
+    </script>
+    
 </body>
 </html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditions Générales d'Utilisation — Corpus Digitalis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --accent: #0f172a;
+            --accent-light: #1e293b;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e8e4de;
+            --card: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--accent);
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: white;
+            text-decoration: none;
+        }
+        .topbar-logo span {
+            background: white;
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            margin-left: 8px;
+        }
+        .topbar-back {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topbar-back:hover { color: white; }
+
+        .page-hero {
+            background: var(--accent);
+            color: white;
+            padding: 50px 5% 40px;
+        }
+        .page-hero .tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+        }
+        .page-hero h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+        .page-hero .meta {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .legal-tabs {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0 5%;
+            display: flex;
+            overflow-x: auto;
+        }
+        .legal-tab {
+            padding: 16px 24px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            color: var(--muted);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .legal-tab:hover { color: var(--accent); }
+        .legal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 0;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 5% 80px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .sidebar { padding-right: 40px; }
+        .sidebar-nav { position: sticky; top: 30px; }
+        .sidebar-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+        .sidebar-nav a {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 7px 0 7px 12px;
+            border-left: 2px solid var(--border);
+            transition: color 0.2s, border-color 0.2s, padding 0.2s;
+            line-height: 1.4;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            padding-left: 16px;
+        }
+
+        .content { min-width: 0; }
+
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .section-header {
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            transition: background 0.15s;
+        }
+        .section-header:hover { background: #fdfcfb; }
+        .section-header-left { display: flex; align-items: center; gap: 14px; }
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .chevron {
+            width: 18px;
+            height: 18px;
+            color: var(--muted);
+            transition: transform 0.25s;
+            flex-shrink: 0;
+        }
+        .section.open .chevron { transform: rotate(180deg); }
+        .section-body { display: none; padding: 0 24px 24px; border-top: 1px solid var(--border); }
+        .section.open .section-body { display: block; }
+
+        .section-body p, .section-body li {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.75;
+        }
+        .section-body ul, .section-body ol { padding-left: 20px; margin: 12px 0; }
+        .section-body li { margin-bottom: 6px; }
+        .section-body strong { color: var(--accent); }
+        .section-body p + p { margin-top: 10px; }
+
+        .highlight-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 16px;
+            margin: 14px 0;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+        .highlight-box.warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .highlight-box strong { display: block; margin-bottom: 4px; }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .price-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .price-card.featured {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+        .price-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+        .price-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .price-period {
+            font-size: 0.78rem;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+        .page-footer {
+            background: var(--accent);
+            color: rgba(255,255,255,0.5);
+            padding: 30px 5%;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .page-footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: color 0.2s;
+        }
+        .page-footer a:hover { color: white; }
+        .page-footer .footer-links { margin-bottom: 12px; }
+
+        @media (max-width: 768px) {
+            .layout { grid-template-columns: 1fr; padding: 20px 4% 60px; }
+            .sidebar { display: none; }
+            .page-hero h1 { font-size: 1.8rem; }
+            .price-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topbar">
+    <a href="/" class="topbar-logo">Corpus Digitalis <span>PRO</span></a>
+    <a href="/" class="topbar-back">← Retour à l'accueil</a>
+</nav>
+
+<div class="page-hero">
+    <div class="tag">Contrat d'utilisation</div>
+    <h1>Conditions Générales d'Utilisation</h1>
+    <div class="meta">Dernière mise à jour : 6 mai 2026 &nbsp;·&nbsp; Contrat B2B — Droit français applicable</div>
+</div>
+
+<div class="legal-tabs">
+    <a href="mentions-legales.html" class="legal-tab">Mentions légales</a>
+    <a href="cgu.html" class="legal-tab active">Conditions d'utilisation</a>
+    <a href="confidentialite.html" class="legal-tab">Confidentialité &amp; RGPD</a>
+</div>
+
+<div class="layout">
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <div class="sidebar-title">Sur cette page</div>
+            <a href="#objet">Le service</a>
+            <a href="#abonnement">Abonnement &amp; tarifs</a>
+            <a href="#obligations">Vos obligations</a>
+            <a href="#nos-obligations">Nos engagements</a>
+            <a href="#contenu">Vos contenus</a>
+            <a href="#resiliation">Résiliation</a>
+            <a href="#responsabilite">Responsabilité</a>
+            <a href="#droit">Droit applicable</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <div class="section open" id="objet">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">📋</div>
+                    <div class="section-title">Le service Corpus Digitalis</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Corpus Digitalis est une <strong>plateforme SaaS (Software as a Service)</strong> de création et d'hébergement de pages web académiques professionnelles. En souscrivant un abonnement, vous obtenez :</p>
+                <ul style="margin: 14px 0;">
+                    <li>Un sous-domaine personnalisé <code style="background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 0.85em;">prenom-nom.corpusdigitalis.com</code></li>
+                    <li>Un espace d'administration pour gérer votre profil, publications, cours et interventions</li>
+                    <li>L'hébergement sécurisé de vos données et contenus</li>
+                    <li>La visibilité sur la page d'accueil <strong>corpusdigitalis.com</strong> (moteur de recherche académique)</li>
+                    <li>Un service de conciergerie optionnel pour la saisie initiale de votre profil</li>
+                </ul>
+                <div class="highlight-box">
+                    <strong>Contrat professionnel (B2B)</strong>
+                    Les présentes CGU constituent un contrat entre deux professionnels. Le droit de rétractation de 14 jours prévu pour les consommateurs ne s'applique pas aux professionnels agissant dans le cadre de leur activité académique.
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="abonnement">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">💳</div>
+                    <div class="section-title">Abonnement &amp; tarifs</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <div class="price-grid">
+                    <div class="price-card featured">
+                        <div class="price-label">Early Bird — Offre limitée</div>
+                        <div class="price-amount">97€</div>
+                        <div class="price-period">TTC / an</div>
+                    </div>
+                    <div class="price-card">
+                        <div class="price-label">Tarif standard</div>
+                        <div class="price-amount">144€</div>
+                        <div class="price-period">TTC / an</div>
+                    </div>
+                </div>
+                <ul style="margin-top: 14px;">
+                    <li>Le paiement est annuel, en une fois, via la plateforme sécurisée <strong>Stripe</strong>.</li>
+                    <li>Corpus Digitalis ne stocke aucune donnée bancaire — vos informations de paiement sont gérées exclusivement par Stripe (certifié PCI-DSS Niveau 1).</li>
+                    <li>Le renouvellement est actuellement <strong>manuel</strong> : vous recevrez un rappel par email 30 jours avant l'échéance.</li>
+                    <li>L'offre Early Bird est non-reconductible au même tarif : le renouvellement se fera au tarif standard en vigueur.</li>
+                </ul>
+                <div class="highlight-box warning" style="margin-top: 14px;">
+                    <strong>Aucun remboursement pro-rata</strong>
+                    En cas de résiliation en cours d'année, aucun remboursement de la période restante n'est effectué. L'accès reste actif jusqu'à la date d'expiration de l'abonnement.
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="obligations">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">📌</div>
+                    <div class="section-title">Vos obligations en tant qu'utilisateur</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>En utilisant Corpus Digitalis, vous vous engagez à :</p>
+                <ul style="margin-top: 12px;">
+                    <li><strong>Exactitude :</strong> fournir des informations exactes, à jour, et représentatives de votre activité académique réelle.</li>
+                    <li><strong>Légalité des contenus :</strong> ne publier aucun contenu illicite, diffamatoire, portant atteinte à des droits de tiers, ou contraire à l'éthique académique.</li>
+                    <li><strong>Droits sur les publications :</strong> garantir disposer des droits nécessaires sur tout contenu publié (notamment les publications scientifiques dont les droits peuvent appartenir en partie à des éditeurs).</li>
+                    <li><strong>Confidentialité des identifiants :</strong> maintenir la sécurité de vos identifiants de connexion et ne pas les partager.</li>
+                    <li><strong>Usage personnel :</strong> ne pas revendre ou sous-licencier l'accès à votre espace à des tiers.</li>
+                </ul>
+                <p style="margin-top:12px;">Tout manquement grave à ces obligations peut entraîner la suspension du service avec un préavis de 48 heures.</p>
+            </div>
+        </div>
+
+        <div class="section" id="nos-obligations">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🤝</div>
+                    <div class="section-title">Nos engagements envers vous</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <ul>
+                    <li><strong>Disponibilité :</strong> objectif de disponibilité de 99,5% du temps (hors maintenances planifiées annoncées 48h à l'avance).</li>
+                    <li><strong>Sécurité des données :</strong> hébergement sécurisé sur infrastructure certifiée, chiffrement des données en transit (HTTPS) et au repos.</li>
+                    <li><strong>Conservation :</strong> vos données sont conservées pendant toute la durée de l'abonnement et 1 an après résiliation.</li>
+                    <li><strong>Support :</strong> réponse aux demandes par email sous 48 heures ouvrées.</li>
+                    <li><strong>Notification :</strong> toute modification importante des CGU vous sera notifiée par email 30 jours avant entrée en vigueur.</li>
+                    <li><strong>Non-divulgation :</strong> vos données ne sont jamais vendues à des tiers. Voir notre <a href="confidentialite.html" style="color: var(--accent); font-weight: 600;">Politique de Confidentialité</a>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="contenu">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🖊️</div>
+                    <div class="section-title">Propriété de vos contenus</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Vous conservez l'<strong>intégralité des droits</strong> sur tous les contenus que vous publiez sur votre profil (textes, photos, publications, CV, etc.).</p>
+                <p style="margin-top:10px;">En publiant ces contenus, vous accordez à Corpus Digitalis une <strong>licence d'affichage non-exclusive, gratuite et révocable</strong> pour rendre votre profil accessible en ligne sur corpusdigitalis.com et son réseau de sous-domaines.</p>
+                <p style="margin-top:10px;">Corpus Digitalis peut utiliser votre profil à des fins de démonstration commerciale (captures d'écran, vidéos de présentation) <strong>uniquement avec votre accord préalable explicite</strong>.</p>
+                <div class="highlight-box" style="margin-top:14px;">
+                    <strong>Portabilité des données</strong>
+                    À tout moment, vous pouvez demander l'export de l'ensemble de vos données en format structuré (JSON/CSV) à l'adresse <a href="mailto:contact@corpusdigitalis.com" style="color:var(--accent);">contact@corpusdigitalis.com</a>.
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="resiliation">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🔚</div>
+                    <div class="section-title">Résiliation &amp; suppression du compte</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p><strong>Résiliation à votre initiative :</strong> vous pouvez résilier à tout moment par email à <a href="mailto:contact@corpusdigitalis.com" style="color:var(--accent);">contact@corpusdigitalis.com</a>. L'accès reste actif jusqu'à la fin de la période payée. Aucun remboursement pro-rata.</p>
+                <p style="margin-top:10px;"><strong>Résiliation à notre initiative :</strong> en cas de violation grave des CGU, nous pouvons suspendre l'accès immédiatement. Dans les autres cas, un préavis de 30 jours s'applique.</p>
+                <p style="margin-top:10px;"><strong>Suppression des données :</strong> vos données personnelles sont supprimées dans un délai de 90 jours après la résiliation. Sur demande explicite, ce délai est réduit à 30 jours.</p>
+                <p style="margin-top:10px;"><strong>Votre sous-domaine</strong> (<code style="background: var(--bg); padding: 2px 6px; border-radius: 4px; font-size: 0.85em;">prenom-nom.corpusdigitalis.com</code>) cesse d'être actif à la date d'expiration de l'abonnement.</p>
+            </div>
+        </div>
+
+        <div class="section" id="responsabilite">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">⚖️</div>
+                    <div class="section-title">Limitation de responsabilité</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <ul>
+                    <li>Corpus Digitalis <strong>n'est pas responsable</strong> des contenus publiés par les utilisateurs.</li>
+                    <li>Notre responsabilité est <strong>limitée au montant de l'abonnement payé</strong> sur la période en cours en cas de préjudice démontré.</li>
+                    <li>Nous ne sommes pas responsables des interruptions de service dues à des tiers (Supabase, Cloudflare, Stripe, GitHub, ou force majeure).</li>
+                    <li>Corpus Digitalis ne garantit pas que votre profil atteindra un niveau spécifique de visibilité ou de référencement.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="droit">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🏛️</div>
+                    <div class="section-title">Droit applicable &amp; juridiction</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Les présentes CGU sont régies par le <strong>droit français</strong>.</p>
+                <p style="margin-top:10px;">En cas de litige non résolu amiablement dans un délai de 30 jours, les parties s'engagent à recourir à la médiation avant toute action judiciaire.</p>
+                <p style="margin-top:10px;">À défaut, le tribunal compétent est le <strong>Tribunal de Commerce de Bordeaux</strong>.</p>
+                <p style="margin-top:14px; font-size: 0.85rem; color: var(--muted);">Corpus Digitalis se réserve le droit de modifier ces CGU. Toute modification substantielle sera notifiée par email 30 jours avant entrée en vigueur. La poursuite de l'utilisation du service après cette date vaut acceptation des nouvelles CGU.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<footer class="page-footer">
+    <div class="footer-links">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgu.html">CGU</a>
+        <a href="confidentialite.html">Confidentialité</a>
+        <a href="mailto:contact@corpusdigitalis.com">Contact</a>
+    </div>
+    <div>© 2026 Corpus Digitalis — Tous droits réservés</div>
+</footer>
+
+<script>
+    function toggle(header) {
+        const section = header.parentElement;
+        section.classList.toggle('open');
+    }
+    const sections = document.querySelectorAll('.section[id]');
+    const links = document.querySelectorAll('.sidebar-nav a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+        links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
+    });
+</script>
+</body>
+</html>

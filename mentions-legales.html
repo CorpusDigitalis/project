@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentions Légales — Corpus Digitalis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --accent: #0f172a;
+            --accent-light: #1e293b;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e8e4de;
+            --card: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAV */
+        .topbar {
+            background: var(--accent);
+            padding: 16px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: white;
+            text-decoration: none;
+        }
+        .topbar-logo span {
+            background: white;
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            margin-left: 8px;
+        }
+        .topbar-back {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            transition: color 0.2s;
+        }
+        .topbar-back:hover { color: white; }
+
+        /* HERO */
+        .page-hero {
+            background: var(--accent);
+            color: white;
+            padding: 50px 5% 40px;
+            border-bottom: 3px solid rgba(255,255,255,0.1);
+        }
+        .page-hero .tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+        }
+        .page-hero h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+        .page-hero .meta {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.55);
+            font-weight: 400;
+        }
+
+        /* LEGAL TABS NAV */
+        .legal-tabs {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0 5%;
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+        }
+        .legal-tab {
+            padding: 16px 24px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            color: var(--muted);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .legal-tab:hover { color: var(--accent); }
+        .legal-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* LAYOUT */
+        .layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 0;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 5% 80px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            padding-right: 40px;
+        }
+        .sidebar-nav {
+            position: sticky;
+            top: 30px;
+        }
+        .sidebar-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+        .sidebar-nav a {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 7px 0 7px 12px;
+            border-left: 2px solid var(--border);
+            transition: color 0.2s, border-color 0.2s, padding 0.2s;
+            line-height: 1.4;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            padding-left: 16px;
+        }
+
+        /* CONTENT */
+        .content { min-width: 0; }
+
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .section-header {
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            transition: background 0.15s;
+        }
+        .section-header:hover { background: #fdfcfb; }
+        .section-header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .chevron {
+            width: 18px;
+            height: 18px;
+            color: var(--muted);
+            transition: transform 0.25s;
+            flex-shrink: 0;
+        }
+        .section.open .chevron { transform: rotate(180deg); }
+
+        .section-body {
+            display: none;
+            padding: 0 24px 24px;
+            border-top: 1px solid var(--border);
+        }
+        .section.open .section-body { display: block; }
+
+        .section-body p, .section-body li {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.75;
+        }
+        .section-body ul, .section-body ol {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+        .section-body li { margin-bottom: 6px; }
+        .section-body strong { color: var(--accent); }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .info-row {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+        .info-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .info-value {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .info-value.placeholder {
+            color: #f59e0b;
+            font-style: italic;
+        }
+
+        .host-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+        .host-name {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--accent);
+            margin-bottom: 2px;
+        }
+        .host-detail {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        /* FOOTER */
+        .page-footer {
+            background: var(--accent);
+            color: rgba(255,255,255,0.5);
+            padding: 30px 5%;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .page-footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: color 0.2s;
+        }
+        .page-footer a:hover { color: white; }
+        .page-footer .footer-links { margin-bottom: 12px; }
+
+        @media (max-width: 768px) {
+            .layout { grid-template-columns: 1fr; padding: 20px 4% 60px; }
+            .sidebar { display: none; }
+            .page-hero h1 { font-size: 1.8rem; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topbar">
+    <a href="/" class="topbar-logo">Corpus Digitalis <span>PRO</span></a>
+    <a href="/" class="topbar-back">← Retour à l'accueil</a>
+</nav>
+
+<div class="page-hero">
+    <div class="tag">Informations légales</div>
+    <h1>Mentions légales</h1>
+    <div class="meta">Dernière mise à jour : 6 mai 2026 &nbsp;·&nbsp; Conformes à la Loi LCEN (n°2004-575)</div>
+</div>
+
+<div class="legal-tabs">
+    <a href="mentions-legales.html" class="legal-tab active">Mentions légales</a>
+    <a href="cgu.html" class="legal-tab">Conditions d'utilisation</a>
+    <a href="confidentialite.html" class="legal-tab">Confidentialité &amp; RGPD</a>
+</div>
+
+<div class="layout">
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <div class="sidebar-title">Sur cette page</div>
+            <a href="#editeur">Éditeur du site</a>
+            <a href="#hebergement">Hébergement</a>
+            <a href="#propriete">Propriété intellectuelle</a>
+            <a href="#cookies">Cookies</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <!-- EDITEUR -->
+        <div class="section open" id="editeur">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🏢</div>
+                    <div class="section-title">Éditeur du site</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body">
+                <p style="margin-top:16px; margin-bottom: 16px;">Le site <strong>corpusdigitalis.com</strong> est édité par :</p>
+                <div class="info-grid">
+                    <div class="info-row">
+                        <div class="info-label">Nom commercial</div>
+                        <div class="info-value">Corpus Digitalis</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Forme juridique</div>
+                        <div class="info-value">Micro-entreprise individuelle</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">SIREN</div>
+                        <div class="info-value">104 423 710</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Exploitant</div>
+                        <div class="info-value">Tristan ARBONA</div>
+                    </div>
+                    <div class="info-row" style="grid-column: 1/-1;">
+                        <div class="info-label">Adresse</div>
+                        <div class="info-value">3 rue des Anciens Combattants d'Afrique, 33800 Bordeaux, France</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Directeur de la publication</div>
+                        <div class="info-value">Tristan ARBONA</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Email de contact</div>
+                        <div class="info-value"><a href="mailto:contact@corpusdigitalis.com" style="color:inherit;">contact@corpusdigitalis.com</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HÉBERGEMENT -->
+        <div class="section" id="hebergement">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🖥️</div>
+                    <div class="section-title">Hébergement &amp; infrastructure</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top: 16px;">
+                <div class="host-card">
+                    <div class="host-name">Supabase Inc. — Base de données &amp; authentification</div>
+                    <div class="host-detail">970 Trestle Glen Rd, Oakland, CA 94610, USA · Données hébergées sur AWS EU-West-1 (Irlande)</div>
+                </div>
+                <div class="host-card">
+                    <div class="host-name">GitHub Pages (Microsoft) — Hébergement frontend</div>
+                    <div class="host-detail">One Microsoft Way, Redmond, WA 98052, USA · Standard Contractual Clauses (SCC) en vigueur</div>
+                </div>
+                <div class="host-card">
+                    <div class="host-name">Cloudflare Inc. — CDN &amp; DNS</div>
+                    <div class="host-detail">101 Townsend St, San Francisco, CA 94107, USA · Data Processing Addendum disponible</div>
+                </div>
+                <div class="host-card">
+                    <div class="host-name">Stripe Inc. — Traitement des paiements</div>
+                    <div class="host-detail">510 Townsend Street, San Francisco, CA 94103, USA · Certifié PCI-DSS Niveau 1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROPRIÉTÉ INTELLECTUELLE -->
+        <div class="section" id="propriete">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">©</div>
+                    <div class="section-title">Propriété intellectuelle</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Le code source, la charte graphique, les textes et éléments visuels propres à Corpus Digitalis sont la propriété exclusive de <strong>Tristan ARBONA (Corpus Digitalis)</strong>. Toute reproduction, même partielle, est interdite sans accord écrit préalable.</p>
+                <p style="margin-top:12px;">Les contenus publiés sur les profils (textes, photos, publications académiques, CV) restent la <strong>propriété exclusive de chaque utilisateur</strong>. Corpus Digitalis dispose uniquement d'une licence d'affichage non-exclusive pour rendre ces contenus accessibles en ligne, conformément aux Conditions Générales d'Utilisation.</p>
+            </div>
+        </div>
+
+        <!-- COOKIES -->
+        <div class="section" id="cookies">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">🍪</div>
+                    <div class="section-title">Cookies</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Ce site utilise uniquement des <strong>cookies strictement nécessaires</strong> au fonctionnement du service :</p>
+                <ul>
+                    <li><strong>Session Supabase</strong> — maintient votre connexion sécurisée à votre compte. Expiré à la fermeture du navigateur ou après 7 jours d'inactivité.</li>
+                    <li><strong>Préférences locales</strong> — mémorise vos préférences d'affichage (stockage local, non transmis à des tiers).</li>
+                </ul>
+                <p style="margin-top: 12px;">Aucun cookie publicitaire, aucun cookie analytique tiers. <strong>Aucune bannière de consentement n'est requise</strong> pour les cookies techniques (Directive ePrivacy).</p>
+            </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="section" id="contact">
+            <div class="section-header" onclick="toggle(this)">
+                <div class="section-header-left">
+                    <div class="section-icon">✉️</div>
+                    <div class="section-title">Contact &amp; réclamations</div>
+                </div>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="section-body" style="padding-top:16px;">
+                <p>Pour toute question relative à ces mentions légales, toute demande d'exercice de droits sur vos données, ou toute réclamation :</p>
+                <p style="margin-top: 12px;"><strong>Email :</strong> <a href="mailto:contact@corpusdigitalis.com" style="color: var(--accent); font-weight: 600;">contact@corpusdigitalis.com</a></p>
+                <p style="margin-top: 8px; font-size: 0.85rem; color: var(--muted);">Délai de réponse : 48 heures ouvrées maximum.</p>
+                <p style="margin-top: 12px;">En cas de litige non résolu, vous pouvez saisir le médiateur de la consommation ou la <strong>CNIL</strong> (<a href="https://www.cnil.fr" target="_blank" rel="noopener" style="color:var(--accent);">www.cnil.fr</a>) pour toute question relative à vos données personnelles.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<footer class="page-footer">
+    <div class="footer-links">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgu.html">CGU</a>
+        <a href="confidentialite.html">Confidentialité</a>
+        <a href="mailto:contact@corpusdigitalis.com">Contact</a>
+    </div>
+    <div>© 2026 Corpus Digitalis — Tous droits réservés</div>
+</footer>
+
+<script>
+    function toggle(header) {
+        const section = header.parentElement;
+        section.classList.toggle('open');
+    }
+
+    // Highlight sidebar link on scroll
+    const sections = document.querySelectorAll('.section[id]');
+    const links = document.querySelectorAll('.sidebar-nav a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => {
+            if (window.scrollY >= s.offsetTop - 120) current = s.id;
+        });
+        links.forEach(l => {
+            l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+        });
+    });
+</script>
+</body>
+</html>

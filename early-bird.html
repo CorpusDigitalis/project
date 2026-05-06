@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offre Early Bird — Corpus Digitalis</title>
+    <meta name="description" content="20 places à 97€/an pour lancer votre présence académique professionnelle. Hub complet : publications, cours, interventions, CV.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --accent: #0f172a;
+            --accent-light: #1e293b;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e8e4de;
+            --card: #ffffff;
+            --gold: #b45309;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+        /* NAV */
+        .topbar { background: var(--accent); padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; }
+        .topbar-logo { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: white; text-decoration: none; }
+        .topbar-logo span { background: white; color: var(--accent); padding: 2px 6px; border-radius: 3px; font-size: 0.6rem; margin-left: 8px; }
+        .topbar-link { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.8rem; font-weight: 500; }
+        .topbar-link:hover { color: white; }
+
+        /* HERO */
+        .hero {
+            background: var(--accent);
+            color: white;
+            padding: 70px 5% 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.9);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+        .hero p { font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto 36px; line-height: 1.7; }
+
+        /* PLACES COUNTER */
+        .counter-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 36px; flex-wrap: wrap; }
+        .counter-box {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 16px 28px;
+            text-align: center;
+        }
+        .counter-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: white; line-height: 1; }
+        .counter-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 6px; }
+        .counter-sep { color: rgba(255,255,255,0.2); font-size: 1.5rem; }
+
+        /* PRICE */
+        .price-block { margin-bottom: 32px; }
+        .price-main { display: flex; align-items: baseline; justify-content: center; gap: 12px; }
+        .price-amount { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; color: white; }
+        .price-period { font-size: 1rem; color: rgba(255,255,255,0.5); }
+        .price-strikethrough { font-size: 1.1rem; color: rgba(255,255,255,0.35); text-decoration: line-through; margin-left: 8px; }
+        .price-saving { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 6px; }
+
+        .cta-btn {
+            display: inline-block;
+            background: white;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            padding: 16px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .cta-sub { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 12px; }
+
+        /* DEADLINE */
+        .deadline-bar {
+            background: rgba(180,83,9,0.15);
+            border: 1px solid rgba(180,83,9,0.3);
+            border-radius: 8px;
+            padding: 10px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.8);
+        }
+        .deadline-dot { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        /* SECTION WHAT */
+        .section-what { padding: 70px 5%; max-width: 1100px; margin: 0 auto; }
+        .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--accent); margin-bottom: 48px; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px 24px;
+        }
+        .feature-icon { font-size: 1.4rem; margin-bottom: 14px; }
+        .feature-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
+        .feature-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+
+        /* DEMOS */
+        .section-demos { background: var(--accent); padding: 70px 5%; }
+        .section-demos-inner { max-width: 1100px; margin: 0 auto; }
+        .section-demos .section-label { color: rgba(255,255,255,0.4); }
+        .section-demos .section-title { color: white; margin-bottom: 40px; }
+        .demos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .demo-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 28px;
+            transition: background 0.2s;
+        }
+        .demo-card:hover { background: rgba(255,255,255,0.1); }
+        .demo-avatar { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .demo-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: white; margin-bottom: 4px; }
+        .demo-title { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+        .demo-desc { font-size: 0.84rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+        .demo-link { display: inline-block; margin-top: 16px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2px; transition: color 0.2s; }
+        .demo-link:hover { color: white; }
+
+        /* PROCESS */
+        .section-process { padding: 70px 5%; max-width: 900px; margin: 0 auto; }
+        .process-steps { display: flex; flex-direction: column; gap: 0; }
+        .process-step { display: flex; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+        .process-step:last-child { border-bottom: none; }
+        .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: white; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .step-content h3 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 6px; }
+        .step-content p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+        /* FAQ */
+        .section-faq { background: var(--card); border-top: 1px solid var(--border); padding: 70px 5%; }
+        .section-faq-inner { max-width: 700px; margin: 0 auto; }
+        .faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+        .faq-q { padding: 18px 22px; font-weight: 600; font-size: 0.92rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+        .faq-q:hover { background: var(--bg); }
+        .faq-a { display: none; padding: 0 22px 18px; font-size: 0.88rem; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); padding-top: 14px; }
+        .faq-item.open .faq-a { display: block; }
+        .faq-arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--muted); }
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+        /* CTA BOTTOM */
+        .section-cta-bottom { background: var(--bg); border-top: 1px solid var(--border); padding: 70px 5%; text-align: center; }
+        .section-cta-bottom h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--accent); margin-bottom: 16px; }
+        .section-cta-bottom p { font-size: 0.95rem; color: var(--muted); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+        .cta-btn-dark {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            padding: 16px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .cta-btn-dark:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+        /* FOOTER */
+        .page-footer { background: var(--accent); color: rgba(255,255,255,0.5); padding: 30px 5%; text-align: center; font-size: 0.8rem; }
+        .page-footer a { color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 12px; }
+        .page-footer a:hover { color: white; }
+        .footer-links { margin-bottom: 12px; }
+
+        @media (max-width: 768px) {
+            .counter-wrap { gap: 12px; }
+            .counter-box { padding: 12px 20px; }
+            .price-amount { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topbar">
+    <a href="/" class="topbar-logo">Corpus Digitalis <span>PRO</span></a>
+    <a href="/" class="topbar-link">← Voir les profils</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-badge">Offre de lancement — Places limitées</div>
+    <h1>Votre présence académique,<br>enfin à la hauteur de vos travaux.</h1>
+    <p>Un hub professionnel complet sous votre propre adresse web — publications, cours, interventions, CV — prêt en 48h. On s'occupe de tout.</p>
+
+    <!-- COMPTEUR DE PLACES -->
+    <div class="counter-wrap">
+        <div class="counter-box">
+            <!-- METTRE À JOUR MANUELLEMENT -->
+            <div class="counter-num" id="places-restantes">20</div>
+            <div class="counter-label">Places restantes</div>
+        </div>
+        <div class="counter-sep">/</div>
+        <div class="counter-box">
+            <div class="counter-num">20</div>
+            <div class="counter-label">Places totales</div>
+        </div>
+    </div>
+
+    <!-- PRIX -->
+    <div class="price-block">
+        <div class="price-main">
+            <div class="price-amount">97€</div>
+            <div class="price-period">/ an TTC</div>
+            <div class="price-strikethrough">144€</div>
+        </div>
+        <div class="price-saving">Économisez 47€ — remboursable sur les crédits de labo</div>
+    </div>
+
+    <!-- CTA -->
+    <!-- REMPLACER href PAR LE VRAI LIEN STRIPE 97€ -->
+    <a href="[LIEN_STRIPE_97€]" class="cta-btn">Réserver ma place — 97€/an</a>
+    <div class="cta-sub">Paiement sécurisé par Stripe · HTTPS · Données hébergées en Europe</div>
+
+    <div class="deadline-bar">
+        <div class="deadline-dot"></div>
+        Offre valable jusqu'au <strong style="color:white; margin: 0 4px;">31 mai 2026</strong> ou jusqu'au 20ème inscrit
+    </div>
+</section>
+
+<!-- CE QUI EST INCLUS -->
+<section class="section-what">
+    <div class="section-label">Ce que vous obtenez</div>
+    <div class="section-title">Tout ce dont un chercheur a besoin, au même endroit.</div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🔗</div>
+            <div class="feature-title">Votre propre adresse</div>
+            <div class="feature-desc">prenom-nom.corpusdigitalis.com — une URL professionnelle que vous envoyez à un éditeur, un journaliste ou un recruteur.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <div class="feature-title">Publications complètes</div>
+            <div class="feature-desc">Toutes vos publications listées avec DOI, résumé, et lien HAL/Scholar. Indexées sur corpusdigitalis.com.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎓</div>
+            <div class="feature-title">Enseignements</div>
+            <div class="feature-desc">Vos cours par niveau avec supports téléchargeables. Vos étudiants ont accès, vos collègues aussi.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <div class="feature-title">Agenda & Interventions</div>
+            <div class="feature-desc">Vos colloques, conférences invitées, séminaires. Visibles publiquement — les organisateurs vous trouvent.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <div class="feature-title">Service Conciergerie</div>
+            <div class="feature-desc">Vous envoyez votre CV PDF. Notre équipe construit votre profil complet en 48h. Vous validez avant la mise en ligne.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <div class="feature-title">Découvrabilité</div>
+            <div class="feature-desc">Profil indexé sur corpusdigitalis.com — searchable par nom, discipline ou publication. Visible sans compte.</div>
+        </div>
+    </div>
+</section>
+
+<!-- PROFILS DÉMO -->
+<section class="section-demos">
+    <div class="section-demos-inner">
+        <div class="section-label">Exemples réels</div>
+        <div class="section-title">À quoi ressemble votre profil.</div>
+        <div class="demos-grid">
+            <div class="demo-card">
+                <div class="demo-avatar">👩‍🎓</div>
+                <div class="demo-name">Claire Martins</div>
+                <div class="demo-title">MCF · Sociologie · Paris 1</div>
+                <div class="demo-desc">4 publications, 3 cours actifs, 3 interventions à venir. Profil complet construit en 48h à partir de son CV.</div>
+                <a href="/" class="demo-link">Voir le profil →</a>
+            </div>
+            <div class="demo-card">
+                <div class="demo-avatar">👨‍🔬</div>
+                <div class="demo-name">Marc Lebrun</div>
+                <div class="demo-title">PR · Physique · Polytechnique</div>
+                <div class="demo-desc">4 publications avec DOI, 2 cours téléchargeables, 3 conférences internationales listées.</div>
+                <a href="/" class="demo-link">Voir le profil →</a>
+            </div>
+            <div class="demo-card">
+                <div class="demo-avatar">👩‍💻</div>
+                <div class="demo-name">Sofia Andrieu</div>
+                <div class="demo-title">Post-doc · Linguistique · EHESS</div>
+                <div class="demo-desc">En recherche de poste — son profil est sa carte de visite pour les commissions de recrutement.</div>
+                <a href="/" class="demo-link">Voir le profil →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROCESSUS -->
+<section class="section-process">
+    <div class="section-label">Comment ça marche</div>
+    <div class="section-title">De l'inscription à votre site live en 48h.</div>
+    <div class="process-steps">
+        <div class="process-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <h3>Vous payez — 97€ une fois par an</h3>
+                <p>Paiement sécurisé par Stripe. Facture disponible immédiatement — intégrable dans vos frais de fonctionnement de labo.</p>
+            </div>
+        </div>
+        <div class="process-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <h3>Vous nous envoyez votre CV PDF</h3>
+                <p>Par email à <strong>contact@corpusdigitalis.com</strong>. Pas d'inscription longue, pas de formulaire complexe. Un email suffit.</p>
+            </div>
+        </div>
+        <div class="process-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <h3>Notre équipe construit votre profil</h3>
+                <p>Publications, cours, bio, photo — tout est extrait et mis en forme. Délai garanti : 48 heures ouvrées.</p>
+            </div>
+        </div>
+        <div class="process-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+                <h3>Vous validez — votre site est en ligne</h3>
+                <p>On vous envoie le lien pour prévisualiser. Si tout vous convient, on publie. Sinon, on ajuste. prenom-nom.corpusdigitalis.com est live.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="section-faq">
+    <div class="section-faq-inner">
+        <div class="section-label">Questions fréquentes</div>
+        <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--accent); margin-bottom:32px;">Tout ce que vous voulez savoir.</div>
+
+        <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+                Est-ce que 97€ rentre dans mes frais de labo ?
+                <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-a">Dans la plupart des universités françaises, les dépenses inférieures à 150€ passent en frais de fonctionnement sans validation hiérarchique. 97€, c'est moins qu'une nuit d'hôtel en conférence — et contrairement à l'hôtel, ça reste. Demandez à votre gestionnaire de labo : la réponse est presque toujours oui.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+                Que se passe-t-il après la période Early Bird ?
+                <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-a">Le renouvellement se fait au tarif standard de 144€/an. Votre adresse et votre contenu restent identiques. Vous recevez un rappel 30 jours avant l'échéance. Si vous ne souhaitez pas renouveler, vos données vous sont restituées sur simple demande.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+                J'ai déjà une page sur le site de mon labo. Pourquoi en avoir une autre ?
+                <span class="faq-arrow">▼</span>
+            </div>
+            <div class="faq-a">La page de votre labo est gérée par le service informatique de votre université. Elle ne vous appartient pas, elle disparaît quand vous changez de poste, et elle ne met pas en valeur votre travail. Corpus Digitalis, c'est votre espace, sous votre contrôle, qui vous suit partout dans votre carrière.</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="section-cta-bottom">
+    <h2>Il reste <span id="places-restantes-2">20</span> places.</h2>
+    <p>L'offre se ferme au 20ème inscrit ou au 31 mai 2026. Après, le tarif passe à 144€/an.</p>
+    <!-- REMPLACER href PAR LE VRAI LIEN STRIPE 97€ -->
+    <a href="[LIEN_STRIPE_97€]" class="cta-btn-dark">Réserver ma place — 97€/an</a>
+    <p style="font-size:0.78rem; color:var(--muted); margin-top:16px;">Questions ? contact@corpusdigitalis.com — réponse sous 48h</p>
+</section>
+
+<footer class="page-footer">
+    <div class="footer-links">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgu.html">CGU</a>
+        <a href="confidentialite.html">Confidentialité</a>
+        <a href="mailto:contact@corpusdigitalis.com">Contact</a>
+    </div>
+    <div>© 2026 Corpus Digitalis — Tous droits réservés</div>
+</footer>
+
+<script>
+    function toggleFaq(el) {
+        el.parentElement.classList.toggle('open');
+    }
+
+    // Sync les deux compteurs
+    const n = document.getElementById('places-restantes').textContent;
+    document.getElementById('places-restantes-2').textContent = n;
+</script>
+</body>
+</html>

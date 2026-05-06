@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page introuvable — Corpus Digitalis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --accent: #0f172a;
+            --muted: #64748b;
+            --border: #e8e4de;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--accent);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(15,23,42,0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(15,23,42,0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 56px;
+        }
+        .logo-text {
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+        }
+        .logo-badge {
+            background: var(--accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+        }
+
+        .error-number {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 8rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--accent);
+            opacity: 0.06;
+            letter-spacing: -0.04em;
+            margin-bottom: -30px;
+            user-select: none;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--accent);
+            border-radius: 16px;
+            padding: 44px 48px;
+            box-shadow:
+                0 1px 2px rgba(0,0,0,0.04),
+                0 8px 24px rgba(0,0,0,0.06),
+                0 32px 64px rgba(0,0,0,0.04);
+        }
+
+        .icon-wrap {
+            width: 52px;
+            height: 52px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 1.4rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .search-wrap {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            background: #fdfcfb;
+            color: var(--accent);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(15,23,42,0.08);
+        }
+        .search-input::placeholder { color: #b8b4ac; }
+        .btn-search {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .btn-search:hover { background: #1e293b; transform: translateY(-1px); }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 4px 0 20px;
+            color: #c9c5bd;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .quick-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--accent);
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s;
+        }
+        .quick-link:hover {
+            background: white;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+        .quick-link-icon {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .quick-link-text { flex: 1; }
+        .quick-link-arrow {
+            color: #c9c5bd;
+            font-size: 0.8rem;
+            transition: color 0.15s;
+        }
+        .quick-link:hover .quick-link-arrow { color: var(--accent); }
+
+        .footer-note {
+            margin-top: 40px;
+            font-size: 0.78rem;
+            color: #c9c5bd;
+        }
+        .footer-note a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-note a:hover { color: var(--accent); }
+
+        @media (max-width: 480px) {
+            .card { padding: 32px 24px; }
+            .error-number { font-size: 6rem; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="logo-bar">
+        <span class="logo-text">Corpus Digitalis</span>
+        <span class="logo-badge">PRO</span>
+    </div>
+
+    <div class="error-number">404</div>
+
+    <div class="card">
+        <div class="icon-wrap">🔍</div>
+        <h1>Ce profil n'existe pas encore.</h1>
+        <p>L'adresse que vous avez saisie ne correspond à aucun profil actif sur Corpus Digitalis. Il est peut-être en cours de création — ou l'URL contient une faute de frappe.</p>
+
+        <div class="search-wrap">
+            <input
+                type="text"
+                class="search-input"
+                placeholder="Rechercher un chercheur..."
+                id="search-input"
+                onkeydown="if(event.key==='Enter') doSearch()"
+            >
+            <button class="btn-search" onclick="doSearch()">Rechercher</button>
+        </div>
+
+        <div class="divider">ou</div>
+
+        <div class="quick-links">
+            <a href="/" class="quick-link">
+                <div class="quick-link-icon">🏠</div>
+                <div class="quick-link-text">Retourner à l'accueil</div>
+                <span class="quick-link-arrow">→</span>
+            </a>
+            <a href="/signup.html" class="quick-link">
+                <div class="quick-link-icon">✨</div>
+                <div class="quick-link-text">Créer mon profil académique</div>
+                <span class="quick-link-arrow">→</span>
+            </a>
+            <a href="mailto:contact@corpusdigitalis.com" class="quick-link">
+                <div class="quick-link-icon">✉️</div>
+                <div class="quick-link-text">Contacter l'équipe</div>
+                <span class="quick-link-arrow">→</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        <a href="/mentions-legales.html">Mentions légales</a> &nbsp;·&nbsp;
+        <a href="/cgu.html">CGU</a> &nbsp;·&nbsp;
+        <a href="/confidentialite.html">Confidentialité</a>
+    </div>
+
+</div>
+
+<script>
+    function doSearch() {
+        const q = document.getElementById('search-input').value.trim();
+        if (q) window.location.href = '/?q=' + encodeURIComponent(q);
+    }
+</script>
+
+</body>
+</html>
