@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Corpus Digitalis</title>
+
+    <!-- Open Graph — mis à jour dynamiquement après chargement du profil -->
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="Corpus Digitalis">
+    <meta property="og:title" content="Profil académique — Corpus Digitalis">
+    <meta property="og:description" content="Hub académique professionnel sur Corpus Digitalis.">
+    <meta property="og:image" content="https://corpusdigitalis.com/og-cover.jpg">
+    <meta property="og:url" content="https://corpusdigitalis.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@CorpusDigitalis">
+    <meta name="twitter:title" content="Profil académique — Corpus Digitalis">
+    <meta name="twitter:description" content="Hub académique professionnel sur Corpus Digitalis.">
+    <meta name="twitter:image" content="https://corpusdigitalis.com/og-cover.jpg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=8" />
+    <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#" class="site-name no-animation" style="cursor: default;">
+                <span id="skeleton-name" class="skeleton-box skeleton-glass" style="width: 140px; height: 24px; border-radius: 4px;"></span>
+                <span id="real-site-name" style="display: none;"></span>
+            </a>
+            <div class="dynamic-nav" id="header-menu"></div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="hero-section">
+
+            <div id="skeleton-img" class="skeleton-box skeleton-img"></div>
+            <img id="profil-img" src="" alt="Portrait" style="display: none;" />
+
+            <div class="description" id="skeleton-desc">
+                <h1 style="margin-top: -8px; margin-bottom: 20px;">
+                    <span class="skeleton-box" style="width: 60%; height: 2.3rem; border-radius: 6px;"></span>
+                </h1>
+                <p id="profil-desc-skeleton" style="font-size: 1.05rem; margin: 0; line-height: 1.6;">
+                    <span class="skeleton-box" style="width: 100%; height: 1.05rem; margin-bottom: 8px;"></span><br>
+                    <span class="skeleton-box" style="width: 100%; height: 1.05rem; margin-bottom: 8px;"></span><br>
+                    <span class="skeleton-box" style="width: 70%; height: 1.05rem;"></span>
+                </p>
+            </div>
+
+            <div class="description" id="real-desc" style="display: none;">
+                <h1 id="main-title"></h1>
+                <p id="profil-desc"></p>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links" id="footer-list"></div>
+        <div class="corpus-tm">™ CorpusDigitalis</div>
+    </footer>
+
+    <script type="module">
+        import { initLayout } from './theme.js';
+
+        function setOGTags(prof) {
+            const slug = window.location.hostname.split('.')[0];
+            const url = `https://${slug}.corpusdigitalis.com`;
+            const title = (prof.title || prof.name || 'Profil académique') + ' — Corpus Digitalis';
+            const desc = (prof.bio || 'Découvrez le profil académique sur Corpus Digitalis.').substring(0, 200);
+            const set = (sel, attr, val) => {
+                let el = document.querySelector(sel);
+                if (!el) { el = document.createElement('meta'); document.head.appendChild(el); }
+                el.setAttribute(attr, val);
+            };
+            document.title = title;
+            set('meta[property="og:title"]',       'content', title);
+            set('meta[property="og:description"]', 'content', desc);
+            set('meta[property="og:url"]',         'content', url);
+            set('meta[name="twitter:title"]',      'content', title);
+            set('meta[name="twitter:description"]','content', desc);
+            if (prof.image_url) {
+                set('meta[property="og:image"]',   'content', prof.image_url);
+                set('meta[name="twitter:image"]',  'content', prof.image_url);
+                set('meta[name="twitter:card"]',   'content', 'summary_large_image');
+            }
+        }
+
+        async function loadHome() {
+            const prof = await initLayout();
+            if (!prof) return;
+            setOGTags(prof);
+
+            const skelName = document.getElementById('skeleton-name');
+            if (skelName) skelName.style.display = 'none';
+
+            const realNameEl = document.getElementById('real-site-name');
+            if (realNameEl) {
+                realNameEl.innerText = prof.name;
+                realNameEl.style.display = 'inline';
+            }
+
+            const skelImg = document.getElementById('skeleton-img');
+            if (skelImg) skelImg.style.display = 'none';
+
+            const skelDesc = document.getElementById('skeleton-desc');
+            if (skelDesc) skelDesc.style.display = 'none';
+
+            const realDesc = document.getElementById('real-desc');
+            if (realDesc) realDesc.style.display = 'flex';
+
+            const imgEl = document.getElementById('profil-img');
+            if (prof.image_url && imgEl) {
+                imgEl.src = prof.image_url;
+                imgEl.style.display = 'block';
+            }
+
+            const titleEl = document.getElementById('main-title');
+            if (titleEl) {
+                titleEl.innerText = prof.title ? prof.title : prof.name;
+            }
+
+            const bioEl = document.getElementById('profil-desc');
+            if (prof.bio && bioEl) {
+                bioEl.innerText = prof.bio;
+            }
+        }
+        loadHome();
+    </script>
+
+</body>
+</html>
