@@ -281,7 +281,7 @@
     async function checkSession() {
         const { data: { session } } = await sb.auth.getSession();
         if (session) {
-            window.location.href = 'admin.html';
+            window.location.href = '/admin/';
         }
     }
     checkSession();
@@ -309,7 +309,7 @@
             showAlert("Email ou mot de passe incorrect.", "error", "alert-circle");
             setLoading(false, 'btn-login', 'Se connecter <i data-lucide="arrow-right" size="16"></i>');
         } else {
-            window.location.href = 'admin.html';
+            window.location.href = '/admin/';
         }
     });
 
@@ -347,7 +347,7 @@
             setLoading(false, 'btn-new-pwd', 'Sauvegarder <i data-lucide="check" size="16"></i>');
         } else {
             showAlert("Mot de passe changé ! Redirection...", "success", "check-circle");
-            setTimeout(() => window.location.href = 'admin.html', 1500);
+            setTimeout(() => window.location.href = '/admin/', 1500);
         }
     });
 

@@ -6,7 +6,7 @@
     <title>Accueil</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=8" />
+    <link rel="stylesheet" href="../style.css?v=8" />
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 <body>
@@ -52,7 +52,7 @@
     </footer>
 
     <script type="module">
-        import { initLayout } from './theme.js';
+        import { initLayout, setupTracking } from '../theme.js';
 
         async function loadHome() {
             const prof = await initLayout();

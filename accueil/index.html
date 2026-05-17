@@ -19,7 +19,7 @@
     <meta name="twitter:image" content="https://corpusdigitalis.com/og-cover.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=8" />
+    <link rel="stylesheet" href="../style.css?v=8" />
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 </head>
 <body>
@@ -65,7 +65,7 @@
     </footer>
 
     <script type="module">
-        import { initLayout } from './theme.js';
+        import { initLayout, setupTracking } from '../theme.js';
 
         function setOGTags(prof) {
             const slug = window.location.hostname.split('.')[0];
@@ -94,6 +94,7 @@
             const prof = await initLayout();
             if (!prof) { window.location.href = '/404.html'; return; }
             setOGTags(prof);
+            setTimeout(() => setupTracking(prof.id, 'accueil'), 500);
 
             const skelName = document.getElementById('skeleton-name');
             if (skelName) skelName.style.display = 'none';

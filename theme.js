@@ -61,10 +61,10 @@ export async function initLayout() {
         let hLinks = '';
         const conf = prof.config?.header || { home: true, courses: true, publications: true, interventions: true };
         
-        if (conf.home) hLinks += `<a href="accueil.html?prof=${slug}">Accueil</a>`;
-        if (conf.courses) hLinks += `<a href="cours.html?prof=${slug}">Cours</a>`;
-        if (conf.publications) hLinks += `<a href="publications.html?prof=${slug}">Publications</a>`;
-        if (conf.interventions) hLinks += `<a href="interventions.html?prof=${slug}">Interventions</a>`;
+        if (conf.home) hLinks += `<a href="/accueil/?prof=${slug}">Accueil</a>`;
+        if (conf.courses) hLinks += `<a href="/cours/?prof=${slug}">Cours</a>`;
+        if (conf.publications) hLinks += `<a href="/publications/?prof=${slug}">Publications</a>`;
+        if (conf.interventions) hLinks += `<a href="/interventions/?prof=${slug}">Interventions</a>`;
         
         headerMenu.innerHTML = hLinks;
     }
@@ -99,5 +99,41 @@ export async function initLayout() {
         }
     });
 
-    return prof; 
+    return prof;
+}
+
+// Tracking silencieux des clics — fire & forget, jamais bloquant
+export async function trackClick(profId, page, linkType, label, url) {
+    try {
+        await supabase.from('link_clicks').insert({
+            prof_id: profId,
+            page: page,
+            link_type: linkType,
+            link_label: (label || '').substring(0, 200),
+            link_url: (url || '').substring(0, 500)
+        });
+    } catch(e) { /* silent — never block navigation */ }
+}
+
+// Initialise le tracking sur une page de profil
+export function setupTracking(profId, page) {
+    document.querySelectorAll('a[href]').forEach(a => {
+        const url = a.getAttribute('href') || '';
+        if (!url || url.startsWith('#') || url.startsWith('javascript')) return;
+        // Ne pas tracker les liens internes de navigation
+        if (url.startsWith('/accueil') || url.startsWith('/cours') || url.startsWith('/publications') || url.startsWith('/interventions')) return;
+        a.addEventListener('click', () => {
+            let linkType = 'external';
+            if (url.includes('doi.org')) linkType = 'doi';
+            else if (url.includes('linkedin.com')) linkType = 'linkedin';
+            else if (url.includes('scholar.google')) linkType = 'scholar';
+            else if (url.includes('hal.') || url.includes('hal-')) linkType = 'hal';
+            else if (url.includes('orcid.org')) linkType = 'orcid';
+            else if (url.includes('arxiv.org')) linkType = 'arxiv';
+            else if (url.startsWith('mailto:')) linkType = 'email';
+            else if (url.match(/\.(pdf|doc|docx|pptx?|xlsx?)(\?|$)/i)) linkType = 'file';
+            const label = (a.textContent || a.title || '').trim().substring(0, 200);
+            trackClick(profId, page, linkType, label, url);
+        }, { once: false, passive: true });
+    });
 }

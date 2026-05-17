@@ -6,7 +6,7 @@
     <title>Publications</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=9" />
+    <link rel="stylesheet" href="../style.css?v=9" />
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer data-domain="tristan-arbona.corpusdigitalis.com" src="https://stats.corpusdigitalis.com/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
 
@@ -71,11 +71,12 @@
     </footer>
 
     <script type="module">
-        import { initLayout, supabase } from './theme.js';
+        import { initLayout, supabase, setupTracking } from '../theme.js';
 
         async function loadPublications() {
             const prof = await initLayout();
             if (!prof) { window.location.href = '/404.html'; return; }
+            setTimeout(() => setupTracking(prof.id, 'publications'), 500);
 
             const skelName = document.getElementById('skeleton-name');
             if (skelName) skelName.style.display = 'none';
