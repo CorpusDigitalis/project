@@ -97,7 +97,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .hc-pub{background:rgba(255,255,255,.04);border-radius:8px;padding:11px 13px;margin-bottom:8px;font-size:.78rem;color:rgba(255,255,255,.58);line-height:1.45;display:flex;gap:8px;align-items:flex-start}
 .hc-pub-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.25);margin-top:5px;flex-shrink:0}
 .hc-tag{display:inline-block;background:rgba(255,255,255,.08);color:rgba(255,255,255,.48);font-size:.62rem;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
-.hc-url{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);font-size:.72rem;color:rgba(255,255,255,.28);font-family:monospace}
+.hc-url{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);font-size:.72rem;color:rgba(255,255,255,.28);font-family:'Inter',sans-serif;font-weight:500}
 .hc-url span{color:rgba(255,255,255,.7);font-weight:600}
 .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.04);border-radius:12px;overflow:hidden;margin-top:16px}
 .hero-stat{padding:14px 12px;text-align:center;background:rgba(255,255,255,.03)}
@@ -134,11 +134,13 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 #features{background:var(--bg);padding:110px 5%}
 .features-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
 .feature-list{display:flex;flex-direction:column;gap:0}
-.feature-item{display:flex;gap:20px;padding:26px 0;border-bottom:1px solid var(--border);align-items:flex-start;cursor:default;transition:padding .2s}
+.feature-item{display:flex;gap:20px;padding:26px 0;border-bottom:1px solid var(--border);align-items:flex-start;cursor:pointer;transition:all .25s;position:relative;border-left:3px solid transparent;padding-left:0}
 .feature-item:last-child{border-bottom:none}
-.feature-item:hover{padding-left:6px}
-.feature-icon{width:44px;height:44px;border-radius:10px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:transform .2s}
-.feature-item:hover .feature-icon{transform:scale(1.08)}
+.feature-item:hover{padding-left:14px;border-left-color:var(--ink);background:linear-gradient(to right,rgba(15,23,42,.03) 0%,transparent 80%);border-radius:0 8px 8px 0}
+.feature-item::after{content:'→';position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:.85rem;color:var(--pale);opacity:0;transition:opacity .2s,right .2s}
+.feature-item:hover::after{opacity:1;right:4px}
+.feature-icon{width:44px;height:44px;border-radius:10px;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:transform .2s,box-shadow .2s}
+.feature-item:hover .feature-icon{transform:scale(1.08);box-shadow:0 4px 16px rgba(15,23,42,.2)}
 .feature-title{font-weight:700;font-size:.95rem;color:var(--ink);margin-bottom:5px}
 .feature-desc{font-size:.84rem;color:var(--muted);line-height:1.72}
 
@@ -149,7 +151,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .browser-dots{display:flex;gap:6px}
 .brd{width:10px;height:10px;border-radius:50%}
 .brd-r{background:#fc5f5a}.brd-y{background:#fdbc40}.brd-g{background:#34c84a}
-.browser-url-bar{flex:1;background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:.72rem;color:var(--muted);font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.browser-url-bar{flex:1;background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:.72rem;color:var(--muted);font-family:'Inter',sans-serif;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mock-content{padding:24px 20px;background:white}
 .mock-top{display:flex;gap:14px;align-items:center;margin-bottom:18px}
 .mock-ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
@@ -207,7 +209,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .dms-lbl{font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-top:4px}
 .demo-browser-frame{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 32px 80px rgba(0,0,0,.4)}
 .demo-bar{background:#1e293b;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.07)}
-.demo-url-bar{flex:1;background:rgba(255,255,255,.06);border-radius:5px;padding:5px 12px;font-size:.71rem;color:rgba(255,255,255,.4);font-family:monospace}
+.demo-url-bar{flex:1;background:rgba(255,255,255,.06);border-radius:5px;padding:5px 12px;font-size:.71rem;color:rgba(255,255,255,.4);font-family:'Inter',sans-serif;font-weight:500}
 .demo-body{background:#0f1a2e;padding:22px 20px}
 .demo-profile-top{display:flex;gap:14px;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.06)}
 .demo-ava{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
@@ -353,6 +355,31 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .footer-link:hover{color:rgba(255,255,255,.65)}
 .footer-copy{font-size:.72rem;color:rgba(255,255,255,.15)}
 
+/* ══════════════════════════
+   DEMO CARDS (sans chrome navigateur)
+══════════════════════════ */
+.demo-card-wrap{}
+.demo-card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,.18),0 2px 8px rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.1)}
+.demo-card-header{padding:20px 24px;background:white;border-bottom:1px solid #f0ece6;display:flex;align-items:center;gap:14px}
+.demo-card-ava{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.92rem;font-weight:800;color:white;flex-shrink:0;letter-spacing:.04em}
+.demo-card-name{font-weight:700;font-size:.95rem;color:#0f172a}
+.demo-card-role{font-size:.72rem;color:#64748b;margin-top:2px;line-height:1.4}
+.demo-card-badge{margin-left:auto;background:#22c55e;color:white;font-size:.56rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:20px;flex-shrink:0;display:flex;align-items:center;gap:4px}
+.demo-card-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:white;animation:pulse 2s infinite}
+.demo-card-url{padding:9px 24px;font-size:.7rem;color:#94a3b8;font-family:'Inter',sans-serif;font-weight:500;background:#f8f9fb;border-bottom:1px solid #f0ece6}
+.demo-card-body{padding:18px 24px 22px;background:white}
+.demo-card-sec{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:10px}
+.demo-card-entry{background:#fafaf8;border-radius:7px;padding:9px 12px;margin-bottom:6px;font-size:.78rem;color:#334155;line-height:1.5;display:flex;gap:8px;align-items:flex-start}
+.demo-card-dot{width:4px;height:4px;border-radius:50%;background:#94a3b8;margin-top:6px;flex-shrink:0}
+.demo-card-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:14px}
+.demo-card-chip{background:#0f172a;color:white;font-size:.6rem;font-weight:600;padding:3px 9px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+
+/* Bouton "Voir le profil live" */
+.demo-visit-btn{display:inline-flex;align-items:center;gap:8px;margin-top:26px;padding:13px 24px;background:white;border:1.5px solid var(--ink);color:var(--ink);font-weight:700;font-size:.85rem;border-radius:8px;text-decoration:none;transition:all .22s;letter-spacing:.01em}
+.demo-visit-btn:hover{background:var(--ink);color:white;transform:translateY(-2px);box-shadow:0 8px 28px rgba(15,23,42,.28)}
+.demo-visit-btn svg{transition:transform .2s}
+.demo-visit-btn:hover svg{transform:translateX(3px)}
+
 /* ── MOBILE MENU ── */
 #mobile-menu{display:none;position:fixed;inset:0;background:rgba(15,23,42,.99);z-index:99;padding:80px 5%;flex-direction:column;gap:8px}
 #mobile-menu.open{display:flex}
@@ -371,7 +398,9 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
   .audience-grid{grid-template-columns:1fr 1fr}
   .pricing-grid{grid-template-columns:1fr}
   .garanties-grid{grid-template-columns:1fr}
-  .demo-layout{grid-template-columns:1fr}
+  .demo-layout{grid-template-columns:1fr;gap:28px}
+  .section{padding:80px 5%}
+  .demo-card-wrap{max-width:480px;margin:0 auto}
 }
 @media(max-width:768px){
   .nav-links{display:none}
@@ -379,8 +408,34 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
   .problem-grid{grid-template-columns:1fr}
   .audience-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
-  .demos-tabs{width:100%;overflow-x:auto;justify-content:flex-start}
+  .demos-tabs{width:100%;overflow-x:auto;justify-content:flex-start;white-space:nowrap}
   .trust-inner{justify-content:flex-start}
+  .section{padding:64px 5%}
+  .section-h{font-size:clamp(1.6rem,5vw,2.4rem)}
+  .section-lead{font-size:.92rem;margin-bottom:40px}
+  .garanties-grid{grid-template-columns:1fr}
+  .demo-meta-stats{gap:16px}
+  .dms-num{font-size:1.4rem}
+  .process-aside{padding:24px}
+  .apropos-aside{padding:24px}
+  .stat-num{font-size:2.2rem}
+  .hero-title{font-size:clamp(2.2rem,7vw,3.4rem)}
+  .hero-actions{flex-direction:column;align-items:flex-start}
+  .btn-hero-primary,.btn-hero-ghost{width:100%;justify-content:center}
+  .audience-card{padding:28px 22px}
+  .pricing-grid{grid-template-columns:1fr}
+  .feature-item::after{display:none}
+}
+@media(max-width:480px){
+  .section{padding:48px 4%}
+  .hero-eyebrow{font-size:.58rem}
+  .demo-card-ava{width:44px;height:44px;font-size:.8rem}
+  .demo-card-header{padding:16px 18px}
+  .demo-card-url{padding:8px 18px}
+  .demo-card-body{padding:16px 18px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .problem-num{font-size:2rem}
+  .ps-content{padding-bottom:32px}
 }
 </style>
 </head>
@@ -416,7 +471,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
     <div>
       <div class="hero-eyebrow">
         <div class="hero-dot"></div>
-        Early Bird — 20 places — Fermeture le 31 mai 2026
+        Early Bird — 14 places restantes sur 20 — Fermeture le 31 mai 2026
       </div>
       <h1 class="hero-title">
         Votre carrière mérite<br>une vitrine <em>à<br>sa hauteur.</em>
@@ -519,27 +574,27 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
           <p class="section-lead section-lead-light">Un hub académique complet, construit par notre équipe en 48h à partir de votre CV. Vous ne touchez à rien — vous validez.</p>
         </div>
         <div class="feature-list">
-          <div class="feature-item reveal stagger-1">
+          <div class="feature-item reveal stagger-1" onclick="document.getElementById('demos').scrollIntoView({behavior:'smooth'})">
             <div class="feature-icon">🔗</div>
             <div><div class="feature-title">Votre propre adresse permanente</div><div class="feature-desc">prenom-nom.corpusdigitalis.com — une URL professionnelle que vous envoyez à un éditeur, un journaliste, une commission de recrutement. Elle vous suit toute votre carrière.</div></div>
           </div>
-          <div class="feature-item reveal stagger-2">
+          <div class="feature-item reveal stagger-2" onclick="document.getElementById('demos').scrollIntoView({behavior:'smooth'})">
             <div class="feature-icon">📚</div>
             <div><div class="feature-title">Publications avec DOI et liens sources</div><div class="feature-desc">Articles, ouvrages, chapitres de livres — avec DOI, résumé, lien HAL ou Scholar. Mis à jour sur simple demande tout au long de l'année.</div></div>
           </div>
-          <div class="feature-item reveal stagger-3">
+          <div class="feature-item reveal stagger-3" onclick="document.getElementById('demos').scrollIntoView({behavior:'smooth'})">
             <div class="feature-icon">🎓</div>
             <div><div class="feature-title">Enseignements structurés par niveau</div><div class="feature-desc">Vos cours organisés par niveau (L1 à M2, doctorat), avec supports téléchargeables. Vos étudiants y accèdent — vos pairs aussi.</div></div>
           </div>
-          <div class="feature-item reveal stagger-4">
+          <div class="feature-item reveal stagger-4" onclick="document.getElementById('demos').scrollIntoView({behavior:'smooth'})">
             <div class="feature-icon">📅</div>
             <div><div class="feature-title">Interventions et agenda public</div><div class="feature-desc">Colloques, conférences, séminaires, émissions. Visibles avant même que vous soyez cherché — les organisateurs vous trouvent.</div></div>
           </div>
-          <div class="feature-item reveal stagger-5">
+          <div class="feature-item reveal stagger-5" onclick="document.getElementById('process').scrollIntoView({behavior:'smooth'})">
             <div class="feature-icon">🤝</div>
             <div><div class="feature-title">Service Conciergerie inclus</div><div class="feature-desc">Vous uploadez votre CV. Notre équipe construit votre profil complet en 48h. Vous validez avant la mise en ligne — et c'est tout.</div></div>
           </div>
-          <div class="feature-item reveal stagger-6">
+          <div class="feature-item reveal stagger-6" onclick="document.getElementById('demos').scrollIntoView({behavior:'smooth'})">
             <div class="feature-icon">🔍</div>
             <div><div class="feature-title">Indexé sur corpusdigitalis.com</div><div class="feature-desc">Searchable par nom, discipline, institution ou publication depuis la page d'accueil. Visible sans compte, sans barrière.</div></div>
           </div>
@@ -667,29 +722,36 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
               <div class="dms"><div class="dms-num">3</div><div class="dms-lbl">Événements</div></div>
               <div class="dms"><div class="dms-num">47h</div><div class="dms-lbl">Construction</div></div>
             </div>
+            <a href="https://claire-martins.corpusdigitalis.com" target="_blank" rel="noopener noreferrer" class="demo-visit-btn">
+              Voir le profil live
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
           </div>
-          <div class="demo-browser-frame reveal-right">
-            <div class="demo-bar">
-              <div class="browser-dots"><div class="brd brd-r"></div><div class="brd brd-y"></div><div class="brd brd-g"></div></div>
-              <div class="demo-url-bar">claire-martins.corpusdigitalis.com</div>
-            </div>
-            <div class="demo-body">
-              <div class="demo-profile-top">
-                <div class="demo-ava" style="background:linear-gradient(135deg,#667eea,#764ba2)">👩‍🎓</div>
-                <div><div class="demo-name-txt">Claire Martins</div><div class="demo-role-txt">MCF · Sociologie · Paris 1 · LISE-CNRS</div></div>
+          <div class="demo-card-wrap reveal-right">
+            <div class="demo-card">
+              <div class="demo-card-header">
+                <div class="demo-card-ava" style="background:linear-gradient(135deg,#2d3748,#1a202c)">CM</div>
+                <div>
+                  <div class="demo-card-name">Claire Martins</div>
+                  <div class="demo-card-role">MCF · Sociologie · Paris 1 · LISE-CNRS</div>
+                </div>
+                <div class="demo-card-badge">LIVE</div>
               </div>
-              <div class="demo-section-lbl">Publications récentes</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Le travail invisible dans les plateformes — <em>RFS</em>, 2025</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Organisations apprenantes et hybridation — <em>Soc. du Travail</em>, 2024</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Numérique et présentéisme professionnel — <em>Travail et Emploi</em>, 2023</div>
-              <div class="demo-section-lbl" style="margin-top:12px">Enseignements 2025–2026</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Sociologie des organisations — M1 Science politique</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Méthodes qualitatives — L3 Sociologie</div>
-              <div class="demo-chips">
-                <div class="demo-chip">Sociologie</div>
-                <div class="demo-chip">CNRS</div>
-                <div class="demo-chip">Paris 1</div>
-                <div class="demo-chip">Travail</div>
+              <div class="demo-card-url">claire-martins.corpusdigitalis.com</div>
+              <div class="demo-card-body">
+                <div class="demo-card-sec">Publications récentes</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Le travail invisible dans les plateformes — <em>RFS</em>, 2025</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Organisations apprenantes et hybridation — <em>Soc. du Travail</em>, 2024</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Numérique et présentéisme professionnel — <em>Travail et Emploi</em>, 2023</div>
+                <div class="demo-card-sec" style="margin-top:14px">Enseignements 2025–2026</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Sociologie des organisations — M1 Science politique</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Méthodes qualitatives — L3 Sociologie</div>
+                <div class="demo-card-chips">
+                  <div class="demo-card-chip">Sociologie</div>
+                  <div class="demo-card-chip">CNRS</div>
+                  <div class="demo-card-chip">Paris 1</div>
+                  <div class="demo-card-chip">Travail</div>
+                </div>
               </div>
             </div>
           </div>
@@ -709,29 +771,36 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
               <div class="dms"><div class="dms-num">4</div><div class="dms-lbl">Conférences</div></div>
               <div class="dms"><div class="dms-num">43h</div><div class="dms-lbl">Construction</div></div>
             </div>
+            <a href="https://marc-lebrun.corpusdigitalis.com" target="_blank" rel="noopener noreferrer" class="demo-visit-btn">
+              Voir le profil live
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
           </div>
-          <div class="demo-browser-frame reveal-right">
-            <div class="demo-bar">
-              <div class="browser-dots"><div class="brd brd-r"></div><div class="brd brd-y"></div><div class="brd brd-g"></div></div>
-              <div class="demo-url-bar">marc-lebrun.corpusdigitalis.com</div>
-            </div>
-            <div class="demo-body">
-              <div class="demo-profile-top">
-                <div class="demo-ava" style="background:linear-gradient(135deg,#1e3a5f,#3b5998)">👨‍🔬</div>
-                <div><div class="demo-name-txt">Marc Lebrun</div><div class="demo-role-txt">PR · Physique Théorique · Polytechnique · IUF</div></div>
+          <div class="demo-card-wrap reveal-right">
+            <div class="demo-card">
+              <div class="demo-card-header">
+                <div class="demo-card-ava" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e)">ML</div>
+                <div>
+                  <div class="demo-card-name">Marc Lebrun</div>
+                  <div class="demo-card-role">PR · Physique Théorique · Polytechnique · IUF</div>
+                </div>
+                <div class="demo-card-badge">LIVE</div>
               </div>
-              <div class="demo-section-lbl">Publications récentes</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Quantum field perturbation methods — <em>Phys. Rev. D</em>, 2025</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Non-perturbative effects in gauge theories — <em>JHEP</em>, 2024</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Renormalization group flow — <em>Nuclear Phys. B</em>, 2023</div>
-              <div class="demo-section-lbl" style="margin-top:12px">Prochaines interventions</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Strings 2026 — Buenos Aires — Juil. 2026</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Workshop QFT — Cambridge — Oct. 2026</div>
-              <div class="demo-chips">
-                <div class="demo-chip">Physique</div>
-                <div class="demo-chip">IUF</div>
-                <div class="demo-chip">Polytechnique</div>
-                <div class="demo-chip">EN · FR</div>
+              <div class="demo-card-url">marc-lebrun.corpusdigitalis.com</div>
+              <div class="demo-card-body">
+                <div class="demo-card-sec">Publications récentes</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Quantum field perturbation methods — <em>Phys. Rev. D</em>, 2025</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Non-perturbative effects in gauge theories — <em>JHEP</em>, 2024</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Renormalization group flow — <em>Nuclear Phys. B</em>, 2023</div>
+                <div class="demo-card-sec" style="margin-top:14px">Prochaines interventions</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Strings 2026 — Buenos Aires — Juil. 2026</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Workshop QFT — Cambridge — Oct. 2026</div>
+                <div class="demo-card-chips">
+                  <div class="demo-card-chip">Physique</div>
+                  <div class="demo-card-chip">IUF</div>
+                  <div class="demo-card-chip">Polytechnique</div>
+                  <div class="demo-card-chip">EN · FR</div>
+                </div>
               </div>
             </div>
           </div>
@@ -751,29 +820,36 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
               <div class="dms"><div class="dms-num">5</div><div class="dms-lbl">Conférences</div></div>
               <div class="dms"><div class="dms-num">38h</div><div class="dms-lbl">Construction</div></div>
             </div>
+            <a href="https://sofia-andrieu.corpusdigitalis.com" target="_blank" rel="noopener noreferrer" class="demo-visit-btn">
+              Voir le profil live
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
           </div>
-          <div class="demo-browser-frame reveal-right">
-            <div class="demo-bar">
-              <div class="browser-dots"><div class="brd brd-r"></div><div class="brd brd-y"></div><div class="brd brd-g"></div></div>
-              <div class="demo-url-bar">sofia-andrieu.corpusdigitalis.com</div>
-            </div>
-            <div class="demo-body">
-              <div class="demo-profile-top">
-                <div class="demo-ava" style="background:linear-gradient(135deg,#2d1b4e,#6b46c1)">👩‍💻</div>
-                <div><div class="demo-name-txt">Sofia Andrieu</div><div class="demo-role-txt">Post-doc · Linguistique cognitive · EHESS</div></div>
+          <div class="demo-card-wrap reveal-right">
+            <div class="demo-card">
+              <div class="demo-card-header">
+                <div class="demo-card-ava" style="background:linear-gradient(135deg,#2d1b4e,#553c9a)">SA</div>
+                <div>
+                  <div class="demo-card-name">Sofia Andrieu</div>
+                  <div class="demo-card-role">Post-doc · Linguistique cognitive · EHESS</div>
+                </div>
+                <div class="demo-card-badge">LIVE</div>
               </div>
-              <div class="demo-section-lbl">Publications récentes</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Métaphores conceptuelles et ancrage culturel — <em>Langages</em>, 2025</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Embodied cognition in bilingual speakers — <em>Cognitive Linguistics</em>, 2024</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>Deixis et cognition spatiale — <em>Langue Française</em>, 2023</div>
-              <div class="demo-section-lbl" style="margin-top:12px">Conférences internationales</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>ICLC 2026 — Tallinn — Août 2026</div>
-              <div class="demo-entry"><div class="demo-entry-dot"></div>AMLaP 2026 — Barcelone — Sept. 2026</div>
-              <div class="demo-chips">
-                <div class="demo-chip">Linguistique</div>
-                <div class="demo-chip">EHESS</div>
-                <div class="demo-chip">Cognitif</div>
-                <div class="demo-chip">EN · FR · ES</div>
+              <div class="demo-card-url">sofia-andrieu.corpusdigitalis.com</div>
+              <div class="demo-card-body">
+                <div class="demo-card-sec">Publications récentes</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Métaphores conceptuelles et ancrage culturel — <em>Langages</em>, 2025</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Embodied cognition in bilingual speakers — <em>Cognitive Linguistics</em>, 2024</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>Deixis et cognition spatiale — <em>Langue Française</em>, 2023</div>
+                <div class="demo-card-sec" style="margin-top:14px">Conférences internationales</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>ICLC 2026 — Tallinn — Août 2026</div>
+                <div class="demo-card-entry"><div class="demo-card-dot"></div>AMLaP 2026 — Barcelone — Sept. 2026</div>
+                <div class="demo-card-chips">
+                  <div class="demo-card-chip">Linguistique</div>
+                  <div class="demo-card-chip">EHESS</div>
+                  <div class="demo-card-chip">Cognitif</div>
+                  <div class="demo-card-chip">EN · FR · ES</div>
+                </div>
               </div>
             </div>
           </div>
@@ -846,8 +922,8 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
       <div class="stat-label">Offre de lancement, par an</div>
     </div>
     <div class="stat-block reveal stagger-2">
-      <div class="stat-num"><span class="counter" data-target="20">0</span></div>
-      <div class="stat-label">Places Early Bird disponibles</div>
+      <div class="stat-num"><span class="counter" data-target="14">0</span></div>
+      <div class="stat-label">Places restantes sur 20</div>
     </div>
     <div class="stat-block reveal stagger-3">
       <div class="stat-num"><span class="counter" data-target="0">0</span></div>
@@ -868,7 +944,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
     </div>
     <div class="pricing-grid">
       <div class="price-card featured reveal-left">
-        <div class="price-badge">Early Bird — 20 places</div>
+        <div class="price-badge">Early Bird — 14 places restantes</div>
         <div class="price-label price-label-light">Lancement — jusqu'au 31 mai 2026</div>
         <div class="price-num price-num-light">97€ <span class="price-strike">144€</span></div>
         <div class="price-period price-period-light">par an TTC · facture disponible immédiatement</div>
@@ -1023,7 +1099,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 ══════════════════════════ -->
 <section id="cta">
   <div class="cta-inner">
-    <div class="cta-eye reveal">Early Bird · 20 places · Fermeture le 31 mai 2026</div>
+    <div class="cta-eye reveal">Early Bird · 14 places restantes · Fermeture le 31 mai 2026</div>
     <h2 class="cta-title reveal">Votre profil peut être<br>live dans 48 heures.</h2>
     <p class="cta-sub reveal">97€/an. Facture immédiate. Vous uploadez votre CV — on s'occupe du reste, de A à Z.</p>
     <div class="cta-actions reveal">
