@@ -114,7 +114,7 @@
 
         async function loadCourses() {
             const prof = await initLayout();
-            if (!prof) return;
+            if (!prof) { window.location.href = '/404.html'; return; }
 
             const skelName = document.getElementById('skeleton-name');
             if (skelName) skelName.style.display = 'none';

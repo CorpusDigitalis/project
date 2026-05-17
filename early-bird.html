@@ -21,11 +21,31 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
 
         /* NAV */
-        .topbar { background: var(--accent); padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; }
-        .topbar-logo { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: white; text-decoration: none; }
-        .topbar-logo span { background: white; color: var(--accent); padding: 2px 6px; border-radius: 3px; font-size: 0.6rem; margin-left: 8px; }
-        .topbar-link { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.8rem; font-weight: 500; }
-        .topbar-link:hover { color: white; }
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--accent);
+            padding: 0 5%;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 62px;
+            transition: box-shadow 0.3s;
+        }
+        .topbar.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
+        .topbar-logo {
+            font-weight: 800; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: white; text-decoration: none; display: flex; align-items: center; gap: 8px;
+        }
+        .topbar-logo span { background: white; color: var(--accent); padding: 2px 7px; border-radius: 3px; font-size: 0.6rem; }
+        .topbar-links { display: flex; align-items: center; gap: 28px; }
+        .topbar-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: color 0.2s; }
+        .topbar-links a:hover { color: white; }
+        .topbar-cta {
+            background: white; color: var(--accent);
+            font-weight: 700; font-size: 0.8rem; letter-spacing: 0.03em;
+            padding: 8px 20px; border-radius: 6px; text-decoration: none;
+            transition: opacity 0.2s; white-space: nowrap;
+        }
+        .topbar-cta:hover { opacity: 0.9; }
+        @media (max-width: 640px) { .topbar-links { display: none; } }
 
         /* HERO */
         .hero {
@@ -144,15 +164,25 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
             padding: 28px;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.4s ease, box-shadow 0.4s ease;
+            will-change: transform;
         }
         .demo-card:hover { background: rgba(255,255,255,0.1); }
-        .demo-avatar { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .demo-card-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+        .demo-photo { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+        .demo-badge-live { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.4); color: #6ee7b7; padding: 3px 8px; border-radius: 20px; margin-left: auto; display: flex; align-items: center; gap: 4px; }
+        .demo-badge-live::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #6ee7b7; animation: pulse 1.5s infinite; }
         .demo-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: white; margin-bottom: 4px; }
         .demo-title { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
         .demo-desc { font-size: 0.84rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
-        .demo-link { display: inline-block; margin-top: 16px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2px; transition: color 0.2s; }
-        .demo-link:hover { color: white; }
+        .demo-link {
+            display: inline-flex; align-items: center; gap: 7px;
+            margin-top: 18px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.03em;
+            color: white; text-decoration: none;
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+            padding: 9px 18px; border-radius: 6px; transition: background 0.2s;
+        }
+        .demo-link:hover { background: rgba(255,255,255,0.22); }
 
         /* PROCESS */
         .section-process { padding: 70px 5%; max-width: 900px; margin: 0 auto; }
@@ -207,9 +237,14 @@
 </head>
 <body>
 
-<nav class="topbar">
-    <a href="/" class="topbar-logo">Corpus Digitalis <span>PRO</span></a>
-    <a href="/" class="topbar-link">← Voir les profils</a>
+<nav class="topbar" id="topbar">
+    <a href="index.html" class="topbar-logo">CORPUS DIGITALIS <span>PRO</span></a>
+    <div class="topbar-links">
+        <a href="#demos">Exemples de profils</a>
+        <a href="#processus">Comment ça marche</a>
+        <a href="#faq">FAQ</a>
+    </div>
+    <a href="https://buy.stripe.com/dRm8wQdepdmcb9d9nqb7y02" class="topbar-cta">Réserver — 97€/an</a>
 </nav>
 
 <!-- HERO -->
@@ -244,7 +279,7 @@
 
     <!-- CTA -->
     <!-- REMPLACER href PAR LE VRAI LIEN STRIPE 97€ -->
-    <a href="[LIEN_STRIPE_97€]" class="cta-btn">Réserver ma place — 97€/an</a>
+    <a href="https://buy.stripe.com/dRm8wQdepdmcb9d9nqb7y02" class="cta-btn">Réserver ma place — 97€/an</a>
     <div class="cta-sub">Paiement sécurisé par Stripe · HTTPS · Données hébergées en Europe</div>
 
     <div class="deadline-bar">
@@ -293,38 +328,47 @@
 </section>
 
 <!-- PROFILS DÉMO -->
-<section class="section-demos">
+<section class="section-demos" id="demos">
     <div class="section-demos-inner">
         <div class="section-label">Exemples réels</div>
         <div class="section-title">À quoi ressemble votre profil.</div>
         <div class="demos-grid">
-            <div class="demo-card">
-                <div class="demo-avatar">👩‍🎓</div>
+            <div class="demo-card" data-tilt>
+                <div class="demo-card-top">
+                    <img class="demo-photo" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=108&h=108&fit=crop&crop=faces&auto=format" alt="Claire Martins">
+                    <div class="demo-badge-live">LIVE</div>
+                </div>
                 <div class="demo-name">Claire Martins</div>
                 <div class="demo-title">MCF · Sociologie · Paris 1</div>
                 <div class="demo-desc">4 publications, 3 cours actifs, 3 interventions à venir. Profil complet construit en 48h à partir de son CV.</div>
-                <a href="/" class="demo-link">Voir le profil →</a>
+                <a href="https://claire-martins.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil live <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
             </div>
-            <div class="demo-card">
-                <div class="demo-avatar">👨‍🔬</div>
+            <div class="demo-card" data-tilt>
+                <div class="demo-card-top">
+                    <img class="demo-photo" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=108&h=108&fit=crop&crop=faces&auto=format" alt="Marc Lebrun">
+                    <div class="demo-badge-live">LIVE</div>
+                </div>
                 <div class="demo-name">Marc Lebrun</div>
                 <div class="demo-title">PR · Physique · Polytechnique</div>
                 <div class="demo-desc">4 publications avec DOI, 2 cours téléchargeables, 3 conférences internationales listées.</div>
-                <a href="/" class="demo-link">Voir le profil →</a>
+                <a href="https://marc-lebrun.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil live <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
             </div>
-            <div class="demo-card">
-                <div class="demo-avatar">👩‍💻</div>
+            <div class="demo-card" data-tilt>
+                <div class="demo-card-top">
+                    <img class="demo-photo" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=108&h=108&fit=crop&crop=faces&auto=format" alt="Sofia Andrieu">
+                    <div class="demo-badge-live">LIVE</div>
+                </div>
                 <div class="demo-name">Sofia Andrieu</div>
                 <div class="demo-title">Post-doc · Linguistique · EHESS</div>
                 <div class="demo-desc">En recherche de poste — son profil est sa carte de visite pour les commissions de recrutement.</div>
-                <a href="/" class="demo-link">Voir le profil →</a>
+                <a href="https://sofia-andrieu.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil live <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- PROCESSUS -->
-<section class="section-process">
+<section class="section-process" id="processus">
     <div class="section-label">Comment ça marche</div>
     <div class="section-title">De l'inscription à votre site live en 48h.</div>
     <div class="process-steps">
@@ -360,7 +404,7 @@
 </section>
 
 <!-- FAQ -->
-<section class="section-faq">
+<section class="section-faq" id="faq">
     <div class="section-faq-inner">
         <div class="section-label">Questions fréquentes</div>
         <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--accent); margin-bottom:32px;">Tout ce que vous voulez savoir.</div>
@@ -396,7 +440,7 @@
     <h2>Il reste <span id="places-restantes-2">14</span> places sur 20.</h2>
     <p>6 places déjà prises. L'offre se ferme au 20ème inscrit ou au 31 mai 2026. Après, le tarif passe à 144€/an.</p>
     <!-- REMPLACER href PAR LE VRAI LIEN STRIPE 97€ -->
-    <a href="[LIEN_STRIPE_97€]" class="cta-btn-dark">Réserver ma place — 97€/an</a>
+    <a href="https://buy.stripe.com/dRm8wQdepdmcb9d9nqb7y02" class="cta-btn-dark">Réserver ma place — 97€/an</a>
     <p style="font-size:0.78rem; color:var(--muted); margin-top:16px;">Questions ? contact@corpusdigitalis.com — réponse sous 48h</p>
 </section>
 
@@ -418,6 +462,30 @@
     // Sync les deux compteurs
     const n = document.getElementById('places-restantes').textContent;
     document.getElementById('places-restantes-2').textContent = n;
+
+    // Nav sticky — ombre au scroll
+    window.addEventListener('scroll', () => {
+        document.getElementById('topbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Effet 3D tilt léger sur les cards démo
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transition = 'background 0.2s';
+        });
+        card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - 0.5;
+            const y = (e.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(600px) rotateX(${-y * 6}deg) rotateY(${x * 6}deg) translateY(-3px)`;
+            card.style.boxShadow = `${-x * 12}px ${-y * 12}px 30px rgba(0,0,0,0.25)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transition = 'background 0.2s, transform 0.45s cubic-bezier(.16,1,.3,1), box-shadow 0.45s ease';
+            card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) translateY(0)';
+            card.style.boxShadow = '';
+        });
+    });
 </script>
 </body>
 </html>

@@ -70,8 +70,8 @@
         /* --- LAYOUT PRO & RESIZER --- */
         .wrapper { 
             display: flex; flex: 1; position: relative; background: var(--bg-body);
-            height: calc(100vh - 20px); margin: 10px 10px 10px 0; 
-            border-radius: 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
+            height: calc(100vh - 20px); margin: 10px 10px 10px 0;
+            border-radius: 16px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden;
             min-width: 0; /* Empêche de déborder */
         }
         
@@ -456,7 +456,14 @@
 
     <div class="wrapper">
         <main class="editor-side" id="editor-side">
-            
+
+            <!-- Bannière Concierge — affichée si données pré-importées -->
+            <div id="concierge-notice" class="hidden" style="background:#ecfdf5; border:1px solid #6ee7b7; border-radius:8px; padding:12px 16px; margin-bottom:20px; display:flex; align-items:center; gap:12px; font-size:0.83rem; color:#065f46; flex-wrap:wrap;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span style="flex:1;">Vos données ont été pré-importées depuis votre CV. Vérifiez et complétez si nécessaire — elles sont éditables à tout moment.</span>
+                <button onclick="dismissConciergeNotice()" style="background:none; border:none; cursor:pointer; color:#6ee7b7; font-size:1.3rem; line-height:1; padding:0; flex-shrink:0; font-weight:700;">×</button>
+            </div>
+
             <section id="mod-profil" class="module">
                 <div class="header-flex">
                     <div>
@@ -698,13 +705,27 @@
     });
 
     document.addEventListener('mouseup', () => {
-        if (isResizing) { 
-            isResizing = false; 
-            shield.style.display = 'none'; 
-            document.body.style.cursor = ''; 
-            resizer.classList.remove('dragging'); 
+        if (isResizing) {
+            isResizing = false;
+            shield.style.display = 'none';
+            document.body.style.cursor = '';
+            resizer.classList.remove('dragging');
+            localStorage.setItem('adminEditorWidth', editorSide.offsetWidth + 'px');
         }
     });
+
+    // Restaure la largeur de l'éditeur sauvegardée
+    (function restoreEditorWidth() {
+        const saved = localStorage.getItem('adminEditorWidth');
+        if (saved && window.innerWidth > 1200) {
+            const w = parseInt(saved);
+            const max = window.innerWidth - 350 - 270;
+            if (w >= 400 && w <= max) {
+                editorSide.style.width = w + 'px';
+                editorSide.style.flex = 'none';
+            }
+        }
+    })();
 
     // Éviter le débordement si on a agrandi l'éditeur puis qu'on réduit la fenêtre
     window.addEventListener('resize', () => {
@@ -859,7 +880,12 @@
         }
         
         await loadData(session.user.id);
-        switchTab('profil', 'accueil.html', document.querySelector('.nav-item.active'));
+
+        // Restaure l'onglet actif depuis la dernière session
+        const savedTab = localStorage.getItem('adminTab') || 'profil';
+        const savedPage = localStorage.getItem('adminPage') || 'accueil.html';
+        const savedNavEl = document.querySelector(`.nav-item[onclick*="switchTab('${savedTab}'"]`) || document.querySelector('.nav-item');
+        switchTab(savedTab, savedPage, savedNavEl);
 
         setTimeout(autoScalePreview, 100);
         checkOnboarding();
@@ -892,9 +918,10 @@
         if (resPubs.status === 'fulfilled' && resPubs.value.data) profileData.publications = resPubs.value.data;
         if (resInter.status === 'fulfilled' && resInter.value.data) profileData.interventions = resInter.value.data;
         
-        renderCourses(); 
-        renderPublications(); 
+        renderCourses();
+        renderPublications();
         renderInterventions();
+        checkConciergeNotice();
     }
 
     function fillProfileUI() {
@@ -1558,11 +1585,18 @@
             const newItem = data[0]; 
             profileData[t].unshift(newItem); 
             
-            if(t==='courses') { openCourseId = newItem.id; renderCourses(); } 
-            if(t==='publications') { openPubId = newItem.id; renderPublications(); } 
-            if(t==='interventions') { openInterId = newItem.id; renderInterventions(); } 
-            
-            showToast("Élément créé !", "success"); 
+            if(t==='courses') { openCourseId = newItem.id; renderCourses(); }
+            if(t==='publications') { openPubId = newItem.id; renderPublications(); }
+            if(t==='interventions') { openInterId = newItem.id; renderInterventions(); }
+
+            // Scroll vers le nouvel élément
+            setTimeout(() => {
+                const prefix = t==='courses' ? 'card-' : (t==='publications' ? 'pub-' : 'inter-');
+                const newEl = document.getElementById(prefix + newItem.id);
+                if (newEl) newEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 150);
+
+            showToast("Élément créé !", "success");
             reloadPreview(); 
         } catch(e) { 
             console.log(e); 
@@ -1589,18 +1623,35 @@
 
     // --- LOGIQUE SAUVEGARDE & REFRESH ---
     
-    window.switchTab = (id, p, el) => { 
-        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden')); 
-        document.getElementById('mod-'+id).classList.remove('hidden'); 
-        
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
-        if(el) el.classList.add('active'); 
-        
-        document.getElementById('sidebar').classList.remove('mobile-open'); 
-        
-        currentPagePath = p; 
+    window.switchTab = (id, p, el) => {
+        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden'));
+        document.getElementById('mod-'+id).classList.remove('hidden');
+
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if(el) el.classList.add('active');
+
+        document.getElementById('sidebar').classList.remove('mobile-open');
+
+        currentPagePath = p;
+        localStorage.setItem('adminTab', id);
+        localStorage.setItem('adminPage', p);
         reloadPreview();
     }
+
+    function checkConciergeNotice() {
+        const hasData = (profileData.publications?.length > 0) || (profileData.courses?.length > 0) || (profileData.interventions?.length > 0);
+        const dismissed = localStorage.getItem('concierge-notice-' + profileData.id);
+        if (hasData && !dismissed) {
+            const el = document.getElementById('concierge-notice');
+            if (el) { el.classList.remove('hidden'); el.style.display = 'flex'; }
+        }
+    }
+
+    window.dismissConciergeNotice = () => {
+        const el = document.getElementById('concierge-notice');
+        if (el) el.style.display = 'none';
+        localStorage.setItem('concierge-notice-' + profileData.id, '1');
+    };
 
     window.reloadPreview = () => { 
         const iframe = document.getElementById('site-preview'); 
