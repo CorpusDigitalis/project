@@ -90,7 +90,8 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .hero-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:28px;backdrop-filter:blur(8px);opacity:0;animation:fadeRight .9s var(--ease) .5s forwards}
 @keyframes fadeRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
 .hero-card-top{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.07)}
-.hc-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.hc-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.hc-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hc-name{font-weight:700;font-size:.95rem;color:white}
 .hc-role{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:2px;letter-spacing:.03em}
 .hc-label{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.22);margin:0 0 10px}
@@ -154,7 +155,8 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .browser-url-bar{flex:1;background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:.72rem;color:var(--muted);font-family:'Inter',sans-serif;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mock-content{padding:24px 20px;background:white}
 .mock-top{display:flex;gap:14px;align-items:center;margin-bottom:18px}
-.mock-ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.mock-ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.mock-ava img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .mock-name-txt{font-weight:700;font-size:.95rem;color:var(--ink)}
 .mock-role-txt{font-size:.74rem;color:var(--muted);margin-top:3px}
 .mock-bio{font-size:.79rem;color:var(--muted);line-height:1.6;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:16px}
@@ -361,7 +363,8 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .demo-card-wrap{}
 .demo-card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,.18),0 2px 8px rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.1)}
 .demo-card-header{padding:20px 24px;background:white;border-bottom:1px solid #f0ece6;display:flex;align-items:center;gap:14px}
-.demo-card-ava{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.92rem;font-weight:800;color:white;flex-shrink:0;letter-spacing:.04em}
+.demo-card-ava{width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.92rem;font-weight:800;color:white;letter-spacing:.04em}
+.demo-card-ava img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .demo-card-name{font-weight:700;font-size:.95rem;color:#0f172a}
 .demo-card-role{font-size:.72rem;color:#64748b;margin-top:2px;line-height:1.4}
 .demo-card-badge{margin-left:auto;background:#22c55e;color:white;font-size:.56rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:20px;flex-shrink:0;display:flex;align-items:center;gap:4px}
@@ -379,6 +382,33 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
 .demo-visit-btn:hover{background:var(--ink);color:white;transform:translateY(-2px);box-shadow:0 8px 28px rgba(15,23,42,.28)}
 .demo-visit-btn svg{transition:transform .2s}
 .demo-visit-btn:hover svg{transform:translateX(3px)}
+
+/* ── DEMO TAB FADE ── */
+.demo-browser{display:none}
+.demo-browser.active{display:block;animation:demoIn .35s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes demoIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── TILT CONTAINER ── */
+.demo-card{transform-style:preserve-3d;will-change:transform}
+
+/* ── AUDIENCE CARD ENHANCED ── */
+.audience-card{transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.audience-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(15,23,42,.1)}
+.aud-num{transition:color .3s,opacity .3s}
+.audience-card:hover .aud-num{color:var(--ink);opacity:.5}
+
+/* ── GARANTIE CARD ENHANCED ── */
+.garantie-card{transition:background .2s,border-left .2s;border-left:3px solid transparent}
+.garantie-card:hover{background:rgba(255,255,255,.055);border-left-color:rgba(255,255,255,.25)}
+
+/* ── STATS HOVER ── */
+.stat-block{transition:background .2s}
+.stat-block:hover{background:rgba(255,255,255,.06)}
+
+/* ── CTA BUTTON GLOW ── */
+.btn-cta-main{position:relative;overflow:hidden}
+.btn-cta-main::after{content:'';position:absolute;inset:-2px;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent,rgba(255,255,255,.06));opacity:0;transition:opacity .3s;pointer-events:none}
+.btn-cta-main:hover::after{opacity:1}
 
 /* ── MOBILE MENU ── */
 #mobile-menu{display:none;position:fixed;inset:0;background:rgba(15,23,42,.99);z-index:99;padding:80px 5%;flex-direction:column;gap:8px}
@@ -485,7 +515,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
     <div class="hero-card">
       <div class="hc-label">Profil actif — construit en 47h</div>
       <div class="hero-card-top">
-        <div class="hc-avatar">👩‍🎓</div>
+        <div class="hc-avatar"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop&crop=faces&auto=format" alt="Claire Martins" loading="lazy"></div>
         <div>
           <div class="hc-name">Claire Martins</div>
           <div class="hc-role">MCF · Sociologie · Paris 1 · LISE-CNRS</div>
@@ -608,7 +638,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
           </div>
           <div class="mock-content">
             <div class="mock-top">
-              <div class="mock-ava">👨‍🔬</div>
+              <div class="mock-ava"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=faces&auto=format" alt="Marc Lebrun" loading="lazy"></div>
               <div><div class="mock-name-txt">Marc Lebrun</div><div class="mock-role-txt">PR · Physique Théorique · Polytechnique · IUF</div></div>
             </div>
             <div class="mock-bio">Professeur des universités en physique théorique à l'École Polytechnique. Membre de l'Institut Universitaire de France. Spécialiste de la théorie des champs quantiques et des effets non-perturbatifs.</div>
@@ -730,7 +760,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
           <div class="demo-card-wrap reveal-right">
             <div class="demo-card">
               <div class="demo-card-header">
-                <div class="demo-card-ava" style="background:linear-gradient(135deg,#2d3748,#1a202c)">CM</div>
+                <div class="demo-card-ava"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop&crop=faces&auto=format" alt="Claire Martins" loading="lazy"></div>
                 <div>
                   <div class="demo-card-name">Claire Martins</div>
                   <div class="demo-card-role">MCF · Sociologie · Paris 1 · LISE-CNRS</div>
@@ -779,7 +809,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
           <div class="demo-card-wrap reveal-right">
             <div class="demo-card">
               <div class="demo-card-header">
-                <div class="demo-card-ava" style="background:linear-gradient(135deg,#1e3a5f,#2d5a8e)">ML</div>
+                <div class="demo-card-ava"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=faces&auto=format" alt="Marc Lebrun" loading="lazy"></div>
                 <div>
                   <div class="demo-card-name">Marc Lebrun</div>
                   <div class="demo-card-role">PR · Physique Théorique · Polytechnique · IUF</div>
@@ -828,7 +858,7 @@ body{font-family:'Inter',sans-serif;background:var(--ink);color:var(--ink);overf
           <div class="demo-card-wrap reveal-right">
             <div class="demo-card">
               <div class="demo-card-header">
-                <div class="demo-card-ava" style="background:linear-gradient(135deg,#2d1b4e,#553c9a)">SA</div>
+                <div class="demo-card-ava"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop&crop=faces&auto=format" alt="Sofia Andrieu" loading="lazy"></div>
                 <div>
                   <div class="demo-card-name">Sofia Andrieu</div>
                   <div class="demo-card-role">Post-doc · Linguistique cognitive · EHESS</div>
@@ -1183,11 +1213,30 @@ window.toggleFaq = (el) => { el.parentElement.classList.toggle('open'); };
 
 // ── DEMO TABS ──
 window.switchDemo = (id, btn) => {
+  if (btn.classList.contains('active')) return;
   document.querySelectorAll('.demo-browser').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.demo-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('demo-'+id).classList.add('active');
+  const next = document.getElementById('demo-'+id);
+  next.classList.add('active');
   btn.classList.add('active');
 };
+
+// ── CARD TILT 3D ──
+document.querySelectorAll('.demo-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transition = 'transform .08s ease,box-shadow .08s ease';
+    card.style.transform = `perspective(800px) rotateX(${-y*5}deg) rotateY(${x*5}deg) scale(1.015)`;
+    card.style.boxShadow = `${-x*20}px ${-y*20}px 60px rgba(0,0,0,.22),0 4px 12px rgba(0,0,0,.12)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform .5s ease,box-shadow .5s ease';
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  });
+});
 
 // ── MOBILE MENU ──
 window.toggleMenu = () => { document.getElementById('mobile-menu').classList.toggle('open'); };
