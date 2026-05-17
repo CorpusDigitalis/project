@@ -7,7 +7,10 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export function getSlug() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('prof') || 'louanne';
+    if (urlParams.get('prof')) return urlParams.get('prof');
+    const parts = window.location.hostname.split('.');
+    if (parts.length >= 3 && parts[0] !== 'www') return parts[0];
+    return null;
 }
 
 export async function initLayout() {
