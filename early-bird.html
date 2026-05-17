@@ -148,7 +148,9 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 28px 24px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
         }
+        .feature-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.07); border-color: #d0ccc6; }
         .feature-icon { font-size: 1.4rem; margin-bottom: 14px; }
         .feature-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
         .feature-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
@@ -199,9 +201,9 @@
         .faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
         .faq-q { padding: 18px 22px; font-weight: 600; font-size: 0.92rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
         .faq-q:hover { background: var(--bg); }
-        .faq-a { display: none; padding: 0 22px 18px; font-size: 0.88rem; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); padding-top: 14px; }
-        .faq-item.open .faq-a { display: block; }
-        .faq-arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--muted); }
+        .faq-a { max-height: 0; overflow: hidden; padding: 0 22px; font-size: 0.88rem; color: var(--muted); line-height: 1.7; border-top: 0 solid var(--border); transition: max-height 0.35s ease, padding 0.3s ease, border-top-width 0.3s ease; }
+        .faq-item.open .faq-a { max-height: 300px; padding: 14px 22px 18px; border-top-width: 1px; }
+        .faq-arrow { transition: transform 0.25s; font-size: 0.8rem; color: var(--muted); }
         .faq-item.open .faq-arrow { transform: rotate(180deg); }
 
         /* CTA BOTTOM */
@@ -228,10 +230,35 @@
         .page-footer a:hover { color: white; }
         .footer-links { margin-bottom: 12px; }
 
+        /* PROGRESS BAR */
+        .progress-wrap { width: 240px; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; margin: 12px auto 6px; overflow: hidden; }
+        .progress-bar { height: 100%; border-radius: 3px; background: white; width: 0; transition: width 1.4s cubic-bezier(.16,1,.3,1); }
+        .progress-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 24px; }
+
+        /* SCROLL REVEAL */
+        .reveal-section { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .reveal-section.visible { opacity: 1; transform: none; }
+
+        /* STICKY CTA BAR */
+        .sticky-cta {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+            background: white; border-top: 1px solid #e8e4de;
+            padding: 12px 5%; display: flex; align-items: center; justify-content: space-between;
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.08); gap: 16px;
+        }
+        .sticky-cta.show { transform: translateY(0); }
+        .sticky-cta-info { min-width: 0; }
+        .sticky-cta-title { font-size: 0.88rem; font-weight: 700; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sticky-cta-sub { font-size: 0.75rem; color: var(--muted); }
+        .sticky-cta-btn { background: var(--accent); color: white; font-weight: 700; font-size: 0.82rem; padding: 10px 22px; border-radius: 6px; text-decoration: none; white-space: nowrap; transition: opacity 0.2s; flex-shrink: 0; }
+        .sticky-cta-btn:hover { opacity: 0.85; }
+
         @media (max-width: 768px) {
             .counter-wrap { gap: 12px; }
             .counter-box { padding: 12px 20px; }
             .price-amount { font-size: 2.8rem; }
+            .sticky-cta-sub { display: none; }
         }
     </style>
 </head>
@@ -267,6 +294,10 @@
         </div>
     </div>
 
+    <!-- PROGRESS BAR PLACES -->
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="progress-label">6 places déjà réservées · 14 restantes</div>
+
     <!-- PRIX -->
     <div class="price-block">
         <div class="price-main">
@@ -289,7 +320,7 @@
 </section>
 
 <!-- CE QUI EST INCLUS -->
-<section class="section-what">
+<section class="section-what reveal-section">
     <div class="section-label">Ce que vous obtenez</div>
     <div class="section-title">Tout ce dont un chercheur a besoin, au même endroit.</div>
 
@@ -328,7 +359,7 @@
 </section>
 
 <!-- PROFILS DÉMO -->
-<section class="section-demos" id="demos">
+<section class="section-demos reveal-section" id="demos">
     <div class="section-demos-inner">
         <div class="section-label">Exemples réels</div>
         <div class="section-title">À quoi ressemble votre profil.</div>
@@ -368,7 +399,7 @@
 </section>
 
 <!-- PROCESSUS -->
-<section class="section-process" id="processus">
+<section class="section-process reveal-section" id="processus">
     <div class="section-label">Comment ça marche</div>
     <div class="section-title">De l'inscription à votre site live en 48h.</div>
     <div class="process-steps">
@@ -404,7 +435,7 @@
 </section>
 
 <!-- FAQ -->
-<section class="section-faq" id="faq">
+<section class="section-faq reveal-section" id="faq">
     <div class="section-faq-inner">
         <div class="section-label">Questions fréquentes</div>
         <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--accent); margin-bottom:32px;">Tout ce que vous voulez savoir.</div>
@@ -444,6 +475,15 @@
     <p style="font-size:0.78rem; color:var(--muted); margin-top:16px;">Questions ? contact@corpusdigitalis.com — réponse sous 48h</p>
 </section>
 
+<!-- STICKY CTA BAR -->
+<div class="sticky-cta" id="sticky-cta">
+    <div class="sticky-cta-info">
+        <div class="sticky-cta-title">Early Bird — 14 places restantes</div>
+        <div class="sticky-cta-sub">97€/an TTC · Paiement sécurisé Stripe</div>
+    </div>
+    <a href="https://buy.stripe.com/dRm8wQdepdmcb9d9nqb7y02" class="sticky-cta-btn">Réserver ma place →</a>
+</div>
+
 <footer class="page-footer">
     <div class="footer-links">
         <a href="mentions-legales.html">Mentions légales</a>
@@ -455,24 +495,61 @@
 </footer>
 
 <script>
+    // FAQ smooth toggle
     function toggleFaq(el) {
-        el.parentElement.classList.toggle('open');
+        const item = el.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
     }
 
     // Sync les deux compteurs
-    const n = document.getElementById('places-restantes').textContent;
-    document.getElementById('places-restantes-2').textContent = n;
+    const placesEl = document.getElementById('places-restantes');
+    const totalPlaces = 20;
+    const takenPlaces = totalPlaces - parseInt(placesEl.textContent);
+    document.getElementById('places-restantes-2').textContent = placesEl.textContent;
 
-    // Nav sticky — ombre au scroll
+    // Count-up animation sur le compteur de places restantes
+    function countUp(el, target, duration) {
+        let start = null;
+        const step = ts => {
+            if (!start) start = ts;
+            const p = Math.min((ts - start) / duration, 1);
+            el.textContent = Math.floor(p * target);
+            if (p < 1) requestAnimationFrame(step);
+            else el.textContent = target;
+        };
+        el.textContent = '0';
+        requestAnimationFrame(step);
+    }
+    setTimeout(() => countUp(placesEl, parseInt(placesEl.textContent) || 14, 950), 250);
+
+    // Progress bar — places prises / total
+    setTimeout(() => {
+        const pct = Math.round((takenPlaces / totalPlaces) * 100);
+        document.getElementById('progress-bar').style.width = pct + '%';
+    }, 300);
+
+    // Nav sticky + Sticky CTA au scroll
+    const hero = document.querySelector('.hero');
+    const stickyCta = document.getElementById('sticky-cta');
     window.addEventListener('scroll', () => {
-        document.getElementById('topbar').classList.toggle('scrolled', window.scrollY > 20);
+        const y = window.scrollY;
+        document.getElementById('topbar').classList.toggle('scrolled', y > 20);
+        if (hero && stickyCta) stickyCta.classList.toggle('show', y > hero.offsetHeight * 0.65);
     });
 
-    // Effet 3D tilt léger sur les cards démo
-    document.querySelectorAll('[data-tilt]').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transition = 'background 0.2s';
+    // Scroll reveal (IntersectionObserver)
+    const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
         });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal-section').forEach(el => revealObs.observe(el));
+
+    // Effet 3D tilt sur les cards démo
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+        card.addEventListener('mouseenter', () => { card.style.transition = 'background 0.2s'; });
         card.addEventListener('mousemove', e => {
             const r = card.getBoundingClientRect();
             const x = (e.clientX - r.left) / r.width - 0.5;
