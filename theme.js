@@ -102,6 +102,26 @@ export async function initLayout() {
         }
     });
 
+    // 6. Police du titre (config.title_font)
+    const titleFont = prof.config?.title_font || 'Playfair Display';
+    const fontMap = {
+        'Playfair Display': 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap',
+        'Lato':             'https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap',
+        'Raleway':          'https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap',
+        'Merriweather':     'https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap',
+        'Source Serif 4':   'https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap',
+    };
+    if (fontMap[titleFont] && !document.querySelector(`link[data-titlefont]`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = fontMap[titleFont];
+        link.dataset.titlefont = '1';
+        document.head.appendChild(link);
+    }
+    document.querySelectorAll('.site-name, .prof-name, h1.name').forEach(el => {
+        el.style.fontFamily = `'${titleFont}', serif`;
+    });
+
     return prof;
 }
 

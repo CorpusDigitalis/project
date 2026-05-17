@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Raleway:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -88,6 +88,14 @@
         .resizer { width: 8px; background: transparent; cursor: col-resize; position: relative; z-index: 50; transition: background 0.2s ease; }
         .resizer:hover, .resizer.dragging { background: var(--sidebar); }
         .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
+
+        /* --- FONT SELECTOR --- */
+        .font-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 14px; }
+        .font-option { border: 2px solid var(--border); border-radius: 8px; padding: 14px 12px; cursor: pointer; text-align: center; transition: 0.15s; background: white; }
+        .font-option:hover { border-color: #94a3b8; }
+        .font-option.selected { border-color: var(--accent); background: #f1f5f9; }
+        .font-preview { font-size: 1.2rem; line-height: 1.2; margin-bottom: 6px; color: var(--text-main); }
+        .font-name { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Inter', sans-serif !important; }
 
         /* --- ESPACEMENTS --- */
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e8e4de; flex-wrap: wrap; gap: 15px; }
@@ -635,6 +643,34 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Police du titre</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Choisissez la typographie utilisée pour votre nom en haut de chaque page.</p>
+                    <div class="font-grid" id="font-selector">
+                        <div class="font-option" data-font="Playfair Display" onclick="selectFont('Playfair Display', this)">
+                            <div class="font-preview" style="font-family:'Playfair Display',serif;">Aa</div>
+                            <div class="font-name">Playfair Display</div>
+                        </div>
+                        <div class="font-option" data-font="Lato" onclick="selectFont('Lato', this)">
+                            <div class="font-preview" style="font-family:'Lato',sans-serif;">Aa</div>
+                            <div class="font-name">Lato</div>
+                        </div>
+                        <div class="font-option" data-font="Raleway" onclick="selectFont('Raleway', this)">
+                            <div class="font-preview" style="font-family:'Raleway',sans-serif;">Aa</div>
+                            <div class="font-name">Raleway</div>
+                        </div>
+                        <div class="font-option" data-font="Merriweather" onclick="selectFont('Merriweather', this)">
+                            <div class="font-preview" style="font-family:'Merriweather',serif;">Aa</div>
+                            <div class="font-name">Merriweather</div>
+                        </div>
+                        <div class="font-option" data-font="Source Serif 4" onclick="selectFont('Source Serif 4', this)">
+                            <div class="font-preview" style="font-family:'Source Serif 4',serif;">Aa</div>
+                            <div class="font-name">Source Serif</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="scroll-spacer"></div>
             </section>
 
@@ -1075,8 +1111,9 @@
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; 
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
         
-        renderHeaderConfig(); 
-        renderFooterConfig(); 
+        renderHeaderConfig();
+        renderFooterConfig();
+        initFontSelector();
         lucide.createIcons();
     }
 
@@ -1889,6 +1926,19 @@
     
     window.removeFooterLink = (idx) => { profileData.config.footer.custom.splice(idx, 1); saveConfig(); renderFooterConfig(); }
     async function saveConfig() { await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); showToast("Configuration sauvegardée", "success"); reloadPreview(); }
+
+    window.selectFont = function(fontName, el) {
+        profileData.config.title_font = fontName;
+        document.querySelectorAll('#font-selector .font-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        saveConfig();
+    };
+    function initFontSelector() {
+        const current = profileData.config?.title_font || 'Playfair Display';
+        document.querySelectorAll('#font-selector .font-option').forEach(o => {
+            o.classList.toggle('selected', o.dataset.font === current);
+        });
+    }
     window.switchCVMode = (mode, btn) => { const row = document.getElementById('cv-row'); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     window.uploadFile = async (type, input) => { if (!input.files.length) return; const file = input.files[0]; showToast("Upload en cours...", "success"); const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) return showToast("Erreur: " + error.message, "error"); const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; if (type === 'avatar') { await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id); document.getElementById('preview-avatar').src = url; } showToast("Sauvegardé !", "success"); }
     function checkOnboarding() {
