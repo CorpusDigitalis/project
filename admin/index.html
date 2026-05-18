@@ -518,6 +518,17 @@
     <div class="wrapper">
         <main class="editor-side" id="editor-side">
 
+            <!-- ALERTE PAIEMENTS EN ATTENTE — visible sur tous les onglets -->
+            <div id="pending-clients-alert" class="hidden" style="background:#fef2f2; border:1.5px solid #fca5a5; border-radius:8px; padding:14px 16px; margin-bottom:20px; font-size:0.83rem; color:#991b1b; position:sticky; top:0; z-index:50; box-shadow:0 4px 12px rgba(239,68,68,0.12);">
+                <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <svg style="flex-shrink:0; margin-top:1px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <div style="flex:1; min-width:0;">
+                        <strong id="pending-alert-title" style="display:block; margin-bottom:8px; font-size:0.88rem;"></strong>
+                        <div id="pending-alert-list" style="display:flex; flex-direction:column; gap:6px;"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Bannière Concierge — affichée si données pré-importées -->
             <div id="concierge-notice" class="hidden" style="background:#ecfdf5; border:1px solid #6ee7b7; border-radius:8px; padding:12px 16px; margin-bottom:20px; display:flex; align-items:center; gap:12px; font-size:0.83rem; color:#065f46; flex-wrap:wrap;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1220,6 +1231,7 @@
         initLayoutSelector();
         initNavLabels();
         lucide.createIcons();
+        checkPendingClients();
     }
 
     function initSortable(containerId, dataKey) {
@@ -2115,6 +2127,47 @@
         document.getElementById('onboarding-overlay').classList.add('hidden');
         if (profileData) localStorage.setItem('onboarding_dismissed_' + profileData.id, '1');
     }
+
+    async function checkPendingClients() {
+        const { data, error } = await sb
+            .from('pending_clients')
+            .select('id, email, created_at, amount_cents, currency')
+            .eq('status', 'needs_followup')
+            .order('created_at', { ascending: false });
+
+        if (error || !data || data.length === 0) return;
+
+        const alertEl = document.getElementById('pending-clients-alert');
+        const titleEl = document.getElementById('pending-alert-title');
+        const listEl  = document.getElementById('pending-alert-list');
+
+        titleEl.textContent = `${data.length} paiement${data.length > 1 ? 's' : ''} reçu${data.length > 1 ? 's' : ''} sans compte — contacter le client et collecter son CV`;
+
+        listEl.innerHTML = data.map(p => {
+            const date   = new Date(p.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            const amount = p.amount_cents ? `${(p.amount_cents / 100).toFixed(0)} ${p.currency || 'EUR'}` : '?';
+            return `<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:white; border:1px solid #fca5a5; border-radius:6px; padding:8px 12px; flex-wrap:wrap;">
+                <div>
+                    <strong style="font-size:0.85rem; color:#7f1d1d;">${p.email}</strong>
+                    <span style="color:#b91c1c; margin-left:8px; font-size:0.78rem;">${amount} · ${date}</span>
+                </div>
+                <button onclick="markPendingResolved('${p.id}')" style="background:#991b1b; color:white; border:none; padding:5px 12px; border-radius:5px; font-size:0.75rem; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; flex-shrink:0;">Résolu</button>
+            </div>`;
+        }).join('');
+
+        alertEl.classList.remove('hidden');
+        alertEl.style.display = 'block';
+    }
+
+    window.markPendingResolved = async (id) => {
+        const { error } = await sb.from('pending_clients').update({ status: 'resolved' }).eq('id', id);
+        if (!error) {
+            showToast('Marqué comme résolu', 'success');
+            checkPendingClients();
+        } else {
+            showToast('Erreur : ' + error.message, 'error');
+        }
+    };
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
     window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='/login/'; }
     

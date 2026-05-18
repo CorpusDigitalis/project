@@ -497,25 +497,42 @@
     // ==========================================================
     // VÉRIFICATION AU CHARGEMENT : retour depuis Stripe ?
     // ==========================================================
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentStatus = urlParams.get('payment');
+    // Récupération du statut de retour Stripe — async pour pouvoir interroger la session
+    (async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentStatus = urlParams.get('payment');
 
-    if (paymentStatus === 'success') {
-        window.history.replaceState({}, '', window.location.pathname);
-        switchToStep(4);
-        updateDots(4);
-    } else if (paymentStatus === 'cancel') {
-        window.history.replaceState({}, '', window.location.pathname);
-        const savedUserId = localStorage.getItem('cd_pending_user_id');
-        const savedEmail = localStorage.getItem('cd_pending_email');
-        if (savedUserId && savedEmail) {
-            userId = savedUserId;
-            userEmail = savedEmail;
-            document.getElementById('cancel-notice').style.display = 'block';
-            switchToStep(3);
-            updateDots(3);
+        if (paymentStatus === 'success') {
+            window.history.replaceState({}, '', window.location.pathname);
+            switchToStep(4);
+            updateDots(4);
+        } else if (paymentStatus === 'cancel') {
+            window.history.replaceState({}, '', window.location.pathname);
+            const savedUserId = localStorage.getItem('cd_pending_user_id');
+            const savedEmail = localStorage.getItem('cd_pending_email');
+
+            if (savedUserId && savedEmail) {
+                userId = savedUserId;
+                userEmail = savedEmail;
+                document.getElementById('cancel-notice').style.display = 'block';
+                switchToStep(3);
+                updateDots(3);
+            } else {
+                // Récupération via session Supabase si localStorage vide (autre navigateur / cache effacé)
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    userId = user.id;
+                    userEmail = user.email;
+                    localStorage.setItem('cd_pending_user_id', userId);
+                    localStorage.setItem('cd_pending_email', userEmail);
+                    document.getElementById('cancel-notice').style.display = 'block';
+                    switchToStep(3);
+                    updateDots(3);
+                }
+                // Si toujours rien : l'utilisateur voit l'étape 1 normalement
+            }
         }
-    }
+    })();
 
     // ==========================================================
     // ÉTAPE 1 : CRÉATION COMPTE
