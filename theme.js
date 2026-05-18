@@ -63,12 +63,13 @@ export async function initLayout() {
     if (headerMenu) {
         let hLinks = '';
         const conf = prof.config?.header || { home: true, courses: true, publications: true, interventions: true };
-        
-        if (conf.home) hLinks += `<a href="/accueil/?prof=${slug}">Accueil</a>`;
-        if (conf.courses) hLinks += `<a href="/cours/?prof=${slug}">Cours</a>`;
-        if (conf.publications) hLinks += `<a href="/publications/?prof=${slug}">Publications</a>`;
-        if (conf.interventions) hLinks += `<a href="/interventions/?prof=${slug}">Interventions</a>`;
-        
+        const labels = prof.config?.nav_labels || {};
+
+        if (conf.home) hLinks += `<a href="/accueil/?prof=${slug}">${labels.home || 'Accueil'}</a>`;
+        if (conf.courses) hLinks += `<a href="/cours/?prof=${slug}">${labels.courses || 'Cours'}</a>`;
+        if (conf.publications) hLinks += `<a href="/publications/?prof=${slug}">${labels.publications || 'Publications'}</a>`;
+        if (conf.interventions) hLinks += `<a href="/interventions/?prof=${slug}">${labels.interventions || 'Interventions'}</a>`;
+
         headerMenu.innerHTML = hLinks;
     }
 
@@ -121,6 +122,17 @@ export async function initLayout() {
     document.querySelectorAll('.site-name, .prof-name, h1.name').forEach(el => {
         el.style.fontFamily = `'${titleFont}', serif`;
     });
+
+    // 7. Couleur d'accent (config.accent_color)
+    const accentColor = prof.config?.accent_color || '#0f172a';
+    document.documentElement.style.setProperty('--site-accent', accentColor);
+
+    // 8. Layout accueil (config.home_layout)
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+        const layout = prof.config?.home_layout || 'card';
+        heroSection.classList.add(`layout-${layout}`);
+    }
 
     return prof;
 }

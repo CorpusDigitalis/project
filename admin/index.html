@@ -97,6 +97,26 @@
         .font-preview { font-size: 1.2rem; line-height: 1.2; margin-bottom: 6px; color: var(--text-main); }
         .font-name { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Inter', sans-serif !important; }
 
+        /* --- DEVICE SWITCHER --- */
+        .btn-toolbar.active-device { background: #f5f2ee; color: var(--accent); font-weight: 700; }
+
+        /* --- ACCENT COLOR SELECTOR --- */
+        .accent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+        .accent-option { border: 2px solid var(--border); border-radius: 8px; padding: 12px 8px; cursor: pointer; text-align: center; transition: 0.15s; background: white; }
+        .accent-option:hover { border-color: #94a3b8; }
+        .accent-option.selected { border-color: var(--accent); background: #f1f5f9; }
+        .accent-swatch { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 6px; border: 2px solid rgba(0,0,0,0.08); }
+        .accent-name { font-size: 0.66rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Inter', sans-serif; }
+
+        /* --- LAYOUT SELECTOR --- */
+        .layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+        .layout-option { border: 2px solid var(--border); border-radius: 8px; padding: 18px 10px; cursor: pointer; text-align: center; transition: 0.15s; background: white; }
+        .layout-option:hover { border-color: #94a3b8; }
+        .layout-option.selected { border-color: var(--accent); background: #f1f5f9; }
+        .layout-option i { color: var(--text-muted); margin-bottom: 8px; }
+        .layout-name { font-size: 0.72rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+        .layout-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
+
         /* --- ESPACEMENTS --- */
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e8e4de; flex-wrap: wrap; gap: 15px; }
         h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.01em; }
@@ -303,6 +323,7 @@
         iframe { width: 100%; flex: 1; border: none; background: white; pointer-events: auto; }
 
         .device-mobile { width: 375px !important; height: 812px !important; flex-shrink: 0 !important; border-radius: 40px !important; border: 14px solid #0f172a !important; }
+        .device-tablet { width: 768px !important; height: 1024px !important; flex-shrink: 0 !important; border-radius: 20px !important; border: 10px solid #0f172a !important; }
         .iframe-shield { display: none; position: absolute; inset: 0; z-index: 20; }
 
         /* --- PILULE FLOTTANTE --- */
@@ -671,6 +692,77 @@
                     </div>
                 </div>
 
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Couleur d'accent</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Teinte principale de votre site (en-tête, boutons, points de couleur).</p>
+                    <div class="accent-grid" id="accent-selector">
+                        <div class="accent-option" data-accent="#0f172a" onclick="selectAccent('#0f172a', this)">
+                            <div class="accent-swatch" style="background:#0f172a;"></div>
+                            <div class="accent-name">Noir</div>
+                        </div>
+                        <div class="accent-option" data-accent="#7c2d12" onclick="selectAccent('#7c2d12', this)">
+                            <div class="accent-swatch" style="background:#7c2d12;"></div>
+                            <div class="accent-name">Bordeaux</div>
+                        </div>
+                        <div class="accent-option" data-accent="#1e3a5f" onclick="selectAccent('#1e3a5f', this)">
+                            <div class="accent-swatch" style="background:#1e3a5f;"></div>
+                            <div class="accent-name">Marine</div>
+                        </div>
+                        <div class="accent-option" data-accent="#2d4a22" onclick="selectAccent('#2d4a22', this)">
+                            <div class="accent-swatch" style="background:#2d4a22;"></div>
+                            <div class="accent-name">Forêt</div>
+                        </div>
+                        <div class="accent-option" data-accent="#4a3728" onclick="selectAccent('#4a3728', this)">
+                            <div class="accent-swatch" style="background:#4a3728;"></div>
+                            <div class="accent-name">Sépia</div>
+                        </div>
+                        <div class="accent-option" data-accent="#374151" onclick="selectAccent('#374151', this)">
+                            <div class="accent-swatch" style="background:#374151;"></div>
+                            <div class="accent-name">Ardoise</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Mise en page — Accueil</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Disposition de votre photo et de votre biographie.</p>
+                    <div class="layout-grid" id="layout-selector">
+                        <div class="layout-option" data-layout="card" onclick="selectLayout('card', this)">
+                            <i data-lucide="layout-panel-top" size="28"></i>
+                            <div class="layout-name">Portrait</div>
+                            <div class="layout-desc">Grande photo + texte</div>
+                        </div>
+                        <div class="layout-option" data-layout="bio" onclick="selectLayout('bio', this)">
+                            <i data-lucide="user-circle" size="28"></i>
+                            <div class="layout-name">Bio</div>
+                            <div class="layout-desc">Avatar rond compact</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Labels de navigation</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:14px;">Personnalisez les noms des liens dans l'en-tête de votre site.</p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-row" style="margin-bottom:0;">
+                            <label>Accueil</label>
+                            <input id="nav-label-home" placeholder="Accueil" oninput="saveNavLabels()">
+                        </div>
+                        <div class="form-row" style="margin-bottom:0;">
+                            <label>Cours</label>
+                            <input id="nav-label-courses" placeholder="Cours" oninput="saveNavLabels()">
+                        </div>
+                        <div class="form-row" style="margin-bottom:0;">
+                            <label>Publications</label>
+                            <input id="nav-label-publications" placeholder="Publications" oninput="saveNavLabels()">
+                        </div>
+                        <div class="form-row" style="margin-bottom:0;">
+                            <label>Interventions</label>
+                            <input id="nav-label-interventions" placeholder="Interventions" oninput="saveNavLabels()">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="scroll-spacer"></div>
             </section>
 
@@ -765,8 +857,14 @@
             </div>
 
             <div class="floating-toolbar">
-                <button class="btn-toolbar" id="btn-toggle-device" onclick="toggleDeviceMode()">
-                    <i data-lucide="smartphone" size="16"></i> <span id="text-toggle-device">Changer d'appareil</span>
+                <button class="btn-toolbar active-device" id="btn-device-desktop" onclick="setDeviceMode('desktop')">
+                    <i data-lucide="monitor" size="16"></i> Bureau
+                </button>
+                <button class="btn-toolbar" id="btn-device-tablet" onclick="setDeviceMode('tablet')">
+                    <i data-lucide="tablet" size="16"></i> Tablette
+                </button>
+                <button class="btn-toolbar" id="btn-device-mobile" onclick="setDeviceMode('mobile')">
+                    <i data-lucide="smartphone" size="16"></i> Mobile
                 </button>
                 <div class="toolbar-divider"></div>
                 <button class="btn-toolbar btn-zoom" onclick="manualZoom(-0.1)" title="Dézoomer"><i data-lucide="minus" size="16"></i></button>
@@ -877,7 +975,7 @@
     const viewport = document.getElementById('viewport');
     const canvasPlane = document.getElementById('canvas-plane');
     
-    let isMobileMode = false;
+    let currentDeviceMode = 'desktop';
     let panX = 0;
     let panY = 0;
     let zoomLevel = 1;
@@ -887,22 +985,26 @@
         canvasPlane.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomLevel})`;
     }
 
-    window.toggleDeviceMode = () => {
-        isMobileMode = !isMobileMode;
+    window.setDeviceMode = (mode) => {
+        currentDeviceMode = mode;
         const wrap = document.getElementById('device-wrapper');
         const chrome = document.getElementById('browser-chrome');
-        const icon = document.getElementById('btn-toggle-device').querySelector('i');
 
-        if (isMobileMode) {
-            wrap.classList.add('device-mobile'); 
-            chrome.style.display = 'none'; 
-            icon.setAttribute('data-lucide', 'monitor');
-        } else {
-            wrap.classList.remove('device-mobile'); 
-            chrome.style.display = 'flex'; 
-            icon.setAttribute('data-lucide', 'smartphone');
+        wrap.classList.remove('device-mobile', 'device-tablet');
+        chrome.style.display = 'flex';
+
+        if (mode === 'mobile') {
+            wrap.classList.add('device-mobile');
+            chrome.style.display = 'none';
+        } else if (mode === 'tablet') {
+            wrap.classList.add('device-tablet');
         }
-        lucide.createIcons(); 
+
+        document.querySelectorAll('[id^="btn-device-"]').forEach(b => b.classList.remove('active-device'));
+        const activeBtn = document.getElementById('btn-device-' + mode);
+        if (activeBtn) activeBtn.classList.add('active-device');
+
+        lucide.createIcons();
         autoScalePreview();
     };
 
@@ -921,8 +1023,8 @@
         const availWidth = viewport.clientWidth - padX; 
         const availHeight = viewport.clientHeight - padY;
         
-        const targetWidth = isMobileMode ? 375 : 1366; 
-        const targetHeight = isMobileMode ? 812 : 768;
+        const targetWidth  = currentDeviceMode === 'mobile' ? 375 : currentDeviceMode === 'tablet' ? 768 : 1366;
+        const targetHeight = currentDeviceMode === 'mobile' ? 812 : currentDeviceMode === 'tablet' ? 1024 : 768;
         
         zoomLevel = Math.min(availWidth / targetWidth, availHeight / targetHeight);
         if (zoomLevel > 1) zoomLevel = 1; 
@@ -1114,6 +1216,9 @@
         renderHeaderConfig();
         renderFooterConfig();
         initFontSelector();
+        initAccentSelector();
+        initLayoutSelector();
+        initNavLabels();
         lucide.createIcons();
     }
 
@@ -1939,6 +2044,60 @@
             o.classList.toggle('selected', o.dataset.font === current);
         });
     }
+
+    window.selectAccent = function(color, el) {
+        if (!profileData.config) profileData.config = {};
+        profileData.config.accent_color = color;
+        document.querySelectorAll('#accent-selector .accent-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        saveConfig();
+    };
+    function initAccentSelector() {
+        const current = profileData.config?.accent_color || '#0f172a';
+        document.querySelectorAll('#accent-selector .accent-option').forEach(o => {
+            o.classList.toggle('selected', o.dataset.accent === current);
+        });
+    }
+
+    window.selectLayout = function(layout, el) {
+        if (!profileData.config) profileData.config = {};
+        profileData.config.home_layout = layout;
+        document.querySelectorAll('#layout-selector .layout-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        saveConfig();
+    };
+    function initLayoutSelector() {
+        const current = profileData.config?.home_layout || 'card';
+        document.querySelectorAll('#layout-selector .layout-option').forEach(o => {
+            o.classList.toggle('selected', o.dataset.layout === current);
+        });
+    }
+
+    let navLabelsTimer;
+    window.saveNavLabels = function() {
+        clearTimeout(navLabelsTimer);
+        navLabelsTimer = setTimeout(async () => {
+            if (!profileData.config) profileData.config = {};
+            profileData.config.nav_labels = {
+                home:          document.getElementById('nav-label-home').value.trim() || null,
+                courses:       document.getElementById('nav-label-courses').value.trim() || null,
+                publications:  document.getElementById('nav-label-publications').value.trim() || null,
+                interventions: document.getElementById('nav-label-interventions').value.trim() || null,
+            };
+            Object.keys(profileData.config.nav_labels).forEach(k => {
+                if (!profileData.config.nav_labels[k]) delete profileData.config.nav_labels[k];
+            });
+            await saveConfig();
+        }, 800);
+    };
+    function initNavLabels() {
+        const labels = profileData.config?.nav_labels || {};
+        document.getElementById('nav-label-home').value          = labels.home || '';
+        document.getElementById('nav-label-courses').value       = labels.courses || '';
+        document.getElementById('nav-label-publications').value  = labels.publications || '';
+        document.getElementById('nav-label-interventions').value = labels.interventions || '';
+    }
+
     window.switchCVMode = (mode, btn) => { const row = document.getElementById('cv-row'); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     window.uploadFile = async (type, input) => { if (!input.files.length) return; const file = input.files[0]; showToast("Upload en cours...", "success"); const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) return showToast("Erreur: " + error.message, "error"); const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; if (type === 'avatar') { await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id); document.getElementById('preview-avatar').src = url; } showToast("Sauvegardé !", "success"); }
     function checkOnboarding() {

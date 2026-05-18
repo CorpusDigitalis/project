@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
+:root {
+    --site-accent: #0f172a;
+}
+
 /* --- RESET GLOBAL --- */
 * {
     box-sizing: border-box;
@@ -24,7 +28,7 @@ body {
 
 /* --- HEADER & FOOTER --- */
 header, footer {
-    background: #1a1a1a;
+    background: var(--site-accent);
     color: white;
     width: 100%;
 }
@@ -192,7 +196,7 @@ footer {
         left: -280px;
         width: 260px;
         height: 100vh;
-        background-color: #1a1a1a;
+        background-color: var(--site-accent);
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
@@ -231,3 +235,26 @@ footer {
 .skeleton-glass { background-color: rgba(255, 255, 255, 0.15); }
 .skeleton-img { width: 350px; height: 500px; border-radius: 12px; flex-shrink: 0; }
 @media (max-width: 850px) { .skeleton-img { width: 100%; max-width: 400px; height: auto; aspect-ratio: 3 / 4; margin: 0 auto; } }
+
+/* --- LAYOUT ACCUEIL : BIO --- */
+.hero-section.layout-bio {
+    align-items: center;
+    gap: 40px;
+}
+.hero-section.layout-bio #profil-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.hero-section.layout-bio .skeleton-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+@media (max-width: 850px) {
+    .hero-section.layout-bio { flex-direction: column; align-items: center; text-align: center; }
+    .hero-section.layout-bio #profil-img { width: 120px; height: 120px; }
+    .hero-section.layout-bio .skeleton-img { width: 120px; height: 120px; }
+}
