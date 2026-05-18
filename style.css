@@ -33,6 +33,19 @@ header, footer {
     width: 100%;
 }
 
+/* Mode clair (config.header_style = 'light') */
+header.header-light {
+    background: #ffffff;
+    color: #1a1a1a;
+    border-bottom: 1px solid #e8e4de;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+header.header-light .site-name,
+header.header-light .site-name.no-animation,
+header.header-light .dynamic-nav a { color: #1a1a1a; }
+header.header-light .dynamic-nav a:hover { color: var(--site-accent); transform: none; }
+header.header-light .burger-menu .bar { background: #1a1a1a; }
+
 header nav {
     max-width: 1400px;
     width: 100%;

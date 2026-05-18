@@ -117,6 +117,24 @@
         .layout-name { font-size: 0.72rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
         .layout-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
 
+        /* --- NAV ORDER LIST --- */
+        .nav-order-item { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; color: #334155; }
+        .nav-order-item .item-label { display: flex; align-items: center; gap: 10px; }
+        .nav-order-btns { display: flex; gap: 4px; }
+        .nav-order-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: 0.15s; }
+        .nav-order-btn:hover { border-color: var(--accent); color: var(--accent); background: #f1f5f9; }
+        .nav-order-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* --- TOGGLE SWITCH --- */
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+        .toggle-row label { margin: 0; text-transform: none; font-size: 0.85rem; font-weight: 600; color: #334155; letter-spacing: 0; }
+        .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-track { position: absolute; inset: 0; background: #cbd5e1; border-radius: 24px; cursor: pointer; transition: 0.25s; }
+        .toggle-track::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        .toggle-switch input:checked + .toggle-track { background: var(--accent); }
+        .toggle-switch input:checked + .toggle-track::before { transform: translateX(20px); }
+
         /* --- ESPACEMENTS --- */
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e8e4de; flex-wrap: wrap; gap: 15px; }
         h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-weight: 700; margin: 0; color: var(--accent); letter-spacing: -0.01em; }
@@ -774,6 +792,74 @@
                     </div>
                 </div>
 
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Ordre des sections</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:14px;">Réorganisez l'ordre d'apparition des pages dans la navigation de votre site.</p>
+                    <div id="nav-order-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Style de l'en-tête</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Fond de la barre de navigation de votre profil.</p>
+                    <div class="layout-grid" id="header-style-selector">
+                        <div class="layout-option" data-hstyle="dark" onclick="selectHeaderStyle('dark', this)">
+                            <i data-lucide="moon" size="26"></i>
+                            <div class="layout-name">Sombre</div>
+                            <div class="layout-desc">Fond noir / accent</div>
+                        </div>
+                        <div class="layout-option" data-hstyle="light" onclick="selectHeaderStyle('light', this)">
+                            <i data-lucide="sun" size="26"></i>
+                            <div class="layout-name">Clair</div>
+                            <div class="layout-desc">Fond blanc avec bordure</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Format des publications</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Niveau de détail affiché sur votre page Publications.</p>
+                    <div class="layout-grid" id="pub-format-selector">
+                        <div class="layout-option" data-pubfmt="full" onclick="selectPubFormat('full', this)">
+                            <i data-lucide="align-left" size="26"></i>
+                            <div class="layout-name">Développé</div>
+                            <div class="layout-desc">Titre, résumé, lien</div>
+                        </div>
+                        <div class="layout-option" data-pubfmt="compact" onclick="selectPubFormat('compact', this)">
+                            <i data-lucide="minus" size="26"></i>
+                            <div class="layout-name">Compact</div>
+                            <div class="layout-desc">Titre et date uniquement</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:6px; color:#334155;">Fond de page</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Couleur de fond de toutes vos pages de profil.</p>
+                    <div class="layout-grid" id="page-bg-selector">
+                        <div class="layout-option" data-pagebg="warm" onclick="selectPageBg('warm', this)">
+                            <div style="width:36px; height:36px; border-radius:8px; background:#fafaf8; border:2px solid #e8e4de; margin:0 auto 8px;"></div>
+                            <div class="layout-name">Beige chaud</div>
+                            <div class="layout-desc">Ton académique</div>
+                        </div>
+                        <div class="layout-option" data-pagebg="white" onclick="selectPageBg('white', this)">
+                            <div style="width:36px; height:36px; border-radius:8px; background:#ffffff; border:2px solid #e8e4de; margin:0 auto 8px;"></div>
+                            <div class="layout-name">Blanc pur</div>
+                            <div class="layout-desc">Design épuré</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-bottom:14px; color:#334155;">Masquer les sections vides</h4>
+                    <div class="toggle-row">
+                        <label style="font-size:0.85rem; font-weight:500; color:#475569; text-transform:none; letter-spacing:0;">Cacher automatiquement Publications, Cours et Interventions de la navigation si vous n'avez rien ajouté dans ces sections.</label>
+                        <label class="toggle-switch" style="margin:0; margin-left:16px;">
+                            <input type="checkbox" id="toggle-hide-empty" onchange="saveHideEmpty(this.checked)">
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="scroll-spacer"></div>
             </section>
 
@@ -1230,6 +1316,11 @@
         initAccentSelector();
         initLayoutSelector();
         initNavLabels();
+        initNavOrder();
+        initHeaderStyleSelector();
+        initPubFormatSelector();
+        initPageBgSelector();
+        initHideEmpty();
         lucide.createIcons();
         checkPendingClients();
     }
@@ -2108,6 +2199,90 @@
         document.getElementById('nav-label-courses').value       = labels.courses || '';
         document.getElementById('nav-label-publications').value  = labels.publications || '';
         document.getElementById('nav-label-interventions').value = labels.interventions || '';
+    }
+
+    // ── ORDRE DES SECTIONS ──
+    const NAV_LABELS_MAP = { accueil: 'Accueil', cours: 'Cours', publications: 'Publications', interventions: 'Interventions' };
+    function renderNavOrder() {
+        const order = profileData.config?.nav_order || ['accueil', 'cours', 'publications', 'interventions'];
+        const list = document.getElementById('nav-order-list');
+        if (!list) return;
+        list.innerHTML = order.map((key, i) => `
+            <div class="nav-order-item" data-key="${key}">
+                <span class="item-label"><i data-lucide="grip-horizontal" size="14" style="color:#94a3b8;"></i>${NAV_LABELS_MAP[key] || key}</span>
+                <div class="nav-order-btns">
+                    <button class="nav-order-btn" onclick="moveNavItem(${i}, -1)" ${i === 0 ? 'disabled' : ''}>▲</button>
+                    <button class="nav-order-btn" onclick="moveNavItem(${i}, 1)" ${i === order.length - 1 ? 'disabled' : ''}>▼</button>
+                </div>
+            </div>`).join('');
+        if (window.lucide) lucide.createIcons();
+    }
+    window.moveNavItem = function(idx, dir) {
+        if (!profileData.config) profileData.config = {};
+        const order = profileData.config.nav_order || ['accueil', 'cours', 'publications', 'interventions'];
+        const newIdx = idx + dir;
+        if (newIdx < 0 || newIdx >= order.length) return;
+        [order[idx], order[newIdx]] = [order[newIdx], order[idx]];
+        profileData.config.nav_order = order;
+        renderNavOrder();
+        saveConfig();
+    };
+    function initNavOrder() { renderNavOrder(); }
+
+    // ── STYLE EN-TÊTE ──
+    window.selectHeaderStyle = function(style, el) {
+        if (!profileData.config) profileData.config = {};
+        profileData.config.header_style = style;
+        document.querySelectorAll('#header-style-selector .layout-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        saveConfig();
+    };
+    function initHeaderStyleSelector() {
+        const current = profileData.config?.header_style || 'dark';
+        document.querySelectorAll('#header-style-selector .layout-option').forEach(o => {
+            o.classList.toggle('selected', o.dataset.hstyle === current);
+        });
+    }
+
+    // ── FORMAT PUBLICATIONS ──
+    window.selectPubFormat = function(fmt, el) {
+        if (!profileData.config) profileData.config = {};
+        profileData.config.pub_format = fmt;
+        document.querySelectorAll('#pub-format-selector .layout-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        saveConfig();
+    };
+    function initPubFormatSelector() {
+        const current = profileData.config?.pub_format || 'full';
+        document.querySelectorAll('#pub-format-selector .layout-option').forEach(o => {
+            o.classList.toggle('selected', o.dataset.pubfmt === current);
+        });
+    }
+
+    // ── FOND DE PAGE ──
+    window.selectPageBg = function(bg, el) {
+        if (!profileData.config) profileData.config = {};
+        profileData.config.page_bg = bg;
+        document.querySelectorAll('#page-bg-selector .layout-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        saveConfig();
+    };
+    function initPageBgSelector() {
+        const current = profileData.config?.page_bg || 'warm';
+        document.querySelectorAll('#page-bg-selector .layout-option').forEach(o => {
+            o.classList.toggle('selected', o.dataset.pagebg === current);
+        });
+    }
+
+    // ── MASQUER SECTIONS VIDES ──
+    window.saveHideEmpty = function(checked) {
+        if (!profileData.config) profileData.config = {};
+        profileData.config.hide_empty_sections = checked;
+        saveConfig();
+    };
+    function initHideEmpty() {
+        const el = document.getElementById('toggle-hide-empty');
+        if (el) el.checked = !!(profileData.config?.hide_empty_sections);
     }
 
     window.switchCVMode = (mode, btn) => { const row = document.getElementById('cv-row'); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }

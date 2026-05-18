@@ -61,16 +61,29 @@ export async function initLayout() {
 
     // 3. Remplir le Header (Liens dynamiques)
     if (headerMenu) {
-        let hLinks = '';
         const conf = prof.config?.header || { home: true, courses: true, publications: true, interventions: true };
         const labels = prof.config?.nav_labels || {};
+        const navOrder = prof.config?.nav_order || ['accueil', 'cours', 'publications', 'interventions'];
 
-        if (conf.home) hLinks += `<a href="/accueil/?prof=${slug}">${labels.home || 'Accueil'}</a>`;
-        if (conf.courses) hLinks += `<a href="/cours/?prof=${slug}">${labels.courses || 'Cours'}</a>`;
-        if (conf.publications) hLinks += `<a href="/publications/?prof=${slug}">${labels.publications || 'Publications'}</a>`;
-        if (conf.interventions) hLinks += `<a href="/interventions/?prof=${slug}">${labels.interventions || 'Interventions'}</a>`;
+        // Masquage auto des sections vides si activé
+        if (prof.config?.hide_empty_sections) {
+            const [pubRes, coursRes, intervRes] = await Promise.all([
+                supabase.from('publications').select('id', { count: 'exact', head: true }).eq('prof_id', prof.id),
+                supabase.from('courses').select('id', { count: 'exact', head: true }).eq('prof_id', prof.id),
+                supabase.from('interventions').select('id', { count: 'exact', head: true }).eq('prof_id', prof.id),
+            ]);
+            if ((pubRes.count || 0) === 0) conf.publications = false;
+            if ((coursRes.count || 0) === 0) conf.courses = false;
+            if ((intervRes.count || 0) === 0) conf.interventions = false;
+        }
 
-        headerMenu.innerHTML = hLinks;
+        const linkMap = {
+            accueil:       conf.home          ? `<a href="/accueil/?prof=${slug}">${labels.home || 'Accueil'}</a>` : '',
+            cours:         conf.courses       ? `<a href="/cours/?prof=${slug}">${labels.courses || 'Cours'}</a>` : '',
+            publications:  conf.publications  ? `<a href="/publications/?prof=${slug}">${labels.publications || 'Publications'}</a>` : '',
+            interventions: conf.interventions ? `<a href="/interventions/?prof=${slug}">${labels.interventions || 'Interventions'}</a>` : '',
+        };
+        headerMenu.innerHTML = navOrder.map(k => linkMap[k] || '').join('');
     }
 
     // 4. Remplir le Footer
@@ -132,6 +145,18 @@ export async function initLayout() {
     if (heroSection) {
         const layout = prof.config?.home_layout || 'card';
         heroSection.classList.add(`layout-${layout}`);
+    }
+
+    // 9. Style de l'en-tête (config.header_style)
+    const headerEl = document.querySelector('header');
+    if (headerEl && (prof.config?.header_style || 'dark') === 'light') {
+        headerEl.classList.add('header-light');
+    }
+
+    // 10. Fond de page (config.page_bg)
+    if ((prof.config?.page_bg || 'warm') === 'white') {
+        document.documentElement.style.setProperty('--bg-body-override', '#ffffff');
+        document.body.style.backgroundColor = '#ffffff';
     }
 
     return prof;

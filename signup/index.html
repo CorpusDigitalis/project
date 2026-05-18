@@ -402,6 +402,10 @@
         <h1>Votre identité.</h1>
         <p>Ces informations structureront votre page publique.</p>
 
+        <div id="email-confirm-notice" style="display:none; background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; color:#166534; line-height:1.5;">
+            <strong>Email envoyé</strong> — un lien de confirmation a été envoyé à <span id="confirm-email-display" style="font-weight:600;"></span>. Vous pouvez continuer sans attendre.
+        </div>
+
         <div id="err-2" class="error-msg"></div>
 
         <label>Nom complet</label>
@@ -564,6 +568,8 @@
         userEmail = email;
         document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
+        document.getElementById('confirm-email-display').textContent = email;
+        document.getElementById('email-confirm-notice').style.display = 'block';
         switchToStep(2);
         updateDots(2);
     }
@@ -584,14 +590,31 @@
         if (!name || !slug) { showErr(errDiv, "Le nom et l'URL personnalisée sont obligatoires."); return; }
         if (slug.length < 3) { showErr(errDiv, "L'URL personnalisée doit contenir au moins 3 caractères."); return; }
 
+        // Faille 5 — vérification unicité du slug avant de continuer
+        const { data: existingSlug } = await supabase.from('profiles').select('id').eq('slug', slug).maybeSingle();
+        if (existingSlug) {
+            showErr(errDiv, "Cette URL est déjà prise. Essayez une variante (ex : marie-dupont-2).");
+            return;
+        }
+
         btn.disabled = true;
         btn.style.opacity = "0.5";
         loader.style.display = "block";
 
         try {
+            // Faille 6 — créer le profil EN PREMIER, avant tout upload
+            const { error: profErr } = await supabase.from('profiles').upsert({
+                id: userId,
+                name: name,
+                bio: bio,
+                slug: slug,
+                is_active: false
+            });
+            if (profErr) throw profErr;
+
+            // Uploader les fichiers maintenant que le profil existe
             const avatarFile = document.getElementById('up-avatar').files[0];
             const cvFile = document.getElementById('up-cv').files[0];
-
             let imageUrl = null;
             let cvUrl = null;
 
@@ -599,34 +622,24 @@
                 const ext = avatarFile.name.split('.').pop();
                 const path = `${userId}/avatar-${Date.now()}.${ext}`;
                 const { error: upErr } = await supabase.storage.from('avatars').upload(path, avatarFile);
-                if (!upErr) {
-                    imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
-                } else {
-                    console.warn('Upload avatar échoué :', upErr.message);
-                }
+                if (!upErr) imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+                else console.warn('Upload avatar échoué :', upErr.message);
             }
 
             if (cvFile) {
                 const path = `${userId}/cv-${Date.now()}.pdf`;
                 const { error: upErr } = await supabase.storage.from('documents').upload(path, cvFile);
-                if (!upErr) {
-                    cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
-                } else {
-                    console.warn('Upload CV échoué :', upErr.message);
-                }
+                if (!upErr) cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                else console.warn('Upload CV échoué :', upErr.message);
             }
 
-            const { error: profErr } = await supabase.from('profiles').upsert({
-                id: userId,
-                name: name,
-                bio: bio,
-                slug: slug,
-                image_url: imageUrl,
-                cv_url: cvUrl,
-                is_active: false
-            });
-
-            if (profErr) throw profErr;
+            // Mettre à jour les URLs si des fichiers ont été uploadés
+            if (imageUrl || cvUrl) {
+                const updates = {};
+                if (imageUrl) updates.image_url = imageUrl;
+                if (cvUrl) updates.cv_url = cvUrl;
+                await supabase.from('profiles').update(updates).eq('id', userId);
+            }
 
             localStorage.setItem('cd_pending_user_id', userId);
             localStorage.setItem('cd_pending_email', userEmail);

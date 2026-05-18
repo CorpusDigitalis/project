@@ -118,20 +118,26 @@
                 return acc;
             }, {});
 
+            const isCompact = (prof.config?.pub_format || 'full') === 'compact';
             if(container) container.innerHTML = "";
             for (const [cat, items] of Object.entries(groupes)) {
                 const h2 = document.createElement('h2'); h2.className = 'categorie-title'; h2.textContent = cat; container.appendChild(h2);
                 items.forEach(pub => {
                     const div = document.createElement('div'); div.className = 'publication-item';
-                    let linkHtml = '';
-                    if (pub.link_value) {
-                        const icon = pub.link_type === 'file' ? 'file-text' : 'external-link';
-                        const defaultLabel = pub.link_type === 'file' ? 'Télécharger le PDF' : 'Voir le document';
-                        const finalLabel = pub.link_label ? pub.link_label : defaultLabel;
-                        linkHtml = `<a href="${pub.link_value}" target="_blank" class="pub-link"><i data-lucide="${icon}" size="18"></i> ${finalLabel}</a>`;
-                    }
                     const dateFormatted = pub.date ? new Date(pub.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' }) : '';
-                    div.innerHTML = `<div class="pub-header"><span class="pub-title">${pub.title || 'Sans titre'}</span>${dateFormatted ? `<span class="pub-date">${dateFormatted}</span>` : ''}</div><p class="pub-desc">${pub.description || ''}</p>${linkHtml}`;
+                    if (isCompact) {
+                        div.style.padding = '14px 18px';
+                        div.innerHTML = `<div class="pub-header" style="margin-bottom:0;"><span class="pub-title" style="font-size:1rem;">${pub.title || 'Sans titre'}</span>${dateFormatted ? `<span class="pub-date">${dateFormatted}</span>` : ''}</div>`;
+                    } else {
+                        let linkHtml = '';
+                        if (pub.link_value) {
+                            const icon = pub.link_type === 'file' ? 'file-text' : 'external-link';
+                            const defaultLabel = pub.link_type === 'file' ? 'Télécharger le PDF' : 'Voir le document';
+                            const finalLabel = pub.link_label ? pub.link_label : defaultLabel;
+                            linkHtml = `<a href="${pub.link_value}" target="_blank" class="pub-link"><i data-lucide="${icon}" size="18"></i> ${finalLabel}</a>`;
+                        }
+                        div.innerHTML = `<div class="pub-header"><span class="pub-title">${pub.title || 'Sans titre'}</span>${dateFormatted ? `<span class="pub-date">${dateFormatted}</span>` : ''}</div><p class="pub-desc">${pub.description || ''}</p>${linkHtml}`;
+                    }
                     container.appendChild(div);
                 });
             }
