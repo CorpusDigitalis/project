@@ -122,7 +122,7 @@
             border-radius: 8px;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: border-color 0.2s, box-shadow 0.2s;
             background: #fdfcfb;
             color: var(--text-main);
@@ -281,7 +281,7 @@
     async function checkSession() {
         const { data: { session } } = await sb.auth.getSession();
         if (session) {
-            window.location.href = '/admin/';
+            window.location.href = 'admin.html';
         }
     }
     checkSession();
@@ -289,9 +289,12 @@
     // --- GESTION DU ROUTAGE (Hash URL pour le reset) ---
     window.onload = () => {
         const hash = window.location.hash;
-        if (hash.includes('type=recovery') || hash.includes('access_token')) {
+        if (hash.includes('type=recovery') || (hash.includes('access_token') && !hash.includes('error'))) {
             switchSection('new-password');
             showAlert("Vous pouvez définir un nouveau mot de passe.", "success", "unlock");
+        } else if (hash.includes('error=access_denied') || hash.includes('error_description')) {
+            switchSection('reset-request');
+            showAlert("Ce lien a expiré. Demandez un nouveau lien ci-dessous.", "error", "alert-circle");
         }
     };
 
@@ -309,7 +312,7 @@
             showAlert("Email ou mot de passe incorrect.", "error", "alert-circle");
             setLoading(false, 'btn-login', 'Se connecter <i data-lucide="arrow-right" size="16"></i>');
         } else {
-            window.location.href = '/admin/';
+            window.location.href = 'admin.html';
         }
     });
 
@@ -343,11 +346,14 @@
         });
 
         if (error) {
-            showAlert("Erreur : " + error.message, "error", "alert-circle");
+            const msg = (error.message.includes('expired') || error.message.includes('invalid') || error.message.includes('session'))
+                ? "Ce lien a expiré. Demandez un nouveau lien de réinitialisation."
+                : "Erreur technique. Veuillez réessayer.";
+            showAlert(msg, "error", "alert-circle");
             setLoading(false, 'btn-new-pwd', 'Sauvegarder <i data-lucide="check" size="16"></i>');
         } else {
             showAlert("Mot de passe changé ! Redirection...", "success", "check-circle");
-            setTimeout(() => window.location.href = '/admin/', 1500);
+            setTimeout(() => window.location.href = 'admin.html', 1500);
         }
     });
 

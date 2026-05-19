@@ -7,9 +7,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Raleway:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -71,8 +70,8 @@
         /* --- LAYOUT PRO & RESIZER --- */
         .wrapper { 
             display: flex; flex: 1; position: relative; background: var(--bg-body);
-            height: calc(100vh - 20px); margin: 10px 10px 10px 0;
-            border-radius: 16px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden;
+            height: calc(100vh - 20px); margin: 10px 10px 10px 0; 
+            border-radius: 30px; box-shadow: -5px 0 20px rgba(0,0,0,0.2); overflow: hidden; 
             min-width: 0; /* Empêche de déborder */
         }
         
@@ -88,52 +87,6 @@
         .resizer { width: 8px; background: transparent; cursor: col-resize; position: relative; z-index: 50; transition: background 0.2s ease; }
         .resizer:hover, .resizer.dragging { background: var(--sidebar); }
         .scroll-spacer { width: 100%; height: 50vh; flex-shrink: 0; }
-
-        /* --- FONT SELECTOR --- */
-        .font-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 14px; }
-        .font-option { border: 2px solid var(--border); border-radius: 8px; padding: 14px 12px; cursor: pointer; text-align: center; transition: 0.15s; background: white; }
-        .font-option:hover { border-color: #94a3b8; }
-        .font-option.selected { border-color: var(--accent); background: #f1f5f9; }
-        .font-preview { font-size: 1.2rem; line-height: 1.2; margin-bottom: 6px; color: var(--text-main); }
-        .font-name { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Inter', sans-serif !important; }
-
-        /* --- DEVICE SWITCHER --- */
-        .btn-toolbar.active-device { background: #f5f2ee; color: var(--accent); font-weight: 700; }
-
-        /* --- ACCENT COLOR SELECTOR --- */
-        .accent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
-        .accent-option { border: 2px solid var(--border); border-radius: 8px; padding: 12px 8px; cursor: pointer; text-align: center; transition: 0.15s; background: white; }
-        .accent-option:hover { border-color: #94a3b8; }
-        .accent-option.selected { border-color: var(--accent); background: #f1f5f9; }
-        .accent-swatch { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 6px; border: 2px solid rgba(0,0,0,0.08); }
-        .accent-name { font-size: 0.66rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Inter', sans-serif; }
-
-        /* --- LAYOUT SELECTOR --- */
-        .layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-        .layout-option { border: 2px solid var(--border); border-radius: 8px; padding: 18px 10px; cursor: pointer; text-align: center; transition: 0.15s; background: white; }
-        .layout-option:hover { border-color: #94a3b8; }
-        .layout-option.selected { border-color: var(--accent); background: #f1f5f9; }
-        .layout-option i { color: var(--text-muted); margin-bottom: 8px; }
-        .layout-name { font-size: 0.72rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
-        .layout-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
-
-        /* --- NAV ORDER LIST --- */
-        .nav-order-item { display: flex; align-items: center; justify-content: space-between; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; font-weight: 600; color: #334155; }
-        .nav-order-item .item-label { display: flex; align-items: center; gap: 10px; }
-        .nav-order-btns { display: flex; gap: 4px; }
-        .nav-order-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 6px; background: white; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: 0.15s; }
-        .nav-order-btn:hover { border-color: var(--accent); color: var(--accent); background: #f1f5f9; }
-        .nav-order-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-        /* --- TOGGLE SWITCH --- */
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
-        .toggle-row label { margin: 0; text-transform: none; font-size: 0.85rem; font-weight: 600; color: #334155; letter-spacing: 0; }
-        .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-track { position: absolute; inset: 0; background: #cbd5e1; border-radius: 24px; cursor: pointer; transition: 0.25s; }
-        .toggle-track::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-        .toggle-switch input:checked + .toggle-track { background: var(--accent); }
-        .toggle-switch input:checked + .toggle-track::before { transform: translateX(20px); }
 
         /* --- ESPACEMENTS --- */
         .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding-bottom: 20px; border-bottom: 1px solid #e8e4de; flex-wrap: wrap; gap: 15px; }
@@ -253,31 +206,6 @@
         .input-group-title { flex: 1; min-width: 150px; margin-bottom: 0; height: var(--input-height); }
         .input-group-title input { height: 100%; min-width: 0; }
 
-        /* --- STATS TAB --- */
-        .stats-period-bar { display: flex; gap: 8px; flex-wrap: wrap; }
-        .period-btn { padding: 7px 16px; border: 1px solid var(--border); border-radius: 6px; background: white; font-size: 0.82rem; font-weight: 600; color: #64748b; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; }
-        .period-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .period-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-        .stats-kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-bottom: 28px; }
-        .kpi-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
-        .kpi-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.07em; margin-bottom: 8px; }
-        .kpi-value { font-size: 2rem; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; line-height: 1; }
-        .kpi-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .charts-row { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; margin-bottom: 25px; }
-        .chart-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
-        .chart-card-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 16px; }
-        .chart-wrap { position: relative; height: 180px; }
-        .stats-table { width: 100%; border-collapse: collapse; }
-        .stats-table th { text-align: left; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.07em; padding: 8px 12px; border-bottom: 2px solid var(--border); }
-        .stats-table td { padding: 11px 12px; border-bottom: 1px solid #f5f2ee; font-size: 0.88rem; vertical-align: middle; }
-        .stats-table tr:last-child td { border-bottom: none; }
-        .stats-table tbody tr:hover td { background: #fafaf8; }
-        .stats-empty { text-align: center; color: var(--text-muted); padding: 40px; font-style: italic; font-size: 0.9rem; }
-        .stats-loading { text-align: center; color: var(--text-muted); padding: 60px; font-size: 0.9rem; }
-        .type-pill { background: #f5f2ee; padding: 3px 9px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #475569; }
-        .stats-full-width .preview-side, .stats-full-width .resizer { display: none !important; }
-        .stats-full-width .editor-side { width: 100% !important; flex: 1 !important; }
-
         /* ========================================================
            MOTEUR DE RENDU CANVAS (FIGMA-LIKE)
            ======================================================== */
@@ -332,16 +260,11 @@
         .dot-red { background: #ff5f56; }
         .dot-yellow { background: #ffbd2e; }
         .dot-green { background: #27c93f; }
-        .url-bar { height: 28px; width: 400px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; border: 1px solid #e8e4de; font-weight: 500; gap: 5px; overflow: hidden; padding: 0 10px; }
-        .url-bar-link { color: #475569; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .url-bar-link:hover { color: #0f172a; text-decoration: underline; }
-        .url-bar-live { display: none; position: absolute; top: 16px; right: 16px; z-index: 100; align-items: center; gap: 6px; background: #0f172a; color: white; font-size: 11px; font-weight: 700; padding: 7px 14px; border-radius: 8px; text-decoration: none; letter-spacing: 0.03em; transition: opacity 0.15s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .url-bar-live:hover { opacity: 0.8; }
+        .url-bar { height: 28px; width: 400px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; border: 1px solid #e8e4de; font-weight: 500; }
         
         iframe { width: 100%; flex: 1; border: none; background: white; pointer-events: auto; }
 
         .device-mobile { width: 375px !important; height: 812px !important; flex-shrink: 0 !important; border-radius: 40px !important; border: 14px solid #0f172a !important; }
-        .device-tablet { width: 768px !important; height: 1024px !important; flex-shrink: 0 !important; border-radius: 20px !important; border: 10px solid #0f172a !important; }
         .iframe-shield { display: none; position: absolute; inset: 0; z-index: 20; }
 
         /* --- PILULE FLOTTANTE --- */
@@ -521,38 +444,19 @@
     <nav id="sidebar">
         <div class="logo">CORPUS DIGITALIS <span>PRO</span></div>
         <div class="nav-title">Site Web</div>
-        <div class="nav-item active" onclick="switchTab('profil', '/accueil/', this)"><i data-lucide="user"></i> Accueil & Profil</div>
-        <div class="nav-item" onclick="switchTab('biblio', '/publications/', this)"><i data-lucide="book-open"></i> Publications</div>
-        <div class="nav-item" onclick="switchTab('cours', '/cours/', this)"><i data-lucide="graduation-cap"></i> Enseignements</div>
-        <div class="nav-item" onclick="switchTab('interventions', '/interventions/', this)"><i data-lucide="mic"></i> Interventions</div>
+        <div class="nav-item active" onclick="switchTab('profil', 'accueil.html', this)"><i data-lucide="user"></i> Accueil & Profil</div>
+        <div class="nav-item" onclick="switchTab('biblio', 'publications.html', this)"><i data-lucide="book-open"></i> Publications</div>
+        <div class="nav-item" onclick="switchTab('cours', 'cours.html', this)"><i data-lucide="graduation-cap"></i> Enseignements</div>
+        <div class="nav-item" onclick="switchTab('interventions', 'interventions.html', this)"><i data-lucide="mic"></i> Interventions</div>
         <div class="nav-title">Configuration</div>
-        <div class="nav-item" onclick="switchTab('perso', '/accueil/', this)"><i data-lucide="settings"></i> Personnalisation</div>
-        <div class="nav-title">Analytiques</div>
-        <div class="nav-item" onclick="switchTab('stats', null, this)"><i data-lucide="bar-chart-2"></i> Statistiques</div>
+        <div class="nav-item" onclick="switchTab('perso', 'accueil.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
+        <div class="nav-item" onclick="switchTab('rdv', 'accueil.html', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
         <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Déconnexion</button>
     </nav>
 
     <div class="wrapper">
         <main class="editor-side" id="editor-side">
-
-            <!-- ALERTE PAIEMENTS EN ATTENTE — visible sur tous les onglets -->
-            <div id="pending-clients-alert" class="hidden" style="background:#fef2f2; border:1.5px solid #fca5a5; border-radius:8px; padding:14px 16px; margin-bottom:20px; font-size:0.83rem; color:#991b1b; position:sticky; top:0; z-index:50; box-shadow:0 4px 12px rgba(239,68,68,0.12);">
-                <div style="display:flex; align-items:flex-start; gap:12px;">
-                    <svg style="flex-shrink:0; margin-top:1px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <div style="flex:1; min-width:0;">
-                        <strong id="pending-alert-title" style="display:block; margin-bottom:8px; font-size:0.88rem;"></strong>
-                        <div id="pending-alert-list" style="display:flex; flex-direction:column; gap:6px;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bannière Concierge — affichée si données pré-importées -->
-            <div id="concierge-notice" class="hidden" style="background:#ecfdf5; border:1px solid #6ee7b7; border-radius:8px; padding:12px 16px; margin-bottom:20px; display:flex; align-items:center; gap:12px; font-size:0.83rem; color:#065f46; flex-wrap:wrap;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span style="flex:1;">Vos données ont été pré-importées depuis votre CV. Vérifiez et complétez si nécessaire — elles sont éditables à tout moment.</span>
-                <button onclick="dismissConciergeNotice()" style="background:none; border:none; cursor:pointer; color:#6ee7b7; font-size:1.3rem; line-height:1; padding:0; flex-shrink:0; font-weight:700;">×</button>
-            </div>
-
+            
             <section id="mod-profil" class="module">
                 <div class="header-flex">
                     <div>
@@ -579,6 +483,17 @@
                     <div class="form-row">
                         <label>Biographie</label>
                         <textarea id="field-bio" rows="6" oninput="autoSave('profiles', null, 'bio', this.value)"></textarea>
+                    </div>
+                </div>
+                <div class="card" style="margin-top:16px;">
+                    <h4 style="margin-bottom:15px; color:#334155;">Compte</h4>
+                    <div class="form-row">
+                        <label>Changer l'email de connexion</label>
+                        <div style="display:flex; gap:8px;">
+                            <input type="email" id="field-email-change" placeholder="nouvelle@adresse.fr" style="flex:1;">
+                            <button class="btn-primary" style="flex-shrink:0; padding:0 16px; white-space:nowrap;" onclick="changeEmail()">Changer</button>
+                        </div>
+                        <p style="font-size:0.78rem; color:#94a3b8; margin-top:6px; margin-bottom:0;">Un email de confirmation sera envoyé à la nouvelle adresse avant que le changement soit effectif.</p>
                     </div>
                 </div>
                 <div class="scroll-spacer"></div>
@@ -639,253 +554,8 @@
                     </div>
                 </div>
                 
-                <!-- ── COULEUR D'ACCENT ── -->
                 <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Couleur d'accent</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Teinte principale de votre site (en-tête, boutons, points de couleur).</p>
-                    <div class="accent-grid" id="accent-selector">
-                        <div class="accent-option" data-accent="#0f172a" onclick="selectAccent('#0f172a', this)">
-                            <div class="accent-swatch" style="background:#0f172a;"></div>
-                            <div class="accent-name">Noir</div>
-                        </div>
-                        <div class="accent-option" data-accent="#7c2d12" onclick="selectAccent('#7c2d12', this)">
-                            <div class="accent-swatch" style="background:#7c2d12;"></div>
-                            <div class="accent-name">Bordeaux</div>
-                        </div>
-                        <div class="accent-option" data-accent="#1e3a5f" onclick="selectAccent('#1e3a5f', this)">
-                            <div class="accent-swatch" style="background:#1e3a5f;"></div>
-                            <div class="accent-name">Marine</div>
-                        </div>
-                        <div class="accent-option" data-accent="#4a3728" onclick="selectAccent('#4a3728', this)">
-                            <div class="accent-swatch" style="background:#4a3728;"></div>
-                            <div class="accent-name">Sépia</div>
-                        </div>
-                        <div class="accent-option" data-accent="#ffffff" onclick="selectAccent('#ffffff', this)">
-                            <div class="accent-swatch" style="background:#ffffff; border-color:#c8c3bb;"></div>
-                            <div class="accent-name">Blanc</div>
-                        </div>
-                        <div class="accent-option" id="accent-custom-option" data-accent="custom" onclick="openCustomAccent(this)" style="position:relative;">
-                            <div class="accent-swatch" id="custom-accent-swatch" style="background: conic-gradient(hsl(0,75%,50%), hsl(60,75%,50%), hsl(120,75%,50%), hsl(180,75%,50%), hsl(240,75%,50%), hsl(300,75%,50%), hsl(360,75%,50%));"></div>
-                            <div class="accent-name">Libre</div>
-                            <input type="color" id="custom-accent-input" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;"
-                                oninput="updateCustomSwatchPreview(this.value)"
-                                onchange="applyCustomAccent(this.value, document.getElementById('accent-custom-option'))">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── TYPOGRAPHIE ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Typographie</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Police du titre. Choisissez "Libre" pour personnaliser titre et texte séparément.</p>
-                    <div class="font-grid" id="font-selector">
-                        <div class="font-option" data-font="Lato" onclick="selectFont('Lato', this)">
-                            <div class="font-preview" style="font-family:'Lato',sans-serif;">Aa</div>
-                            <div class="font-name">Lato</div>
-                        </div>
-                        <div class="font-option" data-font="Raleway" onclick="selectFont('Raleway', this)">
-                            <div class="font-preview" style="font-family:'Raleway',sans-serif;">Aa</div>
-                            <div class="font-name">Raleway</div>
-                        </div>
-                        <div class="font-option" data-font="Merriweather" onclick="selectFont('Merriweather', this)">
-                            <div class="font-preview" style="font-family:'Merriweather',serif;">Aa</div>
-                            <div class="font-name">Merriweather</div>
-                        </div>
-                        <div class="font-option" data-font="Source Serif 4" onclick="selectFont('Source Serif 4', this)">
-                            <div class="font-preview" style="font-family:'Source Serif 4',serif;">Aa</div>
-                            <div class="font-name">Source Serif</div>
-                        </div>
-                        <div class="font-option" id="font-custom-option" data-font="custom" onclick="selectFont('custom', this)">
-                            <div class="font-preview" style="display:flex;align-items:center;justify-content:center;height:100%;padding:2px 0;"><i data-lucide="sliders-horizontal" size="20" style="color:#64748b;"></i></div>
-                            <div class="font-name">Libre</div>
-                        </div>
-                    </div>
-
-                    <div id="custom-font-panel" style="display:none; margin-top:20px; padding-top:20px; border-top:1px solid #e8e4de;">
-                        <div style="margin-bottom:20px;">
-                            <label style="display:block; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#64748b; margin-bottom:8px;">Police du titre</label>
-                            <select id="custom-title-font-select" onchange="applyCustomFont('title', this.value)" style="width:100%; padding:10px 12px; border:1px solid #e0dbd4; border-radius:6px; font-size:0.9rem; background:#fdfcfb; color:#334155; cursor:pointer; box-sizing:border-box;">
-                                <option value="">— choisir une police —</option>
-                                <optgroup label="Serif">
-                                    <option value="EB Garamond">EB Garamond</option>
-                                    <option value="Cormorant Garamond">Cormorant Garamond</option>
-                                    <option value="Lora">Lora</option>
-                                    <option value="Libre Baskerville">Libre Baskerville</option>
-                                    <option value="Crimson Pro">Crimson Pro</option>
-                                    <option value="Playfair Display">Playfair Display</option>
-                                    <option value="Merriweather">Merriweather</option>
-                                    <option value="PT Serif">PT Serif</option>
-                                    <option value="Source Serif 4">Source Serif 4</option>
-                                </optgroup>
-                                <optgroup label="Sans-serif">
-                                    <option value="Inter">Inter</option>
-                                    <option value="DM Sans">DM Sans</option>
-                                    <option value="Outfit">Outfit</option>
-                                    <option value="Nunito">Nunito</option>
-                                    <option value="Poppins">Poppins</option>
-                                    <option value="Work Sans">Work Sans</option>
-                                    <option value="Josefin Sans">Josefin Sans</option>
-                                    <option value="Montserrat">Montserrat</option>
-                                    <option value="Lato">Lato</option>
-                                    <option value="Raleway">Raleway</option>
-                                </optgroup>
-                            </select>
-                            <div id="custom-title-preview" style="margin-top:12px; padding:14px 16px; background:#fafaf8; border:1px solid #e8e4de; border-radius:8px; font-size:1.8rem; color:#0f172a; text-align:center; line-height:1.2; min-height:60px; transition:font-family 0.2s;">Votre nom</div>
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#64748b; margin-bottom:8px;">Police du texte</label>
-                            <select id="custom-body-font-select" onchange="applyCustomFont('body', this.value)" style="width:100%; padding:10px 12px; border:1px solid #e0dbd4; border-radius:6px; font-size:0.9rem; background:#fdfcfb; color:#334155; cursor:pointer; box-sizing:border-box;">
-                                <option value="">— choisir une police —</option>
-                                <optgroup label="Serif">
-                                    <option value="EB Garamond">EB Garamond</option>
-                                    <option value="Cormorant Garamond">Cormorant Garamond</option>
-                                    <option value="Lora">Lora</option>
-                                    <option value="Libre Baskerville">Libre Baskerville</option>
-                                    <option value="Crimson Pro">Crimson Pro</option>
-                                    <option value="Playfair Display">Playfair Display</option>
-                                    <option value="Merriweather">Merriweather</option>
-                                    <option value="PT Serif">PT Serif</option>
-                                    <option value="Source Serif 4">Source Serif 4</option>
-                                </optgroup>
-                                <optgroup label="Sans-serif">
-                                    <option value="Inter">Inter</option>
-                                    <option value="DM Sans">DM Sans</option>
-                                    <option value="Outfit">Outfit</option>
-                                    <option value="Nunito">Nunito</option>
-                                    <option value="Poppins">Poppins</option>
-                                    <option value="Work Sans">Work Sans</option>
-                                    <option value="Josefin Sans">Josefin Sans</option>
-                                    <option value="Montserrat">Montserrat</option>
-                                    <option value="Lato">Lato</option>
-                                    <option value="Raleway">Raleway</option>
-                                </optgroup>
-                            </select>
-                            <div id="custom-body-preview" style="margin-top:12px; padding:14px 16px; background:#fafaf8; border:1px solid #e8e4de; border-radius:8px; font-size:0.92rem; color:#334155; line-height:1.65; min-height:56px; transition:font-family 0.2s;">Publications, cours et interventions — vos travaux présentés avec élégance.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── FOND DE PAGE ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Fond de page</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Couleur de fond de toutes vos pages de profil.</p>
-                    <div class="layout-grid" id="page-bg-selector" style="grid-template-columns: repeat(4, 1fr);">
-                        <div class="layout-option" data-pagebg="warm" onclick="selectPageBg('warm', this)">
-                            <div style="width:36px; height:36px; border-radius:8px; background:#fafaf8; border:2px solid #e8e4de; margin:0 auto 8px;"></div>
-                            <div class="layout-name">Beige</div>
-                            <div class="layout-desc">Ton académique</div>
-                        </div>
-                        <div class="layout-option" data-pagebg="white" onclick="selectPageBg('white', this)">
-                            <div style="width:36px; height:36px; border-radius:8px; background:#ffffff; border:2px solid #e8e4de; margin:0 auto 8px;"></div>
-                            <div class="layout-name">Blanc</div>
-                            <div class="layout-desc">Design épuré</div>
-                        </div>
-                        <div class="layout-option" data-pagebg="dark" onclick="selectPageBg('dark', this)">
-                            <div style="width:36px; height:36px; border-radius:8px; background:#0f172a; border:2px solid #1e293b; margin:0 auto 8px; display:flex; align-items:center; justify-content:center;">
-                                <i data-lucide="moon" size="16" style="color:#94a3b8;"></i>
-                            </div>
-                            <div class="layout-name">Sombre</div>
-                            <div class="layout-desc">Fond noir</div>
-                        </div>
-                        <div class="layout-option" id="pagebg-custom-option" data-pagebg="custom" onclick="openCustomBg(this)" style="position:relative;">
-                            <div id="custom-bg-swatch" style="width:36px; height:36px; border-radius:8px; background: conic-gradient(hsl(0,60%,55%), hsl(60,60%,55%), hsl(120,60%,45%), hsl(180,60%,45%), hsl(240,60%,55%), hsl(300,60%,55%), hsl(360,60%,55%)); border:2px solid #e8e4de; margin:0 auto 8px;"></div>
-                            <div class="layout-name">Libre</div>
-                            <input type="color" id="custom-bg-input" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;"
-                                oninput="updateCustomBgSwatch(this.value)"
-                                onchange="applyCustomBg(this.value, document.getElementById('pagebg-custom-option'))">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── MISE EN PAGE ACCUEIL ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Mise en page — Accueil</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Disposition de votre photo et de votre biographie.</p>
-                    <div class="layout-grid" id="layout-selector">
-                        <div class="layout-option" data-layout="card" onclick="selectLayout('card', this)">
-                            <i data-lucide="layout-panel-top" size="28"></i>
-                            <div class="layout-name">Portrait</div>
-                            <div class="layout-desc">Grande photo + texte</div>
-                        </div>
-                        <div class="layout-option" data-layout="bio" onclick="selectLayout('bio', this)">
-                            <i data-lucide="user-circle" size="28"></i>
-                            <div class="layout-name">Bio</div>
-                            <div class="layout-desc">Avatar rond compact</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── FORMAT DES PUBLICATIONS ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Format des publications</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Niveau de détail affiché sur votre page Publications.</p>
-                    <div class="layout-grid" id="pub-format-selector">
-                        <div class="layout-option" data-pubfmt="full" onclick="selectPubFormat('full', this)">
-                            <i data-lucide="align-left" size="26"></i>
-                            <div class="layout-name">Développé</div>
-                            <div class="layout-desc">Titre, résumé, lien</div>
-                        </div>
-                        <div class="layout-option" data-pubfmt="compact" onclick="selectPubFormat('compact', this)">
-                            <i data-lucide="minus" size="26"></i>
-                            <div class="layout-name">Compact</div>
-                            <div class="layout-desc">Titre et date uniquement</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── EN-TÊTE + MASQUER SECTIONS VIDES ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:4px; color:#334155;">En-tête (Header)</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:15px;">Cliquez sur l'œil pour afficher ou masquer chaque page.</p>
-                    <div id="header-config-container" class="config-list-container"></div>
-                    <div style="margin-top:16px; padding-top:14px; border-top:1px solid #f0ece8;">
-                        <div class="toggle-row">
-                            <label style="font-size:0.82rem; font-weight:500; color:#475569; text-transform:none; letter-spacing:0; line-height:1.45;">Masquer automatiquement les sections sans contenu ajouté.</label>
-                            <label class="toggle-switch" style="margin:0; margin-left:16px; flex-shrink:0;">
-                                <input type="checkbox" id="toggle-hide-empty" onchange="saveHideEmpty(this.checked)">
-                                <span class="toggle-track"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── LABELS DE NAVIGATION ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Labels de navigation</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:14px;">Personnalisez les noms des liens dans l'en-tête de votre site.</p>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                        <div class="form-row" style="margin-bottom:0;">
-                            <label>Accueil</label>
-                            <input id="nav-label-home" placeholder="Accueil" oninput="saveNavLabels()">
-                        </div>
-                        <div class="form-row" style="margin-bottom:0;">
-                            <label>Cours</label>
-                            <input id="nav-label-courses" placeholder="Cours" oninput="saveNavLabels()">
-                        </div>
-                        <div class="form-row" style="margin-bottom:0;">
-                            <label>Publications</label>
-                            <input id="nav-label-publications" placeholder="Publications" oninput="saveNavLabels()">
-                        </div>
-                        <div class="form-row" style="margin-bottom:0;">
-                            <label>Interventions</label>
-                            <input id="nav-label-interventions" placeholder="Interventions" oninput="saveNavLabels()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── ORDRE DES SECTIONS ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Ordre des sections</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:14px;">Réorganisez l'ordre d'apparition des pages dans la navigation de votre site.</p>
-                    <div id="nav-order-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-                </div>
-
-                <!-- ── LIENS & FOOTER (fusionné) ── -->
-                <div class="card">
-                    <h4 style="margin-bottom:4px; color:#334155;">Liens & Pied de page</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:16px;">Renseignez vos liens, puis choisissez lesquels apparaissent dans le footer.</p>
-
-                    <!-- Données des liens -->
+                    <h4 style="margin-bottom:15px; color:#334155;">Identité & Réseaux</h4>
                     <div class="form-row">
                         <label>LinkedIn</label>
                         <input id="field-linkedin" placeholder="https://linkedin.com/in/..." oninput="autoSave('profiles',null,'linkedin_url',this.value)">
@@ -896,6 +566,7 @@
                     </div>
                     <label>Curriculum Vitae (PDF ou Lien)</label>
                     <div id="cv-display-area" style="margin-top:10px;"></div>
+                    
                     <div class="hidden-edit-container" id="cv-edit-container">
                         <div class="resource-row mode-link" id="cv-row">
                             <div class="type-selector">
@@ -916,86 +587,45 @@
                             <button class="btn-validate" onclick="confirmCVUpdate()"><i data-lucide="check" size="20"></i></button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Visibilité dans le footer -->
-                    <div style="margin-top:20px; padding-top:16px; border-top:1px solid #f0ece8;">
-                        <p style="font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#94a3b8; margin:0 0 10px;">Affichage dans le pied de page</p>
-                        <div id="footer-config-container" class="config-list-container"></div>
-                    </div>
+                <div class="card">
+                    <h4 style="margin-bottom:15px; color:#334155;">En-tête (Header)</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:15px;">Cliquez sur l'œil pour afficher ou masquer.</p>
+                    <div id="header-config-container" class="config-list-container"></div>
+                </div>
 
-                    <!-- Liens personnalisés -->
-                    <div style="margin-top:16px; border-top:1px dashed #e8e4de; padding-top:15px;">
+                <div class="card">
+                    <h4 style="margin-bottom:15px; color:#334155;">Pied de page (Footer)</h4>
+                    <div id="footer-config-container" class="config-list-container"></div>
+                    <div style="margin-top:20px; border-top:1px dashed #e8e4de; padding-top:15px;">
                         <label style="margin-bottom:10px;">Ajouter un lien personnalisé</label>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1; min-width:120px;">
-                            <input id="new-footer-url" placeholder="nike.com" style="flex:1; min-width:120px;">
+                        <div style="display:flex; gap:10px;">
+                            <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1; min-width:0;">
+                            <input id="new-footer-url" placeholder="nike.com" style="flex:1; min-width:0;">
                             <button class="btn-primary" onclick="addCustomFooterLink()">Ajouter</button>
                         </div>
                     </div>
                 </div>
-
                 <div class="scroll-spacer"></div>
             </section>
 
-
-            <section id="mod-stats" class="module hidden">
-                <div class="header-flex" style="align-items:center;">
+            <section id="mod-rdv" class="module hidden">
+                <div class="header-flex">
                     <div>
-                        <h2>Statistiques</h2>
-                        <p class="section-subtitle">Analysez les clics de vos visiteurs en temps réel.</p>
-                    </div>
-                    <div class="stats-period-bar" id="stats-period-bar">
-                        <button class="period-btn active" onclick="loadStats(7, this)">7 jours</button>
-                        <button class="period-btn" onclick="loadStats(30, this)">30 jours</button>
-                        <button class="period-btn" onclick="loadStats(90, this)">3 mois</button>
-                        <button class="period-btn" onclick="loadStats(0, this)">Tout</button>
+                        <h2>Rendez-vous</h2>
+                        <p class="section-subtitle">Gérez la prise de rendez-vous pour vos étudiants.</p>
                     </div>
                 </div>
-
-                <div class="stats-kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-label">Clics totaux</div>
-                        <div class="kpi-value" id="stat-total">—</div>
-                        <div class="kpi-sub" id="stat-total-sub">&nbsp;</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Cette semaine</div>
-                        <div class="kpi-value" id="stat-week">—</div>
-                        <div class="kpi-sub" id="stat-week-sub">&nbsp;</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Page la + active</div>
-                        <div class="kpi-value" id="stat-top-page" style="font-size:1.2rem; padding-top:6px;">—</div>
-                        <div class="kpi-sub" id="stat-top-page-sub">&nbsp;</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Lien le + cliqué</div>
-                        <div class="kpi-value" id="stat-top-link" style="font-size:0.9rem; padding-top:4px; word-break:break-all; white-space:normal; line-height:1.3;">—</div>
-                        <div class="kpi-sub" id="stat-top-link-sub">&nbsp;</div>
-                    </div>
-                </div>
-
-                <div class="charts-row">
-                    <div class="chart-card">
-                        <div class="chart-card-title">Clics par jour</div>
-                        <div class="chart-wrap"><canvas id="chart-daily"></canvas></div>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-card-title">Types de liens</div>
-                        <div class="chart-wrap"><canvas id="chart-types"></canvas></div>
-                    </div>
-                </div>
-
                 <div class="card">
-                    <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-muted); margin-bottom:16px;">Détail par lien</div>
-                    <div style="overflow-x:auto;">
-                        <table class="stats-table">
-                            <thead><tr><th>Lien</th><th>Page</th><th>Type</th><th>Clics</th></tr></thead>
-                            <tbody id="stats-table-body"><tr><td colspan="4" class="stats-loading">Chargement...</td></tr></tbody>
-                        </table>
-                    </div>
+                    <label>Lien de prise de rendez-vous</label>
+                    <input id="rdv-url" oninput="saveRDV()" placeholder="https://cal.com/votre-lien">
+                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; line-height: 1.5; background: #fafaf8; padding: 10px; border-radius: 6px; border: 1px solid #e8e4de;">
+                        <strong>Note :</strong> La gestion des disponibilités s'effectue sur <strong>Cal.com</strong>.
+                    </p>
+                    <label style="margin-top:20px">Texte du bouton</label>
+                    <input id="rdv-text" oninput="saveRDV()" placeholder="Prendre rendez-vous">
                 </div>
-
                 <div class="scroll-spacer"></div>
             </section>
 
@@ -1009,17 +639,9 @@
                 <div class="loading-text"><i data-lucide="loader" class="spin"></i> CORPUS DIGITALIS</div>
             </div>
 
-            <a id="url-bar-live" href="#" target="_blank" class="url-bar-live"><i data-lucide="external-link" size="13"></i> Voir en direct</a>
-
             <div class="floating-toolbar">
-                <button class="btn-toolbar active-device" id="btn-device-desktop" onclick="setDeviceMode('desktop')">
-                    <i data-lucide="monitor" size="16"></i> Bureau
-                </button>
-                <button class="btn-toolbar" id="btn-device-tablet" onclick="setDeviceMode('tablet')">
-                    <i data-lucide="tablet" size="16"></i> Tablette
-                </button>
-                <button class="btn-toolbar" id="btn-device-mobile" onclick="setDeviceMode('mobile')">
-                    <i data-lucide="smartphone" size="16"></i> Mobile
+                <button class="btn-toolbar" id="btn-toggle-device" onclick="toggleDeviceMode()">
+                    <i data-lucide="smartphone" size="16"></i> <span id="text-toggle-device">Changer d'appareil</span>
                 </button>
                 <div class="toolbar-divider"></div>
                 <button class="btn-toolbar btn-zoom" onclick="manualZoom(-0.1)" title="Dézoomer"><i data-lucide="minus" size="16"></i></button>
@@ -1035,10 +657,7 @@
                             <div class="mac-dots">
                                 <span class="dot-red"></span><span class="dot-yellow"></span><span class="dot-green"></span>
                             </div>
-                            <div class="url-bar">
-                                <span style="color:#10b981;font-size:9px;">🔒</span>
-                                <a id="url-bar-link" href="#" target="_blank" class="url-bar-link">monsite.com</a>
-                            </div>
+                            <div class="url-bar">monsite.com</div>
                             <div style="width: 42px;"></div> </div>
                         
                         <iframe id="site-preview" src="about:blank"></iframe>
@@ -1062,7 +681,7 @@
     let openCourseId = null;
     let openPubId = null;
     let openInterId = null;
-    let currentPagePath = '/accueil/';
+    let currentPagePath = 'accueil.html'; 
 
     // --- SYSTEME DE REDIMENSIONNEMENT SANS MEMOIRE ---
     const resizer = document.getElementById('resizer');
@@ -1090,27 +709,13 @@
     });
 
     document.addEventListener('mouseup', () => {
-        if (isResizing) {
-            isResizing = false;
-            shield.style.display = 'none';
-            document.body.style.cursor = '';
-            resizer.classList.remove('dragging');
-            localStorage.setItem('adminEditorWidth', editorSide.offsetWidth + 'px');
+        if (isResizing) { 
+            isResizing = false; 
+            shield.style.display = 'none'; 
+            document.body.style.cursor = ''; 
+            resizer.classList.remove('dragging'); 
         }
     });
-
-    // Restaure la largeur de l'éditeur sauvegardée
-    (function restoreEditorWidth() {
-        const saved = localStorage.getItem('adminEditorWidth');
-        if (saved && window.innerWidth > 1200) {
-            const w = parseInt(saved);
-            const max = window.innerWidth - 350 - 270;
-            if (w >= 400 && w <= max) {
-                editorSide.style.width = w + 'px';
-                editorSide.style.flex = 'none';
-            }
-        }
-    })();
 
     // Éviter le débordement si on a agrandi l'éditeur puis qu'on réduit la fenêtre
     window.addEventListener('resize', () => {
@@ -1128,49 +733,33 @@
     // --- MOTEUR CANVAS FIGMA-LIKE ---
     const viewport = document.getElementById('viewport');
     const canvasPlane = document.getElementById('canvas-plane');
-
-    let currentDeviceMode = 'desktop';
+    
+    let isMobileMode = false;
     let panX = 0;
     let panY = 0;
     let zoomLevel = 1;
     let isPanning = false;
 
-    function applyIframeScrollbarStyle() {
-        try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            if (!iframeDoc || !iframeDoc.head) return;
-            let st = iframeDoc.getElementById('__cd_scrollbar');
-            if (!st) { st = iframeDoc.createElement('style'); st.id = '__cd_scrollbar'; iframeDoc.head.appendChild(st); }
-            const hide = (currentDeviceMode === 'mobile' || currentDeviceMode === 'tablet');
-            st.textContent = hide ? '::-webkit-scrollbar{display:none!important}html,body{scrollbar-width:none!important;-ms-overflow-style:none!important}' : '';
-        } catch(e) {}
-    }
-
     function updateCanvasTransform() {
         canvasPlane.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomLevel})`;
     }
 
-    window.setDeviceMode = (mode) => {
-        currentDeviceMode = mode;
+    window.toggleDeviceMode = () => {
+        isMobileMode = !isMobileMode;
         const wrap = document.getElementById('device-wrapper');
         const chrome = document.getElementById('browser-chrome');
+        const icon = document.getElementById('btn-toggle-device').querySelector('i');
 
-        wrap.classList.remove('device-mobile', 'device-tablet');
-        chrome.style.display = 'flex';
-
-        if (mode === 'mobile') {
-            wrap.classList.add('device-mobile');
-            chrome.style.display = 'none';
-        } else if (mode === 'tablet') {
-            wrap.classList.add('device-tablet');
+        if (isMobileMode) {
+            wrap.classList.add('device-mobile'); 
+            chrome.style.display = 'none'; 
+            icon.setAttribute('data-lucide', 'monitor');
+        } else {
+            wrap.classList.remove('device-mobile'); 
+            chrome.style.display = 'flex'; 
+            icon.setAttribute('data-lucide', 'smartphone');
         }
-
-        document.querySelectorAll('[id^="btn-device-"]').forEach(b => b.classList.remove('active-device'));
-        const activeBtn = document.getElementById('btn-device-' + mode);
-        if (activeBtn) activeBtn.classList.add('active-device');
-
-        applyIframeScrollbarStyle();
-        lucide.createIcons();
+        lucide.createIcons(); 
         autoScalePreview();
     };
 
@@ -1189,8 +778,8 @@
         const availWidth = viewport.clientWidth - padX; 
         const availHeight = viewport.clientHeight - padY;
         
-        const targetWidth  = currentDeviceMode === 'mobile' ? 375 : currentDeviceMode === 'tablet' ? 768 : 1366;
-        const targetHeight = currentDeviceMode === 'mobile' ? 812 : currentDeviceMode === 'tablet' ? 1024 : 768;
+        const targetWidth = isMobileMode ? 375 : 1366; 
+        const targetHeight = isMobileMode ? 812 : 768;
         
         zoomLevel = Math.min(availWidth / targetWidth, availHeight / targetHeight);
         if (zoomLevel > 1) zoomLevel = 1; 
@@ -1245,14 +834,13 @@
             }
 
             iframe.contentWindow.addEventListener('wheel', function(e) {
-                if (e.ctrlKey || e.metaKey) {
-                    e.preventDefault();
-                    window.manualZoom(e.deltaY * -0.01);
-                }
+                if (e.ctrlKey || e.metaKey) { 
+                    e.preventDefault(); 
+                    window.manualZoom(e.deltaY * -0.01); 
+                } 
             }, { passive: false });
-            applyIframeScrollbarStyle();
-        } catch (error) {
-            console.log("CORS block - normal en local.");
+        } catch (error) { 
+            console.log("CORS block - normal en local."); 
         }
     };
 
@@ -1277,20 +865,12 @@
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
         if (!session) { 
-            window.location.href = '/login/'; 
+            window.location.href = 'login.html'; 
             return; 
         }
         
         await loadData(session.user.id);
-
-        // Restaure l'onglet actif depuis la dernière session
-        const savedTab = localStorage.getItem('adminTab') || 'profil';
-        // Migration des anciennes valeurs localStorage (avant refactoring URL sans .html)
-        const pageMap = { 'accueil.html': '/accueil/', 'publications.html': '/publications/', 'cours.html': '/cours/', 'interventions.html': '/interventions/' };
-        const rawPage = localStorage.getItem('adminPage');
-        const savedPage = (rawPage && pageMap[rawPage]) ? pageMap[rawPage] : (rawPage || '/accueil/');
-        const savedNavEl = document.querySelector(`.nav-item[onclick*="switchTab('${savedTab}'"]`) || document.querySelector('.nav-item');
-        switchTab(savedTab, savedPage, savedNavEl);
+        switchTab('profil', 'accueil.html', document.querySelector('.nav-item.active'));
 
         setTimeout(autoScalePreview, 100);
         checkOnboarding();
@@ -1308,16 +888,8 @@
         
         const viewSiteLink = document.getElementById('mobile-view-site');
         if(viewSiteLink) {
-            viewSiteLink.href = `/accueil/?prof=${profileData.slug||profileData.id}`;
+            viewSiteLink.href = `accueil.html?prof=${profileData.slug||profileData.id}`;
         }
-
-        // Mettre à jour la barre d'URL du browser chrome
-        const slug = profileData.slug || profileData.id;
-        const liveUrl = `https://${slug}.corpusdigitalis.com`;
-        const urlBarLink = document.getElementById('url-bar-link');
-        const urlBarLive = document.getElementById('url-bar-live');
-        if (urlBarLink) { urlBarLink.textContent = `${slug}.corpusdigitalis.com`; urlBarLink.href = liveUrl; }
-        if (urlBarLive) { urlBarLive.href = liveUrl; urlBarLive.style.display = 'flex'; }
         
         fillProfileUI();
         
@@ -1331,10 +903,9 @@
         if (resPubs.status === 'fulfilled' && resPubs.value.data) profileData.publications = resPubs.value.data;
         if (resInter.status === 'fulfilled' && resInter.value.data) profileData.interventions = resInter.value.data;
         
-        renderCourses();
-        renderPublications();
+        renderCourses(); 
+        renderPublications(); 
         renderInterventions();
-        checkConciergeNotice();
     }
 
     function fillProfileUI() {
@@ -1366,8 +937,9 @@
                     <button class="btn-square delete" onclick="deleteCV()" title="Supprimer"><i data-lucide="trash-2" size="16"></i></button>
                 </div>
             </div>`;
-        } else { 
-            document.getElementById('cv-edit-container').classList.add('visible'); 
+        } else {
+            document.getElementById('cv-edit-container').classList.add('visible');
+            html = '<div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:10px 14px; font-size:0.83rem; color:#92400e; margin-bottom:10px; display:flex; align-items:center; gap:8px;"><i data-lucide="alert-triangle" size="14"></i> Votre CV n\'est pas encore déposé — ajoutez-le ci-dessous pour que votre profil soit complet.</div>';
         }
         cvArea.innerHTML = html;
         
@@ -1377,20 +949,12 @@
             document.getElementById('field-cv-url').value = cvUrl || ''; 
         }
         
+        document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; 
+        document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
         
-        renderHeaderConfig();
-        renderFooterConfig();
-        initFontSelector();
-        initAccentSelector();
-        initLayoutSelector();
-        initNavLabels();
-        initNavOrder();
-        initHeaderStyleSelector();
-        initPubFormatSelector();
-        initPageBgSelector();
-        initHideEmpty();
+        renderHeaderConfig(); 
+        renderFooterConfig(); 
         lucide.createIcons();
-        checkPendingClients();
     }
 
     function initSortable(containerId, dataKey) {
@@ -1785,15 +1349,24 @@
         reloadPreview(); 
     }
     
-    window.deleteCV = async () => { 
-        if(!confirm("Supprimer le CV ?")) return; 
-        await sb.from('profiles').update({ cv_url: null }).eq('id', profileData.id); 
-        profileData.cv_url = null; 
-        fillProfileUI(); 
-        showToast("CV supprimé.", "success"); 
-        reloadPreview(); 
+    window.deleteCV = async () => {
+        if(!confirm("Supprimer le CV ?")) return;
+        await sb.from('profiles').update({ cv_url: null }).eq('id', profileData.id);
+        profileData.cv_url = null;
+        fillProfileUI();
+        showToast("CV supprimé.", "success");
+        reloadPreview();
     }
-    
+
+    window.changeEmail = async () => {
+        const newEmail = document.getElementById('field-email-change').value.trim();
+        if (!newEmail) return showToast("Entrez une adresse email.", "error");
+        const { error } = await sb.auth.updateUser({ email: newEmail });
+        if (error) return showToast("Erreur : " + error.message, "error");
+        showToast("Confirmation envoyée à la nouvelle adresse.", "success");
+        document.getElementById('field-email-change').value = '';
+    }
+
     window.confirmPubUpdate = async (id) => { 
         const url = document.getElementById(`pub-url-${id}`).value; 
         const mode = document.querySelector(`#pub-res-${id} .resource-row`).classList.contains('mode-file') ? 'file' : 'link'; 
@@ -2006,18 +1579,11 @@
             const newItem = data[0]; 
             profileData[t].unshift(newItem); 
             
-            if(t==='courses') { openCourseId = newItem.id; renderCourses(); }
-            if(t==='publications') { openPubId = newItem.id; renderPublications(); }
-            if(t==='interventions') { openInterId = newItem.id; renderInterventions(); }
-
-            // Scroll vers le nouvel élément
-            setTimeout(() => {
-                const prefix = t==='courses' ? 'card-' : (t==='publications' ? 'pub-' : 'inter-');
-                const newEl = document.getElementById(prefix + newItem.id);
-                if (newEl) newEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 150);
-
-            showToast("Élément créé !", "success");
+            if(t==='courses') { openCourseId = newItem.id; renderCourses(); } 
+            if(t==='publications') { openPubId = newItem.id; renderPublications(); } 
+            if(t==='interventions') { openInterId = newItem.id; renderInterventions(); } 
+            
+            showToast("Élément créé !", "success"); 
             reloadPreview(); 
         } catch(e) { 
             console.log(e); 
@@ -2044,43 +1610,18 @@
 
     // --- LOGIQUE SAUVEGARDE & REFRESH ---
     
-    window.switchTab = (id, p, el) => {
-        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden'));
-        document.getElementById('mod-'+id).classList.remove('hidden');
-
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        if(el) el.classList.add('active');
-
-        document.getElementById('sidebar').classList.remove('mobile-open');
-
-        const wrapper = document.querySelector('.wrapper');
-        if (id === 'stats') {
-            if (wrapper) wrapper.classList.add('stats-full-width');
-            localStorage.setItem('adminTab', id);
-            loadStats(7, document.querySelector('.period-btn.active'));
-        } else {
-            if (wrapper) wrapper.classList.remove('stats-full-width');
-            currentPagePath = p;
-            localStorage.setItem('adminTab', id);
-            localStorage.setItem('adminPage', p);
-            reloadPreview();
-        }
+    window.switchTab = (id, p, el) => { 
+        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden')); 
+        document.getElementById('mod-'+id).classList.remove('hidden'); 
+        
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
+        if(el) el.classList.add('active'); 
+        
+        document.getElementById('sidebar').classList.remove('mobile-open'); 
+        
+        currentPagePath = p; 
+        reloadPreview();
     }
-
-    function checkConciergeNotice() {
-        const hasData = (profileData.publications?.length > 0) || (profileData.courses?.length > 0) || (profileData.interventions?.length > 0);
-        const dismissed = localStorage.getItem('concierge-notice-' + profileData.id);
-        if (hasData && !dismissed) {
-            const el = document.getElementById('concierge-notice');
-            if (el) { el.classList.remove('hidden'); el.style.display = 'flex'; }
-        }
-    }
-
-    window.dismissConciergeNotice = () => {
-        const el = document.getElementById('concierge-notice');
-        if (el) el.style.display = 'none';
-        localStorage.setItem('concierge-notice-' + profileData.id, '1');
-    };
 
     window.reloadPreview = () => { 
         const iframe = document.getElementById('site-preview'); 
@@ -2104,32 +1645,32 @@
         }, 1000); 
     }
     
-    function renderHeaderConfig() {
-        const container = document.getElementById('header-config-container');
-        const h = profileData.config?.header || DEFAULT_CONFIG.header;
-        const hideEmpty = !!(profileData.config?.hide_empty_sections);
-        const countMap = { publications: (profileData.publications||[]).length, courses: (profileData.courses||[]).length, interventions: (profileData.interventions||[]).length };
-        const items = [
-            { key: 'home', label: 'Accueil', icon: 'home' },
-            { key: 'publications', label: 'Publications', icon: 'book-open', countKey: 'publications' },
-            { key: 'courses', label: 'Enseignements', icon: 'graduation-cap', countKey: 'courses' },
-            { key: 'interventions', label: 'Interventions', icon: 'mic', countKey: 'interventions' }
-        ];
+    window.saveRDV = () => { 
+        clearTimeout(saveTimer); 
+        saveTimer=setTimeout(async() => { 
+            const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }; 
+            await sb.from('profiles').update({appointment_settings: settings}).eq('id',profileData.id); 
+            profileData.appointment_settings = settings; 
+            showToast("RDV sauvegardé", "success"); 
+            reloadPreview(); 
+        }, 1000); 
+    }
 
-        container.innerHTML = items.map(item => {
-            const manualOn = h[item.key] !== false;
-            const autoHidden = item.countKey && hideEmpty && countMap[item.countKey] === 0;
-            const effectivelyHidden = !manualOn || autoHidden;
-            const badge = autoHidden && manualOn ? `<span style="font-size:0.62rem; background:#fef3c7; color:#b45309; padding:1px 6px; border-radius:4px; font-weight:700; letter-spacing:0.02em; margin-left:6px;">AUTO</span>` : '';
+    function renderHeaderConfig() {
+        const container = document.getElementById('header-config-container'); 
+        const h = profileData.config.header || DEFAULT_CONFIG.header; 
+        const items = [ { key: 'home', label: 'Accueil', icon: 'home' }, { key: 'publications', label: 'Publications', icon: 'book-open' }, { key: 'courses', label: 'Enseignements', icon: 'graduation-cap' }, { key: 'interventions', label: 'Interventions', icon: 'mic' } ];
+        
+        container.innerHTML = items.map(item => { 
+            const isActive = h[item.key]; 
             return `
-                <div class="config-item ${effectivelyHidden ? 'hidden-item' : ''}">
-                    <span style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;"><i data-lucide="${item.icon}" size="16"></i>&nbsp;${item.label}${badge}</span>
-                    <button class="config-toggle-btn ${effectivelyHidden ? 'off' : 'active'}" onclick="toggleConfig('header', '${item.key}')"
-                        title="${autoHidden ? 'Section vide — masquée automatiquement' : ''}">
-                        <i data-lucide="${effectivelyHidden ? 'eye-off' : 'eye'}" size="18"></i>
+                <div class="config-item ${isActive ? '' : 'hidden-item'}">
+                    <span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span>
+                    <button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('header', '${item.key}')">
+                        <i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i>
                     </button>
-                </div>`;
-        }).join('');
+                </div>`; 
+        }).join(''); 
         lucide.createIcons();
     }
 
@@ -2202,284 +1743,6 @@
     
     window.removeFooterLink = (idx) => { profileData.config.footer.custom.splice(idx, 1); saveConfig(); renderFooterConfig(); }
     async function saveConfig() { await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); showToast("Configuration sauvegardée", "success"); reloadPreview(); }
-
-    function loadGoogleFont(fontName) {
-        if (!fontName) return;
-        const id = '__gf_' + fontName.replace(/\s+/g, '_').toLowerCase();
-        if (document.getElementById(id)) return;
-        const link = document.createElement('link');
-        link.id = id;
-        link.rel = 'stylesheet';
-        link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,700;1,400&display=swap`;
-        document.head.appendChild(link);
-    }
-
-    window.selectFont = function(fontName, el) {
-        document.querySelectorAll('#font-selector .font-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        const panel = document.getElementById('custom-font-panel');
-        if (fontName === 'custom') {
-            if (panel) panel.style.display = 'block';
-            return;
-        }
-        if (panel) panel.style.display = 'none';
-        if (!profileData.config) profileData.config = {};
-        profileData.config.title_font = fontName;
-        saveConfig();
-    };
-
-    window.applyCustomFont = function(type, fontName) {
-        if (!fontName) return;
-        loadGoogleFont(fontName);
-        if (!profileData.config) profileData.config = {};
-        if (type === 'title') {
-            profileData.config.title_font = fontName;
-            const preview = document.getElementById('custom-title-preview');
-            if (preview) preview.style.fontFamily = `'${fontName}', serif`;
-        } else {
-            profileData.config.body_font = fontName;
-            const preview = document.getElementById('custom-body-preview');
-            if (preview) preview.style.fontFamily = `'${fontName}', sans-serif`;
-        }
-        saveConfig();
-    };
-
-    function initFontSelector() {
-        const currentTitle = profileData.config?.title_font || 'Lato';
-        const standardFonts = ['Lato', 'Raleway', 'Merriweather', 'Source Serif 4'];
-        const isCustom = !standardFonts.includes(currentTitle);
-        document.querySelectorAll('#font-selector .font-option').forEach(o => {
-            const match = isCustom ? o.dataset.font === 'custom' : o.dataset.font === currentTitle;
-            o.classList.toggle('selected', match);
-        });
-        if (isCustom) {
-            const panel = document.getElementById('custom-font-panel');
-            if (panel) panel.style.display = 'block';
-            const titleSelect = document.getElementById('custom-title-font-select');
-            if (titleSelect) {
-                titleSelect.value = currentTitle;
-                if (titleSelect.value) {
-                    loadGoogleFont(currentTitle);
-                    const preview = document.getElementById('custom-title-preview');
-                    if (preview) preview.style.fontFamily = `'${currentTitle}', serif`;
-                }
-            }
-            const bodyFont = profileData.config?.body_font;
-            if (bodyFont) {
-                const bodySelect = document.getElementById('custom-body-font-select');
-                if (bodySelect) {
-                    bodySelect.value = bodyFont;
-                    loadGoogleFont(bodyFont);
-                    const preview = document.getElementById('custom-body-preview');
-                    if (preview) preview.style.fontFamily = `'${bodyFont}', sans-serif`;
-                }
-            }
-        }
-    }
-
-    window.selectAccent = function(color, el) {
-        if (!profileData.config) profileData.config = {};
-        profileData.config.accent_color = color;
-        document.querySelectorAll('#accent-selector .accent-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        saveConfig();
-    };
-
-    window.openCustomAccent = function(el) {
-        const input = document.getElementById('custom-accent-input');
-        const standardColors = ['#0f172a', '#7c2d12', '#1e3a5f', '#4a3728', '#ffffff'];
-        const current = profileData.config?.accent_color;
-        if (current && !standardColors.includes(current)) input.value = current;
-        input.click();
-    };
-
-    window.updateCustomSwatchPreview = function(color) {
-        const swatch = document.getElementById('custom-accent-swatch');
-        if (swatch) swatch.style.background = color;
-    };
-
-    window.applyCustomAccent = function(color, el) {
-        const swatch = document.getElementById('custom-accent-swatch');
-        if (swatch) swatch.style.background = color;
-        if (!profileData.config) profileData.config = {};
-        profileData.config.accent_color = color;
-        document.querySelectorAll('#accent-selector .accent-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        saveConfig();
-    };
-    function initAccentSelector() {
-        const current = profileData.config?.accent_color || '#0f172a';
-        const standardColors = ['#0f172a', '#7c2d12', '#1e3a5f', '#4a3728', '#ffffff'];
-        const isCustom = !standardColors.includes(current);
-        document.querySelectorAll('#accent-selector .accent-option').forEach(o => {
-            const match = isCustom ? o.dataset.accent === 'custom' : o.dataset.accent === current;
-            o.classList.toggle('selected', match);
-        });
-        if (isCustom) {
-            const swatch = document.getElementById('custom-accent-swatch');
-            if (swatch) swatch.style.background = current;
-            const input = document.getElementById('custom-accent-input');
-            if (input) input.value = current;
-        }
-    }
-
-    window.selectLayout = function(layout, el) {
-        if (!profileData.config) profileData.config = {};
-        profileData.config.home_layout = layout;
-        document.querySelectorAll('#layout-selector .layout-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        currentPagePath = '/accueil/';
-        saveConfig();
-    };
-    function initLayoutSelector() {
-        const current = profileData.config?.home_layout || 'card';
-        document.querySelectorAll('#layout-selector .layout-option').forEach(o => {
-            o.classList.toggle('selected', o.dataset.layout === current);
-        });
-    }
-
-    let navLabelsTimer;
-    window.saveNavLabels = function() {
-        clearTimeout(navLabelsTimer);
-        navLabelsTimer = setTimeout(async () => {
-            if (!profileData.config) profileData.config = {};
-            profileData.config.nav_labels = {
-                home:          document.getElementById('nav-label-home').value.trim() || null,
-                courses:       document.getElementById('nav-label-courses').value.trim() || null,
-                publications:  document.getElementById('nav-label-publications').value.trim() || null,
-                interventions: document.getElementById('nav-label-interventions').value.trim() || null,
-            };
-            Object.keys(profileData.config.nav_labels).forEach(k => {
-                if (!profileData.config.nav_labels[k]) delete profileData.config.nav_labels[k];
-            });
-            await saveConfig();
-        }, 800);
-    };
-    function initNavLabels() {
-        const labels = profileData.config?.nav_labels || {};
-        document.getElementById('nav-label-home').value          = labels.home || '';
-        document.getElementById('nav-label-courses').value       = labels.courses || '';
-        document.getElementById('nav-label-publications').value  = labels.publications || '';
-        document.getElementById('nav-label-interventions').value = labels.interventions || '';
-    }
-
-    // ── ORDRE DES SECTIONS ──
-    const NAV_LABELS_MAP = { accueil: 'Accueil', cours: 'Cours', publications: 'Publications', interventions: 'Interventions' };
-    function renderNavOrder() {
-        const order = profileData.config?.nav_order || ['accueil', 'cours', 'publications', 'interventions'];
-        const list = document.getElementById('nav-order-list');
-        if (!list) return;
-        list.innerHTML = order.map((key, i) => `
-            <div class="nav-order-item" data-key="${key}">
-                <span class="item-label"><i data-lucide="grip-horizontal" size="14" style="color:#94a3b8;"></i>${NAV_LABELS_MAP[key] || key}</span>
-                <div class="nav-order-btns">
-                    <button class="nav-order-btn" onclick="moveNavItem(${i}, -1)" ${i === 0 ? 'disabled' : ''}>▲</button>
-                    <button class="nav-order-btn" onclick="moveNavItem(${i}, 1)" ${i === order.length - 1 ? 'disabled' : ''}>▼</button>
-                </div>
-            </div>`).join('');
-        if (window.lucide) lucide.createIcons();
-    }
-    window.moveNavItem = function(idx, dir) {
-        if (!profileData.config) profileData.config = {};
-        const order = profileData.config.nav_order || ['accueil', 'cours', 'publications', 'interventions'];
-        const newIdx = idx + dir;
-        if (newIdx < 0 || newIdx >= order.length) return;
-        [order[idx], order[newIdx]] = [order[newIdx], order[idx]];
-        profileData.config.nav_order = order;
-        renderNavOrder();
-        saveConfig();
-    };
-    function initNavOrder() { renderNavOrder(); }
-
-    // ── STYLE EN-TÊTE ──
-    window.selectHeaderStyle = function(style, el) {
-        if (!profileData.config) profileData.config = {};
-        profileData.config.header_style = style;
-        document.querySelectorAll('#header-style-selector .layout-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        saveConfig();
-    };
-    function initHeaderStyleSelector() {
-        const current = profileData.config?.header_style || 'dark';
-        document.querySelectorAll('#header-style-selector .layout-option').forEach(o => {
-            o.classList.toggle('selected', o.dataset.hstyle === current);
-        });
-    }
-
-    // ── FORMAT PUBLICATIONS ──
-    window.selectPubFormat = function(fmt, el) {
-        if (!profileData.config) profileData.config = {};
-        profileData.config.pub_format = fmt;
-        document.querySelectorAll('#pub-format-selector .layout-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        currentPagePath = '/publications/';
-        saveConfig();
-    };
-    function initPubFormatSelector() {
-        const current = profileData.config?.pub_format || 'full';
-        document.querySelectorAll('#pub-format-selector .layout-option').forEach(o => {
-            o.classList.toggle('selected', o.dataset.pubfmt === current);
-        });
-    }
-
-    // ── FOND DE PAGE ──
-    window.selectPageBg = function(bg, el) {
-        if (!profileData.config) profileData.config = {};
-        profileData.config.page_bg = bg;
-        document.querySelectorAll('#page-bg-selector .layout-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        saveConfig();
-    };
-    window.openCustomBg = function(el) {
-        const input = document.getElementById('custom-bg-input');
-        const current = profileData.config?.page_bg;
-        const isHex = current && current.startsWith('#');
-        if (isHex && input) input.value = current;
-        document.querySelectorAll('#page-bg-selector .layout-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        if (input) input.click();
-    };
-    window.updateCustomBgSwatch = function(hex) {
-        const swatch = document.getElementById('custom-bg-swatch');
-        if (swatch) swatch.style.background = hex;
-    };
-    window.applyCustomBg = function(hex, el) {
-        if (!hex) return;
-        if (!profileData.config) profileData.config = {};
-        profileData.config.page_bg = hex;
-        const swatch = document.getElementById('custom-bg-swatch');
-        if (swatch) swatch.style.background = hex;
-        document.querySelectorAll('#page-bg-selector .layout-option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        saveConfig();
-    };
-    function initPageBgSelector() {
-        const current = profileData.config?.page_bg || 'warm';
-        const isHex = current.startsWith('#');
-        document.querySelectorAll('#page-bg-selector .layout-option').forEach(o => {
-            const match = isHex ? o.dataset.pagebg === 'custom' : o.dataset.pagebg === current;
-            o.classList.toggle('selected', match);
-        });
-        if (isHex) {
-            const swatch = document.getElementById('custom-bg-swatch');
-            if (swatch) swatch.style.background = current;
-            const input = document.getElementById('custom-bg-input');
-            if (input) input.value = current;
-        }
-    }
-
-    // ── MASQUER SECTIONS VIDES ──
-    window.saveHideEmpty = function(checked) {
-        if (!profileData.config) profileData.config = {};
-        profileData.config.hide_empty_sections = checked;
-        saveConfig();
-        renderHeaderConfig(); // reflète les œils barrés en temps réel
-    };
-    function initHideEmpty() {
-        const el = document.getElementById('toggle-hide-empty');
-        if (el) el.checked = !!(profileData.config?.hide_empty_sections);
-    }
-
     window.switchCVMode = (mode, btn) => { const row = document.getElementById('cv-row'); row.classList.remove('mode-link', 'mode-file'); row.classList.add('mode-' + mode); row.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     window.uploadFile = async (type, input) => { if (!input.files.length) return; const file = input.files[0]; showToast("Upload en cours...", "success"); const path = `${profileData.id}/${type}/${Date.now()}_${file.name}`; const { error } = await sb.storage.from('documents').upload(path, file); if(error) return showToast("Erreur: " + error.message, "error"); const url = sb.storage.from('documents').getPublicUrl(path).data.publicUrl; if (type === 'avatar') { await sb.from('profiles').update({ image_url: url }).eq('id', profileData.id); document.getElementById('preview-avatar').src = url; } showToast("Sauvegardé !", "success"); }
     function checkOnboarding() {
@@ -2497,49 +1760,8 @@
         document.getElementById('onboarding-overlay').classList.add('hidden');
         if (profileData) localStorage.setItem('onboarding_dismissed_' + profileData.id, '1');
     }
-
-    async function checkPendingClients() {
-        const { data, error } = await sb
-            .from('pending_clients')
-            .select('id, email, created_at, amount_cents, currency')
-            .eq('status', 'needs_followup')
-            .order('created_at', { ascending: false });
-
-        if (error || !data || data.length === 0) return;
-
-        const alertEl = document.getElementById('pending-clients-alert');
-        const titleEl = document.getElementById('pending-alert-title');
-        const listEl  = document.getElementById('pending-alert-list');
-
-        titleEl.textContent = `${data.length} paiement${data.length > 1 ? 's' : ''} reçu${data.length > 1 ? 's' : ''} sans compte — contacter le client et collecter son CV`;
-
-        listEl.innerHTML = data.map(p => {
-            const date   = new Date(p.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-            const amount = p.amount_cents ? `${(p.amount_cents / 100).toFixed(0)} ${p.currency || 'EUR'}` : '?';
-            return `<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:white; border:1px solid #fca5a5; border-radius:6px; padding:8px 12px; flex-wrap:wrap;">
-                <div>
-                    <strong style="font-size:0.85rem; color:#7f1d1d;">${p.email}</strong>
-                    <span style="color:#b91c1c; margin-left:8px; font-size:0.78rem;">${amount} · ${date}</span>
-                </div>
-                <button onclick="markPendingResolved('${p.id}')" style="background:#991b1b; color:white; border:none; padding:5px 12px; border-radius:5px; font-size:0.75rem; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; flex-shrink:0;">Résolu</button>
-            </div>`;
-        }).join('');
-
-        alertEl.classList.remove('hidden');
-        alertEl.style.display = 'block';
-    }
-
-    window.markPendingResolved = async (id) => {
-        const { error } = await sb.from('pending_clients').update({ status: 'resolved' }).eq('id', id);
-        if (!error) {
-            showToast('Marqué comme résolu', 'success');
-            checkPendingClients();
-        } else {
-            showToast('Erreur : ' + error.message, 'error');
-        }
-    };
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
-    window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='/login/'; }
+    window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
     
     let toastTimer;
     function showToast(m, type = 'success'){ 
@@ -2548,146 +1770,6 @@
         const iconEl = t.querySelector('i'); if(iconEl) iconEl.setAttribute('data-lucide', icon);
         t.classList.add('visible'); if(window.lucide) lucide.createIcons();
         clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('visible'), 2000); 
-    }
-
-    // --- STATISTIQUES ---
-    let chartDailyInstance = null;
-    let chartTypesInstance = null;
-
-    const TYPE_LABELS = { doi: 'DOI', external: 'Lien', file: 'Fichier', linkedin: 'LinkedIn', scholar: 'Scholar', hal: 'HAL', orcid: 'ORCID', arxiv: 'arXiv', email: 'Email' };
-
-    window.loadStats = async (days, btnEl) => {
-        if (!profileData) return;
-        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-        if (btnEl) btnEl.classList.add('active');
-
-        document.getElementById('stats-table-body').innerHTML = '<tr><td colspan="4" class="stats-loading">Chargement...</td></tr>';
-
-        let query = sb.from('link_clicks').select('*').eq('prof_id', profileData.id).order('clicked_at', { ascending: true });
-        if (days > 0) {
-            const since = new Date(Date.now() - days * 86400000).toISOString();
-            query = query.gte('clicked_at', since);
-        }
-
-        const { data: clicks, error } = await query;
-        if (error || !clicks) {
-            document.getElementById('stats-table-body').innerHTML = '<tr><td colspan="4" class="stats-empty">Erreur lors du chargement.</td></tr>';
-            return;
-        }
-
-        // KPI: total
-        document.getElementById('stat-total').textContent = clicks.length;
-        document.getElementById('stat-total-sub').textContent = days > 0 ? `sur ${days} jours` : 'depuis le début';
-
-        // KPI: cette semaine
-        const weekAgo = new Date(Date.now() - 7 * 86400000);
-        const weekClicks = clicks.filter(c => new Date(c.clicked_at) >= weekAgo);
-        document.getElementById('stat-week').textContent = weekClicks.length;
-        document.getElementById('stat-week-sub').textContent = weekClicks.length > 0 ? 'clics cette semaine' : 'aucun clic cette semaine';
-
-        // KPI: top page
-        const pageCount = {};
-        clicks.forEach(c => { pageCount[c.page] = (pageCount[c.page] || 0) + 1; });
-        const topPageEntry = Object.entries(pageCount).sort((a, b) => b[1] - a[1])[0];
-        document.getElementById('stat-top-page').textContent = topPageEntry ? topPageEntry[0] : '—';
-        document.getElementById('stat-top-page-sub').textContent = topPageEntry ? `${topPageEntry[1]} clic(s)` : 'aucune donnée';
-
-        // KPI: top link
-        const linkCount = {};
-        clicks.forEach(c => {
-            const key = c.link_label || c.link_url || 'inconnu';
-            linkCount[key] = (linkCount[key] || 0) + 1;
-        });
-        const topLinkEntry = Object.entries(linkCount).sort((a, b) => b[1] - a[1])[0];
-        document.getElementById('stat-top-link').textContent = topLinkEntry ? topLinkEntry[0] : '—';
-        document.getElementById('stat-top-link-sub').textContent = topLinkEntry ? `${topLinkEntry[1]} clic(s)` : 'aucune donnée';
-
-        renderDailyChart(clicks, days);
-        renderTypesChart(clicks);
-        renderStatsTable(clicks);
-    };
-
-    function renderDailyChart(clicks, days) {
-        const daysToShow = days > 0 ? days : 30;
-        const labels = [];
-        const values = [];
-        for (let i = daysToShow - 1; i >= 0; i--) {
-            const d = new Date(Date.now() - i * 86400000);
-            const key = d.toISOString().split('T')[0];
-            labels.push(d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }));
-            values.push(clicks.filter(c => c.clicked_at && c.clicked_at.startsWith(key)).length);
-        }
-        const ctx = document.getElementById('chart-daily').getContext('2d');
-        if (chartDailyInstance) chartDailyInstance.destroy();
-        chartDailyInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [{ data: values, borderColor: '#0f172a', backgroundColor: 'rgba(15,23,42,0.06)', fill: true, tension: 0.35, pointRadius: values.length > 30 ? 0 : 3, pointBackgroundColor: '#0f172a', borderWidth: 2 }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0, font: { size: 11 } }, grid: { color: '#f5f2ee' } },
-                    x: { ticks: { font: { size: 10 }, maxRotation: 45, maxTicksLimit: 12 }, grid: { display: false } }
-                },
-                responsive: true, maintainAspectRatio: false
-            }
-        });
-    }
-
-    function renderTypesChart(clicks) {
-        const typeCount = {};
-        clicks.forEach(c => { typeCount[c.link_type] = (typeCount[c.link_type] || 0) + 1; });
-        const sorted = Object.entries(typeCount).sort((a, b) => b[1] - a[1]);
-        if (sorted.length === 0) {
-            const ctx = document.getElementById('chart-types').getContext('2d');
-            if (chartTypesInstance) chartTypesInstance.destroy();
-            chartTypesInstance = null;
-            return;
-        }
-        const labels = sorted.map(([k]) => TYPE_LABELS[k] || k);
-        const values = sorted.map(([, v]) => v);
-        const palette = ['#0f172a', '#334155', '#64748b', '#94a3b8', '#cbd5e1', '#1e40af', '#1d4ed8', '#3b82f6', '#93c5fd'];
-        const ctx = document.getElementById('chart-types').getContext('2d');
-        if (chartTypesInstance) chartTypesInstance.destroy();
-        chartTypesInstance = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels,
-                datasets: [{ data: values, backgroundColor: palette.slice(0, values.length), borderWidth: 2, borderColor: '#fafaf8' }]
-            },
-            options: {
-                plugins: { legend: { position: 'right', labels: { font: { size: 11 }, padding: 10, boxWidth: 12 } } },
-                responsive: true, maintainAspectRatio: false
-            }
-        });
-    }
-
-    function renderStatsTable(clicks) {
-        const linkMap = {};
-        clicks.forEach(c => {
-            const key = (c.link_url || 'unknown') + '||' + c.page;
-            if (!linkMap[key]) linkMap[key] = { label: c.link_label || c.link_url || 'Sans titre', url: c.link_url, page: c.page, type: c.link_type, count: 0 };
-            linkMap[key].count++;
-        });
-        const sorted = Object.values(linkMap).sort((a, b) => b.count - a.count);
-        const tbody = document.getElementById('stats-table-body');
-        if (sorted.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="stats-empty">Aucun clic enregistré pour cette période.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = sorted.slice(0, 50).map(item => {
-            const linkHtml = item.url && item.url !== 'unknown'
-                ? `<a href="${item.url}" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:600;" title="${item.url}">${item.label.length > 50 ? item.label.substring(0, 47) + '...' : item.label}</a>`
-                : `<span style="color:#334155; font-weight:600;">${item.label}</span>`;
-            return `<tr>
-                <td>${linkHtml}</td>
-                <td style="color:var(--text-muted);">${item.page}</td>
-                <td><span class="type-pill">${TYPE_LABELS[item.type] || item.type}</span></td>
-                <td style="font-weight:700; color:var(--accent); text-align:right;">${item.count}</td>
-            </tr>`;
-        }).join('');
     }
 
     init();

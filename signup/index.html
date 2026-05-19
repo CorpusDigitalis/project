@@ -149,7 +149,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
+            font-size: 0.92rem;
             box-sizing: border-box;
             transition: border-color 0.2s, box-shadow 0.2s;
             background: #fdfcfb;
@@ -333,30 +333,6 @@
             text-align: center;
             letter-spacing: 0.02em;
         }
-        .cgu-label {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-top: 20px;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            text-transform: none;
-            letter-spacing: 0;
-            font-weight: 400;
-            cursor: pointer;
-            line-height: 1.5;
-        }
-        .cgu-label input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            flex-shrink: 0;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: var(--accent);
-            font-size: 1rem;
-        }
-        .cgu-label a { color: var(--accent); text-decoration: underline; }
-        .cgu-label a:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -389,11 +365,6 @@
         <label>Mot de passe</label>
         <input type="password" id="reg-password" placeholder="8 caractères minimum">
 
-        <label class="cgu-label">
-            <input type="checkbox" id="cgu-check">
-            J'accepte les <a href="/cgu/" target="_blank">Conditions Générales d'Utilisation</a> et la <a href="/confidentialite/" target="_blank">Politique de confidentialité</a>.
-        </label>
-
         <button class="btn-primary" id="btn-step1" onclick="handleSignup()">Continuer →</button>
     </div>
 
@@ -401,10 +372,6 @@
     <div id="step-2" class="step">
         <h1>Votre identité.</h1>
         <p>Ces informations structureront votre page publique.</p>
-
-        <div id="email-confirm-notice" style="display:none; background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:12px 14px; margin-bottom:16px; font-size:0.82rem; color:#166534; line-height:1.5;">
-            <strong>Email envoyé</strong> — un lien de confirmation a été envoyé à <span id="confirm-email-display" style="font-weight:600;"></span>. Vous pouvez continuer sans attendre.
-        </div>
 
         <div id="err-2" class="error-msg"></div>
 
@@ -437,8 +404,8 @@
         </div>
 
         <div class="price-card">
-            <div class="price-amount">144 €</div>
-            <div class="price-period">par an · remboursable sur crédits de laboratoire</div>
+            <div class="price-amount">97 €</div>
+            <div class="price-period">par an · offre Early Bird · remboursable sur crédits de laboratoire</div>
             <ul class="price-features">
                 <li>Votre espace académique sur mesure</li>
                 <li>Sous-domaine personnel corpusdigitalis.com</li>
@@ -470,13 +437,13 @@
             </div>
         </div>
         <h1 style="text-align:center;">Bienvenue dans Corpus Digitalis.</h1>
-        <p style="text-align:center;">Votre paiement a été confirmé. Votre espace est en cours d'activation.</p>
+        <p style="text-align:center;">Paiement confirmé. Votre CV a bien été reçu.</p>
 
         <div class="next-step-box">
-            <strong>Prochaine étape :</strong><br>
-            Notre équipe finalise votre espace sous 24h. Vous recevrez un email de confirmation avec le lien vers votre site.
+            <strong>Ce qui se passe maintenant :</strong><br>
+            Notre équipe construit votre profil à partir de votre CV sous 48h. Vous recevrez un email dès que votre site est en ligne à l'adresse <em>[votre-nom].corpusdigitalis.com</em>.
         </div>
-        <button class="btn-secondary" onclick="window.location.href='/login/'">Accéder à mon espace →</button>
+        <button class="btn-secondary" onclick="window.location.href='login.html'">Accéder à mon espace →</button>
     </div>
 
     <div class="footer-note">Corpus Digitalis &mdash; Hub académique premium</div>
@@ -491,7 +458,7 @@
     // ==========================================================
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
-    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/dRm8wQdepdmcb9d9nqb7y02';
+    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_28E9AT5Xxbhi5AO5cX8ww00';
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -501,42 +468,40 @@
     // ==========================================================
     // VÉRIFICATION AU CHARGEMENT : retour depuis Stripe ?
     // ==========================================================
-    // Récupération du statut de retour Stripe — async pour pouvoir interroger la session
-    (async () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentStatus = urlParams.get('payment');
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
 
-        if (paymentStatus === 'success') {
-            window.history.replaceState({}, '', window.location.pathname);
-            switchToStep(4);
-            updateDots(4);
-        } else if (paymentStatus === 'cancel') {
-            window.history.replaceState({}, '', window.location.pathname);
+    if (paymentStatus === 'success') {
+        window.history.replaceState({}, '', window.location.pathname);
+        switchToStep(4);
+        updateDots(4);
+    } else if (paymentStatus === 'cancel') {
+        window.history.replaceState({}, '', window.location.pathname);
+        const savedUserId = localStorage.getItem('cd_pending_user_id');
+        const savedEmail = localStorage.getItem('cd_pending_email');
+        if (savedUserId && savedEmail) {
+            userId = savedUserId;
+            userEmail = savedEmail;
+            document.getElementById('cancel-notice').style.display = 'block';
+            switchToStep(3);
+            updateDots(3);
+        }
+    } else {
+        // Utilisateur qui revient après avoir créé son profil mais pas encore payé
+        (async () => {
             const savedUserId = localStorage.getItem('cd_pending_user_id');
             const savedEmail = localStorage.getItem('cd_pending_email');
-
             if (savedUserId && savedEmail) {
-                userId = savedUserId;
-                userEmail = savedEmail;
-                document.getElementById('cancel-notice').style.display = 'block';
-                switchToStep(3);
-                updateDots(3);
-            } else {
-                // Récupération via session Supabase si localStorage vide (autre navigateur / cache effacé)
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user) {
-                    userId = user.id;
-                    userEmail = user.email;
-                    localStorage.setItem('cd_pending_user_id', userId);
-                    localStorage.setItem('cd_pending_email', userEmail);
-                    document.getElementById('cancel-notice').style.display = 'block';
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session && session.user.id === savedUserId) {
+                    userId = savedUserId;
+                    userEmail = savedEmail;
                     switchToStep(3);
                     updateDots(3);
                 }
-                // Si toujours rien : l'utilisateur voit l'étape 1 normalement
             }
-        }
-    })();
+        })();
+    }
 
     // ==========================================================
     // ÉTAPE 1 : CRÉATION COMPTE
@@ -550,7 +515,6 @@
         errDiv.style.display = 'none';
         if (!email || !password) { showErr(errDiv, "Veuillez remplir tous les champs."); return; }
         if (password.length < 6) { showErr(errDiv, "Le mot de passe doit contenir au moins 6 caractères."); return; }
-        if (!document.getElementById('cgu-check').checked) { showErr(errDiv, "Vous devez accepter les CGU et la politique de confidentialité pour continuer."); return; }
 
         btn.disabled = true;
         btn.innerText = "Traitement...";
@@ -558,7 +522,13 @@
         const { data, error } = await supabase.auth.signUp({ email, password });
 
         if (error) {
-            showErr(errDiv, error.message);
+            let msg = error.message;
+            if (msg.includes('already registered') || msg.includes('already in use') || msg.includes('email_exists')) {
+                msg = 'Un compte existe déjà avec cet email. Connectez-vous depuis la page de connexion.';
+            } else if (msg.includes('rate limit') || msg.includes('too many')) {
+                msg = 'Trop de tentatives. Réessayez dans quelques minutes.';
+            }
+            showErr(errDiv, msg);
             btn.disabled = false;
             btn.innerText = "Continuer →";
             return;
@@ -568,8 +538,6 @@
         userEmail = email;
         document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
 
-        document.getElementById('confirm-email-display').textContent = email;
-        document.getElementById('email-confirm-notice').style.display = 'block';
         switchToStep(2);
         updateDots(2);
     }
@@ -590,31 +558,17 @@
         if (!name || !slug) { showErr(errDiv, "Le nom et l'URL personnalisée sont obligatoires."); return; }
         if (slug.length < 3) { showErr(errDiv, "L'URL personnalisée doit contenir au moins 3 caractères."); return; }
 
-        // Faille 5 — vérification unicité du slug avant de continuer
-        const { data: existingSlug } = await supabase.from('profiles').select('id').eq('slug', slug).maybeSingle();
-        if (existingSlug) {
-            showErr(errDiv, "Cette URL est déjà prise. Essayez une variante (ex : marie-dupont-2).");
-            return;
-        }
+        const cvFileCheck = document.getElementById('up-cv').files[0];
+        if (!cvFileCheck) { showErr(errDiv, "Votre CV (PDF) est obligatoire — il nous permet de construire votre profil."); return; }
 
         btn.disabled = true;
         btn.style.opacity = "0.5";
         loader.style.display = "block";
 
         try {
-            // Faille 6 — créer le profil EN PREMIER, avant tout upload
-            const { error: profErr } = await supabase.from('profiles').upsert({
-                id: userId,
-                name: name,
-                bio: bio,
-                slug: slug,
-                is_active: false
-            });
-            if (profErr) throw profErr;
-
-            // Uploader les fichiers maintenant que le profil existe
             const avatarFile = document.getElementById('up-avatar').files[0];
             const cvFile = document.getElementById('up-cv').files[0];
+
             let imageUrl = null;
             let cvUrl = null;
 
@@ -622,24 +576,34 @@
                 const ext = avatarFile.name.split('.').pop();
                 const path = `${userId}/avatar-${Date.now()}.${ext}`;
                 const { error: upErr } = await supabase.storage.from('avatars').upload(path, avatarFile);
-                if (!upErr) imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
-                else console.warn('Upload avatar échoué :', upErr.message);
+                if (!upErr) {
+                    imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+                } else {
+                    console.warn('Upload avatar échoué :', upErr.message);
+                }
             }
 
             if (cvFile) {
                 const path = `${userId}/cv-${Date.now()}.pdf`;
                 const { error: upErr } = await supabase.storage.from('documents').upload(path, cvFile);
-                if (!upErr) cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
-                else console.warn('Upload CV échoué :', upErr.message);
+                if (!upErr) {
+                    cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                } else {
+                    console.warn('Upload CV échoué :', upErr.message);
+                }
             }
 
-            // Mettre à jour les URLs si des fichiers ont été uploadés
-            if (imageUrl || cvUrl) {
-                const updates = {};
-                if (imageUrl) updates.image_url = imageUrl;
-                if (cvUrl) updates.cv_url = cvUrl;
-                await supabase.from('profiles').update(updates).eq('id', userId);
-            }
+            const { error: profErr } = await supabase.from('profiles').upsert({
+                id: userId,
+                name: name,
+                bio: bio,
+                slug: slug,
+                image_url: imageUrl,
+                cv_url: cvUrl,
+                is_active: false
+            });
+
+            if (profErr) throw profErr;
 
             localStorage.setItem('cd_pending_user_id', userId);
             localStorage.setItem('cd_pending_email', userEmail);
