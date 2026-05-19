@@ -136,6 +136,19 @@ export async function initLayout() {
         el.style.fontFamily = `'${titleFont}', serif`;
     });
 
+    // 6b. Police du texte (config.body_font)
+    const bodyFont = prof.config?.body_font;
+    if (bodyFont) {
+        if (!document.querySelector('link[data-bodyfont]')) {
+            const bLink = document.createElement('link');
+            bLink.rel = 'stylesheet';
+            bLink.href = `https://fonts.googleapis.com/css2?family=${bodyFont.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;1,400&display=swap`;
+            bLink.dataset.bodyfont = '1';
+            document.head.appendChild(bLink);
+        }
+        document.body.style.fontFamily = `'${bodyFont}', sans-serif`;
+    }
+
     // 7. Couleur d'accent (config.accent_color)
     const accentColor = prof.config?.accent_color || '#0f172a';
     if (accentColor === '#ffffff') {

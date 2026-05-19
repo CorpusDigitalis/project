@@ -694,13 +694,9 @@
                 </div>
 
                 <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Police du titre</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Choisissez la typographie utilisée pour votre nom en haut de chaque page.</p>
+                    <h4 style="margin-bottom:6px; color:#334155;">Typographie</h4>
+                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Police du titre. Choisissez "Libre" pour personnaliser titre et texte séparément.</p>
                     <div class="font-grid" id="font-selector">
-                        <div class="font-option" data-font="Playfair Display" onclick="selectFont('Playfair Display', this)">
-                            <div class="font-preview" style="font-family:'Playfair Display',serif;">Aa</div>
-                            <div class="font-name">Playfair Display</div>
-                        </div>
                         <div class="font-option" data-font="Lato" onclick="selectFont('Lato', this)">
                             <div class="font-preview" style="font-family:'Lato',sans-serif;">Aa</div>
                             <div class="font-name">Lato</div>
@@ -716,6 +712,73 @@
                         <div class="font-option" data-font="Source Serif 4" onclick="selectFont('Source Serif 4', this)">
                             <div class="font-preview" style="font-family:'Source Serif 4',serif;">Aa</div>
                             <div class="font-name">Source Serif</div>
+                        </div>
+                        <div class="font-option" id="font-custom-option" data-font="custom" onclick="selectFont('custom', this)">
+                            <div class="font-preview" style="display:flex;align-items:center;justify-content:center;height:100%;padding:2px 0;"><i data-lucide="sliders-horizontal" size="20" style="color:#64748b;"></i></div>
+                            <div class="font-name">Libre</div>
+                        </div>
+                    </div>
+
+                    <div id="custom-font-panel" style="display:none; margin-top:20px; padding-top:20px; border-top:1px solid #e8e4de;">
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#64748b; margin-bottom:8px;">Police du titre</label>
+                            <select id="custom-title-font-select" onchange="applyCustomFont('title', this.value)" style="width:100%; padding:10px 12px; border:1px solid #e0dbd4; border-radius:6px; font-size:0.9rem; background:#fdfcfb; color:#334155; cursor:pointer; box-sizing:border-box;">
+                                <option value="">— choisir une police —</option>
+                                <optgroup label="Serif">
+                                    <option value="EB Garamond">EB Garamond</option>
+                                    <option value="Cormorant Garamond">Cormorant Garamond</option>
+                                    <option value="Lora">Lora</option>
+                                    <option value="Libre Baskerville">Libre Baskerville</option>
+                                    <option value="Crimson Pro">Crimson Pro</option>
+                                    <option value="Playfair Display">Playfair Display</option>
+                                    <option value="Merriweather">Merriweather</option>
+                                    <option value="PT Serif">PT Serif</option>
+                                    <option value="Source Serif 4">Source Serif 4</option>
+                                </optgroup>
+                                <optgroup label="Sans-serif">
+                                    <option value="Inter">Inter</option>
+                                    <option value="DM Sans">DM Sans</option>
+                                    <option value="Outfit">Outfit</option>
+                                    <option value="Nunito">Nunito</option>
+                                    <option value="Poppins">Poppins</option>
+                                    <option value="Work Sans">Work Sans</option>
+                                    <option value="Josefin Sans">Josefin Sans</option>
+                                    <option value="Montserrat">Montserrat</option>
+                                    <option value="Lato">Lato</option>
+                                    <option value="Raleway">Raleway</option>
+                                </optgroup>
+                            </select>
+                            <div id="custom-title-preview" style="margin-top:12px; padding:14px 16px; background:#fafaf8; border:1px solid #e8e4de; border-radius:8px; font-size:1.8rem; color:#0f172a; text-align:center; line-height:1.2; min-height:60px; transition:font-family 0.2s;">Votre nom</div>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#64748b; margin-bottom:8px;">Police du texte</label>
+                            <select id="custom-body-font-select" onchange="applyCustomFont('body', this.value)" style="width:100%; padding:10px 12px; border:1px solid #e0dbd4; border-radius:6px; font-size:0.9rem; background:#fdfcfb; color:#334155; cursor:pointer; box-sizing:border-box;">
+                                <option value="">— choisir une police —</option>
+                                <optgroup label="Serif">
+                                    <option value="EB Garamond">EB Garamond</option>
+                                    <option value="Cormorant Garamond">Cormorant Garamond</option>
+                                    <option value="Lora">Lora</option>
+                                    <option value="Libre Baskerville">Libre Baskerville</option>
+                                    <option value="Crimson Pro">Crimson Pro</option>
+                                    <option value="Playfair Display">Playfair Display</option>
+                                    <option value="Merriweather">Merriweather</option>
+                                    <option value="PT Serif">PT Serif</option>
+                                    <option value="Source Serif 4">Source Serif 4</option>
+                                </optgroup>
+                                <optgroup label="Sans-serif">
+                                    <option value="Inter">Inter</option>
+                                    <option value="DM Sans">DM Sans</option>
+                                    <option value="Outfit">Outfit</option>
+                                    <option value="Nunito">Nunito</option>
+                                    <option value="Poppins">Poppins</option>
+                                    <option value="Work Sans">Work Sans</option>
+                                    <option value="Josefin Sans">Josefin Sans</option>
+                                    <option value="Montserrat">Montserrat</option>
+                                    <option value="Lato">Lato</option>
+                                    <option value="Raleway">Raleway</option>
+                                </optgroup>
+                            </select>
+                            <div id="custom-body-preview" style="margin-top:12px; padding:14px 16px; background:#fafaf8; border:1px solid #e8e4de; border-radius:8px; font-size:0.92rem; color:#334155; line-height:1.65; min-height:56px; transition:font-family 0.2s;">Publications, cours et interventions — vos travaux présentés avec élégance.</div>
                         </div>
                     </div>
                 </div>
@@ -2103,17 +2166,78 @@
     window.removeFooterLink = (idx) => { profileData.config.footer.custom.splice(idx, 1); saveConfig(); renderFooterConfig(); }
     async function saveConfig() { await sb.from('profiles').update({ config: profileData.config }).eq('id', profileData.id); showToast("Configuration sauvegardée", "success"); reloadPreview(); }
 
+    function loadGoogleFont(fontName) {
+        if (!fontName) return;
+        const id = '__gf_' + fontName.replace(/\s+/g, '_').toLowerCase();
+        if (document.getElementById(id)) return;
+        const link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,700;1,400&display=swap`;
+        document.head.appendChild(link);
+    }
+
     window.selectFont = function(fontName, el) {
-        profileData.config.title_font = fontName;
         document.querySelectorAll('#font-selector .font-option').forEach(o => o.classList.remove('selected'));
         el.classList.add('selected');
+        const panel = document.getElementById('custom-font-panel');
+        if (fontName === 'custom') {
+            if (panel) panel.style.display = 'block';
+            return;
+        }
+        if (panel) panel.style.display = 'none';
+        if (!profileData.config) profileData.config = {};
+        profileData.config.title_font = fontName;
         saveConfig();
     };
+
+    window.applyCustomFont = function(type, fontName) {
+        if (!fontName) return;
+        loadGoogleFont(fontName);
+        if (!profileData.config) profileData.config = {};
+        if (type === 'title') {
+            profileData.config.title_font = fontName;
+            const preview = document.getElementById('custom-title-preview');
+            if (preview) preview.style.fontFamily = `'${fontName}', serif`;
+        } else {
+            profileData.config.body_font = fontName;
+            const preview = document.getElementById('custom-body-preview');
+            if (preview) preview.style.fontFamily = `'${fontName}', sans-serif`;
+        }
+        saveConfig();
+    };
+
     function initFontSelector() {
-        const current = profileData.config?.title_font || 'Playfair Display';
+        const currentTitle = profileData.config?.title_font || 'Lato';
+        const standardFonts = ['Lato', 'Raleway', 'Merriweather', 'Source Serif 4'];
+        const isCustom = !standardFonts.includes(currentTitle);
         document.querySelectorAll('#font-selector .font-option').forEach(o => {
-            o.classList.toggle('selected', o.dataset.font === current);
+            const match = isCustom ? o.dataset.font === 'custom' : o.dataset.font === currentTitle;
+            o.classList.toggle('selected', match);
         });
+        if (isCustom) {
+            const panel = document.getElementById('custom-font-panel');
+            if (panel) panel.style.display = 'block';
+            const titleSelect = document.getElementById('custom-title-font-select');
+            if (titleSelect) {
+                titleSelect.value = currentTitle;
+                if (titleSelect.value) {
+                    loadGoogleFont(currentTitle);
+                    const preview = document.getElementById('custom-title-preview');
+                    if (preview) preview.style.fontFamily = `'${currentTitle}', serif`;
+                }
+            }
+            const bodyFont = profileData.config?.body_font;
+            if (bodyFont) {
+                const bodySelect = document.getElementById('custom-body-font-select');
+                if (bodySelect) {
+                    bodySelect.value = bodyFont;
+                    loadGoogleFont(bodyFont);
+                    const preview = document.getElementById('custom-body-preview');
+                    if (preview) preview.style.fontFamily = `'${bodyFont}', sans-serif`;
+                }
+            }
+        }
     }
 
     window.selectAccent = function(color, el) {
