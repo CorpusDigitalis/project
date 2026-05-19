@@ -736,10 +736,6 @@
                             <div class="accent-swatch" style="background:#1e3a5f;"></div>
                             <div class="accent-name">Marine</div>
                         </div>
-                        <div class="accent-option" data-accent="#2d4a22" onclick="selectAccent('#2d4a22', this)">
-                            <div class="accent-swatch" style="background:#2d4a22;"></div>
-                            <div class="accent-name">Forêt</div>
-                        </div>
                         <div class="accent-option" data-accent="#4a3728" onclick="selectAccent('#4a3728', this)">
                             <div class="accent-swatch" style="background:#4a3728;"></div>
                             <div class="accent-name">Sépia</div>
@@ -747,6 +743,13 @@
                         <div class="accent-option" data-accent="#ffffff" onclick="selectAccent('#ffffff', this)">
                             <div class="accent-swatch" style="background:#ffffff; border-color:#c8c3bb;"></div>
                             <div class="accent-name">Blanc</div>
+                        </div>
+                        <div class="accent-option" id="accent-custom-option" data-accent="custom" onclick="openCustomAccent(this)" style="position:relative;">
+                            <div class="accent-swatch" id="custom-accent-swatch" style="background: conic-gradient(hsl(0,75%,50%), hsl(60,75%,50%), hsl(120,75%,50%), hsl(180,75%,50%), hsl(240,75%,50%), hsl(300,75%,50%), hsl(360,75%,50%));"></div>
+                            <div class="accent-name">Libre</div>
+                            <input type="color" id="custom-accent-input" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;"
+                                oninput="updateCustomSwatchPreview(this.value)"
+                                onchange="applyCustomAccent(this.value, document.getElementById('accent-custom-option'))">
                         </div>
                     </div>
                 </div>
@@ -2120,11 +2123,43 @@
         el.classList.add('selected');
         saveConfig();
     };
+
+    window.openCustomAccent = function(el) {
+        const input = document.getElementById('custom-accent-input');
+        const standardColors = ['#0f172a', '#7c2d12', '#1e3a5f', '#4a3728', '#ffffff'];
+        const current = profileData.config?.accent_color;
+        if (current && !standardColors.includes(current)) input.value = current;
+        input.click();
+    };
+
+    window.updateCustomSwatchPreview = function(color) {
+        const swatch = document.getElementById('custom-accent-swatch');
+        if (swatch) swatch.style.background = color;
+    };
+
+    window.applyCustomAccent = function(color, el) {
+        const swatch = document.getElementById('custom-accent-swatch');
+        if (swatch) swatch.style.background = color;
+        if (!profileData.config) profileData.config = {};
+        profileData.config.accent_color = color;
+        document.querySelectorAll('#accent-selector .accent-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        saveConfig();
+    };
     function initAccentSelector() {
         const current = profileData.config?.accent_color || '#0f172a';
+        const standardColors = ['#0f172a', '#7c2d12', '#1e3a5f', '#4a3728', '#ffffff'];
+        const isCustom = !standardColors.includes(current);
         document.querySelectorAll('#accent-selector .accent-option').forEach(o => {
-            o.classList.toggle('selected', o.dataset.accent === current);
+            const match = isCustom ? o.dataset.accent === 'custom' : o.dataset.accent === current;
+            o.classList.toggle('selected', match);
         });
+        if (isCustom) {
+            const swatch = document.getElementById('custom-accent-swatch');
+            if (swatch) swatch.style.background = current;
+            const input = document.getElementById('custom-accent-input');
+            if (input) input.value = current;
+        }
     }
 
     window.selectLayout = function(layout, el) {
