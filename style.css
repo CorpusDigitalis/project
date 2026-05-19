@@ -271,3 +271,32 @@ footer {
     .hero-section.layout-bio #profil-img { width: 120px; height: 120px; }
     .hero-section.layout-bio .skeleton-img { width: 120px; height: 120px; }
 }
+
+/* ── DARK MODE (config.page_bg = 'dark') ── */
+html.page-dark body {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+html.page-dark h1,
+html.page-dark h2,
+html.page-dark h3,
+html.page-dark h4 {
+    color: #f1f5f9 !important;
+}
+html.page-dark p,
+html.page-dark #profil-desc,
+html.page-dark .bio-text {
+    color: #cbd5e1 !important;
+}
+html.page-dark .container {
+    border-bottom-color: #1e293b !important;
+}
+html.page-dark .corpus-tm {
+    color: #64748b !important;
+}
+html.page-dark .skeleton-box {
+    background-color: #1e293b !important;
+}
+html.page-dark .skeleton-glass {
+    background-color: rgba(255,255,255,0.08) !important;
+}

@@ -174,9 +174,16 @@ export async function initLayout() {
     }
 
     // 10. Fond de page (config.page_bg)
-    if ((prof.config?.page_bg || 'warm') === 'white') {
+    const pageBg = prof.config?.page_bg || 'warm';
+    if (pageBg === 'white') {
         document.documentElement.style.setProperty('--bg-body-override', '#ffffff');
         document.body.style.backgroundColor = '#ffffff';
+    } else if (pageBg === 'dark') {
+        document.documentElement.classList.add('page-dark');
+        document.body.style.backgroundColor = '#0f172a';
+    } else if (pageBg.startsWith('#')) {
+        document.documentElement.style.setProperty('--bg-body-override', pageBg);
+        document.body.style.backgroundColor = pageBg;
     }
 
     return prof;
