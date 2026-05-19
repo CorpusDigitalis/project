@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue — Corpus Digitalis</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #0f172a; --bg: #fafaf8; --border: #e8e4de; --text-muted: #64748b; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(15,23,42,0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .card {
+            background: white;
+            padding: 52px 48px;
+            border-radius: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06), 0 32px 64px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 460px;
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--accent);
+            text-align: center;
+        }
+        .logo-text {
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--accent);
+            margin-bottom: 32px;
+        }
+        .logo-text span {
+            background: var(--accent);
+            color: white;
+            padding: 3px 7px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            font-weight: 800;
+        }
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+        }
+        h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            font-size: 1.85rem;
+            margin: 0 0 12px;
+            color: var(--accent);
+            line-height: 1.2;
+        }
+        p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0 0 28px; }
+        .next-step-box {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.88rem;
+            color: #1e293b;
+            margin-bottom: 24px;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .btn {
+            display: block;
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            box-sizing: border-box;
+        }
+        .btn:hover { background: #1e293b; transform: translateY(-1px); }
+        .footer-note { margin-top: 28px; font-size: 0.72rem; color: #b8b4ac; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="logo-text">CORPUS DIGITALIS <span>PRO</span></div>
+
+    <div class="success-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+
+    <h1>Bienvenue dans Corpus Digitalis.</h1>
+    <p>Votre paiement est confirmé. Votre CV a bien été reçu.</p>
+
+    <div class="next-step-box">
+        <strong>Ce qui se passe maintenant :</strong><br>
+        Notre équipe analyse votre CV et construit votre profil sous 48h.
+        Vous recevrez un email dès que votre site est en ligne à l'adresse
+        <em>[votre-nom].corpusdigitalis.com</em>.
+    </div>
+
+    <a href="/login/" class="btn">Accéder à mon espace →</a>
+
+    <div class="footer-note">Corpus Digitalis — Hub académique premium</div>
+</div>
+
+<script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    const supabase = createClient(
+        'https://recgvfcuxsonkhlyctrw.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'
+    );
+
+    // Marquer le paiement et nettoyer le localStorage
+    const userId = localStorage.getItem('cd_pending_user_id');
+    if (userId) {
+        await supabase
+            .from('profiles')
+            .update({ paid_at: new Date().toISOString() })
+            .eq('id', userId)
+            .eq('is_active', false);
+
+        localStorage.removeItem('cd_pending_user_id');
+        localStorage.removeItem('cd_pending_email');
+    }
+</script>
+</body>
+</html>
