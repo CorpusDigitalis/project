@@ -132,13 +132,20 @@ export async function initLayout() {
         link.dataset.titlefont = '1';
         document.head.appendChild(link);
     }
-    document.querySelectorAll('.site-name, .prof-name, h1.name').forEach(el => {
+    document.querySelectorAll('.site-name, .prof-name, h1:not(.page-title)').forEach(el => {
         el.style.fontFamily = `'${titleFont}', serif`;
     });
 
     // 7. Couleur d'accent (config.accent_color)
     const accentColor = prof.config?.accent_color || '#0f172a';
-    document.documentElement.style.setProperty('--site-accent', accentColor);
+    if (accentColor === '#ffffff') {
+        // Mode blanc : header clair, accent sombre pour les boutons/liens
+        document.documentElement.style.setProperty('--site-accent', '#0f172a');
+        const headerEl = document.querySelector('header');
+        if (headerEl) headerEl.classList.add('header-light');
+    } else {
+        document.documentElement.style.setProperty('--site-accent', accentColor);
+    }
 
     // 8. Layout accueil (config.home_layout)
     const heroSection = document.querySelector('.hero-section');

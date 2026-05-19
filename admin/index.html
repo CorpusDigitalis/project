@@ -335,8 +335,8 @@
         .url-bar { height: 28px; width: 400px; background: white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #94a3b8; border: 1px solid #e8e4de; font-weight: 500; gap: 5px; overflow: hidden; padding: 0 10px; }
         .url-bar-link { color: #475569; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .url-bar-link:hover { color: #0f172a; text-decoration: underline; }
-        .url-bar-live { display: none; flex-shrink: 0; background: #0f172a; color: white; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 4px; text-decoration: none; letter-spacing: 0.02em; transition: opacity 0.15s; white-space: nowrap; }
-        .url-bar-live:hover { opacity: 0.75; }
+        .url-bar-live { display: none; position: absolute; top: 16px; right: 16px; z-index: 100; align-items: center; gap: 6px; background: #0f172a; color: white; font-size: 11px; font-weight: 700; padding: 7px 14px; border-radius: 8px; text-decoration: none; letter-spacing: 0.03em; transition: opacity 0.15s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .url-bar-live:hover { opacity: 0.8; }
         
         iframe { width: 100%; flex: 1; border: none; background: white; pointer-events: auto; }
 
@@ -527,7 +527,6 @@
         <div class="nav-item" onclick="switchTab('interventions', '/interventions/', this)"><i data-lucide="mic"></i> Interventions</div>
         <div class="nav-title">Configuration</div>
         <div class="nav-item" onclick="switchTab('perso', '/accueil/', this)"><i data-lucide="settings"></i> Personnalisation</div>
-        <div class="nav-item" onclick="switchTab('rdv', '/accueil/', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
         <div class="nav-title">Analytiques</div>
         <div class="nav-item" onclick="switchTab('stats', null, this)"><i data-lucide="bar-chart-2"></i> Statistiques</div>
         <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Déconnexion</button>
@@ -745,9 +744,9 @@
                             <div class="accent-swatch" style="background:#4a3728;"></div>
                             <div class="accent-name">Sépia</div>
                         </div>
-                        <div class="accent-option" data-accent="#374151" onclick="selectAccent('#374151', this)">
-                            <div class="accent-swatch" style="background:#374151;"></div>
-                            <div class="accent-name">Ardoise</div>
+                        <div class="accent-option" data-accent="#ffffff" onclick="selectAccent('#ffffff', this)">
+                            <div class="accent-swatch" style="background:#ffffff; border-color:#c8c3bb;"></div>
+                            <div class="accent-name">Blanc</div>
                         </div>
                     </div>
                 </div>
@@ -799,23 +798,6 @@
                 </div>
 
                 <div class="card">
-                    <h4 style="margin-bottom:6px; color:#334155;">Style de l'en-tête</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Fond de la barre de navigation de votre profil.</p>
-                    <div class="layout-grid" id="header-style-selector">
-                        <div class="layout-option" data-hstyle="dark" onclick="selectHeaderStyle('dark', this)">
-                            <i data-lucide="moon" size="26"></i>
-                            <div class="layout-name">Sombre</div>
-                            <div class="layout-desc">Fond noir / accent</div>
-                        </div>
-                        <div class="layout-option" data-hstyle="light" onclick="selectHeaderStyle('light', this)">
-                            <i data-lucide="sun" size="26"></i>
-                            <div class="layout-name">Clair</div>
-                            <div class="layout-desc">Fond blanc avec bordure</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
                     <h4 style="margin-bottom:6px; color:#334155;">Format des publications</h4>
                     <p style="font-size:0.8rem; color:#64748b; margin-bottom:4px;">Niveau de détail affiché sur votre page Publications.</p>
                     <div class="layout-grid" id="pub-format-selector">
@@ -863,24 +845,6 @@
                 <div class="scroll-spacer"></div>
             </section>
 
-            <section id="mod-rdv" class="module hidden">
-                <div class="header-flex">
-                    <div>
-                        <h2>Rendez-vous</h2>
-                        <p class="section-subtitle">Gérez la prise de rendez-vous pour vos étudiants.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <label>Lien de prise de rendez-vous</label>
-                    <input id="rdv-url" oninput="saveRDV()" placeholder="https://cal.com/votre-lien">
-                    <p style="font-size: 0.8rem; color: #64748b; margin-top: 8px; line-height: 1.5; background: #fafaf8; padding: 10px; border-radius: 6px; border: 1px solid #e8e4de;">
-                        <strong>Note :</strong> La gestion des disponibilités s'effectue sur <strong>Cal.com</strong>.
-                    </p>
-                    <label style="margin-top:20px">Texte du bouton</label>
-                    <input id="rdv-text" oninput="saveRDV()" placeholder="Prendre rendez-vous">
-                </div>
-                <div class="scroll-spacer"></div>
-            </section>
 
             <section id="mod-stats" class="module hidden">
                 <div class="header-flex" style="align-items:center;">
@@ -953,6 +917,8 @@
                 <div class="loading-text"><i data-lucide="loader" class="spin"></i> CORPUS DIGITALIS</div>
             </div>
 
+            <a id="url-bar-live" href="#" target="_blank" class="url-bar-live"><i data-lucide="external-link" size="13"></i> Voir en direct</a>
+
             <div class="floating-toolbar">
                 <button class="btn-toolbar active-device" id="btn-device-desktop" onclick="setDeviceMode('desktop')">
                     <i data-lucide="monitor" size="16"></i> Bureau
@@ -980,7 +946,6 @@
                             <div class="url-bar">
                                 <span style="color:#10b981;font-size:9px;">🔒</span>
                                 <a id="url-bar-link" href="#" target="_blank" class="url-bar-link">monsite.com</a>
-                                <a id="url-bar-live" href="#" target="_blank" class="url-bar-live">Voir en direct ↗</a>
                             </div>
                             <div style="width: 42px;"></div> </div>
                         
@@ -1071,12 +1036,23 @@
     // --- MOTEUR CANVAS FIGMA-LIKE ---
     const viewport = document.getElementById('viewport');
     const canvasPlane = document.getElementById('canvas-plane');
-    
+
     let currentDeviceMode = 'desktop';
     let panX = 0;
     let panY = 0;
     let zoomLevel = 1;
     let isPanning = false;
+
+    function applyIframeScrollbarStyle() {
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (!iframeDoc || !iframeDoc.head) return;
+            let st = iframeDoc.getElementById('__cd_scrollbar');
+            if (!st) { st = iframeDoc.createElement('style'); st.id = '__cd_scrollbar'; iframeDoc.head.appendChild(st); }
+            const hide = (currentDeviceMode === 'mobile' || currentDeviceMode === 'tablet');
+            st.textContent = hide ? '::-webkit-scrollbar{display:none!important}html,body{scrollbar-width:none!important;-ms-overflow-style:none!important}' : '';
+        } catch(e) {}
+    }
 
     function updateCanvasTransform() {
         canvasPlane.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomLevel})`;
@@ -1101,6 +1077,7 @@
         const activeBtn = document.getElementById('btn-device-' + mode);
         if (activeBtn) activeBtn.classList.add('active-device');
 
+        applyIframeScrollbarStyle();
         lucide.createIcons();
         autoScalePreview();
     };
@@ -1176,13 +1153,14 @@
             }
 
             iframe.contentWindow.addEventListener('wheel', function(e) {
-                if (e.ctrlKey || e.metaKey) { 
-                    e.preventDefault(); 
-                    window.manualZoom(e.deltaY * -0.01); 
-                } 
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    window.manualZoom(e.deltaY * -0.01);
+                }
             }, { passive: false });
-        } catch (error) { 
-            console.log("CORS block - normal en local."); 
+            applyIframeScrollbarStyle();
+        } catch (error) {
+            console.log("CORS block - normal en local.");
         }
     };
 
@@ -1247,7 +1225,7 @@
         const urlBarLink = document.getElementById('url-bar-link');
         const urlBarLive = document.getElementById('url-bar-live');
         if (urlBarLink) { urlBarLink.textContent = `${slug}.corpusdigitalis.com`; urlBarLink.href = liveUrl; }
-        if (urlBarLive) { urlBarLive.href = liveUrl; urlBarLive.style.display = 'inline-block'; }
+        if (urlBarLive) { urlBarLive.href = liveUrl; urlBarLive.style.display = 'flex'; }
         
         fillProfileUI();
         
@@ -1307,8 +1285,6 @@
             document.getElementById('field-cv-url').value = cvUrl || ''; 
         }
         
-        document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; 
-        document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
         
         renderHeaderConfig();
         renderFooterConfig();
@@ -2036,17 +2012,6 @@
         }, 1000); 
     }
     
-    window.saveRDV = () => { 
-        clearTimeout(saveTimer); 
-        saveTimer=setTimeout(async() => { 
-            const settings = { url: document.getElementById('rdv-url').value, text: document.getElementById('rdv-text').value }; 
-            await sb.from('profiles').update({appointment_settings: settings}).eq('id',profileData.id); 
-            profileData.appointment_settings = settings; 
-            showToast("RDV sauvegardé", "success"); 
-            reloadPreview(); 
-        }, 1000); 
-    }
-
     function renderHeaderConfig() {
         const container = document.getElementById('header-config-container'); 
         const h = profileData.config.header || DEFAULT_CONFIG.header; 
@@ -2167,6 +2132,7 @@
         profileData.config.home_layout = layout;
         document.querySelectorAll('#layout-selector .layout-option').forEach(o => o.classList.remove('selected'));
         el.classList.add('selected');
+        currentPagePath = '/accueil/';
         saveConfig();
     };
     function initLayoutSelector() {
@@ -2250,6 +2216,7 @@
         profileData.config.pub_format = fmt;
         document.querySelectorAll('#pub-format-selector .layout-option').forEach(o => o.classList.remove('selected'));
         el.classList.add('selected');
+        currentPagePath = '/publications/';
         saveConfig();
     };
     function initPubFormatSelector() {
