@@ -473,6 +473,11 @@
 
     if (paymentStatus === 'success') {
         window.history.replaceState({}, '', window.location.pathname);
+        // Marquer le paiement en BDD pour que @Concierge sache que ce profil est payé
+        const savedUserId = localStorage.getItem('cd_pending_user_id');
+        if (savedUserId) {
+            supabase.from('profiles').update({ paid_at: new Date().toISOString() }).eq('id', savedUserId);
+        }
         switchToStep(4);
         updateDots(4);
     } else if (paymentStatus === 'cancel') {
