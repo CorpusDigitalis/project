@@ -368,12 +368,32 @@
         <button class="btn-primary" id="btn-step1" onclick="handleSignup()">Continuer →</button>
     </div>
 
-    <!-- ÉTAPE 2 : Identité académique -->
+    <!-- ÉTAPE 2 : Vérification email -->
     <div id="step-2" class="step">
+        <h1>Vérifiez votre email.</h1>
+        <p>Un code à 4 chiffres vient d'être envoyé à <strong id="display-email"></strong>. Entrez-le ci-dessous pour continuer.</p>
+
+        <div id="err-2" class="error-msg"></div>
+
+        <label>Code de vérification</label>
+        <div style="display:flex; gap:10px; justify-content:center; margin:8px 0 4px;">
+            <input type="text" id="code-d1" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'code-d2')" onkeydown="focusPrev(event,this,'')">
+            <input type="text" id="code-d2" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'code-d3')" onkeydown="focusPrev(event,this,'code-d1')">
+            <input type="text" id="code-d3" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'code-d4')" onkeydown="focusPrev(event,this,'code-d2')">
+            <input type="text" id="code-d4" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'')" onkeydown="focusPrev(event,this,'code-d3')">
+        </div>
+        <p style="font-size:0.78rem;color:#b8b4ac;text-align:center;margin-bottom:0;">Code valable 15 minutes</p>
+
+        <button class="btn-primary" id="btn-verify" onclick="handleVerification()" style="margin-top:24px;">Vérifier →</button>
+        <button class="btn-secondary" onclick="resendCode()">Renvoyer le code</button>
+    </div>
+
+    <!-- ÉTAPE 3 : Identité académique -->
+    <div id="step-3" class="step">
         <h1>Votre identité.</h1>
         <p>Ces informations structureront votre page publique.</p>
 
-        <div id="err-2" class="error-msg"></div>
+        <div id="err-3" class="error-msg"></div>
 
         <label>Nom complet</label>
         <input type="text" id="conf-name" placeholder="Ex : Pr. Marie Dupont">
@@ -394,8 +414,8 @@
         <div id="loading-msg">Création de votre espace en cours…<br>Cela peut prendre quelques secondes.</div>
     </div>
 
-    <!-- ÉTAPE 3 : Paiement -->
-    <div id="step-3" class="step">
+    <!-- ÉTAPE 4 : Paiement -->
+    <div id="step-4" class="step">
         <h1>Dernière étape.</h1>
         <p>Activez votre espace académique pour commencer à publier.</p>
 
@@ -419,7 +439,7 @@
             </div>
         </div>
 
-        <div id="err-3" class="error-msg"></div>
+        <div id="err-4" class="error-msg"></div>
 
         <button class="btn-primary" id="btn-pay" onclick="redirectToPayment()">
             Procéder au paiement sécurisé →
@@ -429,21 +449,12 @@
         </p>
     </div>
 
-    <!-- ÉTAPE 4 : Confirmation -->
-    <div id="step-4" class="step">
-        <div style="text-align:center;">
-            <div class="success-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
+    <!-- ÉTAPE 5 : Redirection automatique vers bienvenue -->
+    <div id="step-5" class="step">
+        <div style="text-align:center; padding:20px 0;">
+            <div class="success-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <p style="color:#64748b; font-size:0.9rem;">Redirection en cours…</p>
         </div>
-        <h1 style="text-align:center;">Bienvenue dans Corpus Digitalis.</h1>
-        <p style="text-align:center;">Paiement confirmé. Votre CV a bien été reçu.</p>
-
-        <div class="next-step-box">
-            <strong>Ce qui se passe maintenant :</strong><br>
-            Notre équipe construit votre profil à partir de votre CV sous 48h. Vous recevrez un email dès que votre site est en ligne à l'adresse <em>[votre-nom].corpusdigitalis.com</em>.
-        </div>
-        <button class="btn-secondary" onclick="window.location.href='login.html'">Accéder à mon espace →</button>
     </div>
 
     <div class="footer-note">Corpus Digitalis &mdash; Hub académique premium</div>
@@ -459,6 +470,7 @@
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
     const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_28E9AT5Xxbhi5AO5cX8ww00';
+    const VERIFY_EDGE_URL = `${SUPABASE_URL}/functions/v1/send-verification-code`;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -466,47 +478,33 @@
     let userEmail = null;
 
     // ==========================================================
-    // VÉRIFICATION AU CHARGEMENT : retour depuis Stripe ?
+    // CHARGEMENT : reprise de session en cours
     // ==========================================================
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentStatus = urlParams.get('payment');
-
-    if (paymentStatus === 'success') {
-        window.history.replaceState({}, '', window.location.pathname);
-        // Marquer le paiement en BDD pour que @Concierge sache que ce profil est payé
-        const savedUserId = localStorage.getItem('cd_pending_user_id');
-        if (savedUserId) {
-            supabase.from('profiles').update({ paid_at: new Date().toISOString() }).eq('id', savedUserId);
-        }
-        switchToStep(4);
-        updateDots(4);
-    } else if (paymentStatus === 'cancel') {
-        window.history.replaceState({}, '', window.location.pathname);
+    (async () => {
         const savedUserId = localStorage.getItem('cd_pending_user_id');
         const savedEmail = localStorage.getItem('cd_pending_email');
-        if (savedUserId && savedEmail) {
-            userId = savedUserId;
-            userEmail = savedEmail;
+        if (!savedUserId || !savedEmail) return;
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session || session.user.id !== savedUserId) return;
+
+        userId = savedUserId;
+        userEmail = savedEmail;
+
+        const isVerified = localStorage.getItem('cd_email_verified_' + savedUserId);
+        if (!isVerified) return; // Code expiré, on repart de l'étape 1
+
+        const isProfileSaved = localStorage.getItem('cd_profile_saved_' + savedUserId);
+        if (isProfileSaved) {
             document.getElementById('cancel-notice').style.display = 'block';
+            switchToStep(4);
+            updateDots(4);
+        } else {
+            document.getElementById('conf-slug').value = savedEmail.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
             switchToStep(3);
             updateDots(3);
         }
-    } else {
-        // Utilisateur qui revient après avoir créé son profil mais pas encore payé
-        (async () => {
-            const savedUserId = localStorage.getItem('cd_pending_user_id');
-            const savedEmail = localStorage.getItem('cd_pending_email');
-            if (savedUserId && savedEmail) {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session && session.user.id === savedUserId) {
-                    userId = savedUserId;
-                    userEmail = savedEmail;
-                    switchToStep(3);
-                    updateDots(3);
-                }
-            }
-        })();
-    }
+    })();
 
     // ==========================================================
     // ÉTAPE 1 : CRÉATION COMPTE
@@ -541,19 +539,89 @@
 
         userId = data.user.id;
         userEmail = email;
+        localStorage.setItem('cd_pending_user_id', userId);
+        localStorage.setItem('cd_pending_email', userEmail);
         document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+        document.getElementById('display-email').innerText = email;
 
+        btn.innerText = "Envoi du code...";
+        await fetch(VERIFY_EDGE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+            body: JSON.stringify({ user_id: userId, email: userEmail })
+        });
+
+        btn.disabled = false;
+        btn.innerText = "Continuer →";
         switchToStep(2);
         updateDots(2);
     }
 
     // ==========================================================
-    // ÉTAPE 2 : DÉTAILS & UPLOADS
+    // ÉTAPE 2 : VÉRIFICATION EMAIL
+    // ==========================================================
+    window.handleVerification = async () => {
+        const btn = document.getElementById('btn-verify');
+        const errDiv = document.getElementById('err-2');
+
+        const code = ['code-d1','code-d2','code-d3','code-d4']
+            .map(id => document.getElementById(id).value)
+            .join('');
+
+        errDiv.style.display = 'none';
+        if (code.length < 4) { showErr(errDiv, "Entrez les 4 chiffres du code."); return; }
+
+        btn.disabled = true;
+        btn.innerText = "Vérification...";
+
+        const { data: isValid, error } = await supabase.rpc('verify_email_code', {
+            p_user_id: userId,
+            p_code: code
+        });
+
+        if (error || !isValid) {
+            showErr(errDiv, "Code incorrect ou expiré. Vérifiez votre email ou demandez un nouveau code.");
+            btn.disabled = false;
+            btn.innerText = "Vérifier →";
+            return;
+        }
+
+        localStorage.setItem('cd_email_verified_' + userId, '1');
+        switchToStep(3);
+        updateDots(3);
+    }
+
+    window.resendCode = async () => {
+        if (!userId || !userEmail) return;
+        const btn = document.querySelector('#step-2 .btn-secondary');
+        btn.disabled = true;
+        btn.innerText = "Envoi en cours...";
+
+        await fetch(VERIFY_EDGE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+            body: JSON.stringify({ user_id: userId, email: userEmail })
+        });
+
+        btn.innerText = "Code renvoyé ✓";
+        setTimeout(() => { btn.disabled = false; btn.innerText = "Renvoyer le code"; }, 30000);
+    }
+
+    // Focus automatique entre les cases du code
+    window.focusNext = (el, nextId) => {
+        if (el.value.length >= 1 && nextId) document.getElementById(nextId).focus();
+    }
+    window.focusPrev = (e, el, prevId) => {
+        if (e.key === 'Backspace' && el.value === '' && prevId) document.getElementById(prevId).focus();
+    }
+
+    // ==========================================================
+    // ÉTAPE 3 : IDENTITÉ & UPLOADS
     // ==========================================================
     window.submitOnboarding = async () => {
         const btn = document.getElementById('btn-final');
         const loader = document.getElementById('loading-msg');
-        const errDiv = document.getElementById('err-2');
+        const errDiv = document.getElementById('err-3');
 
         const name = document.getElementById('conf-name').value.trim();
         const bio = document.getElementById('conf-bio').value.trim();
@@ -581,21 +649,15 @@
                 const ext = avatarFile.name.split('.').pop();
                 const path = `${userId}/avatar-${Date.now()}.${ext}`;
                 const { error: upErr } = await supabase.storage.from('avatars').upload(path, avatarFile);
-                if (!upErr) {
-                    imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
-                } else {
-                    console.warn('Upload avatar échoué :', upErr.message);
-                }
+                if (!upErr) imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+                else console.warn('Upload avatar échoué :', upErr.message);
             }
 
             if (cvFile) {
                 const path = `${userId}/cv-${Date.now()}.pdf`;
                 const { error: upErr } = await supabase.storage.from('documents').upload(path, cvFile);
-                if (!upErr) {
-                    cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
-                } else {
-                    console.warn('Upload CV échoué :', upErr.message);
-                }
+                if (!upErr) cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                else console.warn('Upload CV échoué :', upErr.message);
             }
 
             const { error: profErr } = await supabase.from('profiles').upsert({
@@ -610,11 +672,9 @@
 
             if (profErr) throw profErr;
 
-            localStorage.setItem('cd_pending_user_id', userId);
-            localStorage.setItem('cd_pending_email', userEmail);
-
-            switchToStep(3);
-            updateDots(3);
+            localStorage.setItem('cd_profile_saved_' + userId, '1');
+            switchToStep(4);
+            updateDots(4);
 
         } catch (err) {
             console.error(err);
@@ -626,11 +686,11 @@
     }
 
     // ==========================================================
-    // ÉTAPE 3 : REDIRECTION VERS STRIPE
+    // ÉTAPE 4 : REDIRECTION VERS STRIPE
     // ==========================================================
     window.redirectToPayment = () => {
         const btn = document.getElementById('btn-pay');
-        const errDiv = document.getElementById('err-3');
+        const errDiv = document.getElementById('err-4');
 
         if (!STRIPE_PAYMENT_LINK || STRIPE_PAYMENT_LINK === 'REMPLACER_PAR_VOTRE_LIEN_STRIPE') {
             showErr(errDiv, "Le lien de paiement n'est pas encore configuré. Contactez l'équipe Corpus Digitalis.");
@@ -661,6 +721,7 @@
     function updateDots(currentStep) {
         for (let i = 1; i <= 4; i++) {
             const dot = document.getElementById(`dot-${i}`);
+            if (!dot) continue;
             dot.classList.remove('active', 'done');
             if (i < currentStep) dot.classList.add('done');
             else if (i === currentStep) dot.classList.add('active');
