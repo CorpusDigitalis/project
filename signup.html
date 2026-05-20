@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer votre espace - Corpus Digitalis</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #0f172a;
+            --accent-light: #1e293b;
+            --bg: #fafaf8;
+            --border: #e8e4de;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-main);
+            box-sizing: border-box;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(15,23,42,0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(15,23,42,0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .onboarding-card {
+            background: white;
+            padding: 45px 45px 40px;
+            border-radius: 16px;
+            box-shadow:
+                0 1px 2px rgba(0,0,0,0.04),
+                0 8px 24px rgba(0,0,0,0.06),
+                0 32px 64px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 460px;
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--accent);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* --- LOGO EN TÊTE --- */
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+        .logo-text span {
+            background: var(--accent);
+            color: white;
+            padding: 3px 7px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+        }
+
+        /* --- INDICATEUR D'ÉTAPES --- */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 36px;
+        }
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: background 0.3s ease, transform 0.2s ease;
+            flex-shrink: 0;
+        }
+        .step-dot.active {
+            background: var(--accent);
+            transform: scale(1.2);
+        }
+        .step-dot.done {
+            background: var(--accent);
+            opacity: 0.35;
+        }
+        .step-line {
+            height: 1px;
+            width: 40px;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+
+        /* --- STEPS --- */
+        .step { display: none; }
+        .step.active { display: block; animation: fadeIn 0.35s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 700;
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+            margin-top: 0;
+            color: var(--accent);
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+        p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            margin-top: 0;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            margin-top: 18px;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fdfcfb;
+            color: var(--text-main);
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(15,23,42,0.08);
+            background: #fff;
+        }
+        input::placeholder, textarea::placeholder { color: #b8b4ac; }
+        input[type="file"] {
+            background: var(--bg);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            margin-top: 28px;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.2);
+        }
+        .btn-primary:active:not(:disabled) { transform: translateY(0); }
+        .btn-primary:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+
+        .btn-secondary {
+            background: white;
+            color: var(--accent);
+            border: 1px solid var(--border);
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-secondary:hover { background: var(--bg); border-color: #cdc8c0; }
+
+        #loading-msg {
+            margin-top: 14px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-align: center;
+            display: none;
+            font-style: italic;
+            line-height: 1.5;
+        }
+        .error-msg {
+            color: #b91c1c;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            display: none;
+            background: #fef2f2;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #fecaca;
+        }
+
+        /* --- PRICE CARD (Étape 3) --- */
+        .price-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px 24px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .price-amount {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+        .price-period {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            letter-spacing: 0.01em;
+        }
+        .price-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        .price-features li {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .price-features li:last-child { border-bottom: none; }
+        .price-features li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: 700;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+        .stripe-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 16px;
+            font-size: 0.72rem;
+            color: #b8b4ac;
+            letter-spacing: 0.02em;
+        }
+
+        /* --- ANNULATION --- */
+        .cancel-notice {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 0.84rem;
+            color: #92400e;
+            margin-bottom: 16px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        /* --- ÉTAPE 4 SUCCÈS --- */
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .next-step-box {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.88rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 0.72rem;
+            color: #b8b4ac;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="onboarding-card">
+
+    <div class="logo-text">CORPUS DIGITALIS <span>PRO</span></div>
+
+    <!-- Indicateur d'étapes -->
+    <div class="step-indicator">
+        <div class="step-dot active" id="dot-1"></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot-3"></div>
+        <div class="step-line"></div>
+        <div class="step-dot" id="dot-4"></div>
+    </div>
+
+    <!-- ÉTAPE 1 : Identifiants -->
+    <div id="step-1" class="step active">
+        <h1>Bienvenue.</h1>
+        <p>Commencez par créer vos identifiants sécurisés pour accéder à la plateforme.</p>
+
+        <div id="err-1" class="error-msg"></div>
+
+        <label>Email professionnel</label>
+        <input type="email" id="reg-email" placeholder="professeur@universite.fr">
+
+        <label>Mot de passe</label>
+        <input type="password" id="reg-password" placeholder="8 caractères minimum">
+
+        <button class="btn-primary" id="btn-step1" onclick="handleSignup()">Continuer →</button>
+    </div>
+
+    <!-- ÉTAPE 2 : Vérification email -->
+    <div id="step-2" class="step">
+        <h1>Vérifiez votre email.</h1>
+        <p>Un code à 4 chiffres vient d'être envoyé à <strong id="display-email"></strong>. Entrez-le ci-dessous pour continuer.</p>
+
+        <div id="err-2" class="error-msg"></div>
+
+        <label>Code de vérification</label>
+        <div style="display:flex; gap:10px; justify-content:center; margin:8px 0 4px;">
+            <input type="text" id="code-d1" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'code-d2')" onkeydown="focusPrev(event,this,'')">
+            <input type="text" id="code-d2" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'code-d3')" onkeydown="focusPrev(event,this,'code-d1')">
+            <input type="text" id="code-d3" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'code-d4')" onkeydown="focusPrev(event,this,'code-d2')">
+            <input type="text" id="code-d4" maxlength="1" inputmode="numeric" pattern="[0-9]" style="width:56px;height:68px;text-align:center;font-size:28px;font-weight:700;letter-spacing:0;font-family:'Courier New',monospace;" oninput="focusNext(this,'')" onkeydown="focusPrev(event,this,'code-d3')">
+        </div>
+        <p style="font-size:0.78rem;color:#b8b4ac;text-align:center;margin-bottom:0;">Code valable 15 minutes</p>
+
+        <button class="btn-primary" id="btn-verify" onclick="handleVerification()" style="margin-top:24px;">Vérifier →</button>
+        <button class="btn-secondary" onclick="resendCode()">Renvoyer le code</button>
+    </div>
+
+    <!-- ÉTAPE 3 : Identité académique -->
+    <div id="step-3" class="step">
+        <h1>Votre identité.</h1>
+        <p>Ces informations structureront votre page publique.</p>
+
+        <div id="err-3" class="error-msg"></div>
+
+        <label>Nom complet</label>
+        <input type="text" id="conf-name" placeholder="Ex : Pr. Marie Dupont">
+
+        <label>Biographie courte</label>
+        <textarea id="conf-bio" rows="3" placeholder="Votre statut, université ou spécialité..."></textarea>
+
+        <label>URL personnalisée</label>
+        <input type="text" id="conf-slug" placeholder="ex : marie-dupont">
+
+        <label>Photo de profil (optionnel)</label>
+        <input type="file" id="up-avatar" accept="image/*">
+
+        <label>Curriculum Vitae</label>
+        <input type="file" id="up-cv" accept=".pdf">
+
+        <button class="btn-primary" id="btn-final" onclick="submitOnboarding()">Continuer →</button>
+        <div id="loading-msg">Création de votre espace en cours…<br>Cela peut prendre quelques secondes.</div>
+    </div>
+
+    <!-- ÉTAPE 4 : Paiement -->
+    <div id="step-4" class="step">
+        <h1>Dernière étape.</h1>
+        <p>Activez votre espace académique pour commencer à publier.</p>
+
+        <div id="cancel-notice" class="cancel-notice">
+            Le paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez — votre profil est bien enregistré.
+        </div>
+
+        <div class="price-card">
+            <div class="price-amount">97 €</div>
+            <div class="price-period">par an · offre Early Bird · remboursable sur crédits de laboratoire</div>
+            <ul class="price-features">
+                <li>Votre espace académique sur mesure</li>
+                <li>Sous-domaine personnel corpusdigitalis.com</li>
+                <li>Publications, cours &amp; interventions illimités</li>
+                <li>CV téléchargeable intégré</li>
+                <li>Service de mise en ligne inclus</li>
+            </ul>
+            <div class="stripe-badge">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 0C3.134 0 0 3.134 0 7s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7z" fill="#635BFF"/></svg>
+                Paiement sécurisé par Stripe
+            </div>
+        </div>
+
+        <div id="err-4" class="error-msg"></div>
+
+        <button class="btn-primary" id="btn-pay" onclick="redirectToPayment()">
+            Procéder au paiement sécurisé →
+        </button>
+        <p style="text-align:center; font-size:0.75rem; color:#b8b4ac; margin-top:10px; margin-bottom:0;">
+            Annulable à tout moment · Résiliation en un clic
+        </p>
+    </div>
+
+    <!-- ÉTAPE 5 : Redirection automatique vers bienvenue -->
+    <div id="step-5" class="step">
+        <div style="text-align:center; padding:20px 0;">
+            <div class="success-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+            <p style="color:#64748b; font-size:0.9rem;">Redirection en cours…</p>
+        </div>
+    </div>
+
+    <div class="footer-note">Corpus Digitalis &mdash; Hub académique premium</div>
+
+</div>
+
+<script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    // ==========================================================
+    // CONFIGURATION
+    // ==========================================================
+    const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
+    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/bJe4gA6Q15TK2CH2Z2b7y03';
+    const VERIFY_EDGE_URL = `${SUPABASE_URL}/functions/v1/send-verification-code`;
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let userId = null;
+    let userEmail = null;
+
+    // ==========================================================
+    // CHARGEMENT : reprise de session en cours
+    // ==========================================================
+    (async () => {
+        const savedUserId = localStorage.getItem('cd_pending_user_id');
+        const savedEmail = localStorage.getItem('cd_pending_email');
+        if (!savedUserId || !savedEmail) return;
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session || session.user.id !== savedUserId) return;
+
+        userId = savedUserId;
+        userEmail = savedEmail;
+
+        const isVerified = localStorage.getItem('cd_email_verified_' + savedUserId);
+        if (!isVerified) return; // Code expiré, on repart de l'étape 1
+
+        const isProfileSaved = localStorage.getItem('cd_profile_saved_' + savedUserId);
+        if (isProfileSaved) {
+            document.getElementById('cancel-notice').style.display = 'block';
+            switchToStep(4);
+            updateDots(4);
+        } else {
+            document.getElementById('conf-slug').value = savedEmail.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+            switchToStep(3);
+            updateDots(3);
+        }
+    })();
+
+    // ==========================================================
+    // ÉTAPE 1 : CRÉATION COMPTE
+    // ==========================================================
+    window.handleSignup = async () => {
+        const btn = document.getElementById('btn-step1');
+        const errDiv = document.getElementById('err-1');
+        const email = document.getElementById('reg-email').value.trim();
+        const password = document.getElementById('reg-password').value;
+
+        errDiv.style.display = 'none';
+        if (!email || !password) { showErr(errDiv, "Veuillez remplir tous les champs."); return; }
+        if (password.length < 6) { showErr(errDiv, "Le mot de passe doit contenir au moins 6 caractères."); return; }
+
+        btn.disabled = true;
+        btn.innerText = "Traitement...";
+
+        const { data, error } = await supabase.auth.signUp({ email, password });
+
+        if (error) {
+            let msg = error.message;
+            if (msg.includes('already registered') || msg.includes('already in use') || msg.includes('email_exists')) {
+                msg = 'Un compte existe déjà avec cet email. Connectez-vous depuis la page de connexion.';
+            } else if (msg.includes('rate limit') || msg.includes('too many')) {
+                msg = 'Trop de tentatives. Réessayez dans quelques minutes.';
+            }
+            showErr(errDiv, msg);
+            btn.disabled = false;
+            btn.innerText = "Continuer →";
+            return;
+        }
+
+        userId = data.user.id;
+        userEmail = email;
+        localStorage.setItem('cd_pending_user_id', userId);
+        localStorage.setItem('cd_pending_email', userEmail);
+        document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+        document.getElementById('display-email').innerText = email;
+
+        btn.innerText = "Envoi du code...";
+        await fetch(VERIFY_EDGE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+            body: JSON.stringify({ user_id: userId, email: userEmail })
+        });
+
+        btn.disabled = false;
+        btn.innerText = "Continuer →";
+        switchToStep(2);
+        updateDots(2);
+    }
+
+    // ==========================================================
+    // ÉTAPE 2 : VÉRIFICATION EMAIL
+    // ==========================================================
+    window.handleVerification = async () => {
+        const btn = document.getElementById('btn-verify');
+        const errDiv = document.getElementById('err-2');
+
+        const code = ['code-d1','code-d2','code-d3','code-d4']
+            .map(id => document.getElementById(id).value)
+            .join('');
+
+        errDiv.style.display = 'none';
+        if (code.length < 4) { showErr(errDiv, "Entrez les 4 chiffres du code."); return; }
+
+        btn.disabled = true;
+        btn.innerText = "Vérification...";
+
+        const { data: isValid, error } = await supabase.rpc('verify_email_code', {
+            p_user_id: userId,
+            p_code: code
+        });
+
+        if (error || !isValid) {
+            showErr(errDiv, "Code incorrect ou expiré. Vérifiez votre email ou demandez un nouveau code.");
+            btn.disabled = false;
+            btn.innerText = "Vérifier →";
+            return;
+        }
+
+        localStorage.setItem('cd_email_verified_' + userId, '1');
+        switchToStep(3);
+        updateDots(3);
+    }
+
+    window.resendCode = async () => {
+        if (!userId || !userEmail) return;
+        const btn = document.querySelector('#step-2 .btn-secondary');
+        btn.disabled = true;
+        btn.innerText = "Envoi en cours...";
+
+        await fetch(VERIFY_EDGE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+            body: JSON.stringify({ user_id: userId, email: userEmail })
+        });
+
+        btn.innerText = "Code renvoyé ✓";
+        setTimeout(() => { btn.disabled = false; btn.innerText = "Renvoyer le code"; }, 30000);
+    }
+
+    // Focus automatique entre les cases du code
+    window.focusNext = (el, nextId) => {
+        if (el.value.length >= 1 && nextId) document.getElementById(nextId).focus();
+    }
+    window.focusPrev = (e, el, prevId) => {
+        if (e.key === 'Backspace' && el.value === '' && prevId) document.getElementById(prevId).focus();
+    }
+
+    // ==========================================================
+    // ÉTAPE 3 : IDENTITÉ & UPLOADS
+    // ==========================================================
+    window.submitOnboarding = async () => {
+        const btn = document.getElementById('btn-final');
+        const loader = document.getElementById('loading-msg');
+        const errDiv = document.getElementById('err-3');
+
+        const name = document.getElementById('conf-name').value.trim();
+        const bio = document.getElementById('conf-bio').value.trim();
+        const slug = document.getElementById('conf-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+        errDiv.style.display = 'none';
+        if (!name || !slug) { showErr(errDiv, "Le nom et l'URL personnalisée sont obligatoires."); return; }
+        if (slug.length < 3) { showErr(errDiv, "L'URL personnalisée doit contenir au moins 3 caractères."); return; }
+
+        const cvFileCheck = document.getElementById('up-cv').files[0];
+        if (!cvFileCheck) { showErr(errDiv, "Votre CV (PDF) est obligatoire — il nous permet de construire votre profil."); return; }
+
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+        loader.style.display = "block";
+
+        try {
+            const avatarFile = document.getElementById('up-avatar').files[0];
+            const cvFile = document.getElementById('up-cv').files[0];
+
+            let imageUrl = null;
+            let cvUrl = null;
+
+            if (avatarFile) {
+                const ext = avatarFile.name.split('.').pop();
+                const path = `${userId}/avatar-${Date.now()}.${ext}`;
+                const { error: upErr } = await supabase.storage.from('avatars').upload(path, avatarFile);
+                if (!upErr) imageUrl = supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+                else console.warn('Upload avatar échoué :', upErr.message);
+            }
+
+            if (cvFile) {
+                const path = `${userId}/cv-${Date.now()}.pdf`;
+                const { error: upErr } = await supabase.storage.from('documents').upload(path, cvFile);
+                if (!upErr) cvUrl = supabase.storage.from('documents').getPublicUrl(path).data.publicUrl;
+                else console.warn('Upload CV échoué :', upErr.message);
+            }
+
+            const { error: profErr } = await supabase.from('profiles').upsert({
+                id: userId,
+                name: name,
+                bio: bio,
+                slug: slug,
+                image_url: imageUrl,
+                cv_url: cvUrl,
+                is_active: false
+            });
+
+            if (profErr) throw profErr;
+
+            localStorage.setItem('cd_profile_saved_' + userId, '1');
+            switchToStep(4);
+            updateDots(4);
+
+        } catch (err) {
+            console.error(err);
+            showErr(errDiv, "Erreur technique : " + err.message);
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            loader.style.display = "none";
+        }
+    }
+
+    // ==========================================================
+    // ÉTAPE 4 : REDIRECTION VERS STRIPE
+    // ==========================================================
+    window.redirectToPayment = () => {
+        const btn = document.getElementById('btn-pay');
+        const errDiv = document.getElementById('err-4');
+
+        if (!STRIPE_PAYMENT_LINK || STRIPE_PAYMENT_LINK === 'REMPLACER_PAR_VOTRE_LIEN_STRIPE') {
+            showErr(errDiv, "Le lien de paiement n'est pas encore configuré. Contactez l'équipe Corpus Digitalis.");
+            return;
+        }
+
+        const email = userEmail || localStorage.getItem('cd_pending_email') || '';
+        const uid = userId || localStorage.getItem('cd_pending_user_id') || '';
+
+        btn.disabled = true;
+        btn.innerText = "Redirection vers le paiement...";
+
+        const stripeUrl = new URL(STRIPE_PAYMENT_LINK);
+        if (email) stripeUrl.searchParams.set('prefilled_email', email);
+        if (uid) stripeUrl.searchParams.set('client_reference_id', uid);
+
+        window.location.href = stripeUrl.toString();
+    }
+
+    // ==========================================================
+    // UTILITAIRES
+    // ==========================================================
+    function switchToStep(n) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById(`step-${n}`).classList.add('active');
+    }
+
+    function updateDots(currentStep) {
+        for (let i = 1; i <= 4; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            if (!dot) continue;
+            dot.classList.remove('active', 'done');
+            if (i < currentStep) dot.classList.add('done');
+            else if (i === currentStep) dot.classList.add('active');
+        }
+    }
+
+    function showErr(div, msg) {
+        div.innerText = msg;
+        div.style.display = 'block';
+    }
+</script>
+</body>
+</html>
