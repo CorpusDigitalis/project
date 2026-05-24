@@ -1,424 +1,630 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offre Early Bird — Corpus Digitalis</title>
-    <meta name="description" content="20 places à 72€/an pour lancer votre présence académique professionnelle. Hub complet : publications, cours, interventions, CV.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #fafaf8;
-            --accent: #0f172a;
-            --accent-light: #1e293b;
-            --text: #1e293b;
-            --muted: #64748b;
-            --border: #e8e4de;
-            --card: #ffffff;
-            --gold: #b45309;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offre Early Bird — 72€/an — Corpus Digitalis</title>
+  <meta name="description" content="20 places à 72€/an. Votre hub académique professionnel live en 48h. Service conciergerie inclus. Satisfait ou remboursé 30 jours.">
+  <link rel="canonical" href="https://corpusdigitalis.com/early-bird/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0f172a;
+      --ink-mid: #1e293b;
+      --bg: #fafaf8;
+      --border: #e8e4de;
+      --muted: #64748b;
+      --gold: #b45309;
+      --green: #10b981;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); overflow-x: hidden; }
 
-        /* NAV */
-        .topbar { position: sticky; top: 0; z-index: 100; background: var(--accent); padding: 16px 5%; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 0 rgba(255,255,255,.06); }
-        .topbar-logo { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: white; text-decoration: none; }
-        .topbar-logo span { background: white; color: var(--accent); padding: 2px 6px; border-radius: 3px; font-size: 0.6rem; margin-left: 8px; }
-        .topbar-link { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.8rem; font-weight: 500; }
-        .topbar-link:hover { color: white; }
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(15,23,42,0.96); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 5%; height: 62px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: box-shadow 0.3s;
+    }
+    .nav.scrolled { box-shadow: 0 4px 32px rgba(0,0,0,0.4); }
+    .nav-logo { font-weight: 800; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-logo span { background: white; color: var(--ink); padding: 2px 7px; border-radius: 3px; font-size: 0.6rem; }
+    .nav-urgency { display: flex; align-items: center; gap: 12px; }
+    .nav-badge { background: rgba(180,83,9,0.2); border: 1px solid rgba(180,83,9,0.4); color: #fbbf24; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+    .nav-cta { background: white; color: var(--ink); font-weight: 700; font-size: 0.8rem; padding: 9px 20px; border-radius: 7px; text-decoration: none; transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
+    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+    @media (max-width: 600px) { .nav-urgency .nav-badge { display: none; } }
 
-        /* HERO */
-        .hero {
-            background: var(--accent);
-            color: white;
-            padding: 70px 5% 60px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
-        }
-        .hero-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.9);
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            padding: 6px 16px;
-            border-radius: 20px;
-            margin-bottom: 24px;
-        }
-        .hero h1 {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            font-weight: 700;
-            line-height: 1.15;
-            margin-bottom: 20px;
-        }
-        .hero p { font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto 36px; line-height: 1.7; }
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      min-height: 100vh;
+      padding: 100px 5% 80px;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(180,83,9,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255,255,255,0.03) 0%, transparent 50%);
+    }
+    .hero-grain {
+      position: absolute; inset: 0; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; max-width: 760px; width: 100%; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 7px 18px; border-radius: 20px; margin-bottom: 32px;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #fbbf24; animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700;
+      color: white; line-height: 1.1; margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: italic; color: rgba(251,191,36,0.9); }
+    .hero-sub { font-size: clamp(0.95rem, 2vw, 1.08rem); color: rgba(255,255,255,0.55); max-width: 540px; margin: 0 auto 44px; line-height: 1.75; }
 
-        /* PLACES COUNTER */
-        .counter-wrap { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 36px; flex-wrap: wrap; }
-        .counter-box {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            padding: 16px 28px;
-            text-align: center;
-        }
-        .counter-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: white; line-height: 1; }
-        .counter-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 6px; }
-        .counter-sep { color: rgba(255,255,255,0.2); font-size: 1.5rem; }
+    /* Countdown */
+    .countdown-wrap { display: flex; justify-content: center; gap: 4px; margin-bottom: 40px; }
+    .cd-block {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 14px 18px; min-width: 68px; text-align: center;
+      backdrop-filter: blur(4px);
+    }
+    .cd-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: white; line-height: 1; }
+    .cd-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 5px; }
+    .cd-sep { align-self: center; padding-bottom: 8px; font-size: 1.4rem; color: rgba(255,255,255,0.2); font-weight: 300; }
 
-        /* PRICE */
-        .price-block { margin-bottom: 32px; }
-        .price-main { display: flex; align-items: baseline; justify-content: center; gap: 12px; }
-        .price-amount { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; color: white; }
-        .price-period { font-size: 1rem; color: rgba(255,255,255,0.5); }
-        .price-strikethrough { font-size: 1.1rem; color: rgba(255,255,255,0.35); text-decoration: line-through; margin-left: 8px; }
-        .price-saving { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 6px; }
+    /* Prix */
+    .price-row { display: flex; align-items: baseline; justify-content: center; gap: 14px; margin-bottom: 8px; }
+    .price-main-num { font-family: 'Playfair Display', serif; font-size: clamp(3.5rem, 8vw, 5.5rem); font-weight: 700; color: white; line-height: 1; }
+    .price-old { font-size: 1.8rem; color: rgba(255,255,255,0.2); text-decoration: line-through; font-family: 'Playfair Display', serif; }
+    .price-period { font-size: 1rem; color: rgba(255,255,255,0.4); align-self: flex-end; margin-bottom: 6px; }
+    .price-save { display: inline-block; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; font-size: 0.78rem; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 32px; }
 
-        .cta-btn {
-            display: inline-block;
-            background: white;
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 0.04em;
-            padding: 16px 40px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.2s;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .cta-sub { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 12px; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 10px; background: white; color: var(--ink); font-weight: 800; font-size: 1rem; letter-spacing: 0.02em; padding: 18px 40px; border-radius: 10px; text-decoration: none; transition: all 0.25s; box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+    .hero-cta:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
+    .hero-cta svg { transition: transform 0.2s; }
+    .hero-cta:hover svg { transform: translateX(4px); }
+    .hero-sub-cta { font-size: 0.74rem; color: rgba(255,255,255,0.3); margin-top: 14px; }
 
-        /* DEADLINE */
-        .deadline-bar {
-            background: rgba(180,83,9,0.15);
-            border: 1px solid rgba(180,83,9,0.3);
-            border-radius: 8px;
-            padding: 10px 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-            font-size: 0.82rem;
-            color: rgba(255,255,255,0.8);
-        }
-        .deadline-dot { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .places-strip {
+      display: flex; justify-content: center; gap: 28px; margin-top: 48px;
+      flex-wrap: wrap;
+    }
+    .places-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+    .places-item svg { color: rgba(255,255,255,0.3); flex-shrink: 0; }
 
-        /* SECTION WHAT */
-        .section-what { padding: 70px 5%; max-width: 1100px; margin: 0 auto; }
-        .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-        .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--accent); margin-bottom: 48px; }
+    /* ── PLACES BAR ── */
+    .places-bar { background: var(--ink-mid); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 20px 5%; display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .pb-label { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.6); }
+    .pb-track { width: 220px; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .pb-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 3px; width: 30%; transition: width 1s ease; }
+    .pb-count { font-size: 0.82rem; font-weight: 700; color: #fbbf24; }
+    @media (max-width: 500px) { .pb-track { width: 140px; } }
 
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
-        .feature-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px 24px;
-        }
-        .feature-icon { font-size: 1.4rem; margin-bottom: 14px; }
-        .feature-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
-        .feature-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+    /* ── SECTIONS communes ── */
+    .section { padding: 96px 5%; }
+    .section-inner { max-width: 1080px; margin: 0 auto; }
+    .section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .section-h { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 16px; }
+    .section-lead { font-size: 0.95rem; color: var(--muted); line-height: 1.75; max-width: 540px; margin-bottom: 52px; }
+    .section-dark { background: var(--ink); }
+    .section-dark .section-eyebrow { color: rgba(255,255,255,0.35); }
+    .section-dark .section-h { color: white; }
+    .section-dark .section-lead { color: rgba(255,255,255,0.5); }
 
-        /* DEMOS */
-        .section-demos { background: var(--accent); padding: 70px 5%; }
-        .section-demos-inner { max-width: 1100px; margin: 0 auto; }
-        .section-demos .section-label { color: rgba(255,255,255,0.4); }
-        .section-demos .section-title { color: white; margin-bottom: 40px; }
-        .demos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .demo-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 28px;
-            transition: background 0.2s;
-        }
-        .demo-card:hover { background: rgba(255,255,255,0.1); }
-        .demo-avatar { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
-        .demo-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: white; margin-bottom: 4px; }
-        .demo-title { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
-        .demo-desc { font-size: 0.84rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
-        .demo-link { display: inline-block; margin-top: 16px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2px; transition: color 0.2s; }
-        .demo-link:hover { color: white; }
+    /* ── FEATURE CARDS 3D ── */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { .features-grid { grid-template-columns: 1fr; } }
 
-        /* PROCESS */
-        .section-process { padding: 70px 5%; max-width: 900px; margin: 0 auto; }
-        .process-steps { display: flex; flex-direction: column; gap: 0; }
-        .process-step { display: flex; gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--border); }
-        .process-step:last-child { border-bottom: none; }
-        .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: white; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-        .step-content h3 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--accent); margin-bottom: 6px; }
-        .step-content p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+    .feat-card {
+      background: white; border: 1px solid var(--border); border-radius: 16px;
+      padding: 32px 28px; cursor: default;
+      transform-style: preserve-3d;
+      transition: box-shadow 0.35s ease, transform 0.1s ease;
+      will-change: transform;
+    }
+    .feat-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+    .feat-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--ink); display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px; transform: translateZ(20px);
+    }
+    .feat-icon svg { color: white; }
+    .feat-title { font-weight: 700; font-size: 0.95rem; color: var(--ink); margin-bottom: 8px; transform: translateZ(10px); }
+    .feat-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
 
-        /* FAQ */
-        .section-faq { background: var(--card); border-top: 1px solid var(--border); padding: 70px 5%; }
-        .section-faq-inner { max-width: 700px; margin: 0 auto; }
-        .faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
-        .faq-q { padding: 18px 22px; font-weight: 600; font-size: 0.92rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-        .faq-q:hover { background: var(--bg); }
-        .faq-a { display: none; padding: 0 22px 18px; font-size: 0.88rem; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); padding-top: 14px; }
-        .faq-item.open .faq-a { display: block; }
-        .faq-arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--muted); }
-        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    /* ── DEMO CARDS 3D ── */
+    .demos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .demos-grid { grid-template-columns: 1fr; } }
 
-        /* CTA BOTTOM */
-        .section-cta-bottom { background: var(--bg); border-top: 1px solid var(--border); padding: 70px 5%; text-align: center; }
-        .section-cta-bottom h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--accent); margin-bottom: 16px; }
-        .section-cta-bottom p { font-size: 0.95rem; color: var(--muted); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
-        .cta-btn-dark {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 0.04em;
-            padding: 16px 40px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .cta-btn-dark:hover { background: var(--accent-light); transform: translateY(-1px); }
+    .demo-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 28px;
+      transform-style: preserve-3d;
+      transition: box-shadow 0.35s, background 0.2s, transform 0.1s;
+      will-change: transform; cursor: default;
+    }
+    .demo-card:hover { background: rgba(255,255,255,0.09); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .demo-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .demo-avatar { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0; }
+    .demo-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .demo-live { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; padding: 3px 9px; border-radius: 20px; }
+    .demo-live::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #6ee7b7; animation: pulse 1.5s infinite; }
+    .demo-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: white; margin-bottom: 3px; }
+    .demo-role { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
+    .demo-stats { display: flex; gap: 16px; margin-bottom: 16px; }
+    .demo-stat { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+    .demo-stat strong { color: rgba(255,255,255,0.75); font-weight: 700; }
+    .demo-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: white; text-decoration: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 7px; transition: background 0.2s; }
+    .demo-link:hover { background: rgba(255,255,255,0.2); }
 
-        /* FOOTER */
-        .page-footer { background: var(--accent); color: rgba(255,255,255,0.5); padding: 30px 5%; text-align: center; font-size: 0.8rem; }
-        .page-footer a { color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 12px; }
-        .page-footer a:hover { color: white; }
-        .footer-links { margin-bottom: 12px; }
+    /* ── PROCESS ── */
+    .process-list { display: flex; flex-direction: column; gap: 0; max-width: 640px; }
+    .process-item { display: flex; gap: 24px; padding: 28px 0; position: relative; }
+    .process-item:not(:last-child)::after { content: ''; position: absolute; left: 19px; top: 72px; bottom: 0; width: 2px; background: var(--border); }
+    .process-num { width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: white; font-weight: 800; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; z-index: 1; }
+    .process-body h3 { font-weight: 700; font-size: 0.95rem; color: var(--ink); margin-bottom: 6px; }
+    .process-body p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
 
-        @media (max-width: 768px) {
-            .counter-wrap { gap: 12px; }
-            .counter-box { padding: 12px 20px; }
-            .price-amount { font-size: 2.8rem; }
-        }
-    </style>
+    /* ── COMPARISON TABLE ── */
+    .comp-table { width: 100%; border-collapse: collapse; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+    .comp-table thead th { padding: 14px 18px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; background: var(--ink); color: rgba(255,255,255,0.4); }
+    .comp-table thead th:first-child { text-align: left; }
+    .comp-table thead th.us { background: rgba(255,255,255,0.12); color: white; }
+    .comp-table tbody tr:nth-child(even) { background: #f9f8f6; }
+    .comp-table tbody td { padding: 13px 18px; font-size: 0.85rem; color: var(--muted); text-align: center; border-bottom: 1px solid var(--border); }
+    .comp-table tbody td:first-child { text-align: left; font-weight: 600; color: var(--ink); }
+    .comp-table tbody td.us-td { background: rgba(15,23,42,0.04); font-weight: 700; color: var(--ink); }
+    .comp-table tbody tr:last-child td { border-bottom: none; }
+    .ic-yes { color: var(--green); font-size: 1rem; }
+    .ic-no { color: #cbd5e1; }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 10px; max-width: 700px; }
+    .faq-item { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: white; }
+    .faq-q { padding: 18px 22px; font-weight: 600; font-size: 0.92rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; user-select: none; transition: background 0.15s; }
+    .faq-q:hover { background: var(--bg); }
+    .faq-arrow { font-size: 0.72rem; color: var(--muted); transition: transform 0.25s; flex-shrink: 0; }
+    .faq-a { max-height: 0; overflow: hidden; padding: 0 22px; font-size: 0.88rem; color: var(--muted); line-height: 1.75; border-top: 0px solid var(--border); transition: max-height 0.35s ease, padding 0.3s, border-top-width 0.3s; }
+    .faq-item.open .faq-a { max-height: 280px; padding: 14px 22px 20px; border-top-width: 1px; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    /* ── CTA BOTTOM ── */
+    .cta-bottom { background: var(--ink); padding: 96px 5%; text-align: center; }
+    .cta-bottom-inner { max-width: 640px; margin: 0 auto; }
+    .cta-bottom h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: white; margin-bottom: 16px; line-height: 1.2; }
+    .cta-bottom p { font-size: 0.95rem; color: rgba(255,255,255,0.45); margin-bottom: 36px; line-height: 1.7; }
+    .cta-bottom-btn { display: inline-flex; align-items: center; gap: 10px; background: white; color: var(--ink); font-weight: 800; font-size: 1rem; padding: 18px 44px; border-radius: 10px; text-decoration: none; transition: all 0.25s; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .cta-bottom-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
+    .guarantee-badge { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; font-size: 0.78rem; font-weight: 600; padding: 8px 20px; border-radius: 8px; }
+
+    /* ── FOOTER ── */
+    .footer { background: #0a0f1e; padding: 28px 5%; text-align: center; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 10px; flex-wrap: wrap; }
+    .footer-links a { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+    .footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.18); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-s1 { transition-delay: 0.05s; }
+    .reveal-s2 { transition-delay: 0.12s; }
+    .reveal-s3 { transition-delay: 0.19s; }
+    .reveal-s4 { transition-delay: 0.26s; }
+    .reveal-s5 { transition-delay: 0.33s; }
+    .reveal-s6 { transition-delay: 0.40s; }
+
+    /* ── URGENCY FLOAT ── */
+    .urgency-float {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 90; background: white; border-radius: 40px;
+      padding: 12px 24px; display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18); border: 1px solid var(--border);
+      opacity: 0; transform: translateX(-50%) translateY(20px);
+      transition: opacity 0.4s, transform 0.4s;
+      white-space: nowrap;
+    }
+    .urgency-float.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .uf-text { font-size: 0.84rem; font-weight: 600; color: var(--ink); }
+    .uf-text span { color: var(--gold); }
+    .uf-btn { background: var(--ink); color: white; font-weight: 700; font-size: 0.8rem; padding: 9px 18px; border-radius: 20px; text-decoration: none; transition: opacity 0.2s; }
+    .uf-btn:hover { opacity: 0.85; }
+    @media (max-width: 540px) { .urgency-float { bottom: 16px; padding: 10px 16px; gap: 10px; } .uf-text { font-size: 0.76rem; } }
+  </style>
 </head>
 <body>
 
-<nav class="topbar">
-    <a href="/" class="topbar-logo">Corpus Digitalis <span>PRO</span></a>
-    <a href="/" class="topbar-link">← Voir les profils</a>
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <a href="/" class="nav-logo">CORPUS DIGITALIS <span>PRO</span></a>
+  <div class="nav-urgency">
+    <div class="nav-badge" id="nav-badge">⏳ Fermeture le 31 mai 2026</div>
+    <a href="/signup/" class="nav-cta">Réserver — 72€/an →</a>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-    <div class="hero-badge">Offre de lancement — Places limitées</div>
-    <h1>Votre hub académique,<br>prêt en 48 heures.</h1>
-    <p>Publications, cours, interventions, bio — sous votre propre adresse web. Vous uploadez votre CV, notre équipe construit tout. Vous validez, votre profil est en ligne.</p>
+  <div class="hero-grain"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Offre Early Bird — <span id="places-hero">14</span> places restantes sur 20
+    </div>
+    <h1>Votre carrière mérite une vitrine<br><em>à sa hauteur.</em></h1>
+    <p class="hero-sub">Publications, cours, interventions, bio — sous votre propre URL professionnelle. Notre équipe construit tout en 48h à partir de votre CV. Vous ne touchez pas une ligne de code.</p>
 
-    <!-- COMPTEUR DE PLACES -->
-    <div class="counter-wrap">
-        <div class="counter-box">
-            <!-- METTRE À JOUR MANUELLEMENT -->
-            <div class="counter-num" id="places-restantes">20</div>
-            <div class="counter-label">Places restantes</div>
-        </div>
-        <div class="counter-sep">/</div>
-        <div class="counter-box">
-            <div class="counter-num">20</div>
-            <div class="counter-label">Places totales</div>
-        </div>
+    <!-- COUNTDOWN -->
+    <div class="countdown-wrap">
+      <div class="cd-block"><div class="cd-num" id="cd-d">07</div><div class="cd-label">Jours</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-num" id="cd-h">00</div><div class="cd-label">Heures</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-num" id="cd-m">00</div><div class="cd-label">Min</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-num" id="cd-s">00</div><div class="cd-label">Sec</div></div>
     </div>
 
     <!-- PRIX -->
-    <div class="price-block">
-        <div class="price-main">
-            <div class="price-amount">72€</div>
-            <div class="price-period">/ an TTC</div>
-            <div class="price-strikethrough">96€</div>
-        </div>
-        <div class="price-saving">Économisez 24€ — tarif figé à vie pour les premiers inscrits</div>
+    <div class="price-row">
+      <div class="price-main-num">72€</div>
+      <div class="price-old">96€</div>
+      <div class="price-period">/ an TTC</div>
     </div>
+    <div class="price-save">Économisez 24€ — tarif figé à vie pour les premiers inscrits</div>
 
-    <!-- CTA -->
-    <a href="/signup/" class="cta-btn">Réserver ma place — 72€/an →</a>
-    <div class="cta-sub">Paiement sécurisé par Stripe · HTTPS · Données hébergées en Europe</div>
+    <a href="/signup/" class="hero-cta">
+      Réserver ma place maintenant
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <div class="hero-sub-cta">Paiement sécurisé par Stripe · HTTPS · Données hébergées en Europe · Remboursé 30 jours</div>
 
-    <div class="deadline-bar">
-        <div class="deadline-dot"></div>
-        Offre valable jusqu'au <strong style="color:white; margin: 0 4px;">31 mai 2026</strong> ou jusqu'au 20ème inscrit
+    <div class="places-strip">
+      <div class="places-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Site live en 48h garanties
+      </div>
+      <div class="places-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Aucune compétence technique
+      </div>
+      <div class="places-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Satisfait ou remboursé 30 jours
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- CE QUI EST INCLUS -->
-<section class="section-what">
-    <div class="section-label">Ce que vous obtenez</div>
-    <div class="section-title">Tout ce dont un chercheur a besoin, au même endroit.</div>
+<!-- BARRE PLACES -->
+<div class="places-bar">
+  <div class="pb-label">Places restantes</div>
+  <div class="pb-track"><div class="pb-fill" id="pb-fill"></div></div>
+  <div class="pb-count"><span id="places-bar">14</span> / 20</div>
+</div>
 
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">🔗</div>
-            <div class="feature-title">Votre propre adresse</div>
-            <div class="feature-desc">prenom-nom.corpusdigitalis.com — une URL professionnelle que vous envoyez à un éditeur, un journaliste ou un recruteur.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <div class="feature-title">Publications complètes</div>
-            <div class="feature-desc">Toutes vos publications listées avec DOI, résumé, et lien HAL/Scholar. Indexées sur corpusdigitalis.com.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎓</div>
-            <div class="feature-title">Enseignements</div>
-            <div class="feature-desc">Vos cours par niveau avec supports téléchargeables. Vos étudiants ont accès, vos collègues aussi.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📅</div>
-            <div class="feature-title">Agenda & Interventions</div>
-            <div class="feature-desc">Vos colloques, conférences invitées, séminaires. Visibles publiquement — les organisateurs vous trouvent.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🤝</div>
-            <div class="feature-title">Service Conciergerie</div>
-            <div class="feature-desc">Vous envoyez votre CV PDF. Notre équipe construit votre profil complet en 48h. Vous validez avant la mise en ligne.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🔍</div>
-            <div class="feature-title">Découvrabilité</div>
-            <div class="feature-desc">Profil indexé sur corpusdigitalis.com — searchable par nom, discipline ou publication. Visible sans compte.</div>
-        </div>
+<!-- CE QUI EST INCLUS -->
+<section class="section" style="background:white;">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">Ce que vous obtenez</div>
+      <h2 class="section-h">Tout ce dont un chercheur a besoin,<br>au même endroit.</h2>
+      <p class="section-lead">Un hub académique complet, construit par notre équipe en 48h. Vous envoyez votre CV — on s'occupe du reste.</p>
     </div>
+    <div class="features-grid">
+      <div class="feat-card reveal reveal-s1">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <div class="feat-title">Votre propre adresse</div>
+        <div class="feat-desc">prenom-nom.corpusdigitalis.com — une URL professionnelle permanente que vous envoyez à un éditeur, un journaliste ou une commission de recrutement.</div>
+      </div>
+      <div class="feat-card reveal reveal-s2">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="feat-title">Publications complètes</div>
+        <div class="feat-desc">Toutes vos publications avec DOI cliquables, résumés, co-auteurs et liens HAL/Scholar. Indexées et visibles sans compte.</div>
+      </div>
+      <div class="feat-card reveal reveal-s3">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div class="feat-title">Enseignements</div>
+        <div class="feat-desc">Vos cours par niveau avec supports téléchargeables. Vos étudiants y accèdent directement, vos collègues aussi.</div>
+      </div>
+      <div class="feat-card reveal reveal-s4">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="feat-title">Agenda & Interventions</div>
+        <div class="feat-desc">Vos colloques, conférences invitées, séminaires. Visibles publiquement — les organisateurs vous trouvent avant même que vous postuliez.</div>
+      </div>
+      <div class="feat-card reveal reveal-s5">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="feat-title">Service Conciergerie</div>
+        <div class="feat-desc">Vous envoyez votre CV PDF. Notre équipe construit votre profil complet en 48h. Vous validez avant la mise en ligne. Zéro effort de votre côté.</div>
+      </div>
+      <div class="feat-card reveal reveal-s6">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="feat-title">Découvrabilité maximale</div>
+        <div class="feat-desc">Profil indexé sur corpusdigitalis.com — searchable par nom, discipline ou publication. Visible sans compte, partageable en un lien.</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- PROFILS DÉMO -->
-<section class="section-demos">
-    <div class="section-demos-inner">
-        <div class="section-label">Exemples réels</div>
-        <div class="section-title">À quoi ressemble votre profil.</div>
-        <div class="demos-grid">
-            <div class="demo-card">
-                <div class="demo-avatar" style="background:none;overflow:hidden"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=52&h=52&fit=crop&crop=faces&auto=format" alt="Claire Martins" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
-                <div class="demo-name">Claire Martins</div>
-                <div class="demo-title">MCF · Sociologie · Paris 1 · LISE-CNRS</div>
-                <div class="demo-desc">9 publications avec DOI, 3 cours actifs avec supports, 3 interventions répertoriées. Profil construit en 47h à partir de son CV.</div>
-                <a href="https://claire-martins.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil →</a>
-            </div>
-            <div class="demo-card">
-                <div class="demo-avatar" style="background:none;overflow:hidden"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=52&h=52&fit=crop&crop=faces&auto=format" alt="Marc Lebrun" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
-                <div class="demo-name">Marc Lebrun</div>
-                <div class="demo-title">PR · Physique Théorique · Polytechnique · IUF</div>
-                <div class="demo-desc">9 publications avec DOI cliquables, 3 cours téléchargeables, 3 conférences internationales. Profil bilingue construit en 43h.</div>
-                <a href="https://marc-lebrun.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil →</a>
-            </div>
-            <div class="demo-card">
-                <div class="demo-avatar" style="background:none;overflow:hidden"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=52&h=52&fit=crop&crop=faces&auto=format" alt="Sofia Andrieu" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>
-                <div class="demo-name">Sofia Andrieu</div>
-                <div class="demo-title">Post-doc · Linguistique Cognitive · EHESS</div>
-                <div class="demo-desc">En recherche de poste — son profil est sa carte de visite permanente pour les commissions de recrutement.</div>
-                <a href="https://sofia-andrieu.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil →</a>
-            </div>
-        </div>
+<section class="section section-dark">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">Exemples réels — en ligne maintenant</div>
+      <h2 class="section-h">À quoi ressemble votre profil.</h2>
+      <p class="section-lead">Trois chercheurs, trois disciplines — chaque profil construit en moins de 48h à partir d'un simple CV.</p>
     </div>
+    <div class="demos-grid">
+      <div class="demo-card reveal reveal-s1">
+        <div class="demo-top">
+          <div class="demo-avatar"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=52&h=52&fit=crop&crop=faces&auto=format" alt="Claire Martins"></div>
+          <div><div class="demo-name">Claire Martins</div><div class="demo-role">MCF · Sociologie · Paris 1</div></div>
+          <div class="demo-live">Live</div>
+        </div>
+        <div class="demo-stats">
+          <div class="demo-stat"><strong>9</strong> publications</div>
+          <div class="demo-stat"><strong>3</strong> cours</div>
+          <div class="demo-stat"><strong>3</strong> interventions</div>
+        </div>
+        <a href="https://claire-martins.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil →</a>
+      </div>
+      <div class="demo-card reveal reveal-s2">
+        <div class="demo-top">
+          <div class="demo-avatar"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=52&h=52&fit=crop&crop=faces&auto=format" alt="Marc Lebrun"></div>
+          <div><div class="demo-name">Marc Lebrun</div><div class="demo-role">PR · Physique Théorique · Polytechnique</div></div>
+          <div class="demo-live">Live</div>
+        </div>
+        <div class="demo-stats">
+          <div class="demo-stat"><strong>9</strong> publications</div>
+          <div class="demo-stat"><strong>3</strong> cours</div>
+          <div class="demo-stat"><strong>3</strong> conférences</div>
+        </div>
+        <a href="https://marc-lebrun.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil →</a>
+      </div>
+      <div class="demo-card reveal reveal-s3">
+        <div class="demo-top">
+          <div class="demo-avatar"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=52&h=52&fit=crop&crop=faces&auto=format" alt="Sofia Andrieu"></div>
+          <div><div class="demo-name">Sofia Andrieu</div><div class="demo-role">Post-doc · Linguistique · EHESS</div></div>
+          <div class="demo-live">Live</div>
+        </div>
+        <div class="demo-stats">
+          <div class="demo-stat"><strong>9</strong> publications</div>
+          <div class="demo-stat"><strong>3</strong> cours</div>
+          <div class="demo-stat"><strong>3</strong> interventions</div>
+        </div>
+        <a href="https://sofia-andrieu.corpusdigitalis.com" target="_blank" class="demo-link">Voir le profil →</a>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- PROCESSUS -->
-<section class="section-process">
-    <div class="section-label">Comment ça marche</div>
-    <div class="section-title">De l'inscription à votre site live en 48h.</div>
-    <div class="process-steps">
-        <div class="process-step">
-            <div class="step-num">1</div>
-            <div class="step-content">
-                <h3>Vous payez — 97€ une fois par an</h3>
-                <p>Paiement sécurisé par Stripe. Facture disponible immédiatement — intégrable dans vos frais de fonctionnement de labo.</p>
-            </div>
+<!-- PROCESS -->
+<section class="section" style="background:white;">
+  <div class="section-inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;">
+      <div class="reveal">
+        <div class="section-eyebrow">Comment ça marche</div>
+        <h2 class="section-h">De l'inscription à votre site live<br>en 48h.</h2>
+        <p class="section-lead">Quatre étapes. Deux minutes de votre côté. Le reste, c'est nous.</p>
+      </div>
+      <div class="process-list reveal">
+        <div class="process-item">
+          <div class="process-num">1</div>
+          <div class="process-body">
+            <h3>Vous créez votre compte</h3>
+            <p>Email, vérification en un clic. 60 secondes.</p>
+          </div>
         </div>
-        <div class="process-step">
-            <div class="step-num">2</div>
-            <div class="step-content">
-                <h3>Vous uploadez votre CV PDF lors de l'inscription</h3>
-                <p>Directement sur la plateforme, en un clic. Pas d'email séparé, pas de formulaire complexe — tout se fait dans le même flux, en 2 minutes.</p>
-            </div>
+        <div class="process-item">
+          <div class="process-num">2</div>
+          <div class="process-body">
+            <h3>Vous uploadez votre CV PDF</h3>
+            <p>Directement dans le flux d'inscription. Pas d'email séparé.</p>
+          </div>
         </div>
-        <div class="process-step">
-            <div class="step-num">3</div>
-            <div class="step-content">
-                <h3>Notre équipe construit votre profil</h3>
-                <p>Publications, cours, bio, photo — tout est extrait et mis en forme. Délai garanti : 48 heures ouvrées.</p>
-            </div>
+        <div class="process-item">
+          <div class="process-num">3</div>
+          <div class="process-body">
+            <h3>Vous payez — 72€/an</h3>
+            <p>Paiement sécurisé Stripe. Facture immédiate — intégrable dans vos frais de labo.</p>
+          </div>
         </div>
-        <div class="process-step">
-            <div class="step-num">4</div>
-            <div class="step-content">
-                <h3>Vous validez — votre site est en ligne</h3>
-                <p>On vous envoie le lien pour prévisualiser. Si tout vous convient, on publie. Sinon, on ajuste. prenom-nom.corpusdigitalis.com est live.</p>
-            </div>
+        <div class="process-item">
+          <div class="process-num">4</div>
+          <div class="process-body">
+            <h3>Votre profil est live</h3>
+            <p>Notre équipe construit tout en 48h. Vous validez — prenom-nom.corpusdigitalis.com est en ligne.</p>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+</section>
+@media (max-width: 760px) {
+  /* process 2-col → 1-col handled by section padding */
+}
+
+<!-- COMPARAISON -->
+<section class="section">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">Pourquoi Corpus Digitalis</div>
+      <h2 class="section-h">Moins cher que Google Workspace.<br>Infiniment plus utile.</h2>
+      <p class="section-lead">Google Workspace coûte 97€/an — juste pour une adresse email + domaine. Corpus Digitalis coûte 72€ en Early Bird et inclut votre hub académique complet.</p>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="comp-table reveal">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Page labo</th>
+            <th>Academia.edu</th>
+            <th class="us">Corpus Digitalis</th>
+            <th>Google WS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Vous appartient vraiment</td><td><span class="ic-no">✗</span></td><td><span class="ic-no">✗</span></td><td class="us-td"><span class="ic-yes">✓</span></td><td><span class="ic-yes">✓</span></td></tr>
+          <tr><td>Survit au changement de poste</td><td><span class="ic-no">✗</span></td><td><span class="ic-yes">✓</span></td><td class="us-td"><span class="ic-yes">✓</span></td><td><span class="ic-yes">✓</span></td></tr>
+          <tr><td>URL propre sans marque tierce</td><td><span class="ic-no">✗</span></td><td><span class="ic-no">✗</span></td><td class="us-td"><span class="ic-yes">✓</span></td><td><span class="ic-yes">✓</span></td></tr>
+          <tr><td>Publications + cours + interventions</td><td>Partiel</td><td>Partiel</td><td class="us-td"><span class="ic-yes">✓ Tout</span></td><td><span class="ic-no">✗</span></td></tr>
+          <tr><td>Conciergerie — construit pour vous</td><td><span class="ic-no">✗</span></td><td><span class="ic-no">✗</span></td><td class="us-td"><span class="ic-yes">✓</span></td><td><span class="ic-no">✗</span></td></tr>
+          <tr><td>Prix annuel</td><td>Gratuit</td><td>Gratuit / 8$/mois</td><td class="us-td" style="color:#b45309;font-weight:800">72€/an EB</td><td>97€/an</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
 <!-- FAQ -->
-<section class="section-faq">
-    <div class="section-faq-inner">
-        <div class="section-label">Questions fréquentes</div>
-        <div class="section-title" style="font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; color:var(--accent); margin-bottom:32px;">Tout ce que vous voulez savoir.</div>
-
+<section class="section" style="background:white;">
+  <div class="section-inner">
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:start;">
+      <div class="reveal">
+        <div class="section-eyebrow">FAQ</div>
+        <h2 class="section-h">Tout ce que vous voulez savoir.</h2>
+      </div>
+      <div class="faq-list reveal">
         <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq(this)">
-                Est-ce que 72€ rentre dans mes frais de labo ?
-                <span class="faq-arrow">▼</span>
-            </div>
-            <div class="faq-a">Dans la plupart des universités françaises, les dépenses inférieures à 150€ passent en frais de fonctionnement sans validation hiérarchique. 72€, c'est moins qu'une nuit d'hôtel en conférence — et contrairement à l'hôtel, ça reste toute l'année. Votre gestionnaire de labo vous confirmera ça en deux minutes.</div>
+          <div class="faq-q" onclick="toggleFaq(this)">72€ rentre-t-il dans mes frais de labo ?<span class="faq-arrow">▾</span></div>
+          <div class="faq-a">Dans la plupart des universités françaises, les dépenses inférieures à 150€ passent en frais de fonctionnement sans validation hiérarchique. 72€, c'est moins qu'une nuit d'hôtel en conférence — et contrairement à l'hôtel, ça reste toute l'année. Votre gestionnaire de labo confirmera ça en deux minutes.</div>
         </div>
-
         <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq(this)">
-                Que se passe-t-il après la période Early Bird ?
-                <span class="faq-arrow">▼</span>
-            </div>
-            <div class="faq-a">Le renouvellement se fait au tarif standard de 96€/an. Bonne nouvelle : les premiers inscrits conservent leur tarif Early Bird (72€) à chaque renouvellement — votre place est définitivement acquise. Votre adresse et votre contenu restent identiques.</div>
+          <div class="faq-q" onclick="toggleFaq(this)">Que se passe-t-il après le 31 mai ?<span class="faq-arrow">▾</span></div>
+          <div class="faq-a">L'offre passe à 96€/an pour les nouveaux inscrits. Bonne nouvelle : les premiers inscrits conservent leur tarif Early Bird (72€) à chaque renouvellement — votre place est définitivement acquise. Votre adresse et tout votre contenu restent identiques.</div>
         </div>
-
         <div class="faq-item">
-            <div class="faq-q" onclick="toggleFaq(this)">
-                J'ai déjà une page sur le site de mon labo. Pourquoi en avoir une autre ?
-                <span class="faq-arrow">▼</span>
-            </div>
-            <div class="faq-a">La page de votre labo est gérée par le service informatique de votre université. Elle ne vous appartient pas, elle disparaît quand vous changez de poste, et elle ne met pas en valeur votre travail. Corpus Digitalis, c'est votre espace, sous votre contrôle, qui vous suit partout dans votre carrière.</div>
+          <div class="faq-q" onclick="toggleFaq(this)">J'ai déjà une page sur le site de mon labo.<span class="faq-arrow">▾</span></div>
+          <div class="faq-a">La page de votre labo est gérée par le service informatique de votre université. Elle ne vous appartient pas, elle disparaît quand vous changez de poste, et elle ne met pas vraiment en valeur votre travail. Corpus Digitalis, c'est votre espace, sous votre contrôle, qui vous suit partout dans votre carrière.</div>
         </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Combien de temps ça me prend à moi ?<span class="faq-arrow">▾</span></div>
+          <div class="faq-a">Environ 3 minutes pour créer votre compte, uploader votre CV et payer. Ensuite notre équipe fait le reste. Vous recevez un lien de prévisualisation sous 48h — vous validez, votre site est en ligne.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">Et si je ne suis pas satisfait ?<span class="faq-arrow">▾</span></div>
+          <div class="faq-a">Satisfait ou remboursé 30 jours après la mise en ligne de votre profil. Aucune question posée. Remboursement sous 5 jours ouvrés sur votre carte.</div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- CTA BOTTOM -->
-<section class="section-cta-bottom">
-    <h2>Il reste <span id="places-restantes-2">20</span> places.</h2>
-    <p>L'offre se ferme au 20ème inscrit ou au 31 mai 2026. Après, le tarif passe à 96€/an.</p>
-    <a href="/signup/" class="cta-btn-dark">Réserver ma place — 72€/an →</a>
-    <p style="font-size:0.78rem; color:var(--muted); margin-top:16px;">Questions ? contact@corpusdigitalis.com — réponse sous 24h</p>
-    <div style="margin-top:28px;padding:16px 24px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0;display:inline-block;">
-        <span style="font-size:.82rem;color:#166534;font-weight:600;">Satisfait ou remboursé — 30 jours après la mise en ligne de votre profil.</span>
+<!-- CTA FINAL -->
+<section class="cta-bottom">
+  <div class="cta-bottom-inner">
+    <h2>Il reste <span id="places-cta">14</span> places.<br>L'offre ferme le 31 mai.</h2>
+    <p>Après, le tarif passe à 96€/an. Les premiers inscrits gardent 72€ à vie.</p>
+    <a href="/signup/" class="cta-bottom-btn">
+      Réserver ma place — 72€/an
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <br>
+    <div class="guarantee-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Satisfait ou remboursé — 30 jours après la mise en ligne
     </div>
+    <div style="margin-top:12px;font-size:0.74rem;color:rgba(255,255,255,0.2);">Questions ? contact@corpusdigitalis.com — réponse sous 24h</div>
+  </div>
 </section>
 
-<footer class="page-footer">
-    <div class="footer-links">
-        <a href="/mentions-legales/">Mentions légales</a>
-        <a href="/cgu/">CGU</a>
-        <a href="/confidentialite/">Confidentialité</a>
-        <a href="mailto:contact@corpusdigitalis.com">Contact</a>
-    </div>
-    <div>© 2026 Corpus Digitalis — Tous droits réservés</div>
+<footer class="footer">
+  <div class="footer-links">
+    <a href="/mentions-legales/">Mentions légales</a>
+    <a href="/cgu/">CGU</a>
+    <a href="/confidentialite/">Confidentialité</a>
+    <a href="mailto:contact@corpusdigitalis.com">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Corpus Digitalis · SIREN 104 423 710 · Bordeaux</div>
 </footer>
 
-<script>
-    function toggleFaq(el) {
-        el.parentElement.classList.toggle('open');
-    }
+<!-- FLOATING URGENCY -->
+<div class="urgency-float" id="urgency-float">
+  <div class="uf-text"><span id="places-float">14</span> places · Ferme le 31 mai</div>
+  <a href="/signup/" class="uf-btn">72€/an →</a>
+</div>
 
-    // Sync les deux compteurs
-    const n = document.getElementById('places-restantes').textContent;
-    document.getElementById('places-restantes-2').textContent = n;
+<script>
+// COUNTDOWN
+const DEADLINE = new Date('2026-05-31T23:59:59');
+function pad(n){ return String(n).padStart(2,'0'); }
+function tick(){
+  const diff = DEADLINE - new Date();
+  if(diff <= 0){ document.querySelector('.countdown-wrap').innerHTML='<div style="color:rgba(255,255,255,0.5);font-size:0.9rem;">Offre expirée</div>'; return; }
+  document.getElementById('cd-d').textContent = pad(Math.floor(diff/86400000));
+  document.getElementById('cd-h').textContent = pad(Math.floor(diff%86400000/3600000));
+  document.getElementById('cd-m').textContent = pad(Math.floor(diff%3600000/60000));
+  document.getElementById('cd-s').textContent = pad(Math.floor(diff%60000/1000));
+}
+tick(); setInterval(tick, 1000);
+
+// PLACES BAR
+const PLACES = 14;
+document.getElementById('pb-fill').style.width = ((20-PLACES)/20*100)+'%';
+
+// NAV SCROLL
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll',()=>{ nav.classList.toggle('scrolled', window.scrollY > 60); });
+
+// FLOATING URGENCY (apparaît après le hero)
+const floatEl = document.getElementById('urgency-float');
+const heroEl = document.querySelector('.hero');
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ floatEl.classList.toggle('show', !e.isIntersecting); });
+},{threshold:0});
+io.observe(heroEl);
+
+// REVEAL SCROLL
+const revealEls = document.querySelectorAll('.reveal');
+const rio = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); rio.unobserve(e.target); } });
+},{threshold:0.12});
+revealEls.forEach(el=>rio.observe(el));
+
+// 3D CARD TILT
+document.querySelectorAll('.feat-card, .demo-card').forEach(card=>{
+  card.addEventListener('mousemove', e=>{
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `perspective(700px) rotateY(${x*14}deg) rotateX(${-y*14}deg) translateZ(10px) scale(1.02)`;
+  });
+  card.addEventListener('mouseleave', ()=>{ card.style.transform = ''; });
+});
+
+// FAQ
+function toggleFaq(el){ el.parentElement.classList.toggle('open'); }
 </script>
 </body>
 </html>

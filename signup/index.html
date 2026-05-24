@@ -469,7 +469,11 @@
     // ==========================================================
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
-    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_28E9AT5Xxbhi5AO5cX8ww00';
+    const STRIPE_EARLY_BIRD = 'https://buy.stripe.com/bJe4gA6Q15TK2CH2Z2b7y03';
+    const STRIPE_STANDARD   = 'https://buy.stripe.com/5kQ6oI1vH81SgtxfLOb7y04';
+    const STRIPE_PAYMENT_LINK = new URLSearchParams(window.location.search).get('plan') === 'standard'
+        ? STRIPE_STANDARD
+        : STRIPE_EARLY_BIRD;
     const VERIFY_EDGE_URL = `${SUPABASE_URL}/functions/v1/send-verification-code`;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
