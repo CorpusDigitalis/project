@@ -423,9 +423,9 @@
             Le paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez — votre profil est bien enregistré.
         </div>
 
-        <div class="price-card">
-            <div class="price-amount">97 €</div>
-            <div class="price-period">par an · offre Early Bird · remboursable sur crédits de laboratoire</div>
+        <div class="price-card" id="price-card">
+            <div class="price-amount" id="price-display">72 €</div>
+            <div class="price-period" id="price-period">par an · offre Early Bird · remboursable sur crédits de laboratoire</div>
             <ul class="price-features">
                 <li>Votre espace académique sur mesure</li>
                 <li>Sous-domaine personnel corpusdigitalis.com</li>
@@ -687,6 +687,15 @@
             btn.style.opacity = "1";
             loader.style.display = "none";
         }
+    }
+
+    // ==========================================================
+    // AFFICHAGE PRIX SELON PLAN
+    // ==========================================================
+    const planParam = new URLSearchParams(window.location.search).get('plan');
+    if (planParam === 'standard') {
+        document.getElementById('price-display').textContent = '96 €';
+        document.getElementById('price-period').textContent = 'par an · tarif standard · remboursable sur crédits de laboratoire';
     }
 
     // ==========================================================
