@@ -864,9 +864,9 @@
     async function init() {
         lucide.createIcons();
         const { data: { session } } = await sb.auth.getSession();
-        if (!session) { 
-            window.location.href = 'login.html'; 
-            return; 
+        if (!session) {
+            window.location.href = '/login/';
+            return;
         }
         
         await loadData(session.user.id);
@@ -1761,7 +1761,7 @@
         if (profileData) localStorage.setItem('onboarding_dismissed_' + profileData.id, '1');
     }
     window.toggleMobileMenu = () => { document.getElementById('sidebar').classList.toggle('mobile-open'); }
-    window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='login.html'; }
+    window.handleLogout = async () => { await sb.auth.signOut(); window.location.href='/login/'; }
     
     let toastTimer;
     function showToast(m, type = 'success'){ 
