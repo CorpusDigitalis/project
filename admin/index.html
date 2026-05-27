@@ -7,7 +7,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
@@ -389,6 +390,67 @@
             padding: 8px; transition: color 0.2s;
         }
         .btn-onboarding-skip:hover { color: var(--accent); }
+
+        /* --- PERSONNALISATION : PALETTES ACCENT --- */
+        .palette-swatches { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+        .palette-swatch { width:36px; height:36px; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:0.2s; flex-shrink:0; }
+        .palette-swatch:hover { transform:scale(1.08); }
+        .palette-swatch.active { border-color:#0f172a; box-shadow:0 0 0 3px rgba(15,23,42,0.15); }
+        .palette-libre { display:flex; align-items:center; gap:8px; }
+        .palette-libre input[type="color"] { width:36px; height:36px; border-radius:8px; border:2px solid var(--border); cursor:pointer; padding:2px; flex-shrink:0; }
+
+        /* --- PERSONNALISATION : FOND DE PAGE --- */
+        .bg-swatches { display:flex; gap:8px; flex-wrap:wrap; }
+        .bg-swatch { width:80px; height:48px; border-radius:8px; cursor:pointer; border:2px solid var(--border); transition:0.2s; display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px; font-size:0.7rem; font-weight:600; color:#64748b; box-sizing:border-box; }
+        .bg-swatch:hover { border-color:#94a3b8; }
+        .bg-swatch.active { border-color:var(--accent); color:var(--accent); }
+        .bg-libre { display:flex; align-items:center; gap:8px; margin-top:10px; }
+        .bg-libre input[type="color"] { width:36px; height:36px; border-radius:8px; border:2px solid var(--border); cursor:pointer; padding:2px; flex-shrink:0; }
+        .bg-libre input[type="text"] { width:90px; flex-shrink:0; }
+
+        /* --- PERSONNALISATION : MISE EN PAGE (RADIOS) --- */
+        .layout-radios { display:flex; gap:10px; flex-wrap:wrap; }
+        .layout-radio-btn { cursor:pointer; border:2px solid var(--border); border-radius:8px; padding:10px 16px; font-size:0.82rem; font-weight:600; color:#64748b; transition:0.2s; display:flex; align-items:center; gap:8px; background:white; }
+        .layout-radio-btn:hover { border-color:#94a3b8; color:#334155; }
+        .layout-radio-btn.active { border-color:var(--accent); color:var(--accent); background:var(--accent-blue-light); }
+        .layout-radio-inner { width:14px; height:14px; border-radius:50%; border:2px solid #94a3b8; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:0.2s; }
+        .layout-radio-btn.active .layout-radio-inner { border-color:var(--accent); background:var(--accent); }
+
+        /* --- PERSONNALISATION : TOGGLE SWITCH --- */
+        .toggle-switch { position:relative; display:inline-block; width:44px; height:24px; flex-shrink:0; }
+        .toggle-switch input { opacity:0; width:0; height:0; }
+        .toggle-slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#e0dbd4; border-radius:24px; transition:0.3s; }
+        .toggle-slider:before { position:absolute; content:""; height:18px; width:18px; left:3px; bottom:3px; background:white; border-radius:50%; transition:0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background:var(--accent); }
+        .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
+
+        /* --- STATISTIQUES : KPI & CHARTS --- */
+        .stat-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:25px; }
+        .stat-kpi { background:white; border:1px solid var(--border); border-radius:8px; padding:20px; text-align:center; }
+        .stat-kpi-val { font-size:2rem; font-weight:800; color:var(--accent); font-family:'Playfair Display',Georgia,serif; display:block; line-height:1; }
+        .stat-kpi-lbl { font-size:0.72rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-top:6px; }
+        .stat-period-selector { display:flex; gap:8px; margin-bottom:20px; }
+        .stat-period-btn { padding:6px 14px; border-radius:20px; border:1px solid var(--border); background:white; font-size:0.8rem; font-weight:600; color:#64748b; cursor:pointer; transition:0.2s; }
+        .stat-period-btn.active { background:var(--accent); color:white; border-color:var(--accent); }
+        .stat-chart-row { display:grid; grid-template-columns:2fr 1fr; gap:20px; margin-bottom:20px; }
+        .stat-chart-box { background:white; border:1px solid var(--border); border-radius:8px; padding:20px; }
+        .stat-chart-title { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#64748b; margin-bottom:15px; }
+        .stat-table { width:100%; border-collapse:collapse; font-size:0.83rem; }
+        .stat-table th { text-align:left; padding:8px 10px; background:#fafaf8; border-bottom:1px solid var(--border); font-weight:700; font-size:0.7rem; text-transform:uppercase; color:#64748b; letter-spacing:0.04em; }
+        .stat-table td { padding:10px 10px; border-bottom:1px solid #f0ece6; color:#334155; }
+        .stat-table tr:last-child td { border-bottom:none; }
+        @media (max-width: 768px) { .stat-kpi-grid { grid-template-columns:repeat(2,1fr); } .stat-chart-row { grid-template-columns:1fr; } }
+
+        /* --- DEVICE SWITCHER 3 MODES --- */
+        .device-tablet { width:768px !important; height:1024px !important; flex-shrink:0 !important; border-radius:20px !important; border:10px solid #0f172a !important; }
+        .device-switcher { display:flex; background:#f0ede8; border-radius:40px; padding:3px; gap:2px; }
+        .btn-device-mode { background:transparent; border:none; border-radius:36px; height:30px; display:flex; align-items:center; justify-content:center; gap:6px; font-size:0.78rem; font-weight:600; color:#64748b; cursor:pointer; transition:0.2s; padding:0 12px; white-space:nowrap; }
+        .btn-device-mode:hover { color:#334155; }
+        .btn-device-mode.active { background:white; color:var(--accent); box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+
+        /* --- PERSONNALISATION : POLICE --- */
+        .font-select-group { display:flex; flex-direction:column; gap:8px; }
+        .font-preview-line { font-size:1rem; color:#334155; padding:8px 0; border-bottom:1px dashed #e8e4de; min-height:30px; }
     </style>
 </head>
 <body>
@@ -451,6 +513,8 @@
         <div class="nav-title">Configuration</div>
         <div class="nav-item" onclick="switchTab('perso', 'accueil.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
         <div class="nav-item" onclick="switchTab('rdv', 'accueil.html', this)"><i data-lucide="calendar"></i> Rendez-vous</div>
+        <div class="nav-title">Analytiques</div>
+        <div class="nav-item" onclick="switchTab('stats', 'accueil.html', this)"><i data-lucide="bar-chart-2"></i> Statistiques</div>
         <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Déconnexion</button>
     </nav>
 
@@ -555,10 +619,147 @@
                 <div class="header-flex">
                     <div>
                         <h2>Personnalisation</h2>
-                        <p class="section-subtitle">Personnalisez l'apparence globale de votre site académique.</p>
+                        <p class="section-subtitle">Apparence, mise en page, navigation et liens de votre site.</p>
                     </div>
                 </div>
-                
+
+                <!-- CARTE 1 : APPARENCE -->
+                <div class="card">
+                    <h4 style="margin-bottom:20px; color:#334155;">Apparence</h4>
+
+                    <div class="form-row">
+                        <label>Couleur accent</label>
+                        <div class="palette-swatches" id="accent-swatches">
+                            <div class="palette-swatch" style="background:#0f172a;" data-color="#0f172a" onclick="saveAccentColor('#0f172a',this)" title="Ardoise"></div>
+                            <div class="palette-swatch" style="background:#1e3a5f;" data-color="#1e3a5f" onclick="saveAccentColor('#1e3a5f',this)" title="Marine"></div>
+                            <div class="palette-swatch" style="background:#7c3aed;" data-color="#7c3aed" onclick="saveAccentColor('#7c3aed',this)" title="Violet"></div>
+                            <div class="palette-swatch" style="background:#065f46;" data-color="#065f46" onclick="saveAccentColor('#065f46',this)" title="Forêt"></div>
+                            <div class="palette-swatch" style="background:#7f1d1d;" data-color="#7f1d1d" onclick="saveAccentColor('#7f1d1d',this)" title="Bordeaux"></div>
+                            <div class="palette-swatch" style="background:#92400e;" data-color="#92400e" onclick="saveAccentColor('#92400e',this)" title="Ambre"></div>
+                            <div class="palette-libre">
+                                <input type="color" id="accent-libre-picker" value="#0f172a" oninput="saveAccentColor(this.value,null)" title="Couleur libre">
+                                <span style="font-size:0.78rem;color:#64748b;">Libre</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Police du texte (corps)</label>
+                        <div class="font-select-group">
+                            <select id="font-body-select" onchange="saveFonts()">
+                                <option value="Inter">Inter (défaut)</option>
+                                <option value="Lato">Lato</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Open Sans">Open Sans</option>
+                                <option value="Source Sans Pro">Source Sans Pro</option>
+                                <option value="Nunito">Nunito</option>
+                                <option value="Raleway">Raleway</option>
+                                <option value="PT Sans">PT Sans</option>
+                                <option value="Merriweather">Merriweather</option>
+                                <option value="Georgia">Georgia (système)</option>
+                            </select>
+                            <div id="font-body-preview" class="font-preview-line">Le renard brun rapide saute par-dessus le chien paresseux.</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Police des titres</label>
+                        <div class="font-select-group">
+                            <select id="font-heading-select" onchange="saveFonts()">
+                                <option value="Playfair Display">Playfair Display (défaut)</option>
+                                <option value="Lora">Lora</option>
+                                <option value="Merriweather">Merriweather</option>
+                                <option value="EB Garamond">EB Garamond</option>
+                                <option value="Libre Baskerville">Libre Baskerville</option>
+                                <option value="Cormorant Garamond">Cormorant Garamond</option>
+                                <option value="DM Serif Display">DM Serif Display</option>
+                                <option value="Spectral">Spectral</option>
+                                <option value="Crimson Text">Crimson Text</option>
+                                <option value="Montserrat">Montserrat</option>
+                            </select>
+                            <div id="font-heading-preview" class="font-preview-line" style="font-size:1.4rem;font-weight:700;">Titre exemple</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Mode sombre</label>
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="dark-mode-toggle" onchange="saveConfigKey('dark_mode',this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span style="font-size:0.85rem;color:#64748b;">Activer le thème sombre sur le profil public</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-bottom:0;">
+                        <label>Fond de page</label>
+                        <div class="bg-swatches">
+                            <div class="bg-swatch active" style="background:#fafaf8;" data-bg="cream" onclick="savePageBg('cream',this)">Crème</div>
+                            <div class="bg-swatch" style="background:#ffffff;" data-bg="white" onclick="savePageBg('white',this)">Blanc</div>
+                            <div class="bg-swatch" style="background:#f0f4f8;" data-bg="blue-gray" onclick="savePageBg('blue-gray',this)">Bleuté</div>
+                            <div class="bg-swatch" style="background:#f5f0eb;" data-bg="warm" onclick="savePageBg('warm',this)">Chaud</div>
+                        </div>
+                        <div class="bg-libre">
+                            <input type="color" id="bg-libre-picker" value="#fafaf8" oninput="savePageBg('custom:'+this.value,null)">
+                            <input type="text" id="bg-libre-hex" placeholder="#fafaf8" oninput="if(/^#[0-9a-f]{6}$/i.test(this.value)){document.getElementById('bg-libre-picker').value=this.value;savePageBg('custom:'+this.value,null);}">
+                            <span style="font-size:0.78rem;color:#64748b;">Couleur libre</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARTE 2 : MISE EN PAGE -->
+                <div class="card">
+                    <h4 style="margin-bottom:20px; color:#334155;">Mise en page</h4>
+
+                    <div class="form-row">
+                        <label>Disposition de la page d'accueil</label>
+                        <div class="layout-radios" id="layout-radios">
+                            <div class="layout-radio-btn active" data-layout="sidebar" onclick="saveConfigKey('layout','sidebar',this,'layout-radios')"><div class="layout-radio-inner"></div> Sidebar (défaut)</div>
+                            <div class="layout-radio-btn" data-layout="centered" onclick="saveConfigKey('layout','centered',this,'layout-radios')"><div class="layout-radio-inner"></div> Centré</div>
+                            <div class="layout-radio-btn" data-layout="fullwidth" onclick="saveConfigKey('layout','fullwidth',this,'layout-radios')"><div class="layout-radio-inner"></div> Pleine largeur</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Format des publications</label>
+                        <div class="layout-radios" id="pub-format-radios">
+                            <div class="layout-radio-btn active" data-layout="standard" onclick="saveConfigKey('pub_format','standard',this,'pub-format-radios')"><div class="layout-radio-inner"></div> Standard</div>
+                            <div class="layout-radio-btn" data-layout="compact" onclick="saveConfigKey('pub_format','compact',this,'pub-format-radios')"><div class="layout-radio-inner"></div> Compact</div>
+                            <div class="layout-radio-btn" data-layout="academic" onclick="saveConfigKey('pub_format','academic',this,'pub-format-radios')"><div class="layout-radio-inner"></div> Académique (APA)</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Style de l'en-tête</label>
+                        <div class="layout-radios" id="header-style-radios">
+                            <div class="layout-radio-btn active" data-layout="classic" onclick="saveConfigKey('header_style','classic',this,'header-style-radios')"><div class="layout-radio-inner"></div> Classique</div>
+                            <div class="layout-radio-btn" data-layout="minimal" onclick="saveConfigKey('header_style','minimal',this,'header-style-radios')"><div class="layout-radio-inner"></div> Minimal</div>
+                            <div class="layout-radio-btn" data-layout="banner" onclick="saveConfigKey('header_style','banner',this,'header-style-radios')"><div class="layout-radio-inner"></div> Bannière</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-bottom:0;">
+                        <label>Sections vides</label>
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="hide-empty-toggle" onchange="toggleHideEmpty(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span style="font-size:0.85rem;color:#64748b;">Masquer automatiquement les sections vides sur le profil public</span>
+                            <span style="font-size:0.7rem;background:#f0ede8;padding:2px 7px;border-radius:4px;color:#94a3b8;font-weight:700;flex-shrink:0;letter-spacing:0.05em;">AUTO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARTE 3 : NAVIGATION -->
+                <div class="card">
+                    <h4 style="margin-bottom:5px; color:#334155;">Navigation</h4>
+                    <p style="font-size:0.8rem;color:#64748b;margin:0 0 20px;">Personnalisez les labels et l'ordre du menu de navigation.</p>
+                    <div id="nav-order-container" class="config-list-container"></div>
+                </div>
+
+                <!-- CARTE 4 : IDENTITÉ, EN-TÊTE & PIED DE PAGE -->
                 <div class="card">
                     <h4 style="margin-bottom:15px; color:#334155;">Identité & Réseaux</h4>
                     <div class="form-row">
@@ -571,21 +772,20 @@
                     </div>
                     <label>Curriculum Vitae (PDF ou Lien)</label>
                     <div id="cv-display-area" style="margin-top:10px;"></div>
-                    
                     <div class="hidden-edit-container" id="cv-edit-container">
                         <div class="resource-row mode-link" id="cv-row">
                             <div class="type-selector">
-                                <button type="button" class="type-btn active" onclick="switchCVMode('link', this)">Lien</button>
-                                <button type="button" class="type-btn" onclick="switchCVMode('file', this)">Fichier</button>
+                                <button type="button" class="type-btn active" onclick="switchCVMode('link',this)">Lien</button>
+                                <button type="button" class="type-btn" onclick="switchCVMode('file',this)">Fichier</button>
                             </div>
                             <div class="action-area">
                                 <div class="link-input-wrapper">
-                                    <input type="url" id="field-cv-url" placeholder="https://..." >
+                                    <input type="url" id="field-cv-url" placeholder="https://...">
                                 </div>
                                 <div class="upload-btn-wrapper">
                                     <label class="upload-label" id="cv-upload-label">
                                         <i data-lucide="cloud-upload"></i> <span class="label-text" id="cv-file-label">Choisir CV PDF</span>
-                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv', this, 'field-cv-url', 'cv-file-label', 'cv-upload-label')">
+                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv',this,'field-cv-url','cv-file-label','cv-upload-label')">
                                     </label>
                                 </div>
                             </div>
@@ -596,18 +796,18 @@
 
                 <div class="card">
                     <h4 style="margin-bottom:15px; color:#334155;">En-tête (Header)</h4>
-                    <p style="font-size:0.8rem; color:#64748b; margin-bottom:15px;">Cliquez sur l'œil pour afficher ou masquer.</p>
+                    <p style="font-size:0.8rem;color:#64748b;margin-bottom:15px;">Cliquez sur l'œil pour afficher ou masquer.</p>
                     <div id="header-config-container" class="config-list-container"></div>
                 </div>
 
                 <div class="card">
                     <h4 style="margin-bottom:15px; color:#334155;">Pied de page (Footer)</h4>
                     <div id="footer-config-container" class="config-list-container"></div>
-                    <div style="margin-top:20px; border-top:1px dashed #e8e4de; padding-top:15px;">
+                    <div style="margin-top:20px;border-top:1px dashed #e8e4de;padding-top:15px;">
                         <label style="margin-bottom:10px;">Ajouter un lien personnalisé</label>
-                        <div style="display:flex; gap:10px;">
-                            <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1; min-width:0;">
-                            <input id="new-footer-url" placeholder="nike.com" style="flex:1; min-width:0;">
+                        <div style="display:flex;gap:10px;">
+                            <input id="new-footer-label" placeholder="Nom (ex: Université)" style="flex:1;min-width:0;">
+                            <input id="new-footer-url" placeholder="nike.com" style="flex:1;min-width:0;">
                             <button class="btn-primary" onclick="addCustomFooterLink()">Ajouter</button>
                         </div>
                     </div>
@@ -630,6 +830,41 @@
                     </p>
                     <label style="margin-top:20px">Texte du bouton</label>
                     <input id="rdv-text" oninput="saveRDV()" placeholder="Prendre rendez-vous">
+                </div>
+                <div class="scroll-spacer"></div>
+            </section>
+
+            <section id="mod-stats" class="module hidden">
+                <div class="header-flex">
+                    <div>
+                        <h2>Statistiques</h2>
+                        <p class="section-subtitle">Visites et interactions sur votre profil public.</p>
+                    </div>
+                </div>
+                <div class="stat-kpi-grid">
+                    <div class="stat-kpi"><span class="stat-kpi-val" id="kpi-views">—</span><span class="stat-kpi-lbl">Vues totales</span></div>
+                    <div class="stat-kpi"><span class="stat-kpi-val" id="kpi-clicks">—</span><span class="stat-kpi-lbl">Clics liens</span></div>
+                    <div class="stat-kpi"><span class="stat-kpi-val" id="kpi-pubs">—</span><span class="stat-kpi-lbl">Publications</span></div>
+                    <div class="stat-kpi"><span class="stat-kpi-val" id="kpi-courses">—</span><span class="stat-kpi-lbl">Cours</span></div>
+                </div>
+                <div class="stat-period-selector">
+                    <button class="stat-period-btn active" onclick="loadStats(7, this)">7 jours</button>
+                    <button class="stat-period-btn" onclick="loadStats(30, this)">30 jours</button>
+                    <button class="stat-period-btn" onclick="loadStats(90, this)">90 jours</button>
+                </div>
+                <div class="stat-chart-row">
+                    <div class="stat-chart-box">
+                        <div class="stat-chart-title">Clics par jour</div>
+                        <canvas id="chart-clicks" height="120"></canvas>
+                    </div>
+                    <div class="stat-chart-box">
+                        <div class="stat-chart-title">Types de liens</div>
+                        <canvas id="chart-types" height="120"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="stat-chart-title" style="margin-bottom:15px;">Détail des clics</div>
+                    <div id="stats-content"><p style="color:#94a3b8; font-size:0.85rem;">Sélectionnez une période pour charger les données.</p></div>
                 </div>
                 <div class="scroll-spacer"></div>
             </section>
@@ -657,9 +892,11 @@
             </div>
 
             <div class="floating-toolbar">
-                <button class="btn-toolbar" id="btn-toggle-device" onclick="toggleDeviceMode()">
-                    <i data-lucide="smartphone" size="16"></i> <span id="text-toggle-device">Changer d'appareil</span>
-                </button>
+                <div class="device-switcher">
+                    <button class="btn-device-mode active" id="btn-mode-desktop" onclick="setDeviceMode('desktop')"><i data-lucide="monitor" size="14"></i> Bureau</button>
+                    <button class="btn-device-mode" id="btn-mode-tablet" onclick="setDeviceMode('tablet')"><i data-lucide="tablet" size="14"></i> Tablette</button>
+                    <button class="btn-device-mode" id="btn-mode-mobile" onclick="setDeviceMode('mobile')"><i data-lucide="smartphone" size="14"></i> Mobile</button>
+                </div>
                 <div class="toolbar-divider"></div>
                 <button class="btn-toolbar btn-zoom" onclick="manualZoom(-0.1)" title="Dézoomer"><i data-lucide="minus" size="16"></i></button>
                 <button class="btn-toolbar btn-zoom-reset" onclick="autoScalePreview()" title="Recadrer au centre">100%</button>
@@ -691,7 +928,21 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     
-    const DEFAULT_CONFIG = { header: { home: true, publications: true, courses: true, interventions: true, contact: true }, footer: { linkedin: true, scholar: true, cv: true, custom: [] } };
+    const DEFAULT_CONFIG = {
+        header: { home: true, publications: true, courses: true, interventions: true, contact: true },
+        footer: { linkedin: true, scholar: true, cv: true, custom: [] },
+        accent_color: '#0f172a',
+        page_bg: 'cream',
+        font_body: 'Inter',
+        font_heading: 'Playfair Display',
+        dark_mode: false,
+        layout: 'sidebar',
+        pub_format: 'standard',
+        header_style: 'classic',
+        hide_empty_sections: false,
+        nav_labels: { home: 'Accueil', publications: 'Publications', courses: 'Enseignements', interventions: 'Interventions' },
+        nav_order: ['home', 'publications', 'courses', 'interventions']
+    };
     
     let profileData = null;
     let saveTimer = null;
@@ -751,7 +1002,7 @@
     const viewport = document.getElementById('viewport');
     const canvasPlane = document.getElementById('canvas-plane');
     
-    let isMobileMode = false;
+    let deviceMode = 'desktop';
     let panX = 0;
     let panY = 0;
     let zoomLevel = 1;
@@ -761,22 +1012,26 @@
         canvasPlane.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomLevel})`;
     }
 
-    window.toggleDeviceMode = () => {
-        isMobileMode = !isMobileMode;
+    window.setDeviceMode = (mode) => {
+        deviceMode = mode;
         const wrap = document.getElementById('device-wrapper');
         const chrome = document.getElementById('browser-chrome');
-        const icon = document.getElementById('btn-toggle-device').querySelector('i');
 
-        if (isMobileMode) {
-            wrap.classList.add('device-mobile'); 
-            chrome.style.display = 'none'; 
-            icon.setAttribute('data-lucide', 'monitor');
-        } else {
-            wrap.classList.remove('device-mobile'); 
-            chrome.style.display = 'flex'; 
-            icon.setAttribute('data-lucide', 'smartphone');
+        wrap.classList.remove('device-mobile', 'device-tablet');
+        chrome.style.display = 'flex';
+
+        if (mode === 'mobile') {
+            wrap.classList.add('device-mobile');
+            chrome.style.display = 'none';
+        } else if (mode === 'tablet') {
+            wrap.classList.add('device-tablet');
         }
-        lucide.createIcons(); 
+
+        document.querySelectorAll('.btn-device-mode').forEach(b => b.classList.remove('active'));
+        const btn = document.getElementById('btn-mode-' + mode);
+        if (btn) btn.classList.add('active');
+
+        lucide.createIcons();
         autoScalePreview();
     };
 
@@ -788,19 +1043,21 @@
     };
 
     window.autoScalePreview = () => {
-        panX = 0; 
+        panX = 0;
         panY = 0;
-        
-        const padX = 100; const padY = 100; 
-        const availWidth = viewport.clientWidth - padX; 
+
+        const padX = 100; const padY = 100;
+        const availWidth = viewport.clientWidth - padX;
         const availHeight = viewport.clientHeight - padY;
-        
-        const targetWidth = isMobileMode ? 375 : 1366; 
-        const targetHeight = isMobileMode ? 812 : 768;
-        
+
+        let targetWidth, targetHeight;
+        if (deviceMode === 'mobile') { targetWidth = 375; targetHeight = 812; }
+        else if (deviceMode === 'tablet') { targetWidth = 768; targetHeight = 1024; }
+        else { targetWidth = 1366; targetHeight = 768; }
+
         zoomLevel = Math.min(availWidth / targetWidth, availHeight / targetHeight);
-        if (zoomLevel > 1) zoomLevel = 1; 
-        
+        if (zoomLevel > 1) zoomLevel = 1;
+
         updateCanvasTransform();
     }
 
@@ -925,9 +1182,10 @@
         if (resPubs.status === 'fulfilled' && resPubs.value.data) profileData.publications = resPubs.value.data;
         if (resInter.status === 'fulfilled' && resInter.value.data) profileData.interventions = resInter.value.data;
         
-        renderCourses(); 
-        renderPublications(); 
+        renderCourses();
+        renderPublications();
         renderInterventions();
+        renderHeaderConfig();
     }
 
     function fillProfileUI() {
@@ -974,8 +1232,9 @@
         document.getElementById('rdv-url').value = profileData.appointment_settings?.url || ''; 
         document.getElementById('rdv-text').value = profileData.appointment_settings?.text || '';
         
-        renderHeaderConfig(); 
-        renderFooterConfig(); 
+        renderHeaderConfig();
+        renderFooterConfig();
+        fillPersoUI();
         lucide.createIcons();
     }
 
@@ -1632,17 +1891,32 @@
 
     // --- LOGIQUE SAUVEGARDE & REFRESH ---
     
-    window.switchTab = (id, p, el) => { 
-        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden')); 
-        document.getElementById('mod-'+id).classList.remove('hidden'); 
-        
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
-        if(el) el.classList.add('active'); 
-        
-        document.getElementById('sidebar').classList.remove('mobile-open'); 
-        
-        currentPagePath = p; 
-        reloadPreview();
+    window.switchTab = (id, p, el) => {
+        document.querySelectorAll('.module').forEach(m => m.classList.add('hidden'));
+        document.getElementById('mod-'+id).classList.remove('hidden');
+
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if (el) el.classList.add('active');
+
+        document.getElementById('sidebar').classList.remove('mobile-open');
+
+        const previewSide = document.getElementById('preview-side');
+        const resizerEl = document.getElementById('resizer');
+
+        if (id === 'stats') {
+            if (previewSide) previewSide.style.display = 'none';
+            if (resizerEl) resizerEl.style.display = 'none';
+            document.getElementById('editor-side').style.width = '100%';
+            document.getElementById('editor-side').style.flex = '1';
+            loadStats(7, document.querySelector('.stat-period-btn.active'));
+        } else {
+            if (previewSide) previewSide.style.display = '';
+            if (resizerEl) resizerEl.style.display = '';
+            document.getElementById('editor-side').style.width = '';
+            document.getElementById('editor-side').style.flex = '';
+            currentPagePath = p;
+            reloadPreview();
+        }
     }
 
     window.reloadPreview = () => {
@@ -1680,20 +1954,39 @@
     }
 
     function renderHeaderConfig() {
-        const container = document.getElementById('header-config-container'); 
-        const h = profileData.config.header || DEFAULT_CONFIG.header; 
-        const items = [ { key: 'home', label: 'Accueil', icon: 'home' }, { key: 'publications', label: 'Publications', icon: 'book-open' }, { key: 'courses', label: 'Enseignements', icon: 'graduation-cap' }, { key: 'interventions', label: 'Interventions', icon: 'mic' } ];
-        
-        container.innerHTML = items.map(item => { 
-            const isActive = h[item.key]; 
+        const container = document.getElementById('header-config-container');
+        if (!container) return;
+        const h = profileData.config.header || DEFAULT_CONFIG.header;
+        const hideEmpty = profileData.config.hide_empty_sections || false;
+
+        const sectionCounts = {
+            home: 1,
+            publications: (profileData.publications || []).length,
+            courses: (profileData.courses || []).length,
+            interventions: (profileData.interventions || []).length
+        };
+
+        const items = [
+            { key: 'home', label: 'Accueil', icon: 'home' },
+            { key: 'publications', label: 'Publications', icon: 'book-open' },
+            { key: 'courses', label: 'Enseignements', icon: 'graduation-cap' },
+            { key: 'interventions', label: 'Interventions', icon: 'mic' }
+        ];
+
+        container.innerHTML = items.map(item => {
+            const isActive = h[item.key] !== false;
+            const isEmpty = sectionCounts[item.key] === 0;
+            const autoHidden = hideEmpty && isEmpty;
+            const badge = isEmpty ? `<span style="font-size:0.65rem;background:#f0ede8;color:#94a3b8;padding:2px 6px;border-radius:3px;font-weight:700;letter-spacing:0.05em;margin-left:6px;">AUTO</span>` : '';
+            const visible = isActive && !autoHidden;
             return `
-                <div class="config-item ${isActive ? '' : 'hidden-item'}">
-                    <span><i data-lucide="${item.icon}" size="16"></i> ${item.label}</span>
-                    <button class="config-toggle-btn ${isActive ? 'active' : 'off'}" onclick="toggleConfig('header', '${item.key}')">
-                        <i data-lucide="${isActive ? 'eye' : 'eye-off'}" size="18"></i>
+                <div class="config-item ${visible ? '' : 'hidden-item'}">
+                    <span><i data-lucide="${item.icon}" size="16"></i> ${item.label}${badge}</span>
+                    <button class="config-toggle-btn ${visible ? 'active' : 'off'}" onclick="toggleConfig('header','${item.key}')">
+                        <i data-lucide="${visible ? 'eye' : 'eye-off'}" size="18"></i>
                     </button>
-                </div>`; 
-        }).join(''); 
+                </div>`;
+        }).join('');
         lucide.createIcons();
     }
 
@@ -1793,6 +2086,286 @@
         const iconEl = t.querySelector('i'); if(iconEl) iconEl.setAttribute('data-lucide', icon);
         t.classList.add('visible'); if(window.lucide) lucide.createIcons();
         clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('visible'), 2000); 
+    }
+
+    // ── PERSONNALISATION ─────────────────────────────────────────────────────
+
+    function fillPersoUI() {
+        if (!profileData || !profileData.config) return;
+        const cfg = profileData.config;
+
+        // Accent color
+        const accent = cfg.accent_color || '#0f172a';
+        document.querySelectorAll('#accent-swatches .palette-swatch').forEach(s => {
+            s.classList.toggle('active', s.dataset.color === accent);
+        });
+        const accentPicker = document.getElementById('accent-libre-picker');
+        if (accentPicker) accentPicker.value = accent;
+
+        // Page background
+        const bg = cfg.page_bg || 'cream';
+        document.querySelectorAll('.bg-swatch').forEach(s => {
+            s.classList.toggle('active', s.dataset.bg === bg);
+        });
+        if (bg.startsWith('custom:')) {
+            const hex = bg.replace('custom:', '');
+            const bgPicker = document.getElementById('bg-libre-picker');
+            const bgHex = document.getElementById('bg-libre-hex');
+            if (bgPicker) bgPicker.value = hex;
+            if (bgHex) bgHex.value = hex;
+        }
+
+        // Fonts
+        const fontBody = cfg.font_body || 'Inter';
+        const fontHeading = cfg.font_heading || 'Playfair Display';
+        const fbSel = document.getElementById('font-body-select');
+        const fhSel = document.getElementById('font-heading-select');
+        if (fbSel) fbSel.value = fontBody;
+        if (fhSel) fhSel.value = fontHeading;
+        loadGoogleFont(fontBody);
+        loadGoogleFont(fontHeading);
+        updateFontPreviews();
+
+        // Dark mode
+        const dmToggle = document.getElementById('dark-mode-toggle');
+        if (dmToggle) dmToggle.checked = cfg.dark_mode || false;
+
+        // Layout radios
+        const layout = cfg.layout || 'sidebar';
+        document.querySelectorAll('#layout-radios .layout-radio-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.layout === layout);
+        });
+
+        const pubFmt = cfg.pub_format || 'standard';
+        document.querySelectorAll('#pub-format-radios .layout-radio-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.layout === pubFmt);
+        });
+
+        const hStyle = cfg.header_style || 'classic';
+        document.querySelectorAll('#header-style-radios .layout-radio-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.layout === hStyle);
+        });
+
+        // Hide empty
+        const heToggle = document.getElementById('hide-empty-toggle');
+        if (heToggle) heToggle.checked = cfg.hide_empty_sections || false;
+
+        // Nav order
+        renderNavOrder();
+    }
+
+    window.saveAccentColor = (color, swatchEl) => {
+        if (!profileData) return;
+        profileData.config.accent_color = color;
+        document.querySelectorAll('#accent-swatches .palette-swatch').forEach(s => s.classList.remove('active'));
+        if (swatchEl) swatchEl.classList.add('active');
+        const picker = document.getElementById('accent-libre-picker');
+        if (picker) picker.value = color;
+        saveConfig();
+    };
+
+    window.savePageBg = (bg, swatchEl) => {
+        if (!profileData) return;
+        profileData.config.page_bg = bg;
+        document.querySelectorAll('.bg-swatch').forEach(s => s.classList.remove('active'));
+        if (swatchEl) swatchEl.classList.add('active');
+        if (bg.startsWith('custom:')) {
+            const hex = bg.replace('custom:', '');
+            const bgHex = document.getElementById('bg-libre-hex');
+            if (bgHex) bgHex.value = hex;
+        }
+        saveConfig();
+    };
+
+    window.saveConfigKey = (key, value, el, groupId) => {
+        if (!profileData) return;
+        profileData.config[key] = value;
+        if (groupId && el) {
+            document.querySelectorAll('#' + groupId + ' .layout-radio-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+        saveConfig();
+    };
+
+    window.saveFonts = () => {
+        if (!profileData) return;
+        const fbSel = document.getElementById('font-body-select');
+        const fhSel = document.getElementById('font-heading-select');
+        if (fbSel) { profileData.config.font_body = fbSel.value; loadGoogleFont(fbSel.value); }
+        if (fhSel) { profileData.config.font_heading = fhSel.value; loadGoogleFont(fhSel.value); }
+        updateFontPreviews();
+        saveConfig();
+    };
+
+    function updateFontPreviews() {
+        const fb = (document.getElementById('font-body-select') || {}).value || 'Inter';
+        const fh = (document.getElementById('font-heading-select') || {}).value || 'Playfair Display';
+        const bodyPrev = document.getElementById('font-body-preview');
+        const headPrev = document.getElementById('font-heading-preview');
+        if (bodyPrev) bodyPrev.style.fontFamily = `'${fb}', sans-serif`;
+        if (headPrev) headPrev.style.fontFamily = `'${fh}', serif`;
+    }
+
+    const _loadedFonts = new Set();
+    function loadGoogleFont(fontName) {
+        if (!fontName || fontName === 'Georgia' || _loadedFonts.has(fontName)) return;
+        _loadedFonts.add(fontName);
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        const encoded = encodeURIComponent(fontName).replace(/%20/g, '+');
+        link.href = `https://fonts.googleapis.com/css2?family=${encoded}:wght@400;600;700&display=swap`;
+        document.head.appendChild(link);
+    }
+
+    function renderNavOrder() {
+        const container = document.getElementById('nav-order-container');
+        if (!container || !profileData) return;
+        const cfg = profileData.config;
+        const order = cfg.nav_order || ['home', 'publications', 'courses', 'interventions'];
+        const labels = cfg.nav_labels || DEFAULT_CONFIG.nav_labels;
+        const defaults = { home: 'Accueil', publications: 'Publications', courses: 'Enseignements', interventions: 'Interventions' };
+
+        container.innerHTML = order.map((key, idx) => `
+            <div class="config-item" style="gap:10px;">
+                <span style="flex:1;min-width:0;">
+                    <input value="${labels[key] || defaults[key] || key}"
+                        style="border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-size:0.85rem;font-weight:600;color:#334155;width:180px;background:white;"
+                        onchange="saveNavLabel('${key}',this.value)">
+                </span>
+                <div style="display:flex;gap:4px;flex-shrink:0;">
+                    <button class="btn-square" onclick="moveNavItem(-1,'${key}')" title="Monter" ${idx === 0 ? 'disabled' : ''}><i data-lucide="chevron-up" size="14"></i></button>
+                    <button class="btn-square" onclick="moveNavItem(1,'${key}')" title="Descendre" ${idx === order.length - 1 ? 'disabled' : ''}><i data-lucide="chevron-down" size="14"></i></button>
+                </div>
+            </div>`).join('');
+        lucide.createIcons();
+    }
+
+    window.saveNavLabel = (key, value) => {
+        if (!profileData) return;
+        if (!profileData.config.nav_labels) profileData.config.nav_labels = Object.assign({}, DEFAULT_CONFIG.nav_labels);
+        profileData.config.nav_labels[key] = value;
+        saveConfig();
+    };
+
+    window.moveNavItem = (dir, key) => {
+        if (!profileData) return;
+        const order = profileData.config.nav_order || ['home', 'publications', 'courses', 'interventions'];
+        const idx = order.indexOf(key);
+        if (idx < 0) return;
+        const newIdx = idx + dir;
+        if (newIdx < 0 || newIdx >= order.length) return;
+        order.splice(idx, 1);
+        order.splice(newIdx, 0, key);
+        profileData.config.nav_order = order;
+        saveConfig();
+        renderNavOrder();
+    };
+
+    window.toggleHideEmpty = (checked) => {
+        if (!profileData) return;
+        profileData.config.hide_empty_sections = checked;
+        saveConfig();
+        renderHeaderConfig();
+    };
+
+    // ── STATISTIQUES ─────────────────────────────────────────────────────────
+
+    let statsClickChart = null;
+    let statsTypeChart = null;
+
+    window.loadStats = async (days, btn) => {
+        if (!profileData) return;
+
+        document.querySelectorAll('.stat-period-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+
+        const statsContent = document.getElementById('stats-content');
+        if (statsContent) statsContent.innerHTML = '<p style="color:#94a3b8;font-size:0.85rem;">Chargement...</p>';
+
+        const since = new Date(Date.now() - days * 86400000).toISOString();
+
+        const { data, error } = await sb
+            .from('link_clicks')
+            .select('*')
+            .eq('prof_id', profileData.id)
+            .gte('clicked_at', since)
+            .order('clicked_at', { ascending: true });
+
+        if (error) {
+            if (statsContent) statsContent.innerHTML = '<p style="color:#ef4444;font-size:0.85rem;">Erreur de chargement des statistiques.</p>';
+            return;
+        }
+
+        renderStats(data || [], days);
+    };
+
+    function renderStats(rows, days) {
+        // KPIs
+        document.getElementById('kpi-clicks').textContent = rows.length;
+        document.getElementById('kpi-pubs').textContent = (profileData.publications || []).length;
+        document.getElementById('kpi-courses').textContent = (profileData.courses || []).length;
+        document.getElementById('kpi-views').textContent = '—';
+
+        // Chart 1: clics par jour
+        const dayBuckets = {};
+        for (let i = days - 1; i >= 0; i--) {
+            const d = new Date(Date.now() - i * 86400000);
+            dayBuckets[d.toISOString().slice(0, 10)] = 0;
+        }
+        rows.forEach(r => {
+            const d = r.clicked_at.slice(0, 10);
+            if (d in dayBuckets) dayBuckets[d]++;
+        });
+        const labels = Object.keys(dayBuckets).map(d => d.slice(5));
+        const values = Object.values(dayBuckets);
+
+        const ctx1 = document.getElementById('chart-clicks');
+        if (ctx1) {
+            if (statsClickChart) statsClickChart.destroy();
+            statsClickChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{ label: 'Clics', data: values, borderColor: '#0f172a', backgroundColor: 'rgba(15,23,42,0.07)', tension: 0.3, fill: true, pointRadius: 3 }]
+                },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+        }
+
+        // Chart 2: types
+        const typeCounts = {};
+        rows.forEach(r => { typeCounts[r.link_type || 'autre'] = (typeCounts[r.link_type || 'autre'] || 0) + 1; });
+        const ctx2 = document.getElementById('chart-types');
+        if (ctx2) {
+            if (statsTypeChart) statsTypeChart.destroy();
+            const typeLabels = Object.keys(typeCounts);
+            statsTypeChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: typeLabels,
+                    datasets: [{ data: typeLabels.map(k => typeCounts[k]), backgroundColor: ['#0f172a','#1e3a5f','#7c3aed','#065f46','#7f1d1d','#92400e'] }]
+                },
+                options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+            });
+        }
+
+        // Tableau détail
+        const statsContent = document.getElementById('stats-content');
+        if (!statsContent) return;
+        if (rows.length === 0) {
+            statsContent.innerHTML = '<p style="color:#94a3b8;font-size:0.85rem;">Aucun clic enregistré sur cette période.</p>';
+            return;
+        }
+        const recent = [...rows].reverse().slice(0, 50);
+        statsContent.innerHTML = `<table class="stat-table">
+            <thead><tr><th>Date</th><th>Type</th><th>Label</th><th>Page</th></tr></thead>
+            <tbody>${recent.map(r => `<tr>
+                <td>${r.clicked_at.slice(0, 16).replace('T', ' ')}</td>
+                <td>${r.link_type || '—'}</td>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.link_label || '—'}</td>
+                <td>${r.page || '—'}</td>
+            </tr>`).join('')}</tbody>
+        </table>`;
     }
 
     init();
