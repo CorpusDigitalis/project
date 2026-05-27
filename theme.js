@@ -174,19 +174,62 @@ export async function initLayout() {
     }
 
     // 10. Fond de page (config.page_bg)
-    const pageBg = prof.config?.page_bg || 'warm';
-    if (pageBg === 'white') {
-        document.documentElement.style.setProperty('--bg-body-override', '#ffffff');
-        document.body.style.backgroundColor = '#ffffff';
-    } else if (pageBg === 'dark') {
-        document.documentElement.classList.add('page-dark');
-        document.body.style.backgroundColor = '#0f172a';
-    } else if (pageBg.startsWith('#')) {
-        document.documentElement.style.setProperty('--bg-body-override', pageBg);
-        document.body.style.backgroundColor = pageBg;
-    }
+    applyPageBg(prof.config?.page_bg);
 
     return prof;
+}
+
+// Applique la config visuellement sans rechargement (postMessage live preview)
+export function applyConfig(config) {
+    if (!config) return;
+
+    // Accent
+    if (config.accent_color) {
+        document.documentElement.style.setProperty('--site-accent', config.accent_color);
+    }
+
+    // Fond de page
+    if (config.page_bg) applyPageBg(config.page_bg);
+
+    // Police titre
+    if (config.title_font) {
+        document.querySelectorAll('.site-name, .prof-name, h1:not(.page-title)').forEach(el => {
+            el.style.fontFamily = `'${config.title_font}', serif`;
+        });
+        loadFontIfNeeded(config.title_font);
+    }
+
+    // Police corps
+    if (config.body_font) {
+        document.body.style.fontFamily = `'${config.body_font}', sans-serif`;
+        loadFontIfNeeded(config.body_font);
+    }
+}
+
+function applyPageBg(pageBg) {
+    const bg = pageBg || 'cream';
+    const bgMap = { cream: '#fafaf8', white: '#ffffff', 'blue-gray': '#f0f4f8', warm: '#f5f0eb' };
+    let hex;
+    if (bg.startsWith('custom:')) {
+        hex = bg.replace('custom:', '');
+    } else if (bg.startsWith('#')) {
+        hex = bg;
+    } else {
+        hex = bgMap[bg] || '#fafaf8';
+    }
+    document.documentElement.style.setProperty('--bg-body-override', hex);
+    document.body.style.backgroundColor = hex;
+    if (bg === 'dark') document.documentElement.classList.add('page-dark');
+}
+
+const _loadedFonts = new Set();
+function loadFontIfNeeded(fontName) {
+    if (!fontName || fontName === 'Georgia' || fontName === 'Alata' || _loadedFonts.has(fontName)) return;
+    _loadedFonts.add(fontName);
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, '+')}:ital,wght@0,400;0,600;0,700;1,400&display=swap`;
+    document.head.appendChild(link);
 }
 
 // Tracking silencieux des clics — fire & forget, jamais bloquant

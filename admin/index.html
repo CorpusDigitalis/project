@@ -511,7 +511,7 @@
         <div class="nav-item" onclick="switchTab('cours', 'cours.html', this)"><i data-lucide="graduation-cap"></i> Enseignements</div>
         <div class="nav-item" onclick="switchTab('interventions', 'interventions.html', this)"><i data-lucide="mic"></i> Interventions</div>
         <div class="nav-title">Configuration</div>
-        <div class="nav-item" onclick="switchTab('perso', 'accueil.html', this)"><i data-lucide="settings"></i> Personnalisation</div>
+        <div class="nav-item" onclick="switchTab('perso', 'accueil.html', this)"><i data-lucide="palette"></i> Apparence & Style</div>
         <div class="nav-title">Analytiques</div>
         <div class="nav-item" onclick="switchTab('stats', 'accueil.html', this)"><i data-lucide="bar-chart-2"></i> Statistiques</div>
         <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out"></i> Déconnexion</button>
@@ -551,6 +551,39 @@
                     <div class="form-row">
                         <label>Biographie</label>
                         <textarea id="field-bio" rows="6" oninput="autoSave('profiles', null, 'bio', this.value)"></textarea>
+                    </div>
+                </div>
+                <div class="card" style="margin-top:16px;">
+                    <h4 style="margin-bottom:15px; color:#334155;">Réseaux & CV</h4>
+                    <div class="form-row">
+                        <label>LinkedIn</label>
+                        <input id="field-linkedin" placeholder="https://linkedin.com/in/..." oninput="autoSave('profiles',null,'linkedin_url',this.value)">
+                    </div>
+                    <div class="form-row">
+                        <label>Google Scholar</label>
+                        <input id="field-scholar" placeholder="https://scholar.google.com/..." oninput="autoSave('profiles',null,'scholar_url',this.value)">
+                    </div>
+                    <label>Curriculum Vitae (PDF ou Lien)</label>
+                    <div id="cv-display-area" style="margin-top:10px;"></div>
+                    <div class="hidden-edit-container" id="cv-edit-container">
+                        <div class="resource-row mode-link" id="cv-row">
+                            <div class="type-selector">
+                                <button type="button" class="type-btn active" onclick="switchCVMode('link',this)">Lien</button>
+                                <button type="button" class="type-btn" onclick="switchCVMode('file',this)">Fichier</button>
+                            </div>
+                            <div class="action-area">
+                                <div class="link-input-wrapper">
+                                    <input type="url" id="field-cv-url" placeholder="https://...">
+                                </div>
+                                <div class="upload-btn-wrapper">
+                                    <label class="upload-label" id="cv-upload-label">
+                                        <i data-lucide="cloud-upload"></i> <span class="label-text" id="cv-file-label">Choisir CV PDF</span>
+                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv',this,'field-cv-url','cv-file-label','cv-upload-label')">
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="btn-validate" onclick="confirmCVUpdate()"><i data-lucide="check" size="20"></i></button>
+                        </div>
                     </div>
                 </div>
                 <div class="card" style="margin-top:16px;">
@@ -617,14 +650,32 @@
             <section id="mod-perso" class="module hidden">
                 <div class="header-flex">
                     <div>
-                        <h2>Personnalisation</h2>
-                        <p class="section-subtitle">Apparence, mise en page, navigation et liens de votre site.</p>
+                        <h2>Apparence & Style</h2>
+                        <p class="section-subtitle">Couleurs, polices, mise en page et navigation de votre site.</p>
                     </div>
                 </div>
 
                 <!-- CARTE 1 : APPARENCE -->
                 <div class="card">
-                    <h4 style="margin-bottom:20px; color:#334155;">Apparence</h4>
+                    <h4 style="margin-bottom:15px; color:#334155;">Apparence</h4>
+
+                    <div class="form-row" style="margin-bottom:24px;">
+                        <label>Démarrage rapide — Preset discipline</label>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button class="layout-radio-btn" onclick="applyPreset('sciences')" style="font-size:0.8rem;">
+                                <span style="width:12px;height:12px;border-radius:50%;background:#1e3a5f;flex-shrink:0;display:inline-block;"></span>
+                                Sciences exactes
+                            </button>
+                            <button class="layout-radio-btn" onclick="applyPreset('lettres')" style="font-size:0.8rem;">
+                                <span style="width:12px;height:12px;border-radius:50%;background:#7f1d1d;flex-shrink:0;display:inline-block;"></span>
+                                Lettres & SHS
+                            </button>
+                            <button class="layout-radio-btn" onclick="applyPreset('droit')" style="font-size:0.8rem;">
+                                <span style="width:12px;height:12px;border-radius:50%;background:#0f172a;flex-shrink:0;display:inline-block;"></span>
+                                Droit & Économie
+                            </button>
+                        </div>
+                    </div>
 
                     <div class="form-row">
                         <label>Couleur accent</label>
@@ -759,41 +810,6 @@
                     <div id="nav-order-container" class="config-list-container"></div>
                 </div>
 
-                <!-- CARTE 4 : IDENTITÉ, EN-TÊTE & PIED DE PAGE -->
-                <div class="card">
-                    <h4 style="margin-bottom:15px; color:#334155;">Identité & Réseaux</h4>
-                    <div class="form-row">
-                        <label>LinkedIn</label>
-                        <input id="field-linkedin" placeholder="https://linkedin.com/in/..." oninput="autoSave('profiles',null,'linkedin_url',this.value)">
-                    </div>
-                    <div class="form-row">
-                        <label>Google Scholar</label>
-                        <input id="field-scholar" placeholder="https://scholar.google.com/..." oninput="autoSave('profiles',null,'scholar_url',this.value)">
-                    </div>
-                    <label>Curriculum Vitae (PDF ou Lien)</label>
-                    <div id="cv-display-area" style="margin-top:10px;"></div>
-                    <div class="hidden-edit-container" id="cv-edit-container">
-                        <div class="resource-row mode-link" id="cv-row">
-                            <div class="type-selector">
-                                <button type="button" class="type-btn active" onclick="switchCVMode('link',this)">Lien</button>
-                                <button type="button" class="type-btn" onclick="switchCVMode('file',this)">Fichier</button>
-                            </div>
-                            <div class="action-area">
-                                <div class="link-input-wrapper">
-                                    <input type="url" id="field-cv-url" placeholder="https://...">
-                                </div>
-                                <div class="upload-btn-wrapper">
-                                    <label class="upload-label" id="cv-upload-label">
-                                        <i data-lucide="cloud-upload"></i> <span class="label-text" id="cv-file-label">Choisir CV PDF</span>
-                                        <input type="file" class="hidden-input" accept="application/pdf" onchange="uploadFileForEdit('cv',this,'field-cv-url','cv-file-label','cv-upload-label')">
-                                    </label>
-                                </div>
-                            </div>
-                            <button class="btn-validate" onclick="confirmCVUpdate()"><i data-lucide="check" size="20"></i></button>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="card">
                     <h4 style="margin-bottom:15px; color:#334155;">En-tête (Header)</h4>
                     <p style="font-size:0.8rem;color:#64748b;margin-bottom:15px;">Cliquez sur l'œil pour afficher ou masquer.</p>
@@ -914,8 +930,8 @@
         footer: { linkedin: true, scholar: true, cv: true, custom: [] },
         accent_color: '#0f172a',
         page_bg: 'cream',
-        font_body: 'Inter',
-        font_heading: 'Lora',
+        body_font: 'Inter',
+        title_font: 'Lora',
         dark_mode: false,
         layout: 'sidebar',
         pub_format: 'standard',
@@ -2083,8 +2099,8 @@
         }
 
         // Fonts
-        const fontBody = cfg.font_body || 'Inter';
-        const fontHeading = cfg.font_heading || 'Lora';
+        const fontBody = cfg.body_font || 'Inter';
+        const fontHeading = cfg.title_font || 'Lora';
         const fbSel = document.getElementById('font-body-select');
         const fhSel = document.getElementById('font-heading-select');
         if (fbSel) fbSel.value = fontBody;
@@ -2121,6 +2137,13 @@
         renderNavOrder();
     }
 
+    function sendPreviewUpdate() {
+        const iframe = document.getElementById('site-preview');
+        if (iframe && iframe.contentWindow && profileData) {
+            iframe.contentWindow.postMessage({ type: 'corpus-preview', config: profileData.config }, '*');
+        }
+    }
+
     window.saveAccentColor = (color, swatchEl) => {
         if (!profileData) return;
         profileData.config.accent_color = color;
@@ -2129,6 +2152,7 @@
         const picker = document.getElementById('accent-libre-picker');
         if (picker) picker.value = color;
         saveConfig();
+        sendPreviewUpdate();
     };
 
     window.savePageBg = (bg, swatchEl) => {
@@ -2142,6 +2166,7 @@
             if (bgHex) bgHex.value = hex;
         }
         saveConfig();
+        sendPreviewUpdate();
     };
 
     window.saveConfigKey = (key, value, el, groupId) => {
@@ -2152,21 +2177,40 @@
             el.classList.add('active');
         }
         saveConfig();
+        sendPreviewUpdate();
+    };
+
+    window.applyPreset = (preset) => {
+        if (!profileData) return;
+        const presets = {
+            sciences: { accent_color: '#1e3a5f', title_font: 'Lora',              body_font: 'Inter',       page_bg: 'cream' },
+            lettres:  { accent_color: '#7f1d1d', title_font: 'Cormorant Garamond', body_font: 'Merriweather', page_bg: 'warm' },
+            droit:    { accent_color: '#0f172a', title_font: 'EB Garamond',        body_font: 'Inter',       page_bg: 'cream' }
+        };
+        const p = presets[preset];
+        if (!p) return;
+        Object.assign(profileData.config, p);
+        fillPersoUI();
+        saveConfig();
+        sendPreviewUpdate();
+        showToast('Preset appliqué — ' + preset, 'success');
     };
 
     window.saveFonts = () => {
         if (!profileData) return;
         const fbSel = document.getElementById('font-body-select');
         const fhSel = document.getElementById('font-heading-select');
-        if (fbSel) { profileData.config.font_body = fbSel.value; loadGoogleFont(fbSel.value); }
-        if (fhSel) { profileData.config.font_heading = fhSel.value; loadGoogleFont(fhSel.value); }
+        if (fbSel) { profileData.config.body_font = fbSel.value; loadGoogleFont(fbSel.value); }
+        if (fhSel) { profileData.config.title_font = fhSel.value; loadGoogleFont(fhSel.value); }
         updateFontPreviews();
         saveConfig();
+        sendPreviewUpdate();
     };
 
     function updateFontPreviews() {
         const fb = (document.getElementById('font-body-select') || {}).value || 'Inter';
         const fh = (document.getElementById('font-heading-select') || {}).value || 'Lora';
+        // key names align with theme.js (body_font / title_font)
         const bodyPrev = document.getElementById('font-body-preview');
         const headPrev = document.getElementById('font-heading-preview');
         if (bodyPrev) bodyPrev.style.fontFamily = `'${fb}', sans-serif`;

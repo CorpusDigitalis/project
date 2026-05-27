@@ -65,7 +65,11 @@
     </footer>
 
     <script type="module">
-        import { initLayout, setupTracking } from '../theme.js';
+        import { initLayout, setupTracking, applyConfig } from '../theme.js';
+
+        window.addEventListener('message', (e) => {
+            if (e.data?.type === 'corpus-preview') applyConfig(e.data.config);
+        });
 
         function setOGTags(prof) {
             const slug = window.location.hostname.split('.')[0];
