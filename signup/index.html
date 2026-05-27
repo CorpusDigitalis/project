@@ -402,7 +402,8 @@
         <textarea id="conf-bio" rows="3" placeholder="Votre statut, université ou spécialité..."></textarea>
 
         <label>URL personnalisée</label>
-        <input type="text" id="conf-slug" placeholder="ex : marie-dupont">
+        <input type="text" id="conf-slug" placeholder="ex : marie-dupont" oninput="liveSlug(this)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <small id="slug-preview" style="display:block;margin-top:6px;font-size:12px;min-height:18px;"></small>
 
         <label>Photo de profil (optionnel)</label>
         <input type="file" id="up-avatar" accept="image/*">
@@ -506,7 +507,9 @@
             switchToStep(4);
             updateDots(4);
         } else {
-            document.getElementById('conf-slug').value = savedEmail.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+            const slugInput = document.getElementById('conf-slug');
+            slugInput.value = sanitizeSlug(savedEmail.split('@')[0]);
+            liveSlug(slugInput);
             switchToStep(3);
             updateDots(3);
         }
@@ -547,7 +550,9 @@
         userEmail = email;
         localStorage.setItem('cd_pending_user_id', userId);
         localStorage.setItem('cd_pending_email', userEmail);
-        document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+        const slugEl = document.getElementById('conf-slug');
+        slugEl.value = sanitizeSlug(email.split('@')[0]);
+        liveSlug(slugEl);
         document.getElementById('display-email').innerText = email;
 
         btn.innerText = "Envoi du code...";
@@ -622,6 +627,33 @@
     }
 
     // ==========================================================
+    // SLUG — nettoyage et aperçu en direct
+    function sanitizeSlug(val) {
+        return val
+            .normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .toLowerCase()
+            .replace(/[\s._@/+]+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-{2,}/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 60);
+    }
+
+    window.liveSlug = function(input) {
+        const clean = sanitizeSlug(input.value);
+        input.value = clean;
+        const preview = document.getElementById('slug-preview');
+        if (clean.length >= 3) {
+            preview.textContent = clean + '.corpusdigitalis.com';
+            preview.style.color = '#16a34a';
+        } else if (clean.length > 0) {
+            preview.textContent = clean + '.corpusdigitalis.com (minimum 3 caractères)';
+            preview.style.color = '#94a3b8';
+        } else {
+            preview.textContent = '';
+        }
+    };
+
     // ÉTAPE 3 : IDENTITÉ & UPLOADS
     // ==========================================================
     window.submitOnboarding = async () => {
@@ -631,7 +663,7 @@
 
         const name = document.getElementById('conf-name').value.trim();
         const bio = document.getElementById('conf-bio').value.trim();
-        const slug = document.getElementById('conf-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+        const slug = sanitizeSlug(document.getElementById('conf-slug').value);
 
         errDiv.style.display = 'none';
         if (!name || !slug) { showErr(errDiv, "Le nom et l'URL personnalisée sont obligatoires."); return; }
