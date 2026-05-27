@@ -456,7 +456,12 @@
 
     <div class="wrapper">
         <main class="editor-side" id="editor-side">
-            
+
+            <!-- BANDEAU : profil en attente d'activation -->
+            <div id="construction-banner" style="display:none; background:#fef9ec; border-bottom:1px solid #fde68a; padding:13px 32px; font-size:13px; color:#78350f; line-height:1.5; flex-shrink:0;">
+                <strong>Votre profil est en cours de construction.</strong> Notre équipe traite votre CV sous 48h ouvrées. Vous recevrez un email dès que votre site est en ligne. En attendant, vous pouvez explorer et préparer vos contenus.
+            </div>
+
             <section id="mod-profil" class="module">
                 <div class="header-flex">
                     <div>
@@ -637,6 +642,18 @@
             
             <div id="preview-loader" class="loading-overlay">
                 <div class="loading-text"><i data-lucide="loader" class="spin"></i> CORPUS DIGITALIS</div>
+            </div>
+
+            <!-- PANNEAU : profil pas encore activé -->
+            <div id="pending-panel" style="display:none; position:absolute; inset:0; z-index:30; background:#f8f7f4; align-items:center; justify-content:center; padding:48px 32px;">
+                <div style="max-width:360px; text-align:center;">
+                    <div style="width:72px; height:72px; background:#0f172a; border-radius:18px; display:flex; align-items:center; justify-content:center; margin:0 auto 28px; font-size:32px; line-height:1;">⚙</div>
+                    <p style="font-family:'Playfair Display',Georgia,serif; font-size:22px; font-weight:700; color:#0f172a; margin:0 0 14px; line-height:1.3;">Votre profil<br>est en construction</p>
+                    <p style="font-size:14px; color:#64748b; line-height:1.75; margin:0 0 24px;">Notre équipe analyse votre CV et structure l'ensemble de vos données. <strong style="color:#374151;">Délai garanti : 48 heures ouvrées.</strong></p>
+                    <div style="background:white; border:1px solid #e2ddd7; border-radius:10px; padding:16px 20px; font-size:13px; color:#475569; text-align:left; line-height:1.65;">
+                        Vous recevrez un email avec votre lien de prévisualisation avant la mise en ligne publique.
+                    </div>
+                </div>
             </div>
 
             <div class="floating-toolbar">
@@ -872,7 +889,12 @@
         await loadData(session.user.id);
         switchTab('profil', 'accueil.html', document.querySelector('.nav-item.active'));
 
-        setTimeout(autoScalePreview, 100);
+        if (profileData && !profileData.is_active) {
+            document.getElementById('pending-panel').style.display = 'flex';
+            document.getElementById('construction-banner').style.display = 'block';
+        } else {
+            setTimeout(autoScalePreview, 100);
+        }
         checkOnboarding();
     }
 
@@ -1623,11 +1645,12 @@
         reloadPreview();
     }
 
-    window.reloadPreview = () => { 
-        const iframe = document.getElementById('site-preview'); 
-        if(iframe && profileData) { 
-            iframe.src = `${currentPagePath}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`; 
-        } 
+    window.reloadPreview = () => {
+        if (profileData && !profileData.is_active) return;
+        const iframe = document.getElementById('site-preview');
+        if(iframe && profileData) {
+            iframe.src = `${currentPagePath}?prof=${profileData.slug||profileData.id}&t=${Date.now()}`;
+        }
     }
 
     window.autoSave = (t,id,f,v) => { 
