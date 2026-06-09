@@ -795,16 +795,16 @@ const STANDARD_PRICE = 96;
 
 // ── DATA ──
 const INITIAL_PROSPECTS = [
-    { id:1,  nom:'Stéphane Beaud',           email:'stephane.beaud@sciencespo-lille.eu',        persona:'A', vague:1, statut:'À contacter', canal:'email', dateJ0:null, notes:'⚠️ Vérifier email avant envoi' },
-    { id:2,  nom:'Gunther Capelle-Blancard',  email:'gunther.capelle-blancard@univ-paris1.fr',   persona:'A', vague:1, statut:'À contacter', canal:'email', dateJ0:null, notes:'LinkedIn actif — DM aussi' },
-    { id:3,  nom:'Laure Bereni',              email:'laure.bereni@cnrs.fr',                      persona:'A', vague:1, statut:'À contacter', canal:'email', dateJ0:null, notes:'Publication Columbia UP 2021' },
-    { id:4,  nom:'Antoine Lilti',             email:'antoine.lilti@ehess.fr',                    persona:'A', vague:1, statut:'À contacter', canal:'email', dateJ0:null, notes:'Traduit Harvard UP' },
-    { id:5,  nom:'Alexis Spire',              email:'alexis.spire@ehess.fr',                     persona:'A', vague:1, statut:'À contacter', canal:'email', dateJ0:null, notes:'DR CNRS' },
-    { id:6,  nom:'Sylvain Laurens',           email:'sylvain.laurens@ehess.fr',                  persona:'A', vague:2, statut:'STOP ❌',     canal:'email', dateJ0:'2026-06-08', notes:'Mise en demeure — ne plus contacter' },
-    { id:7,  nom:'Nicolas Offenstadt',        email:'nicolas.offenstadt@univ-paris1.fr',         persona:'A', vague:2, statut:'À contacter', canal:'email', dateJ0:null, notes:'Actif réseaux sociaux' },
-    { id:8,  nom:'Éric Fassin',               email:'eric.fassin@univ-paris8.fr',                persona:'A', vague:2, statut:'À contacter', canal:'email', dateJ0:null, notes:'⚠️ Ton sobre' },
-    { id:9,  nom:'Florence Haegel',           email:'florence.haegel@sciencespo.fr',             persona:'A', vague:2, statut:'À contacter', canal:'email', dateJ0:null, notes:'' },
-    { id:10, nom:'Yves Sintomer',             email:'yves.sintomer@univ-paris8.fr',              persona:'A', vague:2, statut:'À contacter', canal:'email', dateJ0:null, notes:'Traduit en 8 langues' },
+    { id:1,  nom:'Stéphane Beaud',           email:'stephane.beaud@sciencespo-lille.eu',        persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'J+3 dû aujourd\'hui' },
+    { id:2,  nom:'Gunther Capelle-Blancard',  email:'gunther.capelle-blancard@univ-paris1.fr',   persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'LinkedIn actif — DM aussi' },
+    { id:3,  nom:'Laure Bereni',              email:'laure.bereni@cnrs.fr',                      persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'Publication Columbia UP 2021' },
+    { id:4,  nom:'Antoine Lilti',             email:'antoine.lilti@ehess.fr',                    persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'Traduit Harvard UP' },
+    { id:5,  nom:'Alexis Spire',              email:'alexis.spire@ehess.fr',                     persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'DR CNRS' },
+    { id:6,  nom:'Sylvain Laurens',           email:'sylvain.laurens@ehess.fr',                  persona:'A', vague:2, statut:'STOP ❌', canal:'email', dateJ0:'2026-06-08', notes:'Mise en demeure — ne plus contacter' },
+    { id:7,  nom:'Nicolas Offenstadt',        email:'nicolas.offenstadt@univ-paris1.fr',         persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'Actif réseaux sociaux' },
+    { id:8,  nom:'Éric Fassin',               email:'eric.fassin@univ-paris8.fr',                persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'⚠️ Ton sobre' },
+    { id:9,  nom:'Florence Haegel',           email:'florence.haegel@sciencespo.fr',             persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'Vérifier site perso avant J+3' },
+    { id:10, nom:'Yves Sintomer',             email:'yves.sintomer@univ-paris8.fr',              persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'Traduit en 8 langues' },
     { id:11, nom:'Virginie Guiraudon',        email:'virginie.guiraudon@sciencespo.fr',          persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'Réseau EU — angle international' },
     { id:12, nom:'Sandra Laugier',            email:'sandra.laugier@univ-paris1.fr',             persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'Articles Mind & Ethics' },
     { id:13, nom:'Johanna Siméant-Germanos',  email:'johanna.simeant@ens.fr',                    persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'⚠️ Vérifier email ENS vs Paris 1' },
@@ -835,6 +835,8 @@ const DAILY_MISSIONS = [
     { id:'m_statut',   text:'Mettre à jour les statuts prospects dans le tableau', xp:15 },
 ];
 
+const DATA_VERSION = '3'; // bump pour forcer reset localStorage
+
 // ── STATE ──
 let state = {
     prospects: [],
@@ -848,19 +850,23 @@ let state = {
 
 // ── STORAGE ──
 function saveState() {
-    const toSave = { prospects: state.prospects, xp: state.xp, streak: state.streak, missions: state.missions };
+    const toSave = { v: DATA_VERSION, prospects: state.prospects, xp: state.xp, streak: state.streak, missions: state.missions };
     localStorage.setItem('cd_war_room', JSON.stringify(toSave));
 }
 function loadState() {
     const saved = localStorage.getItem('cd_war_room');
-    if (saved) {
-        const data = JSON.parse(saved);
+    const data = saved ? JSON.parse(saved) : null;
+    if (data && data.v === DATA_VERSION) {
         state.prospects = data.prospects || INITIAL_PROSPECTS;
         state.xp = data.xp || 0;
         state.streak = data.streak || 0;
         state.missions = data.missions || {};
     } else {
+        // Reset : nouvelle version des données
         state.prospects = JSON.parse(JSON.stringify(INITIAL_PROSPECTS));
+        state.xp = 0;
+        state.streak = 1;
+        state.missions = {};
         checkAndResetDailyMissions();
     }
 }
