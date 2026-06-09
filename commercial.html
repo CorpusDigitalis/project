@@ -852,17 +852,23 @@ function checkAndResetDailyMissions() {
 }
 
 // ── AUTH ──
+const PIN_KEY = 'cd_war_pin';
+const CORRECT_PIN = 'corpus2026';
+
 async function checkAuth() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session || session.user.email !== ADMIN_EMAIL) {
-        window.location.href = '/login/';
-        return false;
+    const stored = localStorage.getItem(PIN_KEY);
+    if (stored === CORRECT_PIN) return true;
+    const entered = prompt('War Room — Mot de passe :');
+    if (entered === CORRECT_PIN) {
+        localStorage.setItem(PIN_KEY, CORRECT_PIN);
+        return true;
     }
-    return true;
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;color:#64748b;">Accès refusé.</div>';
+    return false;
 }
 async function handleLogout() {
-    await sb.auth.signOut();
-    window.location.href = '/login/';
+    localStorage.removeItem(PIN_KEY);
+    location.reload();
 }
 
 // ── SUPABASE DATA ──
