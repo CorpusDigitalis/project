@@ -5,1228 +5,406 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corpus Digitalis — War Room</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #fafaf8;
-            --sidebar: #0f172a;
-            --border: #e8e4de;
-            --text: #1e293b;
-            --muted: #64748b;
-            --gold: #f59e0b;
-            --gold-light: #fef3c7;
-            --green: #10b981;
-            --green-light: #ecfdf5;
-            --red: #ef4444;
-            --red-light: #fef2f2;
-            --orange: #f97316;
-            --card-bg: #ffffff;
+            --bg:#fafaf8; --sidebar:#0f172a; --border:#e8e4de;
+            --text:#1e293b; --muted:#64748b;
+            --gold:#f59e0b; --gold-light:#fef3c7;
+            --green:#10b981; --green-light:#ecfdf5;
+            --red:#ef4444; --red-light:#fef2f2;
+            --purple:#8b5cf6; --blue:#3b82f6;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--sidebar); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
-        .hidden { display: none !important; }
-
-        /* ── SIDEBAR ── */
-        nav {
-            width: 260px; flex-shrink: 0; background: var(--sidebar);
-            display: flex; flex-direction: column; padding: 30px 16px;
-            height: 100vh; overflow-y: auto;
-        }
-        .logo { color: white; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; padding: 0 8px; margin-bottom: 6px; }
-        .logo-badge { background: white; color: var(--sidebar); padding: 2px 6px; border-radius: 3px; font-size: 0.65rem; font-weight: 900; }
-        .war-room-label { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 0 8px; margin-bottom: 24px; }
-
-        /* XP Block */
-        .xp-block { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px; margin-bottom: 24px; }
-        .xp-level { color: var(--gold); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-        .xp-title { color: white; font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
-        .xp-bar-wrap { background: rgba(255,255,255,0.1); border-radius: 20px; height: 6px; overflow: hidden; }
-        .xp-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--gold), #fde68a); transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); }
-        .xp-numbers { display: flex; justify-content: space-between; color: #94a3b8; font-size: 0.68rem; margin-top: 5px; }
-        .streak-badge { display: flex; align-items: center; gap: 6px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); border-radius: 6px; padding: 6px 10px; margin-top: 8px; color: var(--gold); font-size: 0.72rem; font-weight: 600; }
-
-        /* Nav items */
-        .nav-section { font-size: 0.6rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.1em; padding: 0 8px; margin: 20px 0 6px; }
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 7px; color: #94a3b8; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: 0.15s; margin-bottom: 2px; }
-        .nav-item:hover { color: white; background: rgba(255,255,255,0.06); }
-        .nav-item.active { color: white; background: rgba(255,255,255,0.1); font-weight: 600; }
-        .nav-item .nav-badge { margin-left: auto; background: var(--gold); color: #0f172a; border-radius: 10px; padding: 2px 7px; font-size: 0.65rem; font-weight: 700; }
-        .nav-item .nav-badge.red { background: var(--red); color: white; }
-        .nav-item .nav-badge.green { background: var(--green); color: white; }
-
-        /* Sidebar bottom */
-        .sidebar-bottom { margin-top: auto; }
-        .logout-btn { display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.8rem; cursor: pointer; padding: 10px 12px; border-radius: 6px; border: none; background: none; width: 100%; transition: 0.15s; }
-        .logout-btn:hover { color: #f87171; }
-
-        /* ── MAIN WRAPPER ── */
-        .wrapper {
-            flex: 1; background: var(--bg); margin: 10px 10px 10px 0;
-            border-radius: 24px; box-shadow: -6px 0 30px rgba(0,0,0,0.25);
-            overflow: hidden; display: flex; flex-direction: column; min-width: 0;
-        }
-
-        /* Top bar */
-        .topbar {
-            background: var(--bg); border-bottom: 1px solid var(--border);
-            padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
-            flex-shrink: 0;
-        }
-        .topbar-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--text); }
-        .topbar-right { display: flex; align-items: center; gap: 12px; }
-        .topbar-date { color: var(--muted); font-size: 0.8rem; }
-        .deadline-chip {
-            background: var(--red-light); color: var(--red); border: 1px solid #fecaca;
-            border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700;
-            display: flex; align-items: center; gap: 5px;
-        }
-        .deadline-chip.soon { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0%,100%{opacity:1} 50%{opacity:0.7} }
-
-        /* Main content */
-        .main { flex: 1; overflow-y: auto; padding: 28px 32px; }
-
-        /* ── CARDS & KPIs ── */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
-        .kpi-card {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
-            padding: 18px 20px; position: relative; overflow: hidden;
-        }
-        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-        .kpi-card.gold::before { background: linear-gradient(90deg, var(--gold), #fde68a); }
-        .kpi-card.green::before { background: linear-gradient(90deg, var(--green), #34d399); }
-        .kpi-card.blue::before { background: linear-gradient(90deg, #3b82f6, #93c5fd); }
-        .kpi-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #c4b5fd); }
-        .kpi-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
-        .kpi-value { font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 4px; }
-        .kpi-sub { font-size: 0.72rem; color: var(--muted); }
-        .kpi-icon { position: absolute; top: 16px; right: 16px; opacity: 0.12; }
-
-        /* Grid layout */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-        .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
-
-        /* Cards */
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        .card-title { font-weight: 700; font-size: 0.85rem; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-        .card-title .ct-icon { color: var(--muted); }
-
-        /* Progress bar */
-        .prog-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .prog-label { font-size: 0.78rem; color: var(--text); font-weight: 500; width: 120px; flex-shrink: 0; }
-        .prog-bar { flex: 1; height: 8px; background: #f1ede7; border-radius: 20px; overflow: hidden; }
-        .prog-fill { height: 100%; border-radius: 20px; transition: width 1s cubic-bezier(0.34,1.56,0.64,1); }
-        .prog-fill.gold { background: linear-gradient(90deg, var(--gold), #fde68a); }
-        .prog-fill.blue { background: linear-gradient(90deg, #3b82f6, #93c5fd); }
-        .prog-fill.purple { background: linear-gradient(90deg, #8b5cf6, #c4b5fd); }
-        .prog-fill.green { background: linear-gradient(90deg, var(--green), #34d399); }
-        .prog-val { font-size: 0.72rem; color: var(--muted); width: 40px; text-align: right; flex-shrink: 0; }
-
-        /* Missions */
-        .mission-list { display: flex; flex-direction: column; gap: 8px; }
-        .mission-item {
-            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-            background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-            cursor: pointer; transition: 0.15s;
-        }
-        .mission-item:hover { border-color: var(--gold); background: var(--gold-light); }
-        .mission-item.done { opacity: 0.5; }
-        .mission-item.done .mission-text { text-decoration: line-through; }
-        .mission-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.15s; }
-        .mission-item.done .mission-check { background: var(--green); border-color: var(--green); }
-        .mission-text { font-size: 0.8rem; font-weight: 500; flex: 1; }
-        .mission-xp { font-size: 0.65rem; color: var(--gold); font-weight: 700; background: var(--gold-light); padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
-
-        /* Objective block */
-        .obj-block { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 12px; padding: 20px; color: white; }
-        .obj-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 6px; }
-        .obj-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
-        .obj-sub { font-size: 0.75rem; color: #94a3b8; margin-bottom: 14px; }
-        .obj-prog-wrap { background: rgba(255,255,255,0.1); border-radius: 20px; height: 8px; overflow: hidden; margin-bottom: 6px; }
-        .obj-prog-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--gold), #fde68a); transition: width 1s; }
-        .obj-numbers { display: flex; justify-content: space-between; font-size: 0.7rem; color: #94a3b8; }
-        .obj-days { margin-top: 10px; display: flex; gap: 8px; }
-        .obj-day-chip { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); border-radius: 6px; padding: 4px 10px; font-size: 0.7rem; color: var(--gold); font-weight: 600; }
-
-        /* Next step block */
-        .next-steps { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
-        .next-steps-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-        .next-step-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-        .next-step-item:last-child { border-bottom: none; }
-        .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: #0f172a; font-size: 0.65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-        .step-content { flex: 1; }
-        .step-action { font-size: 0.82rem; font-weight: 600; color: var(--text); }
-        .step-detail { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-        .step-urgent { color: var(--red); }
-        .step-urgent .step-num { background: var(--red); color: white; }
-
-        /* ── CAMPAGNES VIEW ── */
-        .campagne-card {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
-            margin-bottom: 14px; overflow: hidden;
-        }
-        .campagne-header { padding: 18px 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
-        .campagne-header:hover { background: var(--bg); }
-        .camp-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-        .camp-status-dot.active { background: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
-        .camp-status-dot.pending { background: #e2e8f0; }
-        .camp-status-dot.paused { background: var(--gold); }
-        .camp-name { font-weight: 700; font-size: 0.9rem; flex: 1; }
-        .camp-meta { font-size: 0.72rem; color: var(--muted); }
-        .camp-stats { display: flex; gap: 16px; }
-        .camp-stat { text-align: center; }
-        .camp-stat-val { font-weight: 700; font-size: 1.1rem; color: var(--text); }
-        .camp-stat-label { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; }
-        .camp-body { border-top: 1px solid var(--border); padding: 20px; background: var(--bg); display: none; }
-        .campagne-card.open .camp-body { display: block; }
-
-        /* Vague row */
-        .vague-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-        .vague-row:last-child { border-bottom: none; }
-        .vague-date { font-size: 0.72rem; color: var(--muted); width: 80px; flex-shrink: 0; }
-        .vague-names { font-size: 0.78rem; font-weight: 500; flex: 1; }
-        .touch-badges { display: flex; gap: 5px; }
-        .touch-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; }
-        .touch-badge.sent { background: var(--green-light); color: var(--green); }
-        .touch-badge.pending { background: var(--gold-light); color: #92400e; }
-        .touch-badge.today { background: var(--red-light); color: var(--red); animation: pulse-red 2s infinite; }
-        .touch-badge.todo { background: #f8fafc; color: var(--muted); border: 1px solid var(--border); }
-
-        /* Canal launch cards */
-        .launch-card { background: var(--bg); border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 14px; }
-        .launch-card h3 { font-weight: 700; margin-bottom: 6px; color: var(--text); }
-        .launch-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 16px; }
-        .btn-launch { background: var(--gold); color: #0f172a; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
-        .btn-launch:hover { background: #d97706; }
-        .btn-primary { background: var(--sidebar); color: white; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 7px; }
-        .btn-primary:hover { background: #1e293b; }
-        .btn-ghost { background: none; border: 1px solid var(--border); color: var(--text); padding: 9px 18px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: 0.2s; }
-        .btn-ghost:hover { border-color: var(--text); }
-
-        /* ── TESTS A/B VIEW ── */
-        .ab-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 14px; }
-        .ab-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .ab-name { font-weight: 700; font-size: 0.9rem; }
-        .ab-status-chip { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 10px; }
-        .ab-status-chip.running { background: var(--green-light); color: var(--green); }
-        .ab-status-chip.pending { background: var(--gold-light); color: #92400e; }
-        .ab-status-chip.winner { background: var(--sidebar); color: white; }
-        .ab-variants { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .ab-variant { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-        .ab-variant.leader { border-color: var(--green); background: var(--green-light); }
-        .ab-var-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-        .ab-var-name { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
-        .ab-var-stats { display: flex; gap: 14px; }
-        .ab-var-stat { }
-        .ab-var-stat-val { font-size: 1.1rem; font-weight: 800; color: var(--text); }
-        .ab-var-stat-label { font-size: 0.62rem; color: var(--muted); }
-        .ab-footer { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); }
-
-        /* ── PROSPECTS VIEW ── */
-        .prospects-filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: white; color: var(--muted); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.15s; }
-        .filter-btn:hover, .filter-btn.active { background: var(--sidebar); color: white; border-color: var(--sidebar); }
-        .prospects-table { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-        .pt-header { display: grid; grid-template-columns: 2fr 1fr 0.8fr 1.2fr 1fr; gap: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 10px 16px; }
-        .pt-col-head { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-        .pt-row { display: grid; grid-template-columns: 2fr 1fr 0.8fr 1.2fr 1fr; gap: 0; padding: 12px 16px; border-bottom: 1px solid var(--border); align-items: center; transition: 0.1s; }
-        .pt-row:last-child { border-bottom: none; }
-        .pt-row:hover { background: var(--bg); }
-        .pt-row.urgent { background: #fffbeb; }
-        .pt-name { font-weight: 600; font-size: 0.82rem; }
-        .pt-sub { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
-        .pt-persona { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
-        .pt-persona.A { background: #eff6ff; color: #3b82f6; }
-        .pt-persona.B { background: #f5f3ff; color: #8b5cf6; }
-        .status-select { font-size: 0.72rem; font-weight: 600; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: white; cursor: pointer; color: var(--text); }
-        .pt-dates { font-size: 0.68rem; color: var(--muted); }
-        .pt-notes { font-size: 0.68rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
-        .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; }
-        .status-badge.todo { background: #f8fafc; color: var(--muted); border: 1px solid var(--border); }
-        .status-badge.j0 { background: #eff6ff; color: #3b82f6; }
-        .status-badge.j3 { background: var(--gold-light); color: #92400e; }
-        .status-badge.j7 { background: #fdf4ff; color: #a855f7; }
-        .status-badge.interested { background: var(--green-light); color: var(--green); }
-        .status-badge.client { background: var(--sidebar); color: white; }
-        .status-badge.stop { background: var(--red-light); color: var(--red); }
-        .status-badge.pause { background: #f8fafc; color: var(--muted); }
-
-        /* ── CLIENTS & REVENUS VIEW ── */
-        .revenue-hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px; padding: 30px; color: white; margin-bottom: 20px; text-align: center; }
-        .revenue-amount { font-size: 3.5rem; font-weight: 800; color: var(--gold); line-height: 1; }
-        .revenue-label { color: #94a3b8; font-size: 0.85rem; margin-top: 6px; margin-bottom: 20px; }
-        .revenue-milestones { display: flex; justify-content: center; gap: 12px; }
-        .milestone { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 16px; text-align: center; }
-        .milestone.unlocked { border-color: var(--gold); background: rgba(245,158,11,0.1); }
-        .milestone-val { font-size: 0.85rem; font-weight: 700; }
-        .milestone-label { font-size: 0.62rem; color: #94a3b8; }
-        .milestone.unlocked .milestone-label { color: var(--gold); }
-        .clients-table { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-        .ct-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 12px 16px; border-bottom: 1px solid var(--border); align-items: center; font-size: 0.8rem; }
-        .ct-row:last-child { border-bottom: none; }
-        .ct-row.head { background: var(--bg); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.06em; }
-
-        /* ── ACHIEVEMENTS TOAST ── */
-        .toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
-        .toast {
-            background: #0f172a; color: white; border-radius: 10px; padding: 12px 16px;
-            display: flex; align-items: center; gap: 10px; min-width: 260px;
-            animation: toast-in 0.4s cubic-bezier(0.34,1.56,0.64,1);
-            border: 1px solid rgba(245,158,11,0.4);
-        }
-        @keyframes toast-in { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:none; } }
-        .toast-icon { font-size: 1.2rem; }
-        .toast-text { font-size: 0.8rem; font-weight: 600; flex: 1; }
-        .toast-xp { color: var(--gold); font-weight: 800; font-size: 0.85rem; }
-
-        /* Misc */
-        .divider { height: 1px; background: var(--border); margin: 16px 0; }
-        .empty-state { text-align: center; padding: 40px; color: var(--muted); }
-        .empty-state h3 { font-size: 0.9rem; margin-bottom: 6px; color: var(--text); }
-        .empty-state p { font-size: 0.78rem; }
-        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .section-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--text); }
-        .section-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Inter',sans-serif;background:var(--sidebar);color:var(--text);display:flex;height:100vh;overflow:hidden;}
+        .hidden{display:none!important;}
+        #lockscreen{position:fixed;inset:0;z-index:9999;background:#0f172a;display:flex;align-items:center;justify-content:center;}
+        .lock-box{text-align:center;width:340px;}
+        .lock-logo{color:var(--gold);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;}
+        .lock-title{color:white;font-size:1.5rem;font-weight:800;margin-bottom:4px;}
+        .lock-sub{color:#64748b;font-size:.8rem;margin-bottom:28px;}
+        .lock-input{width:100%;padding:12px 16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:white;font-size:.95rem;outline:none;margin-bottom:10px;font-family:inherit;}
+        .lock-input:focus{border-color:var(--gold);}
+        .lock-error{color:var(--red);font-size:.75rem;margin-bottom:10px;display:none;}
+        .lock-btn{width:100%;padding:12px;background:var(--gold);color:#0f172a;border:none;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit;transition:.2s;}
+        .lock-btn:hover{background:#d97706;}
+        .lock-btn:disabled{opacity:.6;cursor:not-allowed;}
+        nav{width:260px;flex-shrink:0;background:var(--sidebar);display:flex;flex-direction:column;padding:28px 14px;height:100vh;overflow-y:auto;}
+        .logo{color:white;font-weight:800;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:8px;padding:0 8px;margin-bottom:4px;}
+        .logo-badge{background:white;color:var(--sidebar);padding:2px 6px;border-radius:3px;font-size:.65rem;font-weight:900;}
+        .war-label{color:var(--gold);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:0 8px;margin-bottom:20px;}
+        .xp-block{background:rgba(255,255,255,.05);border-radius:10px;padding:12px;margin-bottom:20px;}
+        .xp-lv{color:var(--gold);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;}
+        .xp-ttl{color:white;font-weight:700;font-size:.9rem;margin-bottom:8px;}
+        .xp-bar-w{background:rgba(255,255,255,.1);border-radius:20px;height:5px;overflow:hidden;}
+        .xp-bar-f{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--gold),#fde68a);transition:width .8s cubic-bezier(.34,1.56,.64,1);}
+        .xp-nums{display:flex;justify-content:space-between;color:#94a3b8;font-size:.62rem;margin-top:4px;}
+        .streak{display:flex;align-items:center;gap:6px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);border-radius:6px;padding:5px 8px;margin-top:7px;color:var(--gold);font-size:.7rem;font-weight:600;}
+        .nav-sec{font-size:.58rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.1em;padding:0 8px;margin:16px 0 5px;}
+        .nav-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:7px;color:#94a3b8;font-size:.8rem;font-weight:500;cursor:pointer;transition:.15s;margin-bottom:2px;}
+        .nav-item:hover{color:white;background:rgba(255,255,255,.06);}
+        .nav-item.active{color:white;background:rgba(255,255,255,.1);font-weight:600;}
+        .nav-badge{margin-left:auto;border-radius:10px;padding:2px 7px;font-size:.62rem;font-weight:700;}
+        .nb-gold{background:var(--gold);color:#0f172a;}
+        .nb-red{background:var(--red);color:white;}
+        .nb-green{background:var(--green);color:white;}
+        .nb-gray{background:#334155;color:#94a3b8;}
+        .sidebar-foot{margin-top:auto;}
+        .logout-btn{display:flex;align-items:center;gap:8px;color:#64748b;font-size:.78rem;cursor:pointer;padding:9px 11px;border-radius:6px;border:none;background:none;width:100%;font-family:inherit;transition:.15s;}
+        .logout-btn:hover{color:#f87171;}
+        .wrapper{flex:1;background:var(--bg);margin:10px 10px 10px 0;border-radius:22px;box-shadow:-6px 0 30px rgba(0,0,0,.25);overflow:hidden;display:flex;flex-direction:column;min-width:0;}
+        .topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+        .topbar-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;}
+        .topbar-right{display:flex;align-items:center;gap:10px;}
+        .topbar-date{color:var(--muted);font-size:.75rem;}
+        .deadline-chip{background:var(--red-light);color:var(--red);border:1px solid #fecaca;border-radius:20px;padding:4px 12px;font-size:.72rem;font-weight:700;}
+        .deadline-chip.pulse{animation:pulse 2s infinite;}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.65}}
+        .main{flex:1;overflow-y:auto;padding:24px 28px;}
+        .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+        .section-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;}
+        .section-sub{font-size:.75rem;color:var(--muted);margin-top:2px;}
+        .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+        .kpi-card{background:white;border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;}
+        .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+        .kpi-card.gold::before{background:linear-gradient(90deg,var(--gold),#fde68a);}
+        .kpi-card.green::before{background:linear-gradient(90deg,var(--green),#34d399);}
+        .kpi-card.blue::before{background:linear-gradient(90deg,var(--blue),#93c5fd);}
+        .kpi-card.purple::before{background:linear-gradient(90deg,var(--purple),#c4b5fd);}
+        .kpi-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
+        .kpi-val{font-size:1.9rem;font-weight:800;color:var(--text);line-height:1;margin-bottom:3px;}
+        .kpi-sub{font-size:.68rem;color:var(--muted);}
+        .grid-2{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:14px;}
+        .card{background:white;border:1px solid var(--border);border-radius:12px;padding:18px;}
+        .card-title{font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+        .prog-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+        .prog-lbl{font-size:.75rem;font-weight:500;width:115px;flex-shrink:0;}
+        .prog-bar{flex:1;height:7px;background:#f1ede7;border-radius:20px;overflow:hidden;}
+        .prog-fill{height:100%;border-radius:20px;transition:width 1s cubic-bezier(.34,1.56,.64,1);}
+        .pf-gold{background:linear-gradient(90deg,var(--gold),#fde68a);}
+        .pf-blue{background:linear-gradient(90deg,var(--blue),#93c5fd);}
+        .pf-purple{background:linear-gradient(90deg,var(--purple),#c4b5fd);}
+        .pf-green{background:linear-gradient(90deg,var(--green),#34d399);}
+        .prog-val{font-size:.68rem;color:var(--muted);width:36px;text-align:right;flex-shrink:0;}
+        .obj-block{background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:12px;padding:18px;color:white;}
+        .obj-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:5px;}
+        .obj-ttl{font-weight:700;font-size:.95rem;margin-bottom:3px;}
+        .obj-sub{font-size:.72rem;color:#94a3b8;margin-bottom:12px;}
+        .obj-bar-w{background:rgba(255,255,255,.1);border-radius:20px;height:7px;overflow:hidden;margin-bottom:5px;}
+        .obj-bar-f{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--gold),#fde68a);transition:width 1s;}
+        .obj-nums{display:flex;justify-content:space-between;font-size:.68rem;color:#94a3b8;}
+        .obj-chips{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;}
+        .obj-chip{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:6px;padding:4px 9px;font-size:.67rem;color:var(--gold);font-weight:600;}
+        .next-steps{background:white;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;}
+        .ns-title{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+        .ns-item{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);}
+        .ns-item:last-child{border-bottom:none;}
+        .step-num{width:20px;height:20px;border-radius:50%;background:var(--gold);color:#0f172a;font-size:.62rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+        .step-num.urgent{background:var(--red);color:white;}
+        .step-action{font-size:.8rem;font-weight:600;color:var(--text);}
+        .step-detail{font-size:.68rem;color:var(--muted);margin-top:1px;}
+        .mission-list{display:flex;flex-direction:column;gap:7px;}
+        .mission-item{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.15s;}
+        .mission-item:hover{border-color:var(--gold);background:var(--gold-light);}
+        .mission-item.done{opacity:.45;}
+        .mission-item.done .m-text{text-decoration:line-through;}
+        .m-check{width:17px;height:17px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;}
+        .mission-item.done .m-check{background:var(--green);border-color:var(--green);}
+        .m-text{font-size:.78rem;font-weight:500;flex:1;}
+        .m-xp{font-size:.62rem;color:var(--gold);font-weight:700;background:var(--gold-light);padding:2px 7px;border-radius:10px;flex-shrink:0;}
+        .camp-card{background:white;border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+        .camp-hdr{padding:16px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.1s;}
+        .camp-hdr:hover{background:var(--bg);}
+        .camp-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+        .cd-active{background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.2);}
+        .cd-pending{background:#cbd5e1;}
+        .camp-name{font-weight:700;font-size:.88rem;flex:1;}
+        .camp-meta{font-size:.7rem;color:var(--muted);}
+        .camp-stats{display:flex;gap:14px;}
+        .cs-stat{text-align:center;}
+        .cs-val{font-weight:700;font-size:1.05rem;}
+        .cs-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;}
+        .camp-body{border-top:1px solid var(--border);padding:18px;background:var(--bg);display:none;}
+        .camp-card.open .camp-body{display:block;}
+        .vague-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border);}
+        .vague-row:last-child{border-bottom:none;}
+        .vague-date{font-size:.7rem;color:var(--muted);width:72px;flex-shrink:0;}
+        .vague-names{font-size:.76rem;font-weight:500;flex:1;}
+        .touch-badges{display:flex;gap:4px;flex-wrap:wrap;}
+        .tb{padding:2px 7px;border-radius:4px;font-size:.62rem;font-weight:700;}
+        .tb-sent{background:var(--green-light);color:var(--green);}
+        .tb-today{background:var(--red-light);color:var(--red);animation:pulse 2s infinite;}
+        .tb-soon{background:var(--gold-light);color:#92400e;}
+        .tb-todo{background:#f8fafc;color:var(--muted);border:1px solid var(--border);}
+        .launch-card{background:var(--bg);border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;margin-bottom:12px;}
+        .launch-card h3{font-weight:700;margin-bottom:5px;}
+        .launch-card p{font-size:.78rem;color:var(--muted);margin-bottom:14px;}
+        .ab-card{background:white;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;}
+        .ab-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+        .ab-name{font-weight:700;font-size:.88rem;}
+        .ab-chip{font-size:.62rem;font-weight:700;text-transform:uppercase;padding:3px 9px;border-radius:10px;}
+        .ab-chip.running{background:var(--green-light);color:var(--green);}
+        .ab-chip.pending{background:var(--gold-light);color:#92400e;}
+        .ab-chip.completed{background:var(--sidebar);color:white;}
+        .ab-variants{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        .ab-var{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;}
+        .ab-var.leader{border-color:var(--green);background:var(--green-light);}
+        .ab-var-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+        .ab-var-name{font-size:.78rem;font-weight:600;margin-bottom:8px;}
+        .ab-var-stats{display:flex;gap:12px;}
+        .ab-stat-val{font-size:1.05rem;font-weight:800;}
+        .ab-stat-lbl{font-size:.6rem;color:var(--muted);}
+        .ab-foot{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.72rem;color:var(--muted);}
+        .filters{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+        .f-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:white;color:var(--muted);font-size:.72rem;font-weight:600;cursor:pointer;transition:.15s;}
+        .f-btn:hover,.f-btn.active{background:var(--sidebar);color:white;border-color:var(--sidebar);}
+        .p-table{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+        .p-thead{display:grid;grid-template-columns:2fr 1fr .7fr 1.2fr 1fr;background:var(--bg);border-bottom:1px solid var(--border);padding:9px 14px;}
+        .p-th{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+        .p-row{display:grid;grid-template-columns:2fr 1fr .7fr 1.2fr 1fr;padding:11px 14px;border-bottom:1px solid var(--border);align-items:center;transition:.1s;}
+        .p-row:last-child{border-bottom:none;}
+        .p-row:hover{background:var(--bg);}
+        .p-name{font-weight:600;font-size:.8rem;}
+        .p-sub{font-size:.65rem;color:var(--muted);margin-top:1px;}
+        .persona-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;display:inline-block;}
+        .pb-A{background:#eff6ff;color:var(--blue);}
+        .pb-B{background:#f5f3ff;color:var(--purple);}
+        .status-sel{font-size:.7rem;font-weight:600;padding:4px 7px;border:1px solid var(--border);border-radius:6px;background:white;cursor:pointer;color:var(--text);max-width:130px;}
+        .p-notes{font-size:.65rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px;}
+        .rev-hero{background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:14px;padding:26px;color:white;margin-bottom:18px;text-align:center;}
+        .rev-amount{font-size:3.2rem;font-weight:800;color:var(--gold);line-height:1;}
+        .rev-lbl{color:#94a3b8;font-size:.82rem;margin-top:5px;margin-bottom:18px;}
+        .milestones{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+        .milestone{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 14px;text-align:center;}
+        .milestone.unlocked{border-color:var(--gold);background:rgba(245,158,11,.1);}
+        .ms-val{font-size:.82rem;font-weight:700;}
+        .ms-lbl{font-size:.6rem;color:#94a3b8;}
+        .milestone.unlocked .ms-lbl{color:var(--gold);}
+        .c-table{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+        .c-row{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr;padding:11px 14px;border-bottom:1px solid var(--border);align-items:center;font-size:.78rem;}
+        .c-row:last-child{border-bottom:none;}
+        .c-row.head{background:var(--bg);font-size:.62rem;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.06em;}
+        .log-card{background:white;border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+        .log-hdr{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:.1s;}
+        .log-hdr:hover{background:var(--bg);}
+        .log-type-badge{font-size:.6rem;font-weight:700;text-transform:uppercase;padding:3px 8px;border-radius:6px;flex-shrink:0;}
+        .lt-debate{background:#eff6ff;color:var(--blue);}
+        .lt-strategy{background:#f5f3ff;color:var(--purple);}
+        .lt-lecon{background:var(--red-light);color:var(--red);}
+        .lt-retour{background:var(--green-light);color:var(--green);}
+        .lt-analyse{background:var(--gold-light);color:#92400e;}
+        .log-titre{font-weight:700;font-size:.85rem;flex:1;}
+        .log-meta{font-size:.68rem;color:var(--muted);}
+        .log-body{border-top:1px solid var(--border);padding:16px;background:var(--bg);display:none;white-space:pre-wrap;font-size:.78rem;line-height:1.6;color:var(--text);}
+        .log-card.open .log-body{display:block;}
+        .btn-primary{background:var(--sidebar);color:white;border:none;padding:8px 16px;border-radius:8px;font-weight:600;font-size:.8rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:.2s;}
+        .btn-primary:hover{background:#1e293b;}
+        .btn-gold{background:var(--gold);color:#0f172a;border:none;padding:9px 18px;border-radius:8px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:inherit;transition:.2s;}
+        .btn-gold:hover{background:#d97706;}
+        .divider{height:1px;background:var(--border);margin:14px 0;}
+        .empty-state{text-align:center;padding:36px;color:var(--muted);}
+        .empty-state h3{font-size:.88rem;margin-bottom:5px;color:var(--text);}
+        .empty-state p{font-size:.75rem;}
+        .loading{text-align:center;padding:40px;color:var(--muted);font-size:.82rem;}
+        #toast-wrap{position:fixed;bottom:22px;right:22px;z-index:1000;display:flex;flex-direction:column;gap:7px;}
+        .toast{background:#0f172a;color:white;border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:9px;min-width:240px;animation:toast-in .4s cubic-bezier(.34,1.56,.64,1);border:1px solid rgba(245,158,11,.35);}
+        @keyframes toast-in{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+        .t-icon{font-size:1.1rem;}
+        .t-text{font-size:.78rem;font-weight:600;flex:1;}
+        .t-xp{color:var(--gold);font-weight:800;font-size:.82rem;}
     </style>
 </head>
 <body>
-
-<!-- ── LOCK SCREEN ── -->
-<div id="lockscreen" style="
-    position:fixed;inset:0;z-index:9999;
-    background:#0f172a;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Inter',sans-serif;
-">
-    <div style="text-align:center;width:320px;">
-        <div style="color:#f59e0b;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">CORPUS DIGITALIS</div>
-        <div style="color:white;font-size:1.4rem;font-weight:800;margin-bottom:6px;">War Room</div>
-        <div style="color:#64748b;font-size:0.8rem;margin-bottom:28px;">Accès privé — fondateur uniquement</div>
-        <input id="pin-input" type="password" placeholder="Mot de passe"
-            style="width:100%;padding:12px 16px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:white;font-size:0.95rem;outline:none;box-sizing:border-box;margin-bottom:10px;"
-            onkeydown="if(event.key==='Enter')tryPin()"
-        >
-        <div id="pin-error" style="color:#ef4444;font-size:0.75rem;margin-bottom:10px;display:none;">Mot de passe incorrect.</div>
-        <button onclick="tryPin()" style="width:100%;padding:12px;background:#f59e0b;color:#0f172a;border:none;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;">
-            Entrer →
-        </button>
+<div id="lockscreen">
+    <div class="lock-box">
+        <div class="lock-logo">Corpus Digitalis</div>
+        <div class="lock-title">War Room</div>
+        <div class="lock-sub">Accès fondateur uniquement</div>
+        <input id="pin-input" class="lock-input" type="password" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')tryLogin()">
+        <div id="pin-error" class="lock-error">Mot de passe incorrect.</div>
+        <button class="lock-btn" id="login-btn" onclick="tryLogin()">Entrer →</button>
     </div>
 </div>
-
-<!-- SIDEBAR -->
 <nav>
     <div class="logo"><span class="logo-badge">CD</span> Corpus Digitalis</div>
-    <div class="war-room-label">War Room</div>
-
+    <div class="war-label">War Room</div>
     <div class="xp-block">
-        <div class="xp-level" id="xp-level-label">Niveau 1 — Fondateur</div>
-        <div class="xp-title" id="xp-title">Entrepreneur</div>
-        <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
-        <div class="xp-numbers"><span id="xp-current">0 XP</span><span id="xp-next">100 XP</span></div>
-        <div class="streak-badge" id="streak-badge">
-            <span>🔥</span><span id="streak-text">Streak : 0 jour</span>
-        </div>
+        <div class="xp-lv" id="xp-lv">Niveau 1</div>
+        <div class="xp-ttl" id="xp-ttl">Entrepreneur</div>
+        <div class="xp-bar-w"><div class="xp-bar-f" id="xp-bar" style="width:0%"></div></div>
+        <div class="xp-nums"><span id="xp-cur">0 XP</span><span id="xp-nxt">100 XP</span></div>
+        <div class="streak">🔥 <span id="streak-txt">Streak : 0 jour</span></div>
     </div>
-
-    <div class="nav-section">Vue générale</div>
-    <div class="nav-item active" onclick="showView('overview')">
-        <i data-lucide="layout-dashboard" size="15"></i> Vue d'ensemble
-    </div>
-
-    <div class="nav-section">Acquisition</div>
-    <div class="nav-item" onclick="showView('campagnes')">
-        <i data-lucide="send" size="15"></i> Campagnes
-        <span class="nav-badge red" id="badge-campagnes">3</span>
-    </div>
-    <div class="nav-item" onclick="showView('abtests')">
-        <i data-lucide="git-branch" size="15"></i> Tests A/B
-        <span class="nav-badge" id="badge-ab">3</span>
-    </div>
-    <div class="nav-item" onclick="showView('prospects')">
-        <i data-lucide="users" size="15"></i> Prospects
-        <span class="nav-badge" id="badge-prospects">20</span>
-    </div>
-
-    <div class="nav-section">Résultats</div>
-    <div class="nav-item" onclick="showView('clients')">
-        <i data-lucide="trophy" size="15"></i> Clients & Revenus
-        <span class="nav-badge green" id="badge-clients">0</span>
-    </div>
-
-    <div class="sidebar-bottom">
-        <button class="logout-btn" onclick="handleLogout()">
-            <i data-lucide="log-out" size="14"></i> Déconnexion
-        </button>
+    <div class="nav-sec">Vue générale</div>
+    <div class="nav-item active" onclick="showView('overview')"><i data-lucide="layout-dashboard" size="14"></i> Vue d'ensemble</div>
+    <div class="nav-sec">Acquisition</div>
+    <div class="nav-item" onclick="showView('campagnes')"><i data-lucide="send" size="14"></i> Campagnes <span class="nav-badge nb-red">3</span></div>
+    <div class="nav-item" onclick="showView('abtests')"><i data-lucide="git-branch" size="14"></i> Tests A/B <span class="nav-badge nb-gold" id="badge-ab">3</span></div>
+    <div class="nav-item" onclick="showView('prospects')"><i data-lucide="users" size="14"></i> Prospects <span class="nav-badge nb-gold" id="badge-prospects">—</span></div>
+    <div class="nav-sec">Résultats</div>
+    <div class="nav-item" onclick="showView('clients')"><i data-lucide="trophy" size="14"></i> Clients & Revenus <span class="nav-badge nb-green" id="badge-clients">0</span></div>
+    <div class="nav-sec">Intelligence</div>
+    <div class="nav-item" onclick="showView('journal')"><i data-lucide="brain" size="14"></i> Journal des agents <span class="nav-badge nb-gray" id="badge-logs">—</span></div>
+    <div class="sidebar-foot">
+        <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out" size="13"></i> Déconnexion</button>
     </div>
 </nav>
-
-<!-- MAIN WRAPPER -->
 <div class="wrapper">
-    <!-- TOP BAR -->
     <div class="topbar">
         <div class="topbar-title" id="topbar-title">Vue d'ensemble</div>
         <div class="topbar-right">
             <div class="topbar-date" id="topbar-date"></div>
-            <div class="deadline-chip soon" id="deadline-chip">
-                ⚡ Early Bird : <span id="days-left">—</span> jours
-            </div>
+            <div class="deadline-chip pulse">⚡ Early Bird : <span id="days-left">—</span> jours</div>
         </div>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="main" id="main-content">
-
-        <!-- ═══ VIEW : OVERVIEW ═══ -->
+    <div class="main">
         <div id="view-overview">
-            <!-- KPIs -->
             <div class="kpi-grid">
-                <div class="kpi-card gold">
-                    <div class="kpi-label">Clients actifs</div>
-                    <div class="kpi-value" id="kpi-clients">0</div>
-                    <div class="kpi-sub">objectif : 3 avant le 15 juin</div>
-                    <i data-lucide="trophy" size="40" class="kpi-icon" style="color:var(--gold)"></i>
-                </div>
-                <div class="kpi-card green">
-                    <div class="kpi-label">Revenus encaissés</div>
-                    <div class="kpi-value" id="kpi-revenue">0 €</div>
-                    <div class="kpi-sub" id="kpi-revenue-sub">prochain : 72 € (Early Bird)</div>
-                    <i data-lucide="euro" size="40" class="kpi-icon" style="color:var(--green)"></i>
-                </div>
-                <div class="kpi-card blue">
-                    <div class="kpi-label">Prospects contactés</div>
-                    <div class="kpi-value" id="kpi-contacted">0</div>
-                    <div class="kpi-sub" id="kpi-contacted-sub">sur 20 prévus</div>
-                    <i data-lucide="send" size="40" class="kpi-icon" style="color:#3b82f6"></i>
-                </div>
-                <div class="kpi-card purple">
-                    <div class="kpi-label">Taux de réponse</div>
-                    <div class="kpi-value" id="kpi-rate">—</div>
-                    <div class="kpi-sub">objectif : 20%</div>
-                    <i data-lucide="bar-chart-2" size="40" class="kpi-icon" style="color:#8b5cf6"></i>
-                </div>
+                <div class="kpi-card gold"><div class="kpi-lbl">Clients actifs</div><div class="kpi-val" id="kpi-clients">0</div><div class="kpi-sub">objectif 3 avant le 15 juin</div></div>
+                <div class="kpi-card green"><div class="kpi-lbl">Revenus encaissés</div><div class="kpi-val" id="kpi-revenue">0 €</div><div class="kpi-sub">prochain : 72 €</div></div>
+                <div class="kpi-card blue"><div class="kpi-lbl">Prospects contactés</div><div class="kpi-val" id="kpi-contacted">0</div><div class="kpi-sub">sur 20 prévus</div></div>
+                <div class="kpi-card purple"><div class="kpi-lbl">Taux de réponse</div><div class="kpi-val" id="kpi-rate">—</div><div class="kpi-sub">objectif 20%</div></div>
             </div>
-
-            <!-- Next steps -->
-            <div class="next-steps">
-                <div class="next-steps-title">
-                    <i data-lucide="zap" size="13"></i> PROCHAINES ÉTAPES
-                </div>
-                <div id="next-steps-list"></div>
-            </div>
-
-            <!-- Grid row -->
-            <div class="grid-3">
-                <!-- Pipeline canaux -->
+            <div class="next-steps" id="next-steps-block"></div>
+            <div class="grid-2">
                 <div class="card">
-                    <div class="card-title"><i data-lucide="activity" size="15" class="ct-icon"></i> Pipeline par canal</div>
-                    <div class="prog-row">
-                        <div class="prog-label">📧 Email froid</div>
-                        <div class="prog-bar"><div class="prog-fill gold" id="prog-email" style="width:0%"></div></div>
-                        <div class="prog-val" id="prog-email-val">0/20</div>
-                    </div>
-                    <div class="prog-row">
-                        <div class="prog-label">💼 LinkedIn Pro</div>
-                        <div class="prog-bar"><div class="prog-fill blue" id="prog-linkedin" style="width:0%"></div></div>
-                        <div class="prog-val" id="prog-linkedin-val">0/50</div>
-                    </div>
-                    <div class="prog-row">
-                        <div class="prog-label">🎓 Email univ.</div>
-                        <div class="prog-bar"><div class="prog-fill purple" id="prog-univ" style="width:0%"></div></div>
-                        <div class="prog-val" id="prog-univ-val">0/30</div>
-                    </div>
+                    <div class="card-title"><i data-lucide="activity" size="14"></i> Pipeline par canal</div>
+                    <div class="prog-row"><div class="prog-lbl">📧 Email froid</div><div class="prog-bar"><div class="prog-fill pf-gold" id="prog-email" style="width:0%"></div></div><div class="prog-val" id="pv-email">0/20</div></div>
+                    <div class="prog-row"><div class="prog-lbl">💼 LinkedIn Pro</div><div class="prog-bar"><div class="prog-fill pf-blue" id="prog-linkedin" style="width:0%"></div></div><div class="prog-val" id="pv-linkedin">0/50</div></div>
+                    <div class="prog-row"><div class="prog-lbl">🎓 Email univ.</div><div class="prog-bar"><div class="prog-fill pf-purple" id="prog-univ" style="width:0%"></div></div><div class="prog-val" id="pv-univ">0/30</div></div>
                     <div class="divider"></div>
-                    <div class="prog-row">
-                        <div class="prog-label" style="width:auto;flex:1;font-weight:700;">Objectif clients</div>
-                        <div class="prog-bar"><div class="prog-fill green" id="prog-clients-obj" style="width:0%"></div></div>
-                        <div class="prog-val" id="prog-clients-val">0/3</div>
-                    </div>
+                    <div class="prog-row"><div class="prog-lbl" style="width:auto;flex:1;font-weight:700;">Objectif clients</div><div class="prog-bar"><div class="prog-fill pf-green" id="prog-clients" style="width:0%"></div></div><div class="prog-val" id="pv-clients">0/3</div></div>
                 </div>
-
-                <!-- Objectif Early Bird -->
                 <div class="obj-block">
-                    <div class="obj-label">Objectif Critique</div>
-                    <div class="obj-title">Early Bird — 3 clients</div>
+                    <div class="obj-lbl">Objectif Critique</div>
+                    <div class="obj-ttl">Early Bird — 3 clients</div>
                     <div class="obj-sub">Avant le 15 juin 2026</div>
-                    <div class="obj-prog-wrap"><div class="obj-prog-fill" id="obj-fill" style="width:0%"></div></div>
-                    <div class="obj-numbers">
-                        <span id="obj-clients-done">0 client</span>
-                        <span>3 clients</span>
-                    </div>
-                    <div class="obj-days">
-                        <div class="obj-day-chip" id="obj-days-chip">⏰ <span id="obj-days-text">—</span> jours</div>
-                        <div class="obj-day-chip">72€ × 3 = <strong>216€</strong></div>
-                    </div>
+                    <div class="obj-bar-w"><div class="obj-bar-f" id="obj-fill" style="width:0%"></div></div>
+                    <div class="obj-nums"><span id="obj-done">0 client</span><span>3 clients</span></div>
+                    <div class="obj-chips"><div class="obj-chip" id="obj-days-chip">⏰ — jours</div><div class="obj-chip">72€ × 3 = 216€</div></div>
                 </div>
             </div>
-
-            <!-- Missions du jour -->
             <div class="card">
-                <div class="card-title"><i data-lucide="target" size="15" class="ct-icon"></i> Missions du jour — <span id="missions-xp-total" style="color:var(--gold)">+95 XP disponibles</span></div>
+                <div class="card-title"><i data-lucide="target" size="14"></i> Missions du jour — <span id="missions-xp" style="color:var(--gold)">chargement…</span></div>
                 <div class="mission-list" id="missions-list"></div>
             </div>
         </div>
-
-        <!-- ═══ VIEW : CAMPAGNES ═══ -->
         <div id="view-campagnes" class="hidden">
-            <div class="section-header">
-                <div>
-                    <div class="section-title">Campagnes d'acquisition</div>
-                    <div class="section-sub">3 canaux — email froid, LinkedIn Pro, email universitaire</div>
-                </div>
-                <button class="btn-primary" onclick="showNewCampagneForm()"><i data-lucide="plus" size="14"></i> Nouvelle campagne</button>
-            </div>
-
-            <!-- Campagne 1 : Email froid -->
-            <div class="campagne-card" id="camp-email">
-                <div class="campagne-header" onclick="toggleCamp('camp-email')">
-                    <div class="camp-status-dot active"></div>
-                    <div>
-                        <div class="camp-name">Cold Email — Vague Juin 2026</div>
-                        <div class="camp-meta">📧 Gmail · 20 prospects · séquence J0 / J+3 / J+7 / J+14</div>
-                    </div>
-                    <div class="camp-stats">
-                        <div class="camp-stat"><div class="camp-stat-val" id="cs-sent">0</div><div class="camp-stat-label">J0 envoyés</div></div>
-                        <div class="camp-stat"><div class="camp-stat-val" id="cs-replies">0</div><div class="camp-stat-label">Réponses</div></div>
-                        <div class="camp-stat"><div class="camp-stat-val" id="cs-clients">0</div><div class="camp-stat-label">Clients</div></div>
-                    </div>
-                    <i data-lucide="chevron-down" size="16" style="color:var(--muted); flex-shrink:0;"></i>
+            <div class="section-header"><div><div class="section-title">Campagnes d'acquisition</div><div class="section-sub">3 canaux actifs ou à lancer</div></div></div>
+            <div class="camp-card" id="camp-email-card">
+                <div class="camp-hdr" onclick="toggleCamp('camp-email-card')">
+                    <div class="camp-dot cd-active"></div>
+                    <div><div class="camp-name">Cold Email — Vague Juin 2026</div><div class="camp-meta">📧 Gmail · 20 prospects · séquence J0/J+3/J+7/J+14</div></div>
+                    <div class="camp-stats"><div class="cs-stat"><div class="cs-val">9</div><div class="cs-lbl">J0 envoyés</div></div><div class="cs-stat"><div class="cs-val">1</div><div class="cs-lbl">Réponses</div></div><div class="cs-stat"><div class="cs-val" id="cs-clients">0</div><div class="cs-lbl">Clients</div></div></div>
+                    <i data-lucide="chevron-down" size="15" style="color:var(--muted);flex-shrink:0;"></i>
                 </div>
                 <div class="camp-body">
-                    <div style="margin-bottom:14px;">
-                        <strong style="font-size:0.8rem;">Planning d'envoi :</strong>
-                    </div>
-                    <div class="vague-row">
-                        <div class="vague-date">4 juin</div>
-                        <div class="vague-names">Beaud, Capelle-Blancard, Bereni, Lilti, Spire</div>
-                        <div class="touch-badges">
-                            <span class="touch-badge todo" id="v1-j0">J0 ⏳</span>
-                            <span class="touch-badge today" id="v1-j3">J+3 🔴 AUJOURD'HUI</span>
-                            <span class="touch-badge todo" id="v1-j7">J+7 📅 11/06</span>
-                        </div>
-                    </div>
-                    <div class="vague-row">
-                        <div class="vague-date">9 juin</div>
-                        <div class="vague-names">Offenstadt, Fassin, Haegel, Sintomer <em style="color:var(--red);font-size:0.7rem;">(Laurens : STOP)</em></div>
-                        <div class="touch-badges">
-                            <span class="touch-badge today" id="v2-j0">J0 🔴 AUJOURD'HUI</span>
-                            <span class="touch-badge todo" id="v2-j3">J+3 📅 12/06</span>
-                            <span class="touch-badge todo" id="v2-j7">J+7 📅 16/06</span>
-                        </div>
-                    </div>
-                    <div class="vague-row">
-                        <div class="vague-date">10 juin</div>
-                        <div class="vague-names">Guiraudon, Laugier, Siméant, Lefebvre, Israël</div>
-                        <div class="touch-badges">
-                            <span class="touch-badge todo">J0 📅 10/06</span>
-                            <span class="touch-badge todo">J+3 📅 13/06</span>
-                            <span class="touch-badge todo">J+7 📅 17/06</span>
-                        </div>
-                    </div>
-                    <div class="vague-row">
-                        <div class="vague-date">11 juin</div>
-                        <div class="vague-names">Cosandey, Zimmermann, Vidal, Garo</div>
-                        <div class="touch-badges">
-                            <span class="touch-badge todo">J0 📅 11/06</span>
-                            <span class="touch-badge todo">J+3 📅 15/06</span>
-                            <span class="touch-badge todo">J+7 📅 18/06</span>
-                        </div>
-                    </div>
+                    <div class="vague-row"><div class="vague-date">4 juin</div><div class="vague-names">Beaud, Capelle-Blancard, Bereni, Lilti, Spire</div><div class="touch-badges"><span class="tb tb-sent">J0 ✅</span><span class="tb tb-today">J+3 🔴 AUJOURD'HUI</span><span class="tb tb-soon">J+7 📅 11/06</span></div></div>
+                    <div class="vague-row"><div class="vague-date">9 juin</div><div class="vague-names">Offenstadt, Fassin, Haegel, Sintomer <em style="color:var(--red);font-size:.68rem;">(Laurens : STOP)</em></div><div class="touch-badges"><span class="tb tb-sent">J0 ✅</span><span class="tb tb-soon">J+3 📅 12/06</span><span class="tb tb-todo">J+7 📅 16/06</span></div></div>
+                    <div class="vague-row"><div class="vague-date">10 juin</div><div class="vague-names">Guiraudon, Laugier, Siméant, Lefebvre, Israël</div><div class="touch-badges"><span class="tb tb-soon">J0 📅 Demain</span><span class="tb tb-todo">J+3 📅 13/06</span><span class="tb tb-todo">J+7 📅 17/06</span></div></div>
+                    <div class="vague-row"><div class="vague-date">11 juin</div><div class="vague-names">Cosandey, Zimmermann, Vidal, Garo</div><div class="touch-badges"><span class="tb tb-todo">J0 📅 11/06</span><span class="tb tb-todo">J+3 📅 15/06</span><span class="tb tb-todo">J+7 📅 18/06</span></div></div>
                     <div class="divider"></div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn-primary" onclick="showView('prospects')"><i data-lucide="users" size="13"></i> Gérer les prospects</button>
-                        <button class="btn-ghost">Voir les templates emails</button>
-                    </div>
+                    <button class="btn-primary" onclick="showView('prospects')"><i data-lucide="users" size="13"></i> Gérer les prospects</button>
                 </div>
             </div>
-
-            <!-- Campagne 2 : LinkedIn -->
-            <div class="campagne-card" id="camp-linkedin">
-                <div class="campagne-header" onclick="toggleCamp('camp-linkedin')">
-                    <div class="camp-status-dot pending"></div>
-                    <div>
-                        <div class="camp-name">LinkedIn Pro — Outreach Académique</div>
-                        <div class="camp-meta">💼 LinkedIn Sales Navigator · 15 demandes + 5 InMails/jour</div>
-                    </div>
-                    <div class="camp-stats">
-                        <div class="camp-stat"><div class="camp-stat-val">0</div><div class="camp-stat-label">Connexions</div></div>
-                        <div class="camp-stat"><div class="camp-stat-val">0</div><div class="camp-stat-label">InMails</div></div>
-                        <div class="camp-stat"><div class="camp-stat-val">0</div><div class="camp-stat-label">Réponses</div></div>
-                    </div>
-                    <i data-lucide="chevron-down" size="16" style="color:var(--muted); flex-shrink:0;"></i>
-                </div>
-                <div class="camp-body">
-                    <div class="launch-card">
-                        <h3>💼 LinkedIn Pro — 1 mois gratuit disponible</h3>
-                        <p>Activer Sales Navigator pour accéder aux MCF et post-docs actifs LinkedIn. Séquence : demande connexion (sans note) → si accepté → InMail H.I.S.Q. 50 mots.</p>
-                        <p style="font-size:0.72rem; color:var(--muted); margin-bottom:16px;">Test A/B #3 : connexion sans note vs avec note courte.</p>
-                        <div style="display:flex; gap:10px; justify-content:center;">
-                            <button class="btn-launch" onclick="activateCampagne('linkedin')">▶ Activer Sales Navigator</button>
-                            <button class="btn-ghost">Voir la stratégie</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="camp-card" id="camp-linkedin-card">
+                <div class="camp-hdr" onclick="toggleCamp('camp-linkedin-card')"><div class="camp-dot cd-pending"></div><div><div class="camp-name">LinkedIn Pro — Outreach académique</div><div class="camp-meta">💼 Sales Navigator · 1 mois gratuit disponible</div></div><div class="camp-stats"><div class="cs-stat"><div class="cs-val">0</div><div class="cs-lbl">Connexions</div></div><div class="cs-stat"><div class="cs-val">0</div><div class="cs-lbl">Réponses</div></div></div><i data-lucide="chevron-down" size="15" style="color:var(--muted);flex-shrink:0;"></i></div>
+                <div class="camp-body"><div class="launch-card"><h3>💼 Activer LinkedIn Pro</h3><p>Séquence : demande connexion → InMail H.I.S.Q. 50 mots. Test A/B #3 actif.</p><button class="btn-gold" onclick="toast('💼','LinkedIn Pro activé !','+25 XP');addXP(25);">▶ Activer maintenant</button></div></div>
             </div>
-
-            <!-- Campagne 3 : Email universitaire -->
-            <div class="campagne-card" id="camp-univ">
-                <div class="campagne-header" onclick="toggleCamp('camp-univ')">
-                    <div class="camp-status-dot pending"></div>
-                    <div>
-                        <div class="camp-name">Email Universitaire — Étudiant Entrepreneur</div>
-                        <div class="camp-meta">🎓 Identité Tristan étudiant · 10 prospects/semaine · Persona B uniquement</div>
-                    </div>
-                    <div class="camp-stats">
-                        <div class="camp-stat"><div class="camp-stat-val">0</div><div class="camp-stat-label">Envoyés</div></div>
-                        <div class="camp-stat"><div class="camp-stat-val">0</div><div class="camp-stat-label">Réponses</div></div>
-                        <div class="camp-stat"><div class="camp-stat-val">—</div><div class="camp-stat-label">vs Pro</div></div>
-                    </div>
-                    <i data-lucide="chevron-down" size="16" style="color:var(--muted); flex-shrink:0;"></i>
-                </div>
-                <div class="camp-body">
-                    <div class="launch-card">
-                        <h3>🎓 Canal Étudiant Entrepreneur</h3>
-                        <p>Utiliser ton email universitaire pour approcher les post-docs et doctorants finalistes. L'angle "pair-à-pair" génère plus d'empathie que l'email professionnel.</p>
-                        <p style="font-size:0.72rem; color:var(--muted); margin-bottom:16px;">Ce canal alimente le Test A/B #2 : expéditeur pro vs universitaire.</p>
-                        <button class="btn-launch" onclick="activateCampagne('univ')">▶ Lancer ce canal</button>
-                    </div>
-                </div>
+            <div class="camp-card" id="camp-univ-card">
+                <div class="camp-hdr" onclick="toggleCamp('camp-univ-card')"><div class="camp-dot cd-pending"></div><div><div class="camp-name">Email universitaire — Étudiant entrepreneur</div><div class="camp-meta">🎓 Persona B uniquement · Test A/B #2</div></div><div class="camp-stats"><div class="cs-stat"><div class="cs-val">0</div><div class="cs-lbl">Envoyés</div></div><div class="cs-stat"><div class="cs-val">0</div><div class="cs-lbl">Réponses</div></div></div><i data-lucide="chevron-down" size="15" style="color:var(--muted);flex-shrink:0;"></i></div>
+                <div class="camp-body"><div class="launch-card"><h3>🎓 Canal étudiant entrepreneur</h3><p>Angle peer-to-peer pour les post-docs.</p><button class="btn-gold" onclick="toast('🎓','Canal univ. lancé !','+15 XP');addXP(15);">▶ Lancer ce canal</button></div></div>
             </div>
         </div>
-
-        <!-- ═══ VIEW : TESTS A/B ═══ -->
         <div id="view-abtests" class="hidden">
-            <div class="section-header">
-                <div>
-                    <div class="section-title">Tests A/B</div>
-                    <div class="section-sub">Compare les variantes pour maximiser ton taux de réponse</div>
-                </div>
-                <button class="btn-primary"><i data-lucide="plus" size="14"></i> Nouveau test</button>
-            </div>
-
-            <div class="ab-card">
-                <div class="ab-header">
-                    <div>
-                        <div class="ab-name">Test #1 — Objet email : thème vs nom</div>
-                        <div style="font-size:0.72rem; color:var(--muted); margin-top:3px;">Canal : Email froid · Audience : Persona A (MCF)</div>
-                    </div>
-                    <div class="ab-status-chip running">En cours</div>
-                </div>
-                <div class="ab-variants">
-                    <div class="ab-variant">
-                        <div class="ab-var-label">Variante A</div>
-                        <div class="ab-var-name">"[THÈME DE RECHERCHE] — votre profil"</div>
-                        <div class="ab-var-stats">
-                            <div class="ab-var-stat"><div class="ab-var-stat-val" id="ab1a-sent">0</div><div class="ab-var-stat-label">envoyés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val" id="ab1a-rep">0</div><div class="ab-var-stat-label">réponses</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val" id="ab1a-rate">—</div><div class="ab-var-stat-label">taux</div></div>
-                        </div>
-                    </div>
-                    <div class="ab-variant">
-                        <div class="ab-var-label">Variante B</div>
-                        <div class="ab-var-name">"[NOM] — votre hub académique"</div>
-                        <div class="ab-var-stats">
-                            <div class="ab-var-stat"><div class="ab-var-stat-val" id="ab1b-sent">0</div><div class="ab-var-stat-label">envoyés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val" id="ab1b-rep">0</div><div class="ab-var-stat-label">réponses</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val" id="ab1b-rate">—</div><div class="ab-var-stat-label">taux</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ab-footer">Gagnant déclaré automatiquement à 10+ envois par variante · Minimum statistique requis : n≥10</div>
-            </div>
-
-            <div class="ab-card">
-                <div class="ab-header">
-                    <div>
-                        <div class="ab-name">Test #2 — Identité expéditeur : pro vs universitaire</div>
-                        <div style="font-size:0.72rem; color:var(--muted); margin-top:3px;">Canal : Email · Audience : Persona B (post-docs uniquement)</div>
-                    </div>
-                    <div class="ab-status-chip pending">En attente</div>
-                </div>
-                <div class="ab-variants">
-                    <div class="ab-variant">
-                        <div class="ab-var-label">Variante A</div>
-                        <div class="ab-var-name">contact@corpusdigitalis.com — "Tristan, Fondateur"</div>
-                        <div class="ab-var-stats">
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">envoyés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">réponses</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">—</div><div class="ab-var-stat-label">taux</div></div>
-                        </div>
-                    </div>
-                    <div class="ab-variant">
-                        <div class="ab-var-label">Variante B</div>
-                        <div class="ab-var-name">Email universitaire — "Tristan, étudiant entrepreneur"</div>
-                        <div class="ab-var-stats">
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">envoyés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">réponses</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">—</div><div class="ab-var-stat-label">taux</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ab-footer">Démarrage : quand le canal email universitaire est activé · Audience strictement post-docs</div>
-            </div>
-
-            <div class="ab-card">
-                <div class="ab-header">
-                    <div>
-                        <div class="ab-name">Test #3 — LinkedIn : demande sans note vs avec note</div>
-                        <div style="font-size:0.72rem; color:var(--muted); margin-top:3px;">Canal : LinkedIn Pro · Objectif : maximiser le taux d'acceptation</div>
-                    </div>
-                    <div class="ab-status-chip pending">En attente — LinkedIn non encore activé</div>
-                </div>
-                <div class="ab-variants">
-                    <div class="ab-variant">
-                        <div class="ab-var-label">Variante A</div>
-                        <div class="ab-var-name">Demande de connexion sans note (friction zéro)</div>
-                        <div class="ab-var-stats">
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">envoyés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">acceptés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">—</div><div class="ab-var-stat-label">taux</div></div>
-                        </div>
-                    </div>
-                    <div class="ab-variant">
-                        <div class="ab-var-label">Variante B</div>
-                        <div class="ab-var-name">Demande + 1 ligne contexte (max 300 chars)</div>
-                        <div class="ab-var-stats">
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">envoyés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">0</div><div class="ab-var-stat-label">acceptés</div></div>
-                            <div class="ab-var-stat"><div class="ab-var-stat-val">—</div><div class="ab-var-stat-label">taux</div></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="ab-footer">Démarrage : quand LinkedIn Pro est activé · 15 demandes/jour alternées A/B</div>
-            </div>
+            <div class="section-header"><div><div class="section-title">Tests A/B</div><div class="section-sub">Gagnant déclaré à n≥10</div></div></div>
+            <div id="abtests-container"><div class="loading">Chargement…</div></div>
         </div>
-
-        <!-- ═══ VIEW : PROSPECTS ═══ -->
         <div id="view-prospects" class="hidden">
-            <div class="section-header">
-                <div>
-                    <div class="section-title">Pipeline Prospects</div>
-                    <div class="section-sub" id="prospects-sub">20 prospects · Campagne Juin 2026</div>
-                </div>
-                <button class="btn-primary" onclick="exportProspects()"><i data-lucide="download" size="14"></i> Exporter</button>
-            </div>
-
-            <div class="prospects-filters">
-                <button class="filter-btn active" onclick="filterProspects('all', this)">Tous <span id="f-all">20</span></button>
-                <button class="filter-btn" onclick="filterProspects('todo', this)">À contacter <span id="f-todo">0</span></button>
-                <button class="filter-btn" onclick="filterProspects('j0', this)">J0 envoyé <span id="f-j0">0</span></button>
-                <button class="filter-btn" onclick="filterProspects('j3', this)">J+3 <span id="f-j3">0</span></button>
-                <button class="filter-btn" onclick="filterProspects('j7', this)">J+7 <span id="f-j7">0</span></button>
-                <button class="filter-btn" onclick="filterProspects('interested', this)">Intéressés <span id="f-int">0</span></button>
-                <button class="filter-btn" onclick="filterProspects('client', this)">Clients <span id="f-cli">0</span></button>
-                <button class="filter-btn" onclick="filterProspects('stop', this)">STOP <span id="f-stop">0</span></button>
-            </div>
-
-            <div class="prospects-table">
-                <div class="pt-header">
-                    <div class="pt-col-head">Prospect</div>
-                    <div class="pt-col-head">Persona / Vague</div>
-                    <div class="pt-col-head">Canal</div>
-                    <div class="pt-col-head">Statut</div>
-                    <div class="pt-col-head">Notes</div>
-                </div>
-                <div id="prospects-tbody"></div>
+            <div class="section-header"><div><div class="section-title">Pipeline Prospects</div><div class="section-sub" id="prospects-sub">Chargement…</div></div><button class="btn-primary" onclick="exportCSV()"><i data-lucide="download" size="13"></i> CSV</button></div>
+            <div class="filters" id="filters-row"></div>
+            <div class="p-table">
+                <div class="p-thead"><div class="p-th">Prospect</div><div class="p-th">Persona/Vague</div><div class="p-th">Canal</div><div class="p-th">Statut</div><div class="p-th">Notes</div></div>
+                <div id="prospects-tbody"><div class="loading">Chargement…</div></div>
             </div>
         </div>
-
-        <!-- ═══ VIEW : CLIENTS & REVENUS ═══ -->
         <div id="view-clients" class="hidden">
-            <div class="section-header">
-                <div>
-                    <div class="section-title">Clients & Revenus</div>
-                    <div class="section-sub">Données en temps réel depuis Supabase</div>
+            <div class="section-header"><div><div class="section-title">Clients & Revenus</div><div class="section-sub">Live Supabase</div></div></div>
+            <div class="rev-hero">
+                <div style="font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:6px;">Revenus encaissés</div>
+                <div class="rev-amount" id="hero-rev">0 €</div>
+                <div class="rev-lbl" id="hero-rev-lbl">Aucun client encore</div>
+                <div class="milestones">
+                    <div class="milestone" id="ms1"><div class="ms-val">72 €</div><div class="ms-lbl">🔒 Premier client</div></div>
+                    <div class="milestone" id="ms2"><div class="ms-val">216 €</div><div class="ms-lbl">🔒 Early Bird ×3</div></div>
+                    <div class="milestone" id="ms3"><div class="ms-val">1 000 €</div><div class="ms-lbl">🔒 Milestone 1K</div></div>
+                    <div class="milestone" id="ms4"><div class="ms-val">10 000 €</div><div class="ms-lbl">🔒 Milestone 10K</div></div>
                 </div>
             </div>
-
-            <div class="revenue-hero">
-                <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; color:#94a3b8; margin-bottom:8px;">Revenus encaissés</div>
-                <div class="revenue-amount" id="hero-revenue">0 €</div>
-                <div class="revenue-label" id="hero-revenue-sub">Aucun client encore — le premier est proche</div>
-                <div class="revenue-milestones">
-                    <div class="milestone" id="m1">
-                        <div class="milestone-val">72 €</div>
-                        <div class="milestone-label">🔒 Premier client</div>
-                    </div>
-                    <div class="milestone" id="m2">
-                        <div class="milestone-val">216 €</div>
-                        <div class="milestone-label">🔒 Early Bird ×3</div>
-                    </div>
-                    <div class="milestone" id="m3">
-                        <div class="milestone-val">1 000 €</div>
-                        <div class="milestone-label">🔒 Milestone 1K</div>
-                    </div>
-                    <div class="milestone" id="m4">
-                        <div class="milestone-val">10 000 €</div>
-                        <div class="milestone-label">🔒 Milestone 10K</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="clients-table" id="clients-table">
-                <div class="ct-row head">
-                    <div>Client</div><div>Email</div><div>Payé le</div><div>Montant</div>
-                </div>
-                <div id="clients-tbody">
-                    <div class="empty-state">
-                        <h3>Aucun client encore</h3>
-                        <p>Les clients apparaîtront ici automatiquement dès réception du paiement Stripe.</p>
-                    </div>
-                </div>
+            <div class="c-table">
+                <div class="c-row head"><div>Client</div><div>Slug</div><div>Payé le</div><div>Montant</div></div>
+                <div id="clients-tbody"><div class="empty-state"><h3>Aucun client encore</h3><p>Apparaît dès le premier paiement Stripe.</p></div></div>
             </div>
         </div>
-
-    </div><!-- /main -->
-</div><!-- /wrapper -->
-
-<!-- TOAST CONTAINER -->
-<div class="toast-wrap" id="toast-wrap"></div>
-
+        <div id="view-journal" class="hidden">
+            <div class="section-header"><div><div class="section-title">Journal des agents</div><div class="section-sub">Mis à jour automatiquement par Claude</div></div></div>
+            <div id="logs-container"><div class="loading">Chargement…</div></div>
+        </div>
+    </div>
+</div>
+<div id="toast-wrap"></div>
 <script>
-const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const ADMIN_EMAIL = 'contact@corpusdigitalis.com';
-const EARLY_BIRD_DEADLINE = new Date('2026-06-15T23:59:59');
-const EARLY_BIRD_PRICE = 72;
-const STANDARD_PRICE = 96;
-
-// ── DATA ──
-const INITIAL_PROSPECTS = [
-    { id:1,  nom:'Stéphane Beaud',           email:'stephane.beaud@sciencespo-lille.eu',        persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'J+3 dû aujourd\'hui' },
-    { id:2,  nom:'Gunther Capelle-Blancard',  email:'gunther.capelle-blancard@univ-paris1.fr',   persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'LinkedIn actif — DM aussi' },
-    { id:3,  nom:'Laure Bereni',              email:'laure.bereni@cnrs.fr',                      persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'Publication Columbia UP 2021' },
-    { id:4,  nom:'Antoine Lilti',             email:'antoine.lilti@ehess.fr',                    persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'Traduit Harvard UP' },
-    { id:5,  nom:'Alexis Spire',              email:'alexis.spire@ehess.fr',                     persona:'A', vague:1, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-04', notes:'DR CNRS' },
-    { id:6,  nom:'Sylvain Laurens',           email:'sylvain.laurens@ehess.fr',                  persona:'A', vague:2, statut:'STOP ❌', canal:'email', dateJ0:'2026-06-08', notes:'Mise en demeure — ne plus contacter' },
-    { id:7,  nom:'Nicolas Offenstadt',        email:'nicolas.offenstadt@univ-paris1.fr',         persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'Actif réseaux sociaux' },
-    { id:8,  nom:'Éric Fassin',               email:'eric.fassin@univ-paris8.fr',                persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'⚠️ Ton sobre' },
-    { id:9,  nom:'Florence Haegel',           email:'florence.haegel@sciencespo.fr',             persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'Vérifier site perso avant J+3' },
-    { id:10, nom:'Yves Sintomer',             email:'yves.sintomer@univ-paris8.fr',              persona:'A', vague:2, statut:'J0 ✉️', canal:'email', dateJ0:'2026-06-09', notes:'Traduit en 8 langues' },
-    { id:11, nom:'Virginie Guiraudon',        email:'virginie.guiraudon@sciencespo.fr',          persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'Réseau EU — angle international' },
-    { id:12, nom:'Sandra Laugier',            email:'sandra.laugier@univ-paris1.fr',             persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'Articles Mind & Ethics' },
-    { id:13, nom:'Johanna Siméant-Germanos',  email:'johanna.simeant@ens.fr',                    persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'⚠️ Vérifier email ENS vs Paris 1' },
-    { id:14, nom:'Rémi Lefebvre',             email:'remi.lefebvre@univ-lille.fr',               persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'' },
-    { id:15, nom:'Liora Israël',              email:'liora.israel@ehess.fr',                     persona:'A', vague:3, statut:'À contacter', canal:'email', dateJ0:null, notes:'HAL actif 2024' },
-    { id:16, nom:'Fanny Cosandey',            email:'cosandey@ehess.fr',                         persona:'B', vague:4, statut:'À contacter', canal:'email', dateJ0:null, notes:'Vérifier Google avant envoi' },
-    { id:17, nom:'Bénédicte Zimmermann',      email:'benedicte.zimmermann@ehess.fr',             persona:'B', vague:4, statut:'À contacter', canal:'email', dateJ0:null, notes:'⚠️ Email CORRIGÉ — vérifier HAL' },
-    { id:18, nom:'Cécile Vidal',              email:'cecile.vidal@ehess.fr',                     persona:'B', vague:4, statut:'À contacter', canal:'email', dateJ0:null, notes:'Publie en anglais' },
-    { id:19, nom:'Isabelle Garo',             email:'isabelle.garo@parisnanterre.fr',            persona:'B', vague:4, statut:'À contacter', canal:'email', dateJ0:null, notes:'⚠️ Email CORRIGÉ — "Actuel Marx" à vérifier' },
-    { id:20, nom:'Bruno Amable',              email:'bruno.amable@unige.ch',                     persona:'B', vague:4, statut:'⏸ Phase 2',   canal:'email', dateJ0:null, notes:'HORS IDF — Genève — Phase 2' },
+const SB_URL='https://recgvfcuxsonkhlyctrw.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const ADMIN_EMAIL='contact@corpusdigitalis.com';
+const EB_DEADLINE=new Date('2026-06-15T23:59:59');
+const XP_LEVELS=[
+    {min:0,max:100,lv:1,title:'Entrepreneur'},{min:100,max:250,lv:2,title:'Prospecteur'},
+    {min:250,max:500,lv:3,title:'Chasseur'},{min:500,max:900,lv:4,title:'Closer'},
+    {min:900,max:1500,lv:5,title:'Fondateur Confirmé'},{min:1500,max:9999,lv:6,title:'Licorne en Construction'},
 ];
-
-const XP_LEVELS = [
-    { min:0,   max:100,  level:1, title:'Entrepreneur' },
-    { min:100, max:250,  level:2, title:'Prospecteur' },
-    { min:250, max:500,  level:3, title:'Chasseur' },
-    { min:500, max:900,  level:4, title:'Closer' },
-    { min:900, max:1500, level:5, title:'Fondateur Confirmé' },
-    { min:1500,max:9999, level:6, title:'Licorne en Construction' },
+const DAILY_MISSIONS=[
+    {id:'m_j3_v1',text:'Relances J+3 — Beaud, Capelle-B, Bereni, Lilti, Spire',xp:15,urgent:true},
+    {id:'m_emails_v4',text:'Emails J0 — Cosandey, Zimmermann, Vidal, Garo (vérifier HAL)',xp:20,urgent:true},
+    {id:'m_linkedin',text:'Activer LinkedIn Pro (1 mois gratuit)',xp:25},
+    {id:'m_template',text:'Template email confirmation Supabase (5 min)',xp:10},
+    {id:'m_haegel',text:'Vérifier site perso Florence Haegel avant J+3',xp:10},
 ];
-
-const DAILY_MISSIONS = [
-    { id:'m_emails',   text:'Envoyer les 4 emails du 9 juin (Cosandey, Zimmermann, Vidal, Garo)', xp:20, urgent:true },
-    { id:'m_verify',   text:'Vérifier HAL pour Zimmermann et Garo avant envoi', xp:10, urgent:true },
-    { id:'m_relance',  text:'Préparer les relances J+3 pour la vague 1 (dû aujourd\'hui)', xp:15, urgent:true },
-    { id:'m_linkedin', text:'Activer LinkedIn Pro (1 mois gratuit disponible)', xp:25 },
-    { id:'m_template', text:'Coller le template email de confirmation dans Supabase (5 min)', xp:10 },
-    { id:'m_statut',   text:'Mettre à jour les statuts prospects dans le tableau', xp:15 },
-];
-
-const DATA_VERSION = '3'; // bump pour forcer reset localStorage
-
-// ── STATE ──
-let state = {
-    prospects: [],
-    xp: 0,
-    streak: 0,
-    missions: {},
-    clients: [],
-    revenue: 0,
-    filter: 'all',
-};
-
-// ── STORAGE ──
-function saveState() {
-    const toSave = { v: DATA_VERSION, prospects: state.prospects, xp: state.xp, streak: state.streak, missions: state.missions };
-    localStorage.setItem('cd_war_room', JSON.stringify(toSave));
-}
-function loadState() {
-    const saved = localStorage.getItem('cd_war_room');
-    const data = saved ? JSON.parse(saved) : null;
-    if (data && data.v === DATA_VERSION) {
-        state.prospects = data.prospects || INITIAL_PROSPECTS;
-        state.xp = data.xp || 0;
-        state.streak = data.streak || 0;
-        state.missions = data.missions || {};
-    } else {
-        // Reset : nouvelle version des données
-        state.prospects = JSON.parse(JSON.stringify(INITIAL_PROSPECTS));
-        state.xp = 0;
-        state.streak = 1;
-        state.missions = {};
-        checkAndResetDailyMissions();
-    }
-}
-function checkAndResetDailyMissions() {
-    const today = new Date().toDateString();
-    const lastDay = localStorage.getItem('cd_mission_day');
-    if (lastDay !== today) {
-        state.missions = {};
-        localStorage.setItem('cd_mission_day', today);
-    }
-}
-
-// ── AUTH ──
-const PIN_KEY = 'cd_war_pin';
-const CORRECT_PIN = 'corpus2026';
-
-function tryPin() {
-    const val = document.getElementById('pin-input').value;
-    if (val === CORRECT_PIN) {
-        localStorage.setItem(PIN_KEY, CORRECT_PIN);
-        document.getElementById('lockscreen').style.display = 'none';
-        init();
-    } else {
-        document.getElementById('pin-error').style.display = 'block';
-        document.getElementById('pin-input').value = '';
-        document.getElementById('pin-input').focus();
-    }
-}
-
-async function checkAuth() {
-    const stored = localStorage.getItem(PIN_KEY);
-    if (stored === CORRECT_PIN) {
-        document.getElementById('lockscreen').style.display = 'none';
-        return true;
-    }
-    document.getElementById('pin-input').focus();
-    return false;
-}
-
-async function handleLogout() {
-    localStorage.removeItem(PIN_KEY);
-    location.reload();
-}
-
-// ── SUPABASE DATA ──
-async function fetchClients() {
-    const { data } = await sb.from('profiles')
-        .select('id, name, slug, paid_at, created_at')
-        .eq('is_active', true)
-        .not('paid_at', 'is', null)
-        .order('paid_at', { ascending: false });
-    if (data) {
-        state.clients = data;
-        state.revenue = data.length * EARLY_BIRD_PRICE;
-        updateClientBadge();
-        renderClientsView();
-    }
-}
-
-// ── UI: NAVIGATION ──
-const VIEWS = ['overview','campagnes','abtests','prospects','clients'];
-const VIEW_TITLES = { overview:'Vue d\'ensemble', campagnes:'Campagnes', abtests:'Tests A/B', prospects:'Prospects', clients:'Clients & Revenus' };
-
-function showView(name) {
-    VIEWS.forEach(v => {
-        document.getElementById('view-' + v).classList.toggle('hidden', v !== name);
-    });
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    document.querySelector(`[onclick="showView('${name}')"]`)?.classList.add('active');
-    document.getElementById('topbar-title').textContent = VIEW_TITLES[name];
-    if (name === 'overview') renderOverview();
-    if (name === 'prospects') renderProspects();
-    if (name === 'clients') renderClientsView();
-}
-
-// ── UI: OVERVIEW ──
-function renderOverview() {
-    const contacted = state.prospects.filter(p => p.statut !== 'À contacter' && p.statut !== '⏸ Phase 2').length;
-    const replied = state.prospects.filter(p => ['Intéressé ⭐','Client ✅','STOP ❌'].includes(p.statut)).length;
-    const rate = contacted > 0 ? Math.round(replied / contacted * 100) : null;
-
-    animateCounter('kpi-clients', state.clients.length);
-    document.getElementById('kpi-revenue').textContent = state.revenue + ' €';
-    animateCounter('kpi-contacted', contacted);
-    document.getElementById('kpi-rate').textContent = rate !== null ? rate + '%' : '—';
-    document.getElementById('kpi-contacted-sub').textContent = `sur ${state.prospects.filter(p=>p.statut!=='⏸ Phase 2').length} prévus`;
-
-    // Pipeline
-    const emailSent = state.prospects.filter(p => p.canal==='email' && p.statut !== 'À contacter').length;
-    setProgress('prog-email', emailSent, 20, 'prog-email-val');
-    setProgress('prog-linkedin', 0, 50, 'prog-linkedin-val');
-    setProgress('prog-univ', 0, 30, 'prog-univ-val');
-    setProgress('prog-clients-obj', state.clients.length, 3, 'prog-clients-val');
-
-    // Objectif EB
-    const pct = Math.min(100, Math.round(state.clients.length / 3 * 100));
-    document.getElementById('obj-fill').style.width = pct + '%';
-    document.getElementById('obj-clients-done').textContent = state.clients.length + ' client' + (state.clients.length>1?'s':'');
-    const daysLeft = Math.ceil((EARLY_BIRD_DEADLINE - new Date()) / 86400000);
-    document.getElementById('obj-days-text').textContent = daysLeft > 0 ? daysLeft : '0';
-    document.getElementById('days-left').textContent = daysLeft > 0 ? daysLeft : '0';
-    document.getElementById('obj-days-chip').innerHTML = `⏰ <span>${daysLeft}</span> jours restants`;
-
-    // Missions
-    renderMissions();
-    renderNextSteps();
-    updateXPDisplay();
-}
-
-function renderNextSteps() {
-    const contacted = state.prospects.filter(p => p.statut !== 'À contacter' && p.statut !== '⏸ Phase 2').length;
-    const steps = [];
-
-    if (!state.missions['m_emails']) {
-        steps.push({ urgent:true, action:'Envoyer 4 emails — Cosandey, Zimmermann, Vidal, Garo', detail:'COMMERCIAL/20_emails_prets_J0.md → emails 16 à 19 · Vérifier Google + HAL d\'abord' });
-    }
-    if (!state.missions['m_relance']) {
-        steps.push({ urgent:true, action:'Relances J+3 — Vague 1 (dû aujourd\'hui)', detail:'Beaud, Capelle-Blancard, Bereni, Lilti, Spire · SEQUENCES_RELANCES.md' });
-    }
-    if (!state.missions['m_linkedin']) {
-        steps.push({ action:'Activer LinkedIn Pro (1 mois gratuit)', detail:'Accès : linkedin.com → essai gratuit Sales Navigator → lancer la campagne' });
-    }
-    if (!state.missions['m_template']) {
-        steps.push({ action:'Template email Supabase (5 min)', detail:'app.supabase.com → Authentication → Email Templates → coller Email n°1' });
-    }
-    steps.push({ action:'Relances J+7 — Vague 1', detail:'Dû le 11 juin · Beaud, Capelle-Blancard, Bereni, Lilti, Spire' });
-
-    const el = document.getElementById('next-steps-list');
-    el.innerHTML = steps.slice(0,4).map((s, i) => `
-        <div class="next-step-item ${s.urgent ? 'step-urgent' : ''}">
-            <div class="step-num">${i+1}</div>
-            <div class="step-content">
-                <div class="step-action">${s.action}</div>
-                <div class="step-detail">${s.detail}</div>
-            </div>
-        </div>`).join('');
-}
-
-function renderMissions() {
-    const el = document.getElementById('missions-list');
-    let totalXP = DAILY_MISSIONS.reduce((a,m) => state.missions[m.id] ? a : a+m.xp, 0);
-    document.getElementById('missions-xp-total').textContent = `+${totalXP} XP disponibles`;
-    el.innerHTML = DAILY_MISSIONS.map(m => `
-        <div class="mission-item ${state.missions[m.id] ? 'done' : ''}" onclick="completeMission('${m.id}', ${m.xp})">
-            <div class="mission-check">${state.missions[m.id] ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : ''}</div>
-            <div class="mission-text ${m.urgent && !state.missions[m.id] ? 'step-urgent' : ''}">${m.urgent && !state.missions[m.id] ? '🔴 ' : ''}${m.text}</div>
-            <div class="mission-xp">+${m.xp} XP</div>
-        </div>`).join('');
-}
-
-function completeMission(id, xp) {
-    if (state.missions[id]) return;
-    state.missions[id] = true;
-    addXP(xp, '✅ Mission accomplie');
-    saveState();
-    renderMissions();
-    renderNextSteps();
-}
-
-// ── UI: PROSPECTS ──
-const STATUS_OPTS = ['À contacter','J0 ✉️','J+3 ✉️','J+7 ✉️','Breakup ✉️','Intéressé ⭐','Client ✅','STOP ❌','⏸ Phase 2'];
-const STATUS_CLASS = {'À contacter':'todo','J0 ✉️':'j0','J+3 ✉️':'j3','J+7 ✉️':'j7','Breakup ✉️':'j7','Intéressé ⭐':'interested','Client ✅':'client','STOP ❌':'stop','⏸ Phase 2':'pause'};
-
-function renderProspects() {
-    updateFilterCounts();
-    const filtered = state.filter === 'all' ? state.prospects : state.prospects.filter(p => mapFilterToStatus(p.statut) === state.filter);
-    const tbody = document.getElementById('prospects-tbody');
-    tbody.innerHTML = filtered.map(p => `
-        <div class="pt-row ${p.statut === 'STOP ❌' ? '' : (isUrgent(p) ? 'urgent' : '')}">
-            <div>
-                <div class="pt-name">${p.nom}</div>
-                <div class="pt-sub">${p.email}</div>
-            </div>
-            <div>
-                <span class="pt-persona ${p.persona}">${p.persona}</span>
-                <span class="pt-sub" style="display:inline;margin-left:6px;">Vague ${p.vague}</span>
-            </div>
-            <div><span style="font-size:0.78rem;">${p.canal === 'email' ? '📧' : p.canal === 'linkedin' ? '💼' : '🎓'}</span></div>
-            <div>
-                <select class="status-select" onchange="updateProspectStatus(${p.id}, this.value)">
-                    ${STATUS_OPTS.map(s => `<option value="${s}" ${p.statut===s?'selected':''}>${s}</option>`).join('')}
-                </select>
-            </div>
-            <div class="pt-notes" title="${p.notes}">${p.notes || '—'}</div>
-        </div>`).join('') || '<div class="empty-state"><h3>Aucun prospect dans ce filtre</h3></div>';
-    document.getElementById('prospects-sub').textContent = `${filtered.length} prospect${filtered.length>1?'s':''} · Campagne Juin 2026`;
-}
-
-function isUrgent(p) {
-    if (p.statut === 'J0 ✉️' && p.dateJ0) {
-        const diff = Math.ceil((new Date() - new Date(p.dateJ0)) / 86400000);
-        return diff >= 3;
-    }
-    return false;
-}
-
-function mapFilterToStatus(s) {
-    if (s === 'À contacter') return 'todo';
-    if (s === 'J0 ✉️') return 'j0';
-    if (s === 'J+3 ✉️') return 'j3';
-    if (['J+7 ✉️','Breakup ✉️'].includes(s)) return 'j7';
-    if (s === 'Intéressé ⭐') return 'interested';
-    if (s === 'Client ✅') return 'client';
-    if (s === 'STOP ❌') return 'stop';
-    return 'other';
-}
-
-function updateFilterCounts() {
-    const counts = { todo:0, j0:0, j3:0, j7:0, interested:0, client:0, stop:0 };
-    state.prospects.forEach(p => { const k = mapFilterToStatus(p.statut); if (counts[k]!==undefined) counts[k]++; });
-    document.getElementById('f-all').textContent = state.prospects.length;
-    Object.keys(counts).forEach(k => { const el = document.getElementById('f-'+k); if(el) el.textContent = counts[k]; });
-}
-
-function filterProspects(f, btn) {
-    state.filter = f;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderProspects();
-}
-
-function updateProspectStatus(id, newStatus) {
-    const p = state.prospects.find(x => x.id === id);
-    if (!p) return;
-    const old = p.statut;
-    p.statut = newStatus;
-    if (newStatus === 'J0 ✉️' && !p.dateJ0) { p.dateJ0 = new Date().toISOString().slice(0,10); }
-    saveState();
-    handleStatusXP(old, newStatus);
-    updateClientBadge();
-    renderProspects();
-}
-
-function handleStatusXP(oldS, newS) {
-    const xpMap = { 'J0 ✉️':5, 'J+3 ✉️':3, 'J+7 ✉️':3, 'Intéressé ⭐':30, 'Client ✅':100 };
-    if (xpMap[newS]) addXP(xpMap[newS], newS === 'Client ✅' ? '🏆 Nouveau client !' : '📨 Prospect mis à jour');
-    if (newS === 'Client ✅') showToast('🏆', 'Premier client signé !', '+100 XP');
-}
-
-function exportProspects() {
-    const rows = ['Nom,Email,Persona,Vague,Canal,Statut,Notes'];
-    state.prospects.forEach(p => rows.push(`"${p.nom}","${p.email}",${p.persona},${p.vague},${p.canal},"${p.statut}","${p.notes}"`));
-    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'prospects.csv'; a.click();
-}
-
-// ── UI: CLIENTS ──
-function renderClientsView() {
-    document.getElementById('hero-revenue').textContent = state.revenue + ' €';
-    document.getElementById('hero-revenue-sub').textContent = state.clients.length === 0
-        ? 'Aucun client encore — le premier est proche'
-        : `${state.clients.length} client${state.clients.length>1?'s':''} actifs · ${EARLY_BIRD_PRICE}€/an`;
-    updateMilestones();
-    const tbody = document.getElementById('clients-tbody');
-    if (state.clients.length === 0) {
-        tbody.innerHTML = '<div class="empty-state"><h3>Aucun client encore</h3><p>Apparaît automatiquement dès le premier paiement Stripe.</p></div>';
-    } else {
-        tbody.innerHTML = state.clients.map(c => `
-            <div class="ct-row">
-                <div><strong>${c.name || 'Prof'}</strong><br><span style="font-size:0.68rem;color:var(--muted);">${c.slug}.corpusdigitalis.com</span></div>
-                <div style="font-size:0.75rem;color:var(--muted);">—</div>
-                <div style="font-size:0.75rem;">${c.paid_at ? new Date(c.paid_at).toLocaleDateString('fr-FR') : '—'}</div>
-                <div><strong style="color:var(--green);">${EARLY_BIRD_PRICE} €</strong></div>
-            </div>`).join('');
-    }
-}
-
-function updateMilestones() {
-    const r = state.revenue;
-    if (r >= 72) { document.getElementById('m1').classList.add('unlocked'); document.getElementById('m1').innerHTML = '<div class="milestone-val">72 €</div><div class="milestone-label">✅ Premier client</div>'; }
-    if (r >= 216) { document.getElementById('m2').classList.add('unlocked'); document.getElementById('m2').innerHTML = '<div class="milestone-val">216 €</div><div class="milestone-label">✅ Early Bird ×3</div>'; }
-    if (r >= 1000) { document.getElementById('m3').classList.add('unlocked'); document.getElementById('m3').innerHTML = '<div class="milestone-val">1 000 €</div><div class="milestone-label">✅ Milestone 1K</div>'; }
-    if (r >= 10000) { document.getElementById('m4').classList.add('unlocked'); document.getElementById('m4').innerHTML = '<div class="milestone-val">10 000 €</div><div class="milestone-label">✅ Milestone 10K</div>'; }
-}
-
-// ── UI: BADGES & SIDEBAR ──
-function updateClientBadge() {
-    document.getElementById('badge-clients').textContent = state.clients.length;
-    document.getElementById('kpi-clients').textContent = state.clients.length;
-    document.getElementById('kpi-revenue').textContent = state.revenue + ' €';
-}
-
-// ── CAMPAGNES ──
-function toggleCamp(id) {
-    document.getElementById(id).classList.toggle('open');
-}
-function activateCampagne(type) {
-    if (type === 'linkedin') { addXP(25, '🚀 LinkedIn Pro activé'); showToast('💼', 'LinkedIn Pro lancé !', '+25 XP'); }
-    if (type === 'univ') { addXP(15, '🎓 Canal Universitaire lancé'); showToast('🎓', 'Canal email univ. lancé !', '+15 XP'); }
-}
-
-// ── XP SYSTEM ──
-function addXP(amount, reason) {
-    state.xp += amount;
-    saveState();
-    updateXPDisplay();
-    showToast('⭐', reason, `+${amount} XP`);
-}
-
-function updateXPDisplay() {
-    const lvl = XP_LEVELS.find(l => state.xp >= l.min && state.xp < l.max) || XP_LEVELS[XP_LEVELS.length-1];
-    const pct = Math.min(100, Math.round((state.xp - lvl.min) / (lvl.max - lvl.min) * 100));
-    document.getElementById('xp-level-label').textContent = `Niveau ${lvl.level} — Fondateur`;
-    document.getElementById('xp-title').textContent = lvl.title;
-    document.getElementById('xp-bar').style.width = pct + '%';
-    document.getElementById('xp-current').textContent = state.xp + ' XP';
-    document.getElementById('xp-next').textContent = lvl.max + ' XP';
-    document.getElementById('streak-text').textContent = `Streak : ${state.streak} jour${state.streak!==1?'s':''}`;
-}
-
-// ── TOAST ──
-function showToast(icon, text, xp) {
-    const wrap = document.getElementById('toast-wrap');
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${text}</span><span class="toast-xp">${xp}</span>`;
-    wrap.appendChild(t);
-    setTimeout(() => t.remove(), 3500);
-}
-
-// ── HELPERS ──
-function setProgress(barId, val, max, valId) {
-    const pct = max > 0 ? Math.min(100, Math.round(val/max*100)) : 0;
-    document.getElementById(barId).style.width = pct + '%';
-    if (valId) document.getElementById(valId).textContent = `${val}/${max}`;
-}
-
-function animateCounter(id, target) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    let current = 0;
-    const step = Math.max(1, Math.ceil(target / 30));
-    const timer = setInterval(() => {
-        current = Math.min(current + step, target);
-        el.textContent = current;
-        if (current >= target) clearInterval(timer);
-    }, 30);
-}
-
-function setTopbarDate() {
-    const now = new Date();
-    document.getElementById('topbar-date').textContent = now.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' });
-}
-
-// ── INIT ──
-async function init() {
-    const ok = await checkAuth();
-    if (!ok) return; // lockscreen stays visible
-    loadState();
-    checkAndResetDailyMissions();
-    setTopbarDate();
-    lucide.createIcons();
-    await fetchClients();
-    renderOverview();
-    // Deadline chip
-    const daysLeft = Math.ceil((EARLY_BIRD_DEADLINE - new Date()) / 86400000);
-    if (daysLeft <= 3) document.getElementById('deadline-chip').classList.add('soon');
-    if (daysLeft <= 0) document.getElementById('deadline-chip').style.background = 'var(--red-light)';
-}
-
+const STATUS_OPTS=['À contacter','J0 ✉️','J+3 ✉️','J+7 ✉️','Breakup ✉️','Intéressé ⭐','Client ✅','STOP ❌','⏸ Phase 2'];
+const STATUS_MAP={'À contacter':'todo','J0 ✉️':'j0','J+3 ✉️':'j3','J+7 ✉️':'j7','Breakup ✉️':'j7','Intéressé ⭐':'interested','Client ✅':'client','STOP ❌':'stop','⏸ Phase 2':'pause'};
+const LOG_TYPES={agent_debate:{cls:'lt-debate',lbl:'Débat agents'},strategy:{cls:'lt-strategy',lbl:'Stratégie'},lecon:{cls:'lt-lecon',lbl:'Leçon'},retour_client:{cls:'lt-retour',lbl:'Retour client'},analyse:{cls:'lt-analyse',lbl:'Analyse'}};
+const VIEWS=['overview','campagnes','abtests','prospects','clients','journal'];
+const VIEW_TITLES={overview:'Vue d\'ensemble',campagnes:'Campagnes',abtests:'Tests A/B',prospects:'Prospects',clients:'Clients & Revenus',journal:'Journal des agents'};
+let state={prospects:[],abtests:[],logs:[],clients:[],revenue:0,filter:'all'};
+function getXP(){return{xp:+localStorage.getItem('cd_xp')||0,streak:+localStorage.getItem('cd_streak')||0,missions:JSON.parse(localStorage.getItem('cd_missions')||'{}'),missionDay:localStorage.getItem('cd_mday')||''};}
+function saveXP(d){localStorage.setItem('cd_xp',d.xp);localStorage.setItem('cd_streak',d.streak);localStorage.setItem('cd_missions',JSON.stringify(d.missions));localStorage.setItem('cd_mday',d.missionDay);}
+function addXP(amt,reason=''){const d=getXP();d.xp+=amt;saveXP(d);updateXPDisplay();if(reason)toast('⭐',reason,`+${amt} XP`);}
+function updateXPDisplay(){const d=getXP();const lvl=XP_LEVELS.find(l=>d.xp>=l.min&&d.xp<l.max)||XP_LEVELS[XP_LEVELS.length-1];const pct=Math.min(100,Math.round((d.xp-lvl.min)/(lvl.max-lvl.min)*100));document.getElementById('xp-lv').textContent=`Niveau ${lvl.lv}`;document.getElementById('xp-ttl').textContent=lvl.title;document.getElementById('xp-bar').style.width=pct+'%';document.getElementById('xp-cur').textContent=d.xp+' XP';document.getElementById('xp-nxt').textContent=lvl.max+' XP';document.getElementById('streak-txt').textContent=`Streak : ${d.streak} jour${d.streak!==1?'s':''}`; }
+async function tryLogin(){const btn=document.getElementById('login-btn');const pw=document.getElementById('pin-input').value;btn.disabled=true;btn.textContent='Connexion…';const{data,error}=await sb.auth.signInWithPassword({email:ADMIN_EMAIL,password:pw});if(error){document.getElementById('pin-error').style.display='block';document.getElementById('pin-input').value='';document.getElementById('pin-input').focus();btn.disabled=false;btn.textContent='Entrer →';}else{document.getElementById('lockscreen').style.display='none';boot();}}
+async function checkAuth(){const{data:{session}}=await sb.auth.getSession();if(session&&session.user.email===ADMIN_EMAIL){document.getElementById('lockscreen').style.display='none';return true;}document.getElementById('pin-input').focus();return false;}
+async function handleLogout(){await sb.auth.signOut();location.reload();}
+async function loadAll(){const[p,a,l,c]=await Promise.all([sb.from('commercial_prospects').select('*').order('vague,id'),sb.from('commercial_abtests').select('*').order('id'),sb.from('commercial_logs').select('*').order('created_at',{ascending:false}),sb.from('profiles').select('id,name,slug,paid_at').eq('is_active',true).not('paid_at','is',null).order('paid_at',{ascending:false})]);state.prospects=p.data||[];state.abtests=a.data||[];state.logs=l.data||[];state.clients=c.data||[];state.revenue=state.clients.length*72;updateBadges();}
+function updateBadges(){document.getElementById('badge-clients').textContent=state.clients.length;document.getElementById('badge-prospects').textContent=state.prospects.length;document.getElementById('badge-logs').textContent=state.logs.length;}
+function showView(v){VIEWS.forEach(x=>document.getElementById('view-'+x).classList.toggle('hidden',x!==v));document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));document.querySelector(`[onclick="showView('${v}')"]`)?.classList.add('active');document.getElementById('topbar-title').textContent=VIEW_TITLES[v];if(v==='overview')renderOverview();if(v==='abtests')renderABTests();if(v==='prospects')renderProspects();if(v==='clients')renderClients();if(v==='journal')renderJournal();}
+function renderOverview(){const contacted=state.prospects.filter(p=>p.statut!=='À contacter'&&p.statut!=='⏸ Phase 2').length;const replied=state.prospects.filter(p=>['Intéressé ⭐','Client ✅','STOP ❌'].includes(p.statut)).length;const rate=contacted>0?Math.round(replied/contacted*100):null;document.getElementById('kpi-clients').textContent=state.clients.length;document.getElementById('kpi-revenue').textContent=state.revenue+'€';document.getElementById('kpi-contacted').textContent=contacted;document.getElementById('kpi-rate').textContent=rate!==null?rate+'%':'—';const emailSent=state.prospects.filter(p=>p.canal==='email'&&p.statut!=='À contacter'&&p.statut!=='⏸ Phase 2').length;setBar('prog-email',emailSent,20,'pv-email');setBar('prog-linkedin',0,50,'pv-linkedin');setBar('prog-univ',0,30,'pv-univ');setBar('prog-clients',state.clients.length,3,'pv-clients');const pct=Math.min(100,Math.round(state.clients.length/3*100));document.getElementById('obj-fill').style.width=pct+'%';document.getElementById('obj-done').textContent=state.clients.length+' client'+(state.clients.length>1?'s':'');const daysLeft=Math.max(0,Math.ceil((EB_DEADLINE-new Date())/86400000));document.getElementById('days-left').textContent=daysLeft;document.getElementById('obj-days-chip').textContent='⏰ '+daysLeft+' jours';renderNextSteps();renderMissions();updateXPDisplay();}
+function renderNextSteps(){const d=getXP();const steps=[];if(!d.missions['m_j3_v1'])steps.push({urgent:true,action:'Relances J+3 Vague 1 (aujourd\'hui)',detail:'Beaud, Capelle-B, Bereni, Lilti, Spire'});if(!d.missions['m_emails_v4'])steps.push({urgent:true,action:'Emails J0 Vague 4',detail:'Cosandey, Zimmermann, Vidal, Garo · vérifier HAL avant'});if(!d.missions['m_linkedin'])steps.push({action:'Activer LinkedIn Pro',detail:'linkedin.com → Sales Navigator'});steps.push({action:'Relances J+7 Vague 1 (11 juin)',detail:'Beaud, Capelle-B, Bereni, Lilti, Spire'});const el=document.getElementById('next-steps-block');el.innerHTML='<div class="ns-title"><i data-lucide="zap" size="12"></i> PROCHAINES ÉTAPES</div>'+steps.slice(0,4).map((s,i)=>`<div class="ns-item"><div class="step-num ${s.urgent?'urgent':''}}">${i+1}</div><div><div class="step-action">${s.action}</div><div class="step-detail">${s.detail}</div></div></div>`).join('');lucide.createIcons();}
+function renderMissions(){const d=getXP();const today=new Date().toDateString();if(d.missionDay!==today){d.missions={};d.missionDay=today;saveXP(d);}const avail=DAILY_MISSIONS.reduce((a,m)=>d.missions[m.id]?a:a+m.xp,0);document.getElementById('missions-xp').textContent=`+${avail} XP disponibles`;document.getElementById('missions-list').innerHTML=DAILY_MISSIONS.map(m=>`<div class="mission-item ${d.missions[m.id]?'done':''}" onclick="completeMission('${m.id}',${m.xp})"><div class="m-check">${d.missions[m.id]?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':''}</div><div class="m-text">${m.urgent&&!d.missions[m.id]?'🔴 ':''}${m.text}</div><div class="m-xp">+${m.xp} XP</div></div>`).join('');}
+function completeMission(id,xp){const d=getXP();if(d.missions[id])return;d.missions[id]=true;saveXP(d);addXP(xp,'✅ Mission accomplie');renderMissions();}
+function renderABTests(){const el=document.getElementById('abtests-container');if(!state.abtests.length){el.innerHTML='<div class="empty-state"><h3>Aucun test</h3></div>';return;}el.innerHTML=state.abtests.map(t=>{const rateA=t.sent_a>0?Math.round(t.rep_a/t.sent_a*100)+'%':'—';const rateB=t.sent_b>0?Math.round(t.rep_b/t.sent_b*100)+'%':'—';const chipCls=t.statut==='running'?'running':t.statut==='completed'?'completed':'pending';const chipTxt=t.statut==='running'?'En cours':t.statut==='completed'?'Terminé':'En attente';return `<div class="ab-card"><div class="ab-hdr"><div><div class="ab-name">Test #${t.id} — ${t.nom}</div><div style="font-size:.7rem;color:var(--muted);margin-top:2px;">${t.variable}</div></div><div class="ab-chip ${chipCls}">${chipTxt}</div></div><div class="ab-variants"><div class="ab-var ${t.rep_a>t.rep_b&&t.sent_a>0?'leader':''}"><div class="ab-var-lbl">Variante A</div><div class="ab-var-name">${t.variante_a_label}</div><div class="ab-var-stats"><div><div class="ab-stat-val">${t.sent_a}</div><div class="ab-stat-lbl">envoyés</div></div><div><div class="ab-stat-val">${t.rep_a}</div><div class="ab-stat-lbl">réponses</div></div><div><div class="ab-stat-val">${rateA}</div><div class="ab-stat-lbl">taux</div></div></div></div><div class="ab-var ${t.rep_b>t.rep_a&&t.sent_b>0?'leader':''}"><div class="ab-var-lbl">Variante B</div><div class="ab-var-name">${t.variante_b_label}</div><div class="ab-var-stats"><div><div class="ab-stat-val">${t.sent_b}</div><div class="ab-stat-lbl">envoyés</div></div><div><div class="ab-stat-val">${t.rep_b}</div><div class="ab-stat-lbl">réponses</div></div><div><div class="ab-stat-val">${rateB}</div><div class="ab-stat-lbl">taux</div></div></div></div></div><div class="ab-foot">${t.gagnant?'Gagnant : '+t.gagnant:'En attente de données (n≥10)'}</div></div>`;}).join('');}
+function renderProspects(){const counts={all:state.prospects.length,todo:0,j0:0,j3:0,j7:0,interested:0,client:0,stop:0};state.prospects.forEach(p=>{const k=STATUS_MAP[p.statut];if(k&&counts[k]!==undefined)counts[k]++;});const FILTERS=[{k:'all',lbl:'Tous'},{k:'todo',lbl:'À contacter'},{k:'j0',lbl:'J0'},{k:'j3',lbl:'J+3'},{k:'j7',lbl:'J+7'},{k:'interested',lbl:'Intéressés'},{k:'client',lbl:'Clients'},{k:'stop',lbl:'STOP'}];document.getElementById('filters-row').innerHTML=FILTERS.map(f=>`<button class="f-btn ${state.filter===f.k?'active':''}" onclick="setFilter('${f.k}')">${f.lbl} ${counts[f.k]||0}</button>`).join('');const filtered=state.filter==='all'?state.prospects:state.prospects.filter(p=>STATUS_MAP[p.statut]===state.filter);document.getElementById('prospects-sub').textContent=`${filtered.length} prospect${filtered.length>1?'s':''} · Campagne Juin 2026`;document.getElementById('prospects-tbody').innerHTML=filtered.map(p=>`<div class="p-row"><div><div class="p-name">${p.nom}</div><div class="p-sub">${p.email||'—'}</div></div><div><span class="persona-badge pb-${p.persona}">${p.persona}</span> <span style="font-size:.68rem;color:var(--muted);">V${p.vague}</span></div><div><span style="font-size:.8rem;">${p.canal==='email'?'📧':p.canal==='linkedin'?'💼':'🎓'}</span></div><div><select class="status-sel" onchange="updateStatus(${p.id},this.value)">${STATUS_OPTS.map(s=>`<option value="${s}" ${p.statut===s?'selected':''}>${s}</option>`).join('')}</select></div><div class="p-notes" title="${p.notes||''}">${p.notes||'—'}</div></div>`).join('')||'<div class="empty-state"><h3>Aucun prospect</h3></div>';}
+function setFilter(f){state.filter=f;renderProspects();}
+async function updateStatus(id,newStatus){const p=state.prospects.find(x=>x.id===id);if(!p)return;p.statut=newStatus;const upd={statut:newStatus};if(newStatus==='J0 ✉️'&&!p.date_j0)upd.date_j0=new Date().toISOString().slice(0,10);await sb.from('commercial_prospects').update(upd).eq('id',id);const xpMap={'J0 ✉️':5,'J+3 ✉️':3,'J+7 ✉️':3,'Intéressé ⭐':30,'Client ✅':100};if(xpMap[newStatus])addXP(xpMap[newStatus],newStatus==='Client ✅'?'🏆 Nouveau client !':'📨 Mis à jour');updateBadges();renderProspects();}
+function exportCSV(){const rows=['Nom,Email,Persona,Vague,Canal,Statut,Notes'];state.prospects.forEach(p=>rows.push(`"${p.nom}","${p.email||''}",${p.persona},${p.vague},${p.canal},"${p.statut}","${(p.notes||'').replace(/"/g,'""')}"`));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='prospects.csv';a.click();}
+function renderClients(){document.getElementById('hero-rev').textContent=state.revenue+' €';document.getElementById('hero-rev-lbl').textContent=state.clients.length===0?'Aucun client encore — le premier est proche':`${state.clients.length} client${state.clients.length>1?'s':''} actifs`;const r=state.revenue;[[72,'ms1','✅ Premier client'],[216,'ms2','✅ Early Bird ×3'],[1000,'ms3','✅ Milestone 1K'],[10000,'ms4','✅ Milestone 10K']].forEach(([min,id,lbl])=>{if(r>=min){const el=document.getElementById(id);el.classList.add('unlocked');el.querySelector('.ms-lbl').textContent=lbl;}});document.getElementById('clients-tbody').innerHTML=state.clients.length===0?'<div class="empty-state"><h3>Aucun client encore</h3><p>Apparaît dès le premier paiement.</p></div>':state.clients.map(c=>`<div class="c-row"><div><strong>${c.name||'Prof'}</strong></div><div style="font-size:.72rem;color:var(--muted);">${c.slug}.corpusdigitalis.com</div><div style="font-size:.72rem;">${c.paid_at?new Date(c.paid_at).toLocaleDateString('fr-FR'):'—'}</div><div><strong style="color:var(--green);">72 €</strong></div></div>`).join('');}
+function renderJournal(){const el=document.getElementById('logs-container');if(!state.logs.length){el.innerHTML='<div class="empty-state"><h3>Aucune entrée</h3><p>Les analyses et débats d\'agents sont ajoutés automatiquement par Claude.</p></div>';return;}document.getElementById('badge-logs').textContent=state.logs.length;el.innerHTML=state.logs.map((l,i)=>{const t=LOG_TYPES[l.type]||{cls:'lt-analyse',lbl:l.type};const agentsArr=l.agents?l.agents.split(',').map(a=>a.trim()).filter(Boolean):[];return `<div class="log-card" id="log-${i}"><div class="log-hdr" onclick="toggleLog('log-${i}')"><span class="log-type-badge ${t.cls}">${t.lbl}</span><div><div class="log-titre">${l.titre}</div><div class="log-meta">${new Date(l.date_log||l.created_at).toLocaleDateString('fr-FR')}${agentsArr.length?' · '+agentsArr.join(', '):''}</div></div><i data-lucide="chevron-down" size="14" style="color:var(--muted);flex-shrink:0;"></i></div><div class="log-body">${l.contenu}</div></div>`;}).join('');lucide.createIcons();}
+function toggleLog(id){document.getElementById(id).classList.toggle('open');}
+function toggleCamp(id){document.getElementById(id).classList.toggle('open');}
+function setBar(barId,val,max,valId){const pct=max>0?Math.min(100,Math.round(val/max*100)):0;document.getElementById(barId).style.width=pct+'%';document.getElementById(valId).textContent=`${val}/${max}`;}
+function toast(icon,text,xp){const w=document.getElementById('toast-wrap');const t=document.createElement('div');t.className='toast';t.innerHTML=`<span class="t-icon">${icon}</span><span class="t-text">${text}</span><span class="t-xp">${xp}</span>`;w.appendChild(t);setTimeout(()=>t.remove(),3500);}
+async function boot(){document.getElementById('topbar-date').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});const daysLeft=Math.max(0,Math.ceil((EB_DEADLINE-new Date())/86400000));document.getElementById('days-left').textContent=daysLeft;lucide.createIcons();await loadAll();renderOverview();}
+async function init(){const ok=await checkAuth();if(!ok)return;await boot();}
 init();
 </script>
 </body>
