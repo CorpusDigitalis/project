@@ -269,16 +269,22 @@
 </div>
 
 <script>
-    // Initialisation des icônes
-    lucide.createIcons();
+    // Initialisation des icônes — ne doit JAMAIS bloquer la page si le CDN échoue
+    function safeIcons() { try { lucide.createIcons(); } catch (e) {} }
+    safeIcons();
 
     // Connexion Supabase (Script classique pour éviter les erreurs CORS locales)
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sb = (typeof supabase !== 'undefined') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+    function sbIndisponible() {
+        showAlert("Connexion impossible : un script n'a pas pu se charger. Rechargez la page (Ctrl+F5) ou essayez un autre navigateur.", "error", "alert-circle");
+    }
 
     // --- AUTO-REDIRECTION (Si déjà connecté) ---
     async function checkSession() {
+        if (!sb) return;
         const { data: { session } } = await sb.auth.getSession();
         if (session) {
             window.location.href = '/admin/';
@@ -301,6 +307,7 @@
     // --- 1. CONNEXION ---
     document.getElementById('form-login').addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!sb) { sbIndisponible(); return; }
         setLoading(true, 'btn-login');
 
         const { error } = await sb.auth.signInWithPassword({
@@ -319,6 +326,7 @@
     // --- 2. DEMANDE DE RESET ---
     document.getElementById('form-reset-request').addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!sb) { sbIndisponible(); return; }
         setLoading(true, 'btn-reset');
         const email = document.getElementById('reset-email').value;
 
@@ -339,6 +347,7 @@
     // --- 3. SAUVEGARDE NOUVEAU MDP ---
     document.getElementById('form-new-password').addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!sb) { sbIndisponible(); return; }
         setLoading(true, 'btn-new-pwd');
 
         const { error } = await sb.auth.updateUser({
@@ -373,7 +382,7 @@
         el.innerHTML = `<i data-lucide="${iconName}" size="18"></i> ${msg}`;
         el.className = `alert ${type}`;
         el.style.display = 'flex';
-        lucide.createIcons();
+        safeIcons();
     }
 
     function setLoading(isLoading, btnId, defaultHTML = '') {
@@ -385,7 +394,7 @@
             btn.disabled = false;
             btn.innerHTML = defaultHTML;
         }
-        lucide.createIcons();
+        safeIcons();
     }
 </script>
 </body>
