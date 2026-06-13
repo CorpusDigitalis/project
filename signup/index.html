@@ -425,8 +425,8 @@
         </div>
 
         <div class="price-card" id="price-card">
-            <div class="price-amount" id="price-display">72 €</div>
-            <div class="price-period" id="price-period">par an · offre Early Bird · remboursable sur crédits de laboratoire</div>
+            <div class="price-amount" id="price-display">96 €</div>
+            <div class="price-period" id="price-period">par an · remboursable sur crédits de laboratoire</div>
             <ul class="price-features">
                 <li>Votre espace académique sur mesure</li>
                 <li>Sous-domaine personnel corpusdigitalis.com</li>
@@ -470,13 +470,12 @@
     // ==========================================================
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
-    const STRIPE_EARLY_BIRD = 'https://buy.stripe.com/bJe4gA6Q15TK2CH2Z2b7y03';
+    // Early Bird abandonné le 12/06/2026 (modèle V3) — le canal direct paie le tarif standard
     const STRIPE_STANDARD   = 'https://buy.stripe.com/5kQ6oI1vH81SgtxfLOb7y04';
     const STRIPE_MENSUEL    = 'https://buy.stripe.com/6oUeVedep6XO1yD57ab7y05';
     const _plan = new URLSearchParams(window.location.search).get('plan');
-    const STRIPE_PAYMENT_LINK = _plan === 'standard' ? STRIPE_STANDARD
-                               : _plan === 'mensuel'  ? STRIPE_MENSUEL
-                               : STRIPE_EARLY_BIRD;
+    const STRIPE_PAYMENT_LINK = _plan === 'mensuel' ? STRIPE_MENSUEL
+                               : STRIPE_STANDARD;
     const VERIFY_EDGE_URL = `${SUPABASE_URL}/functions/v1/send-verification-code`;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -710,6 +709,13 @@
 
             if (profErr) throw profErr;
 
+            // Email de bienvenue automatique (les 3 liens) — ne doit jamais bloquer le flux
+            fetch(`${SUPABASE_URL}/functions/v1/send-welcome-email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+                body: JSON.stringify({ email: userEmail, name: name, slug: slug })
+            }).catch(() => {});
+
             localStorage.setItem('cd_profile_saved_' + userId, '1');
             switchToStep(4);
             updateDots(4);
@@ -782,6 +788,21 @@
         div.innerText = msg;
         div.style.display = 'block';
     }
+</script>
+<script>
+    // Filet de sécurité CDN : si le module ci-dessus n'a pas chargé (réseau, bloqueur),
+    // les boutons ne feraient rien — on affiche un message clair au lieu du silence.
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            if (typeof window.handleSignup !== 'function') {
+                const err = document.getElementById('err-1');
+                if (err) {
+                    err.innerText = "Le formulaire n'a pas pu se charger (connexion ou bloqueur de script). Rechargez la page (Ctrl+F5) ou essayez un autre navigateur.";
+                    err.style.display = 'block';
+                }
+            }
+        }, 2500);
+    });
 </script>
 </body>
 </html>

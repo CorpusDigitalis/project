@@ -127,6 +127,13 @@
         <em>[votre-nom].corpusdigitalis.com</em>.
     </div>
 
+    <div class="next-step-box">
+        <strong>Vos 3 liens à garder :</strong><br>
+        1. Votre site public : <span id="public-site-link"><em>[votre-nom].corpusdigitalis.com</em></span><br>
+        2. Modifier votre site : <a href="/admin/">corpusdigitalis.com/admin/</a><br>
+        3. Vous reconnecter : <a href="/login/">corpusdigitalis.com/login/</a>
+    </div>
+
     <a href="/login/" class="btn">Accéder à mon espace →</a>
 
     <div class="footer-note">Corpus Digitalis — Hub académique premium</div>
@@ -143,6 +150,17 @@
     // Marquer le paiement et nettoyer le localStorage
     const userId = localStorage.getItem('cd_pending_user_id');
     if (userId) {
+        // Afficher le lien du futur site public (slug du profil)
+        const { data: prof } = await supabase
+            .from('profiles')
+            .select('slug')
+            .eq('id', userId)
+            .single();
+        if (prof && prof.slug) {
+            const el = document.getElementById('public-site-link');
+            if (el) el.innerHTML = '<a href="https://' + prof.slug + '.corpusdigitalis.com">' + prof.slug + '.corpusdigitalis.com</a> <em>(actif sous 48h)</em>';
+        }
+
         await supabase
             .from('profiles')
             .update({ paid_at: new Date().toISOString() })

@@ -9,6 +9,10 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Filet de sécurité CDN : si lucide n'a pas chargé, substitut inerte — la page ne doit jamais mourir en silence
+        if (!window.lucide) window.lucide = { createIcons: function() {} };
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
@@ -923,8 +927,12 @@
 <script>
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE'; 
+    if (typeof supabase === 'undefined') {
+        document.body.innerHTML = '<div style="font-family:sans-serif;max-width:480px;margin:120px auto;text-align:center;line-height:1.6"><h2>Connexion impossible</h2><p>Un script n&rsquo;a pas pu se charger (r&eacute;seau ou bloqueur). Rechargez la page (Ctrl+F5) ou essayez un autre navigateur.</p></div>';
+        throw new Error('CDN supabase indisponible');
+    }
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    
+
     const DEFAULT_CONFIG = {
         header: { home: true, publications: true, courses: true, interventions: true, contact: true },
         footer: { linkedin: true, scholar: true, cv: true, custom: [] },

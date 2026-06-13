@@ -402,7 +402,8 @@
         <textarea id="conf-bio" rows="3" placeholder="Votre statut, université ou spécialité..."></textarea>
 
         <label>URL personnalisée</label>
-        <input type="text" id="conf-slug" placeholder="ex : marie-dupont">
+        <input type="text" id="conf-slug" placeholder="ex : marie-dupont" oninput="liveSlug(this)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <small id="slug-preview" style="display:block;margin-top:6px;font-size:12px;min-height:18px;"></small>
 
         <label>Photo de profil (optionnel)</label>
         <input type="file" id="up-avatar" accept="image/*">
@@ -423,9 +424,9 @@
             Le paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez — votre profil est bien enregistré.
         </div>
 
-        <div class="price-card">
-            <div class="price-amount">97 €</div>
-            <div class="price-period">par an · offre Early Bird · remboursable sur crédits de laboratoire</div>
+        <div class="price-card" id="price-card">
+            <div class="price-amount" id="price-display">96 €</div>
+            <div class="price-period" id="price-period">par an · remboursable sur crédits de laboratoire</div>
             <ul class="price-features">
                 <li>Votre espace académique sur mesure</li>
                 <li>Sous-domaine personnel corpusdigitalis.com</li>
@@ -469,7 +470,12 @@
     // ==========================================================
     const SUPABASE_URL = 'https://recgvfcuxsonkhlyctrw.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY2d2ZmN1eHNvbmtobHljdHJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MTY5OTAsImV4cCI6MjA4MjM5Mjk5MH0.NrEoz7TiMDShWJ1pb2jTHgnItJgSSh1SFb5Q2X7zsjE';
-    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/bJe4gA6Q15TK2CH2Z2b7y03';
+    // Early Bird abandonné le 12/06/2026 (modèle V3) — le canal direct paie le tarif standard
+    const STRIPE_STANDARD   = 'https://buy.stripe.com/5kQ6oI1vH81SgtxfLOb7y04';
+    const STRIPE_MENSUEL    = 'https://buy.stripe.com/6oUeVedep6XO1yD57ab7y05';
+    const _plan = new URLSearchParams(window.location.search).get('plan');
+    const STRIPE_PAYMENT_LINK = _plan === 'mensuel' ? STRIPE_MENSUEL
+                               : STRIPE_STANDARD;
     const VERIFY_EDGE_URL = `${SUPABASE_URL}/functions/v1/send-verification-code`;
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -500,7 +506,9 @@
             switchToStep(4);
             updateDots(4);
         } else {
-            document.getElementById('conf-slug').value = savedEmail.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+            const slugInput = document.getElementById('conf-slug');
+            slugInput.value = sanitizeSlug(savedEmail.split('@')[0]);
+            liveSlug(slugInput);
             switchToStep(3);
             updateDots(3);
         }
@@ -541,7 +549,9 @@
         userEmail = email;
         localStorage.setItem('cd_pending_user_id', userId);
         localStorage.setItem('cd_pending_email', userEmail);
-        document.getElementById('conf-slug').value = email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+        const slugEl = document.getElementById('conf-slug');
+        slugEl.value = sanitizeSlug(email.split('@')[0]);
+        liveSlug(slugEl);
         document.getElementById('display-email').innerText = email;
 
         btn.innerText = "Envoi du code...";
@@ -616,6 +626,33 @@
     }
 
     // ==========================================================
+    // SLUG — nettoyage et aperçu en direct
+    function sanitizeSlug(val) {
+        return val
+            .normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .toLowerCase()
+            .replace(/[\s._@/+]+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-{2,}/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 60);
+    }
+
+    window.liveSlug = function(input) {
+        const clean = sanitizeSlug(input.value);
+        input.value = clean;
+        const preview = document.getElementById('slug-preview');
+        if (clean.length >= 3) {
+            preview.textContent = clean + '.corpusdigitalis.com';
+            preview.style.color = '#16a34a';
+        } else if (clean.length > 0) {
+            preview.textContent = clean + '.corpusdigitalis.com (minimum 3 caractères)';
+            preview.style.color = '#94a3b8';
+        } else {
+            preview.textContent = '';
+        }
+    };
+
     // ÉTAPE 3 : IDENTITÉ & UPLOADS
     // ==========================================================
     window.submitOnboarding = async () => {
@@ -625,7 +662,7 @@
 
         const name = document.getElementById('conf-name').value.trim();
         const bio = document.getElementById('conf-bio').value.trim();
-        const slug = document.getElementById('conf-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+        const slug = sanitizeSlug(document.getElementById('conf-slug').value);
 
         errDiv.style.display = 'none';
         if (!name || !slug) { showErr(errDiv, "Le nom et l'URL personnalisée sont obligatoires."); return; }
@@ -672,6 +709,13 @@
 
             if (profErr) throw profErr;
 
+            // Email de bienvenue automatique (les 3 liens) — ne doit jamais bloquer le flux
+            fetch(`${SUPABASE_URL}/functions/v1/send-welcome-email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+                body: JSON.stringify({ email: userEmail, name: name, slug: slug })
+            }).catch(() => {});
+
             localStorage.setItem('cd_profile_saved_' + userId, '1');
             switchToStep(4);
             updateDots(4);
@@ -683,6 +727,18 @@
             btn.style.opacity = "1";
             loader.style.display = "none";
         }
+    }
+
+    // ==========================================================
+    // AFFICHAGE PRIX SELON PLAN
+    // ==========================================================
+    const planParam = _plan;
+    if (planParam === 'standard') {
+        document.getElementById('price-display').textContent = '96 €';
+        document.getElementById('price-period').textContent = 'par an · tarif standard · remboursable sur crédits de laboratoire';
+    } else if (planParam === 'mensuel') {
+        document.getElementById('price-display').textContent = '9 €';
+        document.getElementById('price-period').textContent = 'par mois · résiliable à tout moment · remboursable sur crédits de laboratoire';
     }
 
     // ==========================================================
@@ -732,6 +788,21 @@
         div.innerText = msg;
         div.style.display = 'block';
     }
+</script>
+<script>
+    // Filet de sécurité CDN : si le module ci-dessus n'a pas chargé (réseau, bloqueur),
+    // les boutons ne feraient rien — on affiche un message clair au lieu du silence.
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            if (typeof window.handleSignup !== 'function') {
+                const err = document.getElementById('err-1');
+                if (err) {
+                    err.innerText = "Le formulaire n'a pas pu se charger (connexion ou bloqueur de script). Rechargez la page (Ctrl+F5) ou essayez un autre navigateur.";
+                    err.style.display = 'block';
+                }
+            }
+        }, 2500);
+    });
 </script>
 </body>
 </html>
