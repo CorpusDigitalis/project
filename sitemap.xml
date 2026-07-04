@@ -28,6 +28,13 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Galerie inbound -->
+  <url>
+    <loc>https://corpusdigitalis.com/galerie/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Pages légales -->
   <url>
     <loc>https://corpusdigitalis.com/mentions-legales/</loc>
@@ -45,19 +52,19 @@
     <priority>0.4</priority>
   </url>
 
-  <!-- Profils démo actifs — REMPLACER par vrais profils dès disponibles -->
+  <!-- Profils : pages STATIQUES en chemins /prenom-nom (SEO indexable). Démos — remplacer par vrais clients. -->
   <url>
-    <loc>https://claire-martins.corpusdigitalis.com/</loc>
+    <loc>https://corpusdigitalis.com/claire-martins/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://marc-lebrun.corpusdigitalis.com/</loc>
+    <loc>https://corpusdigitalis.com/marc-lebrun/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sofia-andrieu.corpusdigitalis.com/</loc>
+    <loc>https://corpusdigitalis.com/sofia-andrieu/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
